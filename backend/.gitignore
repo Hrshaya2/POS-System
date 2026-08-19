@@ -1,0 +1,19 @@
+# Environment variables (contains sensitive credentials)
+.env
+.env.local
+.env.production
+
+# Node modules
+node_modules/
+
+# SQLite database
+database.sqlite
+database.sqlite-journal
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
