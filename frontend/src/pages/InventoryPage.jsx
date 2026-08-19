@@ -26,7 +26,7 @@ export default function InventoryPage() {
         try {
             const storedToken = localStorage.getItem('token');
             const endpoint = activeTab === 'phones' ? 'phones' : 'accessories';
-            const res = await fetch(`http://localhost:5000/api/inventory/${endpoint}`, {
+            const res = await fetch(`/api/inventory/${endpoint}`, {
                 headers: { 'Authorization': `Bearer ${storedToken}` }
             });
             if (res.ok) {
@@ -53,7 +53,7 @@ export default function InventoryPage() {
             const storedToken = localStorage.getItem('token');
             const endpoint = activeTab === 'phones' ? 'phones' : 'accessories';
 
-            const res = await fetch(`http://localhost:5000/api/inventory/${endpoint}`, {
+            const res = await fetch(`/api/inventory/${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ export default function InventoryPage() {
             const storedToken = localStorage.getItem('token');
             const endpoint = activeTab === 'phones' ? 'phones' : 'accessories';
 
-            const res = await fetch(`http://localhost:5000/api/inventory/${endpoint}/${editingItem.id}`, {
+            const res = await fetch(`/api/inventory/${endpoint}/${editingItem.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ export default function InventoryPage() {
             const storedToken = localStorage.getItem('token');
             const endpoint = activeTab === 'phones' ? 'phones' : 'accessories';
 
-            const res = await fetch(`http://localhost:5000/api/inventory/${endpoint}/${item.id}`, {
+            const res = await fetch(`/api/inventory/${endpoint}/${item.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${storedToken}`

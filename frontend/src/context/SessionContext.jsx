@@ -22,7 +22,7 @@ export const SessionProvider = ({ children }) => {
         }
 
         try {
-            const res = await fetch('http://localhost:5000/api/sessions/current', {
+            const res = await fetch('/api/sessions/current', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -44,7 +44,7 @@ export const SessionProvider = ({ children }) => {
 
     const openSession = async (openingCash, openingReload) => {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5000/api/sessions/open', {
+        const res = await fetch('/api/sessions/open', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify({ openingCash, openingReload })
@@ -61,7 +61,7 @@ export const SessionProvider = ({ children }) => {
     const closeSession = async (actualCash, actualReload) => {
         if (!session) return;
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5000/api/sessions/close', {
+        const res = await fetch('/api/sessions/close', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify({ id: session.id, actualCash, actualReload })

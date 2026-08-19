@@ -187,7 +187,7 @@ const SyncStatusBadge = () => {
   const fetchSyncStatus = React.useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:5000/api/sync-status', {
+      const res = await fetch('/api/sync-status', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -267,7 +267,7 @@ const Dashboard = () => {
     const fetchDashboard = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5000/api/dashboard', {
+        const res = await fetch('/api/dashboard', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {

@@ -25,7 +25,7 @@ export default function UsersPage() {
     const fetchUsers = async () => {
         try {
             const storedToken = localStorage.getItem('token');
-            const res = await fetch('http://localhost:5000/api/users', {
+            const res = await fetch('/api/users', {
                 headers: {
                     'Authorization': `Bearer ${storedToken}`
                 }
@@ -62,7 +62,7 @@ export default function UsersPage() {
         if (!window.confirm(`Are you sure you want to delete "${targetUser.name}"?`)) return;
         try {
             const storedToken = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:5000/api/users/${targetUser.id}`, {
+            const res = await fetch(`/api/users/${targetUser.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${storedToken}`
@@ -90,7 +90,7 @@ export default function UsersPage() {
         setFormLoading(true);
         try {
             const storedToken = localStorage.getItem('token');
-            const res = await fetch('http://localhost:5000/api/users', {
+            const res = await fetch('/api/users', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ export default function UsersPage() {
             const body = { name: editForm.name, email: editForm.email, role: editForm.role };
             if (editForm.password) body.password = editForm.password;
 
-            const res = await fetch(`http://localhost:5000/api/users/${editUser.id}`, {
+            const res = await fetch(`/api/users/${editUser.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

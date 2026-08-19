@@ -21,7 +21,7 @@ export default function CloseSessionModal({ onClose }) {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) return;
-                const res = await fetch('http://localhost:5000/api/sessions/current', {
+                const res = await fetch('/api/sessions/current', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {

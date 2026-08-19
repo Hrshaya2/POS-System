@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useSession } from '../context/SessionContext';
 import { BadgeCheck, Banknote, Barcode, CreditCard, History, PackageSearch, Printer, Search, ShieldAlert, ShoppingCart, Smartphone, RefreshCw, Trash2, Warehouse } from 'lucide-react';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = '/api';
 
 const PAYMENT_METHODS = [
     { value: 'CASH', label: 'Cash', icon: Banknote },
