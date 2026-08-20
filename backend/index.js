@@ -483,7 +483,7 @@ app.get('/api/sales', authenticateToken, async (req, res) => {
         if (!isAdminOrShopOwner(req.user.role)) {
             filter.cashier_id = req.user.id;
         } else if (cashierId) {
-            filter.cashier_id = Number(cashierId);
+            filter.cashier_id = cashierId;
         }
 
         if (q && q.trim()) {
@@ -979,7 +979,7 @@ app.get('/api/cash-movements', authenticateToken, requireAdmin, async (req, res)
 
         if (from) filter.movement_date = { $gte: from };
         if (to) filter.movement_date = { ...filter.movement_date, $lte: to };
-        if (cashierId) filter.cashier_id = Number(cashierId);
+        if (cashierId) filter.cashier_id = cashierId;
 
         const rows = await CashMovement.find(filter).sort({ movement_date: -1, _id: -1 });
         res.json(rows.map(r => ({
@@ -1015,7 +1015,7 @@ app.post('/api/cash-movements', authenticateToken, requireAdmin, async (req, res
 
         const resolvedDate = movementDate || new Date().toISOString().slice(0, 10);
         const movement = await CashMovement.create({
-            cashier_id: cashierId ? Number(cashierId) : null,
+            cashier_id: cashierId ? cashierId : null,
             cashier_name: cashierName || 'System',
             movement_type: normalizedType,
             amount: normalizedAmount,
@@ -1340,7 +1340,7 @@ app.get('/api/sessions/current', authenticateToken, async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Database error fetching current session' });
+        res.status(500).json({ error: err.message || 'Database error fetching current session' });
     }
 });
 
@@ -1366,7 +1366,7 @@ app.post('/api/sessions/open', authenticateToken, async (req, res) => {
         res.status(201).json({ ...session.toObject(), id: session._id.toString() });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Database error opening session' });
+        res.status(500).json({ error: err.message || 'Database error opening session' });
     }
 });
 
@@ -1419,7 +1419,7 @@ app.post('/api/sessions/close', authenticateToken, async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Database error closing session' });
+        res.status(500).json({ error: err.message || 'Database error closing session' });
     }
 });
 
@@ -1430,7 +1430,7 @@ app.get('/api/sessions', authenticateToken, requireAdmin, async (req, res) => {
         res.json(sessions.map(s => ({ ...s.toObject(), id: s._id.toString() })));
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Database error fetching sessions' });
+        res.status(500).json({ error: err.message || 'Database error fetching sessions' });
     }
 });
 

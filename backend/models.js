@@ -46,7 +46,7 @@ const accessorySchema = new mongoose.Schema({
 const saleSchema = new mongoose.Schema({
     local_id: Number,
     receipt_no: { type: String, unique: true, required: true },
-    cashier_id: { type: Number, required: true },
+    cashier_id: { type: String, required: true },
     cashier_name: { type: String, required: true },
     cashier_role: { type: String, required: true },
     items: [{ type: mongoose.Schema.Types.Mixed }],
@@ -61,7 +61,7 @@ const saleSchema = new mongoose.Schema({
     approval_required: { type: Boolean, default: false },
     approval_status: { type: String, default: 'NOT_REQUIRED' },
     approval_note: String,
-    session_id: Number,
+    session_id: String,
     createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
@@ -87,8 +87,8 @@ const repairJobSchema = new mongoose.Schema({
 // --- REPAIR_JOB_PARTS ---
 const repairJobPartSchema = new mongoose.Schema({
     local_id: Number,
-    repair_job_id: { type: Number, required: true },
-    inventory_id: { type: Number, required: true },
+    repair_job_id: { type: String, required: true },
+    inventory_id: { type: String, required: true },
     part_name: { type: String, required: true },
     sku: String,
     quantity: { type: Number, default: 1 },
@@ -100,7 +100,7 @@ const repairJobPartSchema = new mongoose.Schema({
 // --- CASH_MOVEMENTS ---
 const cashMovementSchema = new mongoose.Schema({
     local_id: Number,
-    cashier_id: Number,
+    cashier_id: String,
     cashier_name: String,
     movement_type: { type: String, required: true },
     amount: { type: Number, required: true },
@@ -121,8 +121,8 @@ const dailySessionSchema = new mongoose.Schema({
     actual_cash: Number,
     variance: Number,
     status: { type: String, default: 'open' },
-    opened_by: { type: Number, required: true },
-    closed_by: Number,
+    opened_by: { type: String, required: true },
+    closed_by: String,
     closed_at: Date,
     created_at: { type: Date, default: Date.now }
 }, { timestamps: true });
