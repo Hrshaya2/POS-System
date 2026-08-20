@@ -32,7 +32,7 @@ export default function Login() {
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="flex justify-center flex-col items-center">
                     <div className="p-0">
-                        <img src="./frontend/logo.png" alt="Loyal Mobile" className="w-26 h-26 object-cover rounded-full border-3 order-white shadow-md" />
+                        <img src="frontend/logo.png" alt="Loyal Mobile" className="w-26 h-26 object-cover rounded-full border-3 order-white shadow-md" />
                     </div>
                     <h2 className="text-center text-3xl font-extrabold text-gray-900">
                         LOYAL <span className="text-blue-500">MOBILE</span>
