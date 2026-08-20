@@ -87,7 +87,7 @@ const Layout = ({ children }) => {
       <aside className="w-64 bg-gray-900 h-full flex flex-col shadow-2xl z-10 border-r border-gray-800">
         <div className="p-6 flex items-center space-x-3">
           <div className="p-0">
-            <img src="frontend/logo.png" alt="Loyal Mobile" className="w-14 12 object-cover rounded-full border-3 order-white shadow-md" />
+            <img src="/logo.png" alt="Loyal Mobile" className="w-14 12 object-cover rounded-full border-3 order-white shadow-md" />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
             LOYAL <span className="text-blue-300">MOBILE</span>
