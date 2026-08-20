@@ -32,7 +32,7 @@ export default function Login() {
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="flex justify-center flex-col items-center">
                     <div className="p-0">
-                        <img src="/logo.png" alt="Loyal Mobile" className="w-26 h-26 object-cover rounded-full border-3 order-white shadow-md" />
+                        <img src="frontend/logo.png" alt="Loyal Mobile" className="w-26 h-26 object-cover rounded-full border-3 order-white shadow-md" />
                     </div>
                     <h2 className="text-center text-3xl font-extrabold text-gray-900">
                         LOYAL <span className="text-blue-500">MOBILE</span>
@@ -65,7 +65,7 @@ export default function Login() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="appearance-none block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors bg-gray-50 focus:bg-white"
-                                    placeholder="admin@nangi.com"
+                                    placeholder="test@testmail.com"
                                 />
                             </div>
                         </div>
