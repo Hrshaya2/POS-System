@@ -26,8 +26,11 @@ import { CloudOff, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { SessionProvider, useSession } from './context/SessionContext';
+import { SyncProvider, useSync } from './context/SyncContext';
 import OpenSessionModal from './components/CashSession/OpenSessionModal';
 import CloseSessionModal from './components/CashSession/CloseSessionModal';
+import SyncStatusIndicator from './components/SyncStatusIndicator';
+import OfflineBanner from './components/OfflineBanner';
 import Login from './pages/Login';
 import UsersPage from './pages/UsersPage';
 import InventoryPage from './pages/InventoryPage';
@@ -119,10 +122,14 @@ const Layout = ({ children }) => {
 
       {/* Main Content */}
       <main className="flex-1 h-full overflow-y-auto bg-[#f8fafc]">
+        {/* Offline Banner (only shows when offline) */}
+        <OfflineBanner />
+
         {/* Top Header */}
         <header className="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200 px-8 py-4 flex justify-between items-center shadow-sm">
           <h2 className="text-xl font-semibold text-gray-800">Branch: Main Store (Colombo)</h2>
           <div className="flex items-center space-x-4">
+            <SyncStatusIndicator />
             {isOpen ? (
               <button
                 onClick={() => setShowCloseModal(true)}
@@ -179,12 +186,18 @@ const StatCard = ({ title, value, subtitle, icon: Icon, colorClass, bgClass }) =
   </div>
 );
 
-// --- SYNC STATUS BADGE ---
+// --- SYNC STATUS BADGE (kept for backward compat with backend polling) ---
 const SyncStatusBadge = () => {
+  const { status: localStatus } = useSync();
   const [status, setStatus] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 
   const fetchSyncStatus = React.useCallback(async () => {
+    // If offline, prefer the local IndexedDB status
+    if (!navigator.onLine) {
+      setLoading(false);
+      return;
+    }
     try {
       const token = localStorage.getItem('token');
       const res = await fetch('/api/sync-status', {
@@ -206,6 +219,11 @@ const SyncStatusBadge = () => {
     const interval = setInterval(fetchSyncStatus, 15000);
     return () => clearInterval(interval);
   }, [fetchSyncStatus]);
+
+  // Local IndexedDB status takes priority
+  if (localStatus?.pendingCounts?.total > 0) {
+    return <SyncStatusIndicator />;
+  }
 
   if (loading) {
     return (
@@ -234,17 +252,6 @@ const SyncStatusBadge = () => {
     );
   }
 
-  const pending = status.totalPending || 0;
-
-  if (pending > 0) {
-    return (
-      <div className="bg-amber-50 border border-amber-200 text-amber-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center space-x-2">
-        <RefreshCw size={16} className="animate-spin" />
-        <span>Syncing... {pending} items pending</span>
-      </div>
-    );
-  }
-
   return (
     <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center space-x-2">
       <CheckCircle2 size={16} />
@@ -260,6 +267,7 @@ const SyncStatusBadge = () => {
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { status: syncStatus } = useSync();
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 
@@ -267,7 +275,7 @@ const Dashboard = () => {
     const fetchDashboard = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('/api/dashboard', {
+        const res = await fetch(`/api/dashboard?tzOffset=${new Date().getTimezoneOffset()}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
@@ -279,8 +287,30 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
+
     fetchDashboard();
+
+    // Poll every 15 seconds so Today's Sales and the chart stay fresh
+    const interval = setInterval(fetchDashboard, 15000);
+    return () => clearInterval(interval);
   }, []);
+
+  // Refresh when a background sync completes (pending count drops to 0)
+  const prevPendingRef = React.useRef(syncStatus?.pendingCounts?.total);
+  React.useEffect(() => {
+    const prev = prevPendingRef.current;
+    const current = syncStatus?.pendingCounts?.total;
+    prevPendingRef.current = current;
+
+    // If we had pending items and now they're all synced, refresh the dashboard
+    if (prev > 0 && current === 0) {
+      const token = localStorage.getItem('token');
+      fetch(`/api/dashboard?tzOffset=${new Date().getTimezoneOffset()}`, { headers: { 'Authorization': `Bearer ${token}` } })
+        .then((res) => res.ok ? res.json() : null)
+        .then((fresh) => { if (fresh) setData(fresh); })
+        .catch((err) => console.error("Failed to refresh dashboard after sync", err));
+    }
+  }, [syncStatus?.pendingCounts?.total]);
 
   if (loading) return <div className="p-8 text-gray-500">Loading dashboard...</div>;
   if (!data) return <div className="p-8 text-gray-500">Failed to load dashboard data.</div>;
@@ -351,7 +381,7 @@ const Dashboard = () => {
           </div>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={salesTrend.reverse()} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <AreaChart data={salesTrend} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
@@ -528,9 +558,11 @@ function App() {
   return (
     <AuthProvider>
       <SessionProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
+        <SyncProvider>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </SyncProvider>
       </SessionProvider>
     </AuthProvider>
   );

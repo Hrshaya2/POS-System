@@ -56,6 +56,23 @@ const diffDays = (fromDate, toDate = new Date()) => {
     return Math.max(0, Math.floor(delta / (1000 * 60 * 60 * 24)));
 };
 
+// Calendar-day helpers that respect the client's timezone.
+// tzOffsetMinutes follows JavaScript's Date#getTimezoneOffset convention
+// (minutes to ADD to local time to get UTC; e.g. -330 for UTC+05:30 Colombo).
+const localDateStr = (tzOffsetMinutes, base = new Date()) =>
+    new Date(base.getTime() - tzOffsetMinutes * 60 * 1000).toISOString().slice(0, 10);
+
+const localDayRange = (dateStr, tzOffsetMinutes) => {
+    const offsetMs = tzOffsetMinutes * 60 * 1000;
+    return {
+        start: new Date(new Date(`${dateStr}T00:00:00.000Z`).getTime() + offsetMs),
+        end: new Date(new Date(`${dateStr}T23:59:59.999Z`).getTime() + offsetMs)
+    };
+};
+
+const formatLocalTime = (date, tzOffsetMinutes) =>
+    new Date(date.getTime() - tzOffsetMinutes * 60 * 1000).toISOString().slice(11, 16);
+
 const formatReceiptNo = () => `RCPT-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
 
 const normalizeSale = (sale) => {
@@ -98,16 +115,33 @@ const connectDB = async () => {
 // Middleware
 // =============================================
 
-const authenticateToken = (req, res, next) => {
+const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (!token) return res.sendStatus(401);
 
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user;
-        next();
-    });
+    let payload;
+    try {
+        payload = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+        return res.sendStatus(403);
+    }
+
+    // Reject tokens belonging to users that no longer exist (e.g. the account
+    // was deleted). Without this check, a stale token silently passes auth but
+    // every user-scoped query (like a cashier's sales history) returns nothing,
+    // making pages appear mysteriously empty.
+    try {
+        await connectDB();
+        const userExists = await User.exists({ _id: payload.id });
+        if (!userExists) return res.sendStatus(401);
+    } catch (dbErr) {
+        console.error('Auth DB check failed:', dbErr);
+        return res.status(500).json({ error: 'Authentication check failed' });
+    }
+
+    req.user = payload;
+    next();
 };
 
 const isAdminOrShopOwner = (role) => role === 'admin' || role === 'shop_owner';
@@ -496,7 +530,7 @@ app.get('/api/sales', authenticateToken, async (req, res) => {
             ];
         }
 
-        const sales = await Sale.find(filter).sort({ created_at: -1 }).limit(200);
+        const sales = await Sale.find(filter).sort({ createdAt: -1 }).limit(200);
         res.json(sales.map(normalizeSale));
     } catch (err) {
         console.error(err);
@@ -516,6 +550,46 @@ app.get('/api/sales/:id', authenticateToken, async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Database error fetching sale' });
+    }
+});
+
+// Delete sales data (Admin/Shop Owner only)
+// Supports optional date range: ?from=YYYY-MM-DD&to=YYYY-MM-DD
+// Also supports deleting a single sale by id: /api/sales/:id (DELETE)
+app.delete('/api/sales', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const { from = '', to = '', cashierId = '' } = req.query;
+        const filter = {};
+
+        if (from || to) {
+            filter.createdAt = {};
+            if (from) filter.createdAt.$gte = new Date(`${from}T00:00:00.000Z`);
+            if (to) filter.createdAt.$lte = new Date(`${to}T23:59:59.999Z`);
+        }
+        if (cashierId) filter.cashier_id = cashierId;
+
+        const result = await Sale.deleteMany(filter);
+        res.json({
+            success: true,
+            deletedCount: result.deletedCount || 0,
+            message: `Deleted ${result.deletedCount || 0} sale record(s)`
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error deleting sales' });
+    }
+});
+
+app.delete('/api/sales/:id', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const sale = await Sale.findByIdAndDelete(req.params.id);
+        if (!sale) return res.status(404).json({ error: 'Sale not found' });
+        res.json({ success: true, message: `Deleted sale ${sale.receipt_no}` });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error deleting sale' });
     }
 });
 
@@ -653,6 +727,61 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
     } catch (err) {
         console.error(err);
         return res.status(400).json({ error: err.message || 'Unable to complete sale' });
+    }
+});
+
+// =============================================
+// OFFLINE SALE IMPORT (backup of offline-created sales)
+// =============================================
+
+// Used by the offline sync engine when a pending sale cannot go through the
+// normal checkout (e.g. the item was already sold / stock changed on the
+// server while the device was offline). It records the sale exactly as it was
+// created on the POS device - preserving the ORIGINAL sale time - without
+// applying any inventory side-effects. Idempotent per receipt_no.
+app.post('/api/sales/import', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const s = req.body || {};
+        if (!s.receipt_no || !Array.isArray(s.items)) {
+            return res.status(400).json({ error: 'receipt_no and items are required' });
+        }
+
+        // Idempotent: if this receipt already exists, treat as success so the
+        // client can mark its local copy as synced.
+        const existing = await Sale.findOne({ receipt_no: s.receipt_no });
+        if (existing) {
+            return res.json({ sale: normalizeSale(existing), imported: false, message: 'Sale already exists' });
+        }
+
+        let createdAt = s.created_at ? new Date(s.created_at) : new Date();
+        if (Number.isNaN(createdAt.getTime())) createdAt = new Date();
+
+        const saleDoc = await Sale.create({
+            receipt_no: String(s.receipt_no),
+            cashier_id: s.cashier_id || req.user.id,
+            cashier_name: s.cashier_name || req.user.name,
+            cashier_role: s.cashier_role || req.user.role,
+            items: s.items,
+            subtotal: Number(s.subtotal || 0),
+            discount_amount: Number(s.discount_amount || 0),
+            discount_percent: Number(s.discount_percent || 0),
+            total: Number(s.total || 0),
+            payment_method: String(s.payment_method || 'CASH').toUpperCase(),
+            payment_details: s.payment_details || null,
+            cash_received: Number(s.cash_received || 0),
+            change_amount: Number(s.change_amount || 0),
+            approval_required: !!s.approval_required,
+            approval_status: s.approval_status || 'NOT_REQUIRED',
+            approval_note: s.approval_note || null,
+            session_id: s.session_id || null,
+            createdAt
+        });
+
+        res.status(201).json({ sale: normalizeSale(saleDoc), imported: true, message: 'Offline sale imported' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message || 'Database error importing sale' });
     }
 });
 
@@ -1060,8 +1189,8 @@ app.get('/api/reports', authenticateToken, requireAdmin, async (req, res) => {
         const [phones, accessories, saleRowsRange, saleRowsAll, deliveredRepairs, cashMovements] = await Promise.all([
             Phone.find({}),
             Accessory.find({}),
-            Sale.find({ created_at: { $gte: rangeStart, $lte: rangeEnd } }).sort({ created_at: -1 }),
-            Sale.find({}).sort({ created_at: -1 }),
+            Sale.find({ createdAt: { $gte: rangeStart, $lte: rangeEnd } }).sort({ createdAt: -1 }),
+            Sale.find({}).sort({ createdAt: -1 }),
             RepairJob.find({ repair_status: 'Delivered', updated_at: { $gte: rangeStart, $lte: rangeEnd } }),
             CashMovement.find({ movement_date: { $gte: from, $lte: to } })
         ]);
@@ -1073,8 +1202,8 @@ app.get('/api/reports', authenticateToken, requireAdmin, async (req, res) => {
         saleRowsAll.forEach((row) => {
             (row.items || []).forEach((item) => {
                 const key = `${item.inventory_type}:${item.inventory_id}`;
-                if (!soldLookup.has(key) || new Date(row.created_at) > new Date(soldLookup.get(key))) {
-                    soldLookup.set(key, row.created_at);
+                if (!soldLookup.has(key) || new Date(row.createdAt) > new Date(soldLookup.get(key))) {
+                    soldLookup.set(key, row.createdAt);
                 }
             });
         });
@@ -1178,7 +1307,7 @@ app.get('/api/reports', authenticateToken, requireAdmin, async (req, res) => {
             marginRows.push({
                 sale_id: row._id.toString(),
                 receipt_no: row.receipt_no,
-                created_at: row.created_at,
+                created_at: row.createdAt,
                 cashier_name: row.cashier_name,
                 revenue: saleRevenue,
                 cost: saleCost,
@@ -1192,7 +1321,7 @@ app.get('/api/reports', authenticateToken, requireAdmin, async (req, res) => {
             cashierCurrent.sale_count += 1;
             cashierAggregate.set(cashierKey, cashierCurrent);
 
-            const saleDate = String(row.created_at || '').slice(0, 10);
+            const saleDate = String(row.createdAt || '').slice(0, 10);
             const balanceKey = `${row.cashier_id}:${saleDate}`;
             const balanceCurrent = cashierBalanceAggregate.get(balanceKey) || {
                 cashier_id: row.cashier_id,
@@ -1480,23 +1609,31 @@ app.get('/api/sync-status', authenticateToken, async (req, res) => {
 app.get('/api/dashboard', authenticateToken, async (req, res) => {
     try {
         await connectDB();
-        const todayStr = new Date().toISOString().slice(0, 10);
-        const todayStart = new Date(`${todayStr}T00:00:00.000Z`);
-        const todayEnd = new Date(`${todayStr}T23:59:59.999Z`);
 
-        let yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toISOString().slice(0, 10);
-        const yesterdayStart = new Date(`${yesterdayStr}T00:00:00.000Z`);
-        const yesterdayEnd = new Date(`${yesterdayStr}T23:59:59.999Z`);
+        // Use the client's timezone (sent as ?tzOffset=, getTimezoneOffset() style)
+        // so "today" matches the shop's local calendar. Falls back to the server's
+        // own timezone when the parameter is absent.
+        let tzOffset = Number(req.query.tzOffset);
+        if (!Number.isFinite(tzOffset) || Math.abs(tzOffset) > 900) {
+            tzOffset = new Date().getTimezoneOffset();
+        }
+
+        const now = new Date();
+        const todayStr = localDateStr(tzOffset, now);
+        const { start: todayStart, end: todayEnd } = localDayRange(todayStr, tzOffset);
+
+        const yesterdayStr = localDateStr(tzOffset, new Date(now.getTime() - 24 * 60 * 60 * 1000));
+        const { start: yesterdayStart, end: yesterdayEnd } = localDayRange(yesterdayStr, tzOffset);
 
         // 1. Today's Sales & Yesterday's Sales
+        // NOTE: Sale documents store their timestamp as `createdAt` (Mongoose timestamps),
+        // NOT `created_at` — querying `created_at` always matched nothing.
         const todaySalesAgg = await Sale.aggregate([
-            { $match: { created_at: { $gte: todayStart, $lte: todayEnd } } },
+            { $match: { createdAt: { $gte: todayStart, $lte: todayEnd } } },
             { $group: { _id: null, total: { $sum: '$total' } } }
         ]);
         const yesterdaySalesAgg = await Sale.aggregate([
-            { $match: { created_at: { $gte: yesterdayStart, $lte: yesterdayEnd } } },
+            { $match: { createdAt: { $gte: yesterdayStart, $lte: yesterdayEnd } } },
             { $group: { _id: null, total: { $sum: '$total' } } }
         ]);
 
@@ -1549,7 +1686,7 @@ app.get('/api/dashboard', authenticateToken, async (req, res) => {
         });
 
         // 5. Recent Sales
-        const recentSalesRows = await Sale.find({}).sort({ created_at: -1 }).limit(5);
+        const recentSalesRows = await Sale.find({}).sort({ createdAt: -1 }).limit(5);
         const recentSales = recentSalesRows.map(sale => {
             const items = sale.items || [];
             const mainItem = items.length > 0 ? items[0].name + (items.length > 1 ? ` +${items.length - 1} more` : '') : 'Unknown items';
@@ -1558,22 +1695,20 @@ app.get('/api/dashboard', authenticateToken, async (req, res) => {
                 item: mainItem,
                 amount: `Rs. ${Number(sale.total).toLocaleString('en-LK')}`,
                 cashier: sale.cashier_name,
-                time: new Date(sale.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                time: formatLocalTime(new Date(sale.createdAt), tzOffset)
             };
         });
 
         // 6. Sales Trend (Last 7 Days)
         const salesTrend = [];
         for (let i = 6; i >= 0; i--) {
-            let d = new Date();
-            d.setDate(d.getDate() - i);
-            const dateStr = d.toISOString().slice(0, 10);
-            const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
-            const start = new Date(`${dateStr}T00:00:00.000Z`);
-            const end = new Date(`${dateStr}T23:59:59.999Z`);
+            const dateStr = localDateStr(tzOffset, new Date(now.getTime() - i * 24 * 60 * 60 * 1000));
+            const dayName = new Date(`${dateStr}T00:00:00.000Z`)
+                .toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' });
+            const { start, end } = localDayRange(dateStr, tzOffset);
 
             const dayAgg = await Sale.aggregate([
-                { $match: { created_at: { $gte: start, $lte: end } } },
+                { $match: { createdAt: { $gte: start, $lte: end } } },
                 { $group: { _id: null, total: { $sum: '$total' } } }
             ]);
 

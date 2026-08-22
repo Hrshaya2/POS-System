@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Smartphone, LogIn, AlertCircle } from 'lucide-react';
+import { Smartphone, LogIn, AlertCircle, WifiOff } from 'lucide-react';
+import SingleDeviceWarning from '../components/SingleDeviceWarning';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -44,7 +45,22 @@ export default function Login() {
                 </div>
             </div>
 
-            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md space-y-4">
+                <SingleDeviceWarning />
+
+                {!navigator.onLine && (
+                    <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 flex items-start space-x-3 text-sm">
+                        <WifiOff size={18} className="text-rose-600 mt-0.5 shrink-0" />
+                        <div>
+                            <p className="font-bold text-rose-800">You are offline.</p>
+                            <p className="text-rose-700 mt-1">
+                                If you have signed in on this browser before, refresh the page to continue using the app
+                                with offline billing. Otherwise, connect to the internet once to log in.
+                            </p>
+                        </div>
+                    </div>
+                )}
+
                 <div className="bg-white py-8 px-4 shadow-xl shadow-blue-900/5 sm:rounded-2xl sm:px-10 border border-gray-100">
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         {error && (

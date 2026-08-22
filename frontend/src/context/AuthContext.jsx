@@ -17,6 +17,19 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     }, []);
 
+    useEffect(() => {
+        // When any API call returns 401 (expired/invalid token - see main.jsx),
+        // clear the session so ProtectedRoute sends the user to the login
+        // screen instead of leaving them on pages that silently show no data.
+        const handleAuthExpired = () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setUser(null);
+        };
+        window.addEventListener('pos:auth-expired', handleAuthExpired);
+        return () => window.removeEventListener('pos:auth-expired', handleAuthExpired);
+    }, []);
+
     const login = async (email, password) => {
         try {
             const res = await fetch('/api/auth/login', {

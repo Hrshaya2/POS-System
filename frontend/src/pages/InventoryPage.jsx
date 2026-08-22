@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Package, Search, Plus, Smartphone, Settings, AlertTriangle, X, Pencil, Trash2 } from 'lucide-react';
+import { Package, Search, Plus, Smartphone, Settings, AlertTriangle, X, Pencil, Trash2, WifiOff, Barcode } from 'lucide-react';
+import { getCachedInventory } from '../db/database';
+import { generateInternalSku, isInternalSku, printBarcodeLabel, renderBarcodeSvg } from '../utils/barcode';
 
 export default function InventoryPage() {
     const { user } = useAuth();
@@ -17,6 +19,44 @@ export default function InventoryPage() {
     const [formData, setFormData] = useState({});
     const [submitting, setSubmitting] = useState(false);
 
+    // Label printer size (mm) - configurable because label printer sizes vary.
+    // Persisted so the shop doesn't have to re-enter it every time.
+    const [labelSize, setLabelSize] = useState(() => {
+        try {
+            const saved = JSON.parse(localStorage.getItem('pos_label_size'));
+            if (saved?.widthMm && saved?.heightMm) return saved;
+        } catch (err) { /* ignore malformed cache */ }
+        return { widthMm: 40, heightMm: 30 };
+    });
+
+    const updateLabelSize = (key, value) => {
+        const num = Math.max(10, Math.min(200, Number(value) || 0));
+        setLabelSize(prev => {
+            const next = { ...prev, [key]: num };
+            try { localStorage.setItem('pos_label_size', JSON.stringify(next)); } catch (err) { /* ignore */ }
+            return next;
+        });
+    };
+
+    // Generate a unique internal barcode (LM-XXXXXX) into the SKU field.
+    const handleGenerateSku = () => {
+        const sku = generateInternalSku(accessories.map(a => a.sku));
+        setFormData(prev => ({ ...prev, sku }));
+    };
+
+    // Print a scannable label for an item (from the modal form or a table row).
+    const handlePrintLabel = (item) => {
+        const code = item?.sku ?? formData.sku;
+        if (!code) return;
+        printBarcodeLabel({
+            code,
+            name: item?.name ?? formData.name,
+            price: item?.sell_price ?? formData.sell_price,
+            widthMm: labelSize.widthMm,
+            heightMm: labelSize.heightMm
+        });
+    };
+
     useEffect(() => {
         fetchInventory();
     }, [activeTab]);
@@ -24,6 +64,14 @@ export default function InventoryPage() {
     const fetchInventory = async () => {
         setLoading(true);
         try {
+            if (!navigator.onLine) {
+                // Offline: serve from IndexedDB cache
+                const cached = await getCachedInventory();
+                setPhones(cached.phones);
+                setAccessories(cached.accessories);
+                return;
+            }
+
             const storedToken = localStorage.getItem('token');
             const endpoint = activeTab === 'phones' ? 'phones' : 'accessories';
             const res = await fetch(`/api/inventory/${endpoint}`, {
@@ -35,7 +83,15 @@ export default function InventoryPage() {
                 else setAccessories(data);
             }
         } catch (err) {
-            console.error(err);
+            // Network error: fall back to cached inventory
+            console.warn('Falling back to cached inventory:', err);
+            try {
+                const cached = await getCachedInventory();
+                setPhones(cached.phones);
+                setAccessories(cached.accessories);
+            } catch (cacheErr) {
+                console.error('Cache fallback also failed:', cacheErr);
+            }
         } finally {
             setLoading(false);
         }
@@ -333,6 +389,13 @@ export default function InventoryPage() {
                                             <td className="px-6 py-4">
                                                 <div className="flex justify-end space-x-2">
                                                     <button
+                                                        onClick={() => handlePrintLabel(a)}
+                                                        className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                                        title="Print barcode label"
+                                                    >
+                                                        <Barcode size={16} />
+                                                    </button>
+                                                    <button
                                                         onClick={() => handleEditItem(a)}
                                                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                                         title="Edit"
@@ -441,8 +504,14 @@ export default function InventoryPage() {
                                     <>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">SKU</label>
-                                                <input required type="text" name="sku" value={formData.sku || ''} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" />
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">SKU / Barcode</label>
+                                                <div className="flex space-x-2">
+                                                    <input required type="text" name="sku" value={formData.sku || ''} onChange={handleInputChange} placeholder="Scan, type, or Generate" className="flex-1 min-w-0 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 font-mono" />
+                                                    <button type="button" onClick={handleGenerateSku} title="Generate a unique internal barcode (LM-XXXXXX)" className="px-3 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg hover:bg-indigo-100 transition-colors flex items-center space-x-1 whitespace-nowrap">
+                                                        <Barcode size={16} />
+                                                        <span className="text-xs font-semibold">Generate</span>
+                                                    </button>
+                                                </div>
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
@@ -458,6 +527,35 @@ export default function InventoryPage() {
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Item Name</label>
                                             <input required type="text" name="name" value={formData.name || ''} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" />
                                         </div>
+
+                                        {(formData.sku || '').trim() !== '' && (
+                                            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Barcode Preview · CODE128</span>
+                                                    {isInternalSku(formData.sku) && (
+                                                        <span className="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">Internal</span>
+                                                    )}
+                                                </div>
+                                                <div className="bg-white rounded-lg p-3 flex justify-center overflow-hidden">
+                                                    {renderBarcodeSvg(formData.sku, { height: 48, width: 2 })
+                                                        ? <div dangerouslySetInnerHTML={{ __html: renderBarcodeSvg(formData.sku, { height: 48, width: 2 }) }} />
+                                                        : <span className="text-xs text-gray-400">Enter a valid code to preview its barcode.</span>}
+                                                </div>
+                                                <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                                                    <div className="flex items-center space-x-1 text-xs text-gray-500">
+                                                        <span>Label size</span>
+                                                        <input type="number" min="15" max="200" value={labelSize.widthMm} onChange={(e) => updateLabelSize('widthMm', e.target.value)} className="w-16 px-2 py-1 border border-gray-200 rounded" title="Label width in mm" />
+                                                        <span>×</span>
+                                                        <input type="number" min="10" max="200" value={labelSize.heightMm} onChange={(e) => updateLabelSize('heightMm', e.target.value)} className="w-16 px-2 py-1 border border-gray-200 rounded" title="Label height in mm" />
+                                                        <span>mm</span>
+                                                    </div>
+                                                    <button type="button" onClick={() => handlePrintLabel()} className="px-3 py-2 bg-gray-900 text-white text-xs font-semibold rounded-lg hover:bg-gray-800 transition-colors flex items-center space-x-1">
+                                                        <Barcode size={14} />
+                                                        <span>Print Barcode Label</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
 
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>

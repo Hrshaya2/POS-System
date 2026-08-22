@@ -1,7 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useSession } from '../context/SessionContext';
-import { BadgeCheck, Banknote, Barcode, CreditCard, History, PackageSearch, Printer, Search, ShieldAlert, ShoppingCart, Smartphone, RefreshCw, Trash2, Warehouse } from 'lucide-react';
+import { useSync } from '../context/SyncContext';
+import { BadgeCheck, Banknote, Barcode, CreditCard, History, PackageSearch, Printer, Search, ShieldAlert, ShoppingCart, Smartphone, RefreshCw, Trash2, Warehouse, WifiOff, CloudUpload } from 'lucide-react';
+import { addPendingSale, generateLocalReceiptNo } from '../db/database';
+import { refreshInventoryCache } from '../services/syncService';
+import { getCachedInventory } from '../db/database';
 
 const API_BASE = '/api';
 
@@ -101,9 +105,54 @@ const buildReceiptWindow = (receipt) => {
     setTimeout(() => win.print(), 200);
 };
 
+// Builds a complete receipt object from the cart + payment info without needing a server response.
+const buildLocalReceipt = ({ user, session, cart, paymentMethod, cashReceived, paymentSplit, discountValue, paymentDetails }) => {
+    const items = cart.map((item) => ({
+        inventory_type: item.inventoryType,
+        inventory_id: item.inventoryId,
+        imei: item.trackedBy === 'IMEI' ? item.code : null,
+        sku: item.trackedBy === 'IMEI' ? null : item.code,
+        name: item.name,
+        quantity: item.quantity,
+        unit_price: item.unitPrice,
+        line_total: item.unitPrice * item.quantity,
+        tracked_by: item.trackedBy
+    }));
+
+    const subtotal = items.reduce((sum, item) => sum + item.line_total, 0);
+    const total = Math.max(0, subtotal - discountValue);
+    const cashTendered = paymentMethod === 'CASH' ? safeNumber(cashReceived) : 0;
+    const changeAmount = paymentMethod === 'CASH' ? Math.max(0, cashTendered - total) : 0;
+    const now = new Date().toISOString();
+
+    return {
+        receipt_no: generateLocalReceiptNo(),
+        cashier_id: user?.id,
+        cashier_name: user?.name,
+        cashier_role: user?.role,
+        items,
+        subtotal,
+        discount_amount: discountValue,
+        discount_percent: subtotal > 0 ? (discountValue / subtotal) * 100 : 0,
+        total,
+        payment_method: paymentMethod,
+        payment_details: paymentDetails,
+        cash_received: cashTendered,
+        change_amount: changeAmount,
+        approval_required: false,
+        approval_status: 'NOT_REQUIRED',
+        approval_note: null,
+        session_id: session?.id || null,
+        created_at: now,
+        // Local-only fields the sync service understands
+        clientLocalId: crypto?.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`
+    };
+};
+
 export default function SalesPage() {
     const { user } = useAuth();
     const { session } = useSession();
+    const { syncNow } = useSync();
 
     const [activeTab, setActiveTab] = useState('billing');
     const [phones, setPhones] = useState([]);
@@ -124,6 +173,19 @@ export default function SalesPage() {
     const [salesLoading, setSalesLoading] = useState(true);
     const [receipt, setReceipt] = useState(null);
     const [checkoutError, setCheckoutError] = useState('');
+    const [offlineMode, setOfflineMode] = useState(!navigator.onLine);
+    const [salesError, setSalesError] = useState('');
+
+    useEffect(() => {
+        const handleOnline = () => setOfflineMode(false);
+        const handleOffline = () => setOfflineMode(true);
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+        return () => {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
+    }, []);
 
     const isAdmin = user?.role === 'admin' || user?.role === 'shop_owner';
 
@@ -156,11 +218,28 @@ export default function SalesPage() {
         const term = productSearch.trim().toLowerCase();
         if (!term) return catalog.slice(0, 12);
 
-        return catalog.filter((item) =>
-            item.code.toLowerCase().includes(term) ||
-            item.displayName.toLowerCase().includes(term) ||
-            item.meta.toLowerCase().includes(term)
-        ).slice(0, 12);
+        // Barcode-scan friendly ordering: an EXACT code match (manufacturer
+        // barcode or internally generated LM-XXXXXX) always sorts first, so
+        // "scan + Enter" adds precisely that item with no extra clicks.
+        const scored = catalog
+            .map((item) => {
+                const code = item.code.toLowerCase();
+                let score;
+                if (code === term) score = 0;
+                else if (code.startsWith(term)) score = 1;
+                else if (
+                    code.includes(term) ||
+                    item.displayName.toLowerCase().includes(term) ||
+                    item.meta.toLowerCase().includes(term)
+                ) score = 2;
+                else score = -1;
+                return { item, score };
+            })
+            .filter((x) => x.score >= 0)
+            .sort((a, b) => a.score - b.score)
+            .map((x) => x.item);
+
+        return scored.slice(0, 12);
     }, [catalog, productSearch]);
 
     const subtotal = useMemo(() => cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0), [cart]);
@@ -175,6 +254,17 @@ export default function SalesPage() {
     const loadInventory = async () => {
         try {
             const token = localStorage.getItem('token');
+
+            if (!navigator.onLine) {
+                // Offline: serve from IndexedDB cache
+                const cached = await getCachedInventory();
+                setPhones(cached.phones);
+                setAccessories(cached.accessories);
+                setConfig({ discountApprovalLimitPercent: 10 });
+                setOfflineMode(true);
+                return;
+            }
+
             const [phoneRes, accessoryRes, configRes] = await Promise.all([
                 fetch(`${API_BASE}/inventory/phones`, { headers: { Authorization: `Bearer ${token}` } }),
                 fetch(`${API_BASE}/inventory/accessories`, { headers: { Authorization: `Bearer ${token}` } }),
@@ -184,6 +274,16 @@ export default function SalesPage() {
             if (phoneRes.ok) setPhones(await phoneRes.json());
             if (accessoryRes.ok) setAccessories(await accessoryRes.json());
             if (configRes.ok) setConfig(await configRes.json());
+        } catch (err) {
+            // Network error: fall back to cached inventory
+            try {
+                const cached = await getCachedInventory();
+                setPhones(cached.phones);
+                setAccessories(cached.accessories);
+                setOfflineMode(true);
+            } catch (cacheErr) {
+                console.error('Both network and local inventory failed:', cacheErr);
+            }
         } finally {
             setInventoryLoading(false);
         }
@@ -200,7 +300,73 @@ export default function SalesPage() {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            if (res.ok) setSales(await res.json());
+            if (res.ok) {
+                const serverSales = await res.json();
+                // Merge with local sales so offline-created records still show.
+                // Already-synced local rows are excluded — their server copy is in serverSales.
+                const { getRecentOfflineSales } = await import('../db/database');
+                const localSales = await getRecentOfflineSales(100);
+                const localIsPending = (local) => local.syncStatus !== 'synced';
+                const pendingLocalSales = localSales.filter((local) => localIsPending(local));
+                const merged = [
+                    ...pendingLocalSales.map((local) => ({
+                        id: local.id,
+                        receipt_no: local.receipt_no,
+                        cashier_id: local.cashier_id,
+                        cashier_name: local.cashier_name,
+                        items: local.items,
+                        subtotal: local.subtotal,
+                        discount_amount: local.discount_amount,
+                        total: local.total,
+                        payment_method: local.payment_method,
+                        created_at: local.created_at,
+                        pending_sync: local.syncStatus === 'pending',
+                        syncStatus: local.syncStatus || 'pending',
+                        approval_required: local.approval_required || false
+                    })),
+                    ...serverSales
+                ];
+                // Deduplicate by receipt_no (local prefix won't clash with server)
+                const seen = new Set();
+                const deduped = merged.filter((sale) => {
+                    const key = sale.receipt_no || sale.id;
+                    if (seen.has(key)) return false;
+                    seen.add(key);
+                    return true;
+                });
+                setSales(deduped);
+                setSalesError('');
+            } else if (res.status === 401) {
+                setSalesError('Your session has expired. Please sign in again to load sales history.');
+            } else {
+                const errData = await res.json().catch(() => ({}));
+                setSalesError(errData.error || 'Unable to load sales history from the server.');
+            }
+        } catch (err) {
+            console.warn('Offline - sales history unavailable from server. Showing local pending sales only.');
+            setSalesError('You appear to be offline - showing locally saved sales only.');
+            try {
+                const { getRecentOfflineSales } = await import('../db/database');
+                const localSales = await getRecentOfflineSales(100);
+                const localIsPending = (local) => local.syncStatus === 'pending';
+                setSales(localSales.map((local) => ({
+                    id: local.id,
+                    receipt_no: local.receipt_no,
+                    cashier_id: local.cashier_id,
+                    cashier_name: local.cashier_name,
+                    items: local.items,
+                    subtotal: local.subtotal,
+                    discount_amount: local.discount_amount,
+                    total: local.total,
+                    payment_method: local.payment_method,
+                    created_at: local.created_at,
+                    pending_sync: localIsPending(local),
+                    syncStatus: local.syncStatus || 'pending',
+                    approval_required: local.approval_required || false
+                })));
+            } catch (cacheErr) {
+                console.error('Failed to load local sales:', cacheErr);
+            }
         } finally {
             setSalesLoading(false);
         }
@@ -276,9 +442,17 @@ export default function SalesPage() {
         buildReceiptWindow(saleReceipt);
     };
 
+    // Local-first checkout:
+    // 1. Build the receipt locally
+    // 2. Write to IndexedDB FIRST (status: pending unless network confirms)
+    // 3. Show success + print receipt immediately
+    // 4. In parallel, push to the server. On success mark synced.
     const handleCheckout = async () => {
         setCheckoutError('');
-        if (!session) {
+        if (!session && !navigator.onLine) {
+            // Allow offline checkout without an active session, but warn
+            // (session is only enforced online)
+        } else if (!session) {
             setCheckoutError('You must Open a Day Session before completing sales.');
             return;
         }
@@ -287,7 +461,15 @@ export default function SalesPage() {
             return;
         }
 
-        const payload = {
+        const paymentDetails = paymentMethod === 'CASH'
+            ? { cash: safeNumber(cashReceived), cashReceived: safeNumber(cashReceived), change: Math.max(0, safeNumber(cashReceived) - total), change_amount: Math.max(0, safeNumber(cashReceived) - total) }
+            : paymentMethod === 'SPLIT' ? {
+                cash: safeNumber(paymentSplit.cash),
+                card: safeNumber(paymentSplit.card),
+                bankTransfer: safeNumber(paymentSplit.bankTransfer)
+            } : null;
+
+        const payloadForServer = {
             items: cart.map((item) => ({
                 inventoryType: item.inventoryType,
                 inventoryId: item.inventoryId,
@@ -295,16 +477,10 @@ export default function SalesPage() {
             })),
             paymentMethod,
             cashReceived: paymentMethod === 'CASH' ? safeNumber(cashReceived) : 0,
-            paymentDetails: paymentMethod === 'CASH'
-                ? { cash: safeNumber(cashReceived), cashReceived: safeNumber(cashReceived), change: Math.max(0, safeNumber(cashReceived) - total), change_amount: Math.max(0, safeNumber(cashReceived) - total) }
-                : paymentMethod === 'SPLIT' ? {
-                    cash: safeNumber(paymentSplit.cash),
-                    card: safeNumber(paymentSplit.card),
-                    bankTransfer: safeNumber(paymentSplit.bankTransfer)
-                } : null,
+            paymentDetails,
             discountAmount: discountValue,
             approvalNote: approvalNote.trim() || null,
-            sessionId: session?.id
+            sessionId: session?.id || null
         };
 
         if (paymentMethod === 'CASH' && safeNumber(cashReceived) < total - 0.01) {
@@ -318,33 +494,84 @@ export default function SalesPage() {
         }
 
         setCheckoutLoading(true);
+
         try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${API_BASE}/sales/checkout`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify(payload)
+            // STEP 1: Build the local receipt immediately (no network dependency)
+            const localReceipt = buildLocalReceipt({
+                user,
+                session,
+                cart,
+                paymentMethod,
+                cashReceived,
+                paymentSplit,
+                discountValue,
+                paymentDetails
             });
+            // Mark as pending sync initially (will flip to synced if the network push succeeds)
+            localReceipt.pending_sync = !navigator.onLine;
 
-            const data = await res.json();
-            if (!res.ok) {
-                throw new Error(data.error || 'Checkout failed');
-            }
+            // STEP 2: Persist to IndexedDB FIRST
+            const localKey = await addPendingSale(localReceipt);
 
-            setReceipt(data.receipt);
+            // STEP 3: Clear the cart and show the receipt instantly
+            setReceipt({ ...localReceipt, id: localKey });
             setCart([]);
             setDiscountAmount('0');
             setCashReceived('');
             setPaymentSplit({ cash: '', card: '', bankTransfer: '' });
             setApprovalNote('');
             setProductSearch('');
-            await Promise.all([loadInventory(), loadSales()]);
-            handlePrintReceipt(data.receipt);
+
+            handlePrintReceipt({ ...localReceipt, pending_sync: !navigator.onLine });
+
+            // STEP 4: Async push to server if online (never block the cashier)
+            const token = localStorage.getItem('token');
+            if (navigator.onLine && token) {
+                (async () => {
+                    try {
+                        const res = await fetch(`${API_BASE}/sales/checkout`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${token}`
+                            },
+                            body: JSON.stringify(payloadForServer)
+                        });
+                        const data = await res.json();
+                        if (res.ok) {
+                            // Mark the local record as synced
+                            const { markSaleSynced } = await import('../db/database');
+                            await markSaleSynced(localKey, data?.sale?.id || data?.receipt?.id || null);
+                            // Update the on-screen receipt to reflect synced state
+                            setReceipt((current) => current?.id === localKey
+                                ? { ...current, pending_sync: false, receipt_no: data?.receipt?.receipt_no || current.receipt_no, id: data?.receipt?.id || current.id }
+                                : current);
+                            await refreshInventoryCache();
+                            loadSales();
+                            // Refresh the sync status indicator immediately
+                            syncNow();
+                        } else {
+                            // Server rejected (e.g. duplicate from a retry) — keep local copy as pending
+                            console.warn('Checkout push failed, keeping local record pending:', data.error);
+                            setReceipt((current) => current?.id === localKey
+                                ? { ...current, pending_sync: true }
+                                : current);
+                        }
+                    } catch (err) {
+                        // Network dropped mid-push — keep local record pending for background sync
+                        console.warn('Network push failed, record saved locally and will sync later:', err);
+                        setReceipt((current) => current?.id === localKey
+                            ? { ...current, pending_sync: true }
+                            : current);
+                    }
+                })();
+            }
+
+            // Refresh inventory (network or cached)
+            loadInventory();
         } catch (err) {
-            setCheckoutError(err.message);
+            console.error('Checkout failed:', err);
+            setCheckoutError(err.message || 'Checkout failed');
         } finally {
             setCheckoutLoading(false);
         }
@@ -381,6 +608,18 @@ export default function SalesPage() {
                     </button>
                 </div>
             </div>
+
+            {offlineMode && (
+                <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm">
+                    <WifiOff size={18} className="text-amber-600 mt-0.5 shrink-0" />
+                    <div>
+                        <p className="font-bold text-amber-800">Offline billing is active.</p>
+                        <p className="text-amber-700 mt-1">
+                            Sales are saved to this browser's local database first and will sync to the cloud automatically when the internet returns.
+                        </p>
+                    </div>
+                </div>
+            )}
 
             {activeTab === 'billing' ? (
                 <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
@@ -600,8 +839,14 @@ export default function SalesPage() {
                                 className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-4 py-3 font-semibold text-white shadow-lg shadow-blue-500/25 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Printer size={18} />
-                                {checkoutLoading ? 'Completing sale...' : 'Checkout & Print Receipt'}
+                                {checkoutLoading ? 'Saving locally...' : 'Checkout & Print Receipt'}
                             </button>
+                            {offlineMode && (
+                                <div className="mt-3 flex items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+                                    <CloudUpload size={16} />
+                                    <span>Will be saved to this device and synced when online.</span>
+                                </div>
+                            )}
                         </div>
 
                         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
@@ -665,6 +910,12 @@ export default function SalesPage() {
                             </button>
                         </div>
 
+                        {salesError && (
+                            <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                                {salesError}
+                            </div>
+                        )}
+
                         <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-3">
                             <div className="lg:col-span-2 relative">
                                 <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -704,16 +955,16 @@ export default function SalesPage() {
                                             <td className="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap">{sale.receipt_no}</td>
                                             <td className="px-6 py-4 max-w-[240px]">
                                                 <div className="font-medium text-gray-900 truncate">
-                                                    {sale.items.map((item) => item.name).join(', ')}
+                                                    {(sale.items || []).map((item) => item.name).join(', ')}
                                                 </div>
-                                                <div className="text-xs text-gray-400">{sale.items.length} line items</div>
+                                                <div className="text-xs text-gray-400">{(sale.items || []).length} line items</div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">{sale.cashier_name}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{sale.payment_method.replace('_', ' ')}</td>
                                             <td className="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap">{formatMoney(sale.total)}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${sale.pending_sync ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}`}>
-                                                    {sale.pending_sync ? 'Pending sync' : 'Synced'}
+                                                <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${sale.pending_sync || sale.syncStatus === 'pending' ? 'bg-amber-100 text-amber-700' : sale.syncStatus === 'failed' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                                                    {sale.pending_sync || sale.syncStatus === 'pending' ? 'Pending sync' : sale.syncStatus === 'failed' ? 'Sync failed' : 'Synced'}
                                                 </span>
                                                 {sale.approval_required ? (
                                                     <div className="mt-2 inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-rose-100 text-rose-700">

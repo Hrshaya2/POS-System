@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Activity, CalendarDays, ClipboardList, Package, Search, ShieldCheck, Wrench } from 'lucide-react';
+import { addPendingRepairJob, addPendingRepairStatusUpdate } from '../db/database';
 
 const API_BASE = '/api';
 const REPAIR_STATUSES = ['Received', 'Diagnosing', 'Awaiting Parts', 'In Repair', 'Ready for Pickup', 'Delivered'];
@@ -26,6 +27,18 @@ export default function RepairPage() {
   const completionDateRef = useRef(null);
   const [jobs, setJobs] = useState([]);
   const [spareParts, setSpareParts] = useState([]);
+  const [offlineMode, setOfflineMode] = useState(!navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setOfflineMode(false);
+    const handleOffline = () => setOfflineMode(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -146,23 +159,26 @@ export default function RepairPage() {
     setSaving(true);
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_BASE}/repair-jobs`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          ...form,
-          estimated_cost: Number(form.estimated_cost || 0),
-          warranty_period_months: Number(form.warranty_period_months || 3)
-        })
-      });
+      // Build the local repair job record
+      const localJob = {
+        customerName: form.customer_name.trim(),
+        phoneNumber: form.phone_number.trim(),
+        deviceModel: form.device_model.trim(),
+        imei: form.imei?.trim() || '',
+        reportedIssue: form.reported_issue.trim(),
+        itemsLeft: form.items_left?.trim() || '',
+        receivedDate: form.received_date,
+        estimatedCost: Number(form.estimated_cost || 0),
+        estimatedCompletionDate: form.estimated_completion_date,
+        warrantyPeriodMonths: Number(form.warranty_period_months || 3),
+        repair_status: 'Received',
+        created_at: new Date().toISOString()
+      };
 
-      const data = await parseApiResponse(res);
-      if (!res.ok) throw new Error(data.error || 'Unable to create repair job');
+      // Local-first: persist to IndexedDB first
+      const localKey = await addPendingRepairJob(localJob);
 
+      // Save the form immediately
       setForm({
         customer_name: '',
         phone_number: '',
@@ -175,8 +191,73 @@ export default function RepairPage() {
         estimated_completion_date: defaultDueDate,
         warranty_period_months: '3'
       });
-      await loadData();
-      setSelectedJobId(data.id);
+
+      // Add the local job to the list so it shows immediately
+      const displayJob = {
+        id: `local-${localKey}`,
+        customer_name: localJob.customerName,
+        phone_number: localJob.phoneNumber,
+        device_model: localJob.deviceModel,
+        imei: localJob.imei || null,
+        reported_issue: localJob.reportedIssue,
+        items_left: localJob.itemsLeft,
+        received_date: localJob.receivedDate,
+        estimated_cost: localJob.estimatedCost,
+        estimated_completion_date: localJob.estimatedCompletionDate,
+        repair_status: 'Received',
+        warranty_period_months: localJob.warrantyPeriodMonths,
+        warranty_end_date: null,
+        created_at: localJob.created_at,
+        parts: [],
+        invoice: {
+          job_id: `local-${localKey}`,
+          invoice_no: `REPAIR-LOCAL-${localKey}`,
+          labor_cost: localJob.estimatedCost,
+          parts_cost: 0,
+          total_cost: localJob.estimatedCost,
+          status: 'Received',
+          created_at: localJob.created_at
+        }
+      };
+      setJobs((current) => [displayJob, ...current]);
+      setSelectedJobId(displayJob.id);
+
+      // If online, also push to the server in the background (never block the user)
+      const token = localStorage.getItem('token');
+      if (navigator.onLine && token) {
+        (async () => {
+          try {
+            const res = await fetch(`${API_BASE}/repair-jobs`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                ...form,
+                estimated_cost: Number(form.estimated_cost || 0),
+                warranty_period_months: Number(form.warranty_period_months || 3)
+              })
+            });
+
+            const data = await parseApiResponse(res);
+            if (res.ok) {
+              const { markRepairJobSynced, removeRepairJob } = await import('../db/database');
+              await markRepairJobSynced(localKey, data.id);
+              setJobs((current) => current.map((job) =>
+                job.id === displayJob.id ? { ...job, id: data.id } : job
+              ));
+              setSelectedJobId(data.id);
+              await loadData();
+            } else {
+              console.warn('Repair job server push failed, keeping local record pending:', data.error);
+            }
+          } catch (err) {
+            // Network dropped mid-push — record stays pending and background sync handles it
+            console.warn('Network push failed, repair job saved locally and will sync later:', err);
+          }
+        })();
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -185,6 +266,23 @@ export default function RepairPage() {
   };
 
   const advanceStatus = async (jobId, nextStatus) => {
+    // Local-first status update
+    const isLocalJob = String(jobId).startsWith('local-');
+
+    if (!navigator.onLine || isLocalJob) {
+      // Offline (or the job is a local-only pending record): update UI and queue the status change
+      setJobs((current) => current.map((job) =>
+        job.id === jobId ? { ...job, repair_status: nextStatus } : job
+      ));
+      if (!isLocalJob) {
+        // Only queue server-targeted updates for server-known jobs
+        await addPendingRepairStatusUpdate({ repairJobId: jobId, targetStatus: nextStatus })
+          .catch((err) => console.warn('Failed to queue offline status update:', err));
+      }
+      setSelectedJobId(jobId);
+      return;
+    }
+
     const token = localStorage.getItem('token');
     const res = await fetch(`${API_BASE}/repair-jobs/${jobId}/status`, {
       method: 'PUT',
