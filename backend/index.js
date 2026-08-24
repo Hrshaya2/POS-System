@@ -200,6 +200,10 @@ app.post('/api/auth/login', async (req, res) => {
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) return res.status(401).json({ error: 'Invalid credentials' });
 
+        // Record the login time so admins can see each user's last activity
+        user.lastLogin = new Date();
+        await user.save();
+
         const token = jwt.sign(
             { id: user._id.toString(), role: user.role, name: user.name, email: user.email },
             JWT_SECRET,
@@ -226,7 +230,8 @@ app.get('/api/users', authenticateToken, requireAdmin, async (req, res) => {
             name: u.name,
             email: u.email,
             role: u.role,
-            created_at: u.createdAt
+            created_at: u.createdAt,
+            last_login: u.lastLogin || null
         }));
 
         if (req.user.role === 'shop_owner') {

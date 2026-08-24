@@ -204,6 +204,19 @@ export default function UsersPage() {
         return ['cashier']; // shop_owner can only create/select cashier
     };
 
+    const formatLastLogin = (value) => {
+        if (!value) return null;
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return null;
+        return date.toLocaleString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+
     return (
         <div className="space-y-6">
             {/* Toast Messages */}
@@ -248,19 +261,20 @@ export default function UsersPage() {
                                 <th scope="col" className="px-6 py-3 font-medium">Name</th>
                                 <th scope="col" className="px-6 py-3 font-medium">Email</th>
                                 <th scope="col" className="px-6 py-3 font-medium">Role</th>
+                                <th scope="col" className="px-6 py-3 font-medium">Last Login</th>
                                 <th scope="col" className="px-6 py-3 font-medium">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan="4" className="px-6 py-8 text-center">
+                                <tr><td colSpan="5" className="px-6 py-8 text-center">
                                     <div className="flex items-center justify-center space-x-2">
                                         <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                                         <span>Loading users...</span>
                                     </div>
                                 </td></tr>
                             ) : usersList.length === 0 ? (
-                                <tr><td colSpan="4" className="px-6 py-8 text-center text-gray-400">No users found.</td></tr>
+                                <tr><td colSpan="5" className="px-6 py-8 text-center text-gray-400">No users found.</td></tr>
                             ) : (
                                 usersList.map((u) => (
                                     <tr key={u.id} className="bg-white border-b border-gray-50 hover:bg-gray-50/80 transition-colors">
@@ -284,6 +298,13 @@ export default function UsersPage() {
                                                 {getRoleIcon(u.role)}
                                                 {u.role.toUpperCase()}
                                             </span>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            {formatLastLogin(u.last_login) ? (
+                                                <span className="text-gray-600">{formatLastLogin(u.last_login)}</span>
+                                            ) : (
+                                                <span className="text-gray-300 italic">Never logged in</span>
+                                            )}
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex space-x-2">
