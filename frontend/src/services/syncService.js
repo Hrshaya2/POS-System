@@ -12,10 +12,29 @@ import {
   removeRepairJob,
   removeRepairStatusUpdate,
   getPendingCounts,
-  cacheInventory
+  db,
+  // Stock management queue
+  getPendingStockOps,
+  markStockOpSynced,
+  markStockOpFailed,
+  incrementStockOpAttempt,
+  remapLocalItemId,
+  putCachedMovements,
+  upsertCachedCategory,
+  putCachedTake,
+  getCachedTake,
+  findCachedTakeByLocalKey,
+  putCachedImport,
+  findCachedImportByLocalKey,
+  removeCachedImportByLocalKey
 } from '../db/database';
+import { applyServerInventorySnapshot } from './stockService';
 
 const SYNC_INTERVAL_MS = 30000; // 30 seconds
+
+// Throttles stranded-op revival so "Retry" clicks re-arm attempts without
+// letting genuinely bad ops spin on every 30s cycle forever.
+let lastStrandedRevivalAt = 0;
 
 let syncInProgress = false;
 let listeners = new Set();
@@ -24,9 +43,15 @@ let listeners = new Set();
 // errors such as "item already sold" or "not enough stock") can never succeed
 // no matter how many times we retry, so they must not block the sync queue.
 const toSyncError = (res, data, fallbackMessage) => {
-  const err = new Error(data?.error || fallbackMessage);
+  let message = data?.error || fallbackMessage;
+  // Payload-size rejections arrive as HTML/empty bodies from Express's body
+  // parser - translate them into something actionable, not a generic error.
+  if (res.status === 413) message = 'Import payload too large - please split the file into smaller batches.';
+  const err = new Error(message);
   err.status = res.status;
-  err.permanent = res.status >= 400 && res.status < 500 && res.status !== 401 && res.status !== 429;
+  // 413 depends on the server's configured body limit, not on bad data -
+  // classify it as retriable instead of permanently failed.
+  err.permanent = res.status >= 400 && res.status < 500 && res.status !== 401 && res.status !== 429 && res.status !== 413;
   return err;
 };
 
@@ -71,7 +96,10 @@ const checkoutSale = async (sale, token) => {
     paymentDetails: sale.payment_details || null,
     discountAmount: sale.discount_amount || 0,
     approvalNote: sale.approval_note || null,
-    sessionId: sale.session_id || null
+    sessionId: sale.session_id || null,
+    // Idempotency token so a background-sync retry can never double-record a
+    // sale that the immediate post-checkout push already created on the server.
+    clientLocalId: sale.clientLocalId || (sale.id !== undefined ? `sale-${String(sale.id)}-${String(sale.cashier_id || '')}` : undefined)
   };
 
   const res = await fetch('/api/sales/checkout', {
@@ -194,6 +222,232 @@ const pushRepairStatusUpdate = async (update, token) => {
   return res.json();
 };
 
+// =============================================
+// Stock Management offline write queue
+// =============================================
+
+const stockApi = async (path, { method = 'GET', body } = {}, token) => {
+  const res = await fetch(path, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: body !== undefined ? JSON.stringify(body) : undefined
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw toSyncError(res, data, data?.error || 'Stock request failed during sync');
+  return data;
+};
+
+const isLocalId = (id) => String(id || '').startsWith('loc-') || String(id || '').startsWith('local:');
+
+// Server-confirmed movements replace their optimistic offline twins
+// (matched via the client-generated local_key correlation id).
+const reconcileMovements = async (movements) => {
+  if (!Array.isArray(movements)) return;
+  const confirmed = movements.filter((m) => m?.local_key);
+  for (const m of confirmed) {
+    await db.stockMovements.where('localKey').equals(m.local_key).delete();
+  }
+  await putCachedMovements(movements.map((m) => ({ ...m, syncStatus: 'synced' })));
+};
+
+// Ops queued before an offline-created item synced still carry its local id.
+// Resolve the current (server) id via the immutable SKU at flush time.
+const resolveAccessoryServerId = async (payload) => {
+  let id = payload.accessoryId || payload.id;
+  if (!isLocalId(id)) return id;
+  if (payload.sku || payload.item?.sku) {
+    const sku = payload.sku || payload.item.sku;
+    const item = await db.inventoryAccessories.where('sku').equals(String(sku).trim()).first();
+    if (item && !isLocalId(item.id)) return item.id;
+  }
+  return null;
+};
+
+const pushStockOp = async (op, token) => {
+  const { entityType, opType, payload } = op;
+
+  switch (`${entityType}:${opType}`) {
+    case 'category:create': {
+      const created = await stockApi('/api/stock/categories', { method: 'POST', body: payload }, token);
+      if (created?.id && payload.localKey) {
+        // Merge under the server id, preserving nothing else from the local row.
+        await db.stockCategories.delete(payload.localKey);
+        await upsertCachedCategory({ ...created, localKey: payload.localKey, syncStatus: 'synced' });
+      }
+      return created;
+    }
+    case 'category:update':
+      return stockApi(`/api/stock/categories/${payload.id}`, { method: 'PUT', body: payload }, token);
+    case 'category:delete':
+      return stockApi(`/api/stock/categories/${payload.id}`, { method: 'DELETE' }, token);
+
+    case 'item:create': {
+      const created = await stockApi('/api/inventory/accessories', { method: 'POST', body: payload.item }, token);
+      const serverId = created?.id || created?.accessory?.id;
+      if (serverId && payload.localId) {
+        await remapLocalItemId(payload.localId, serverId);
+      }
+      return created;
+    }
+    case 'item:update': {
+      const serverId = await resolveAccessoryServerId(payload);
+      if (!serverId) throw Object.assign(new Error('Item not synced yet'), { permanent: false });
+      return stockApi(`/api/inventory/accessories/${serverId}`, { method: 'PUT', body: payload.item }, token);
+    }
+    case 'item:delete': {
+      const serverId = await resolveAccessoryServerId(payload);
+      if (!serverId) throw Object.assign(new Error('Item not synced yet'), { permanent: false });
+      return stockApi(`/api/inventory/accessories/${serverId}`, { method: 'DELETE' }, token);
+    }
+
+    case 'movement:delete':
+      return stockApi(`/api/stock/movements/${payload.movementId}`, { method: 'DELETE' }, token);
+
+    case 'adjustment:apply': {
+      const serverId = await resolveAccessoryServerId(payload);
+      if (!serverId) throw Object.assign(new Error('Item not synced yet'), { permanent: false });
+      const result = await stockApi('/api/stock/adjust', {
+        method: 'POST',
+        body: { ...payload, accessoryId: serverId }
+      }, token);
+      if (result?.movement) {
+        await reconcileMovements([result.movement]);
+      }
+      return result;
+    }
+
+    case 'take:start': {
+      const take = await stockApi('/api/stock/takes/start', { method: 'POST', body: payload }, token);
+      if (take?.id && payload.localTakeId) {
+        const local = await getCachedTake(payload.localTakeId);
+        const merged = {
+          ...take,
+          counts: local?.counts || {},
+          localKey: payload.localTakeId,
+          syncStatus: 'synced'
+        };
+        await putCachedTake(merged);
+        if (payload.localTakeId !== take.id) {
+          await db.stockTakes.delete(payload.localTakeId);
+        }
+      }
+      return take;
+    }
+    case 'take:save': {
+      const take = await findCachedTakeByLocalKey(payload.localTakeId);
+      const serverId = take?.serverId || (take && !isLocalId(take.id) ? take.id : null) || (!isLocalId(payload.localTakeId) ? payload.localTakeId : null);
+      if (!serverId) throw Object.assign(new Error('Stock take not synced yet'), { permanent: false });
+      return stockApi(`/api/stock/takes/${serverId}`, { method: 'PUT', body: { counts: payload.counts } }, token);
+    }
+    case 'take:apply': {
+      const take = await findCachedTakeByLocalKey(payload.localTakeId);
+      const serverId = take?.serverId || (take && !isLocalId(take.id) ? take.id : null) || (!isLocalId(payload.localTakeId) ? payload.localTakeId : null);
+      if (!serverId) throw Object.assign(new Error('Stock take not synced yet'), { permanent: false });
+      const result = await stockApi(`/api/stock/takes/${serverId}/apply`, { method: 'POST', body: { lines: payload.lines } }, token);
+      await reconcileMovements(result?.movements || []);
+      if (result?.take) {
+        await db.stockTakes.delete(payload.localTakeId).catch(() => {});
+        await putCachedTake({ ...result.take, counts: take?.counts || {}, localKey: payload.localTakeId, syncStatus: 'synced' });
+      }
+      return result;
+    }
+
+    case 'import:run': {
+      const result = await stockApi('/api/stock/import', { method: 'POST', body: payload }, token);
+      await reconcileMovements(result?.movements || []);
+      // Persist the authoritative upload-history record so the file flips
+      // from "Waiting to sync" to "Saved to database" immediately.
+      const serverImport = result?.import;
+      if (serverImport?.id) {
+        if (payload.localKey) await removeCachedImportByLocalKey(payload.localKey);
+        await putCachedImport({ ...serverImport, localKey: payload.localKey || null, syncStatus: 'synced' });
+      } else if (payload.localKey) {
+        // Older backend without history support - still confirm our record.
+        const twin = await findCachedImportByLocalKey(payload.localKey);
+        if (twin) await putCachedImport({ ...twin, syncStatus: 'synced' });
+      }
+      return result;
+    }
+
+    default:
+      // Unknown combo - drop it rather than blocking the queue forever.
+      console.warn('[SyncService] Unknown stock op:', entityType, opType);
+      return { ignored: true };
+  }
+};
+
+export const flushPendingStockOps = async (token) => {
+  let syncedOps = 0;
+  let lastError = null;
+
+  // One-shot rescue: earlier builds misclassified oversized-import rejections
+  // (HTTP 413 from the server's default body limit) as permanent failures,
+  // stranding real data marked "failed". Give stranded first-attempt ops
+  // exactly one more chance per session; bounded, so genuinely bad ops
+  // still stop retrying after this.
+  if (Date.now() - lastStrandedRevivalAt > 60000) {
+    lastStrandedRevivalAt = Date.now();
+    try {
+      const stranded = await db.pendingStockOps.where('syncStatus').equals('failed').toArray();
+      // Bounded revival: ops keep re-attempting up to 10 tries total so a
+      // restarted backend picks them up automatically, but genuinely bad
+      // payloads stop spinning after that.
+      const rescueable = stranded.filter((op) => (op.attempts || 0) <= 10);
+      for (const op of rescueable) {
+        await db.pendingStockOps.update(op.id, { syncStatus: 'pending', syncError: null });
+        if (op.entityType === 'import' && op.payload?.localKey) {
+          const twin = await findCachedImportByLocalKey(op.payload.localKey).catch(() => null);
+          if (twin) await putCachedImport({ ...twin, syncStatus: 'waiting', syncError: null });
+        }
+      }
+      if (rescueable.length) console.info(`[SyncService] Revived ${rescueable.length} failed stock op(s) for retry.`);
+    } catch (revErr) {
+      console.warn('[SyncService] Stranded-op revival skipped:', revErr);
+    }
+  }
+
+  const ops = await getPendingStockOps();
+  for (const op of ops) {
+    if (!navigator.onLine) break;
+    try {
+      await incrementStockOpAttempt(op.id);
+      await pushStockOp(op, token);
+      await markStockOpSynced(op.id);
+      syncedOps++;
+    } catch (err) {
+      lastError = err.message;
+      console.warn('[SyncService] Failed to sync stock op:', err);
+      // A 404/501 here almost always means the backend process predates the
+      // Stock Management feature ("route not found") - not bad data - and
+      // 502/503 are transient gateway errors. Marking those permanent would
+      // fail the op AND let the post-sync inventory refresh wipe its still-
+      // unsaved items from the local cache. Keep them pending instead: they
+      // apply automatically once the backend is restarted/up to date.
+      const staleBackend = err.status === 404 || err.status === 501 || err.status === 502 || err.status === 503;
+      if (err.status === 404 && !String(err.message || '').includes('out of date')) {
+        err.message = `${err.message} — server out of date (restart/redeploy the backend)`;
+      }
+      if (err.permanent && !staleBackend) {
+        await markStockOpFailed(op.id, err.message);
+        // Surface permanent failures on the corresponding upload-history row.
+        if (op.entityType === 'import' && op.payload?.localKey) {
+          try {
+            const twin = await findCachedImportByLocalKey(op.payload.localKey);
+            if (twin) await putCachedImport({ ...twin, syncStatus: 'failed', syncError: err.message });
+          } catch (_histErr) { /* never block the queue */ }
+        }
+        continue;
+      }
+      break; // transient failure - retry on the next cycle
+    }
+  }
+
+  return { syncedOps, lastError };
+};
+
 export const attemptSync = async () => {
   if (syncInProgress) return { skipped: true };
   if (!navigator.onLine) return { skipped: true, reason: 'offline' };
@@ -283,6 +537,14 @@ export const attemptSync = async () => {
       }
     }
 
+    // Push pending stock management writes (adjustments, takes, imports...)
+    try {
+      await flushPendingStockOps(token);
+    } catch (err) {
+      lastError = err.message;
+      console.warn('[SyncService] Stock ops flush failed:', err);
+    }
+
     // Refresh inventory cache after a successful sync
     const counts = await getPendingCounts();
     if (counts.total === 0 && navigator.onLine) {
@@ -324,7 +586,9 @@ export const refreshInventoryCache = async () => {
 
     if (phonesRes.ok && accessoriesRes.ok) {
       const [phones, accessories] = await Promise.all([phonesRes.json(), accessoriesRes.json()]);
-      await cacheInventory({ phones, accessories });
+      // Unified reconcile path (stockService): preserves pending local
+      // creates/imports instead of clobbering them after every sale.
+      await applyServerInventorySnapshot({ phones, accessories });
       return { cachedAt: new Date().toISOString() };
     }
   } catch (err) {

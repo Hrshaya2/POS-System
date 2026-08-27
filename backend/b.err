@@ -1,0 +1,467 @@
+SyntaxError: Unexpected token '"', ""{\"email\"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at createStrictSyntaxError (D:\Nangi\POS\backend\node_modules\body-parser\lib\types\json.js:137:10)
+    at parse (D:\Nangi\POS\backend\node_modules\body-parser\lib\types\json.js:86:15)
+    at D:\Nangi\POS\backend\node_modules\body-parser\lib\read.js:162:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:227:14)
+    at invokeCallback (D:\Nangi\POS\backend\node_modules\raw-body\index.js:238:16)
+    at done (D:\Nangi\POS\backend\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (D:\Nangi\POS\backend\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:509:28)
+    at endReadableNT (node:internal/streams/readable:1736:12)
+ValidationError: InventoryPhone validation failed: selling_price: Path `selling_price` is required.
+    at model.validate (D:\Nangi\POS\backend\node_modules\mongoose\lib\document.js:2910:36)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async model.$__save (D:\Nangi\POS\backend\node_modules\mongoose\lib\model.js:399:7)
+    at async maybeTracedSave (D:\Nangi\POS\backend\node_modules\mongoose\lib\model.js:676:7)
+    at async model.create (D:\Nangi\POS\backend\node_modules\mongoose\lib\model.js:2764:5)
+    at async D:\Nangi\POS\backend\index.js:424:23 {
+  errors: {
+    selling_price: ValidatorError: Path `selling_price` is required.
+        at SchemaNumber.doValidate (D:\Nangi\POS\backend\node_modules\mongoose\lib\schemaType.js:1537:13)
+        at model.validate (D:\Nangi\POS\backend\node_modules\mongoose\lib\document.js:2888:20)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async model.$__save (D:\Nangi\POS\backend\node_modules\mongoose\lib\model.js:399:7)
+        at async maybeTracedSave (D:\Nangi\POS\backend\node_modules\mongoose\lib\model.js:676:7) {
+      properties: [Object],
+      kind: 'required',
+      path: 'selling_price',
+      value: undefined,
+      reason: undefined,
+      Symbol(mongoose#validatorError): true
+    }
+  },
+  _message: 'InventoryPhone validation failed'
+}
+Auth DB check failed: MongoServerSelectionError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+    at Topology.selectServer (D:\Nangi\POS\backend\node_modules\mongodb\lib\sdam\topology.js:348:38)
+    at async executeOperationWithRetries (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:157:18)
+    at async executeOperation (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:83:16)
+    at async FindCursor._initialize (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:653:13)
+    at async FindCursor.next (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:325:17)
+    at async Collection.findOne (D:\Nangi\POS\backend\node_modules\mongodb\lib\collection.js:313:24)
+    at async model.Query._findOne (D:\Nangi\POS\backend\node_modules\mongoose\lib\query.js:2773:15)
+    at async maybeTracedQueryExec (D:\Nangi\POS\backend\node_modules\mongoose\lib\query.js:4796:65) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-00.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-02.bbo6kvb.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-1mo77x-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000034c'),
+    maxSetVersion: 286,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+      at TLSSocket.<anonymous> (D:\Nangi\POS\backend\node_modules\mongodb\lib\cmap\connect.js:314:44)
+      at Object.onceWrapper (node:events:631:26)
+      at TLSSocket.emit (node:events:509:28)
+      at emitErrorNT (node:internal/streams/destroy:170:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    errorLabelSet: Set(3) { 'SystemOverloadedError', 'RetryableError', 'ResetPool' },
+    beforeHandshake: false,
+    [cause]: Error: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+        at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+      errno: -3008,
+      code: 'ENOTFOUND',
+      syscall: 'getaddrinfo',
+      hostname: 'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net'
+    }
+  }
+}
+Auth DB check failed: MongoServerSelectionError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+    at Topology.selectServer (D:\Nangi\POS\backend\node_modules\mongodb\lib\sdam\topology.js:348:38)
+    at async executeOperationWithRetries (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:260:22)
+    at async executeOperation (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:83:16)
+    at async FindCursor._initialize (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:653:13)
+    at async FindCursor.next (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:325:17)
+    at async Collection.findOne (D:\Nangi\POS\backend\node_modules\mongodb\lib\collection.js:313:24)
+    at async model.Query._findOne (D:\Nangi\POS\backend\node_modules\mongoose\lib\query.js:2773:15)
+    at async maybeTracedQueryExec (D:\Nangi\POS\backend\node_modules\mongoose\lib\query.js:4796:65) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-00.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-02.bbo6kvb.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-1mo77x-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000034c'),
+    maxSetVersion: 286,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+      at TLSSocket.<anonymous> (D:\Nangi\POS\backend\node_modules\mongodb\lib\cmap\connect.js:314:44)
+      at Object.onceWrapper (node:events:631:26)
+      at TLSSocket.emit (node:events:509:28)
+      at emitErrorNT (node:internal/streams/destroy:170:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    errorLabelSet: Set(3) { 'SystemOverloadedError', 'RetryableError', 'ResetPool' },
+    beforeHandshake: false,
+    [cause]: Error: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+        at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+      errno: -3008,
+      code: 'ENOTFOUND',
+      syscall: 'getaddrinfo',
+      hostname: 'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net'
+    }
+  }
+}
+Auth DB check failed: MongoServerSelectionError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+    at Topology.selectServer (D:\Nangi\POS\backend\node_modules\mongodb\lib\sdam\topology.js:348:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:597:9)
+    at process.processTimers (node:internal/timers:571:7)
+    at async executeOperationWithRetries (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:260:22)
+    at async executeOperation (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:83:16)
+    at async FindCursor._initialize (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:653:13)
+    at async FindCursor.next (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:325:17) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-00.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-02.bbo6kvb.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-1mo77x-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000034c'),
+    maxSetVersion: 286,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+      at TLSSocket.<anonymous> (D:\Nangi\POS\backend\node_modules\mongodb\lib\cmap\connect.js:314:44)
+      at Object.onceWrapper (node:events:631:26)
+      at TLSSocket.emit (node:events:509:28)
+      at emitErrorNT (node:internal/streams/destroy:170:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    errorLabelSet: Set(3) { 'SystemOverloadedError', 'RetryableError', 'ResetPool' },
+    beforeHandshake: false,
+    [cause]: Error: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+        at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+      errno: -3008,
+      code: 'ENOTFOUND',
+      syscall: 'getaddrinfo',
+      hostname: 'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net'
+    }
+  }
+}
+Auth DB check failed: MongoServerSelectionError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+    at Topology.selectServer (D:\Nangi\POS\backend\node_modules\mongodb\lib\sdam\topology.js:348:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:597:9)
+    at process.processTimers (node:internal/timers:571:7)
+    at async executeOperationWithRetries (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:157:18)
+    at async executeOperation (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:83:16)
+    at async FindCursor._initialize (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:653:13)
+    at async FindCursor.next (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:325:17) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-00.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-02.bbo6kvb.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-1mo77x-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000034c'),
+    maxSetVersion: 286,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+      at TLSSocket.<anonymous> (D:\Nangi\POS\backend\node_modules\mongodb\lib\cmap\connect.js:314:44)
+      at Object.onceWrapper (node:events:631:26)
+      at TLSSocket.emit (node:events:509:28)
+      at emitErrorNT (node:internal/streams/destroy:170:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    errorLabelSet: Set(3) { 'SystemOverloadedError', 'RetryableError', 'ResetPool' },
+    beforeHandshake: false,
+    [cause]: Error: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+        at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+      errno: -3008,
+      code: 'ENOTFOUND',
+      syscall: 'getaddrinfo',
+      hostname: 'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net'
+    }
+  }
+}
+Auth DB check failed: MongoServerSelectionError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+    at Topology.selectServer (D:\Nangi\POS\backend\node_modules\mongodb\lib\sdam\topology.js:348:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:597:9)
+    at process.processTimers (node:internal/timers:571:7)
+    at async executeOperationWithRetries (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:157:18)
+    at async executeOperation (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:83:16)
+    at async FindCursor._initialize (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:653:13)
+    at async FindCursor.next (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:325:17) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-00.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-02.bbo6kvb.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-1mo77x-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000034c'),
+    maxSetVersion: 286,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+      at TLSSocket.<anonymous> (D:\Nangi\POS\backend\node_modules\mongodb\lib\cmap\connect.js:314:44)
+      at Object.onceWrapper (node:events:631:26)
+      at TLSSocket.emit (node:events:509:28)
+      at emitErrorNT (node:internal/streams/destroy:170:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    errorLabelSet: Set(3) { 'SystemOverloadedError', 'RetryableError', 'ResetPool' },
+    beforeHandshake: false,
+    [cause]: Error: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+        at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+      errno: -3008,
+      code: 'ENOTFOUND',
+      syscall: 'getaddrinfo',
+      hostname: 'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net'
+    }
+  }
+}
+Auth DB check failed: MongoServerSelectionError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+    at Topology.selectServer (D:\Nangi\POS\backend\node_modules\mongodb\lib\sdam\topology.js:348:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:597:9)
+    at process.processTimers (node:internal/timers:571:7)
+    at async executeOperationWithRetries (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:157:18)
+    at async executeOperation (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:83:16)
+    at async FindCursor._initialize (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:653:13)
+    at async FindCursor.next (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:325:17) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-00.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-02.bbo6kvb.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-1mo77x-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000034c'),
+    maxSetVersion: 286,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+      at TLSSocket.<anonymous> (D:\Nangi\POS\backend\node_modules\mongodb\lib\cmap\connect.js:314:44)
+      at Object.onceWrapper (node:events:631:26)
+      at TLSSocket.emit (node:events:509:28)
+      at emitErrorNT (node:internal/streams/destroy:170:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    errorLabelSet: Set(3) { 'SystemOverloadedError', 'RetryableError', 'ResetPool' },
+    beforeHandshake: false,
+    [cause]: Error: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+        at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+      errno: -3008,
+      code: 'ENOTFOUND',
+      syscall: 'getaddrinfo',
+      hostname: 'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net'
+    }
+  }
+}
+Auth DB check failed: MongoServerSelectionError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+    at Topology.selectServer (D:\Nangi\POS\backend\node_modules\mongodb\lib\sdam\topology.js:348:38)
+    at async executeOperationWithRetries (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:157:18)
+    at async executeOperation (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:83:16)
+    at async FindCursor._initialize (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:653:13)
+    at async FindCursor.next (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:325:17)
+    at async Collection.findOne (D:\Nangi\POS\backend\node_modules\mongodb\lib\collection.js:313:24)
+    at async model.Query._findOne (D:\Nangi\POS\backend\node_modules\mongoose\lib\query.js:2773:15)
+    at async maybeTracedQueryExec (D:\Nangi\POS\backend\node_modules\mongoose\lib\query.js:4796:65) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-00.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-02.bbo6kvb.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-1mo77x-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000034c'),
+    maxSetVersion: 286,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+      at TLSSocket.<anonymous> (D:\Nangi\POS\backend\node_modules\mongodb\lib\cmap\connect.js:314:44)
+      at Object.onceWrapper (node:events:631:26)
+      at TLSSocket.emit (node:events:509:28)
+      at emitErrorNT (node:internal/streams/destroy:170:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    errorLabelSet: Set(3) { 'SystemOverloadedError', 'RetryableError', 'ResetPool' },
+    beforeHandshake: false,
+    [cause]: Error: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+        at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+      errno: -3008,
+      code: 'ENOTFOUND',
+      syscall: 'getaddrinfo',
+      hostname: 'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net'
+    }
+  }
+}
+Auth DB check failed: MongoServerSelectionError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+    at Topology.selectServer (D:\Nangi\POS\backend\node_modules\mongodb\lib\sdam\topology.js:348:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:597:9)
+    at process.processTimers (node:internal/timers:571:7)
+    at async executeOperationWithRetries (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:260:22)
+    at async executeOperation (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:83:16)
+    at async FindCursor._initialize (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:653:13)
+    at async FindCursor.next (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:325:17) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-00.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-02.bbo6kvb.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-1mo77x-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000034c'),
+    maxSetVersion: 286,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+      at TLSSocket.<anonymous> (D:\Nangi\POS\backend\node_modules\mongodb\lib\cmap\connect.js:314:44)
+      at Object.onceWrapper (node:events:631:26)
+      at TLSSocket.emit (node:events:509:28)
+      at emitErrorNT (node:internal/streams/destroy:170:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    errorLabelSet: Set(3) { 'SystemOverloadedError', 'RetryableError', 'ResetPool' },
+    beforeHandshake: false,
+    [cause]: Error: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+        at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+      errno: -3008,
+      code: 'ENOTFOUND',
+      syscall: 'getaddrinfo',
+      hostname: 'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net'
+    }
+  }
+}
+Auth DB check failed: MongoServerSelectionError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+    at Topology.selectServer (D:\Nangi\POS\backend\node_modules\mongodb\lib\sdam\topology.js:348:38)
+    at async executeOperationWithRetries (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:260:22)
+    at async executeOperation (D:\Nangi\POS\backend\node_modules\mongodb\lib\operations\execute_operation.js:83:16)
+    at async FindCursor._initialize (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:619:27)
+    at async FindCursor.fetchBatch (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:653:13)
+    at async FindCursor.next (D:\Nangi\POS\backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:325:17)
+    at async Collection.findOne (D:\Nangi\POS\backend\node_modules\mongodb\lib\collection.js:313:24)
+    at async model.Query._findOne (D:\Nangi\POS\backend\node_modules\mongoose\lib\query.js:2773:15)
+    at async maybeTracedQueryExec (D:\Nangi\POS\backend\node_modules\mongoose\lib\query.js:4796:65) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-00.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-02.bbo6kvb.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-1mo77x-shard-0',
+    maxElectionId: new ObjectId('7fffffff000000000000034c'),
+    maxSetVersion: 286,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkError: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+      at TLSSocket.<anonymous> (D:\Nangi\POS\backend\node_modules\mongodb\lib\cmap\connect.js:314:44)
+      at Object.onceWrapper (node:events:631:26)
+      at TLSSocket.emit (node:events:509:28)
+      at emitErrorNT (node:internal/streams/destroy:170:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    errorLabelSet: Set(3) { 'SystemOverloadedError', 'RetryableError', 'ResetPool' },
+    beforeHandshake: false,
+    [cause]: Error: getaddrinfo ENOTFOUND ac-svzn017-shard-00-01.bbo6kvb.mongodb.net
+        at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+      errno: -3008,
+      code: 'ENOTFOUND',
+      syscall: 'getaddrinfo',
+      hostname: 'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net'
+    }
+  }
+}

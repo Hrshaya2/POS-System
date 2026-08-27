@@ -3,8 +3,9 @@
 // API requests are NEVER cached - only data/API calls should fail offline, never the app itself.
 
 const CACHE_PREFIX = 'loyal-mobile-pos';
-const APP_SHELL_CACHE = `${CACHE_PREFIX}-app-shell-v1`;
-const RUNTIME_CACHE = `${CACHE_PREFIX}-runtime-v1`;
+// v2: busts any pre-Stock-Management app shell cached by v1 clients.
+const APP_SHELL_CACHE = `${CACHE_PREFIX}-app-shell-v2`;
+const RUNTIME_CACHE = `${CACHE_PREFIX}-runtime-v2`;
 
 // Static bundle files (JS/CSS/images/fonts) - these are hashed by Vite on build, so cache-first is safe
 const STATIC_ASSET_PATTERN = /\.(js|css|png|jpe?g|gif|webp|svg|ico|woff2?|ttf|otf|eot|map)(\?.*)?$/i;
@@ -29,6 +30,10 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
+
+  // Never intercept anything during local development: serving cached
+  // /src/*.jsx modules makes edits appear to "not load" and breaks HMR.
+  if (self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1') return;
 
   const url = new URL(request.url);
 

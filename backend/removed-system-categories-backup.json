@@ -1,0 +1,109 @@
+{
+  "removedAt": "2026-08-27T05:16:48.366Z",
+  "rows": [
+    {
+      "_id": "6a8fc556e0f524b5999e87bb",
+      "name": "Phone Cases",
+      "description": "",
+      "color_tag": "",
+      "is_phone_category": false,
+      "active": true,
+      "created_by": "system",
+      "created_at": "2026-08-27T05:04:22.619Z",
+      "__v": 0,
+      "createdAt": "2026-08-27T05:04:22.621Z",
+      "updatedAt": "2026-08-27T05:04:22.621Z"
+    },
+    {
+      "_id": "6a8fc556e0f524b5999e87bc",
+      "name": "Chargers",
+      "description": "",
+      "color_tag": "",
+      "is_phone_category": false,
+      "active": true,
+      "created_by": "system",
+      "created_at": "2026-08-27T05:04:22.620Z",
+      "__v": 0,
+      "createdAt": "2026-08-27T05:04:22.621Z",
+      "updatedAt": "2026-08-27T05:04:22.621Z"
+    },
+    {
+      "_id": "6a8fc556e0f524b5999e87bd",
+      "name": "Screen Protectors",
+      "description": "",
+      "color_tag": "",
+      "is_phone_category": false,
+      "active": true,
+      "created_by": "system",
+      "created_at": "2026-08-27T05:04:22.620Z",
+      "__v": 0,
+      "createdAt": "2026-08-27T05:04:22.621Z",
+      "updatedAt": "2026-08-27T05:04:22.621Z"
+    },
+    {
+      "_id": "6a8fc556e0f524b5999e87be",
+      "name": "Spare Parts",
+      "description": "",
+      "color_tag": "",
+      "is_phone_category": false,
+      "active": true,
+      "created_by": "system",
+      "created_at": "2026-08-27T05:04:22.620Z",
+      "__v": 0,
+      "createdAt": "2026-08-27T05:04:22.621Z",
+      "updatedAt": "2026-08-27T05:04:22.621Z"
+    },
+    {
+      "_id": "6a8fc556e0f524b5999e87bf",
+      "name": "Cables",
+      "description": "",
+      "color_tag": "",
+      "is_phone_category": false,
+      "active": true,
+      "created_by": "system",
+      "created_at": "2026-08-27T05:04:22.620Z",
+      "__v": 0,
+      "createdAt": "2026-08-27T05:04:22.621Z",
+      "updatedAt": "2026-08-27T05:04:22.621Z"
+    },
+    {
+      "_id": "6a8fc556e0f524b5999e87c0",
+      "name": "Audio",
+      "description": "",
+      "color_tag": "",
+      "is_phone_category": false,
+      "active": true,
+      "created_by": "system",
+      "created_at": "2026-08-27T05:04:22.620Z",
+      "__v": 0,
+      "createdAt": "2026-08-27T05:04:22.621Z",
+      "updatedAt": "2026-08-27T05:04:22.621Z"
+    },
+    {
+      "_id": "6a8fc556e0f524b5999e87c1",
+      "name": "Power Banks",
+      "description": "",
+      "color_tag": "",
+      "is_phone_category": false,
+      "active": true,
+      "created_by": "system",
+      "created_at": "2026-08-27T05:04:22.620Z",
+      "__v": 0,
+      "createdAt": "2026-08-27T05:04:22.621Z",
+      "updatedAt": "2026-08-27T05:04:22.621Z"
+    },
+    {
+      "_id": "6a8fc556e0f524b5999e87c2",
+      "name": "Other Accessories",
+      "description": "",
+      "color_tag": "",
+      "is_phone_category": false,
+      "active": true,
+      "created_by": "system",
+      "created_at": "2026-08-27T05:04:22.620Z",
+      "__v": 0,
+      "createdAt": "2026-08-27T05:04:22.621Z",
+      "updatedAt": "2026-08-27T05:04:22.621Z"
+    }
+  ]
+}

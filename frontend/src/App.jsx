@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
+import { getMovements, deleteAdjustmentMovement } from './services/stockService';
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -11,7 +12,10 @@ import {
   TrendingUp,
   AlertTriangle,
   Clock,
-  Coins
+  Coins,
+  Boxes,
+  Trash2,
+  Settings
 } from 'lucide-react';
 import {
   AreaChart,
@@ -27,17 +31,19 @@ import { CloudOff, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { SessionProvider, useSession } from './context/SessionContext';
 import { SyncProvider, useSync } from './context/SyncContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import OpenSessionModal from './components/CashSession/OpenSessionModal';
 import CloseSessionModal from './components/CashSession/CloseSessionModal';
 import SyncStatusIndicator from './components/SyncStatusIndicator';
 import OfflineBanner from './components/OfflineBanner';
 import Login from './pages/Login';
 import UsersPage from './pages/UsersPage';
-import InventoryPage from './pages/InventoryPage';
+import StockManagementPage from './pages/StockManagementPage';
 import SalesPage from './pages/SalesPage';
 import RepairPage from './pages/RepairPage';
 import ReportsPage from './pages/ReportsPage';
 import CashSessionHistoryPage from './pages/CashSessionHistoryPage';
+import SettingsPage from './pages/SettingsPage';
 
 // MOCK DATA REMOVED - using live backend API instead
 
@@ -100,7 +106,7 @@ const Layout = ({ children }) => {
         <nav className="flex-1 px-4 space-y-2 mt-4 overflow-y-auto">
           <SidebarItem icon={LayoutDashboard} label="Dashboard" path="/" />
           <SidebarItem icon={ShoppingCart} label="Sales / Billing" path="/sales" />
-          <SidebarItem icon={Package} label="Inventory" path="/inventory" />
+          <SidebarItem icon={Boxes} label="Stock Management" path="/stock" />
           <SidebarItem icon={Wrench} label="Repairs" path="/repairs" />
 
           {(user?.role === 'admin' || user?.role === 'shop_owner') && (
@@ -108,6 +114,7 @@ const Layout = ({ children }) => {
               <SidebarItem icon={BarChart3} label="Reports" path="/reports" />
               <SidebarItem icon={Coins} label="Sessions" path="/sessions" />
               <SidebarItem icon={Users} label="Users" path="/users" />
+              <SidebarItem icon={Settings} label="Settings" path="/settings" />
             </>
           )}
         </nav>
@@ -311,6 +318,33 @@ const Dashboard = () => {
         .catch((err) => console.error("Failed to refresh dashboard after sync", err));
     }
   }, [syncStatus?.pendingCounts?.total]);
+
+  // Staff Stock Adjustments — admin/owner oversight of cashier stock edits.
+  const [adjustments, setAdjustments] = React.useState([]);
+  const loadAdjustments = React.useCallback(async () => {
+    try {
+      setAdjustments(await getMovements({ type: 'ADJUSTMENT', limit: 50 }));
+    } catch (err) {
+      console.error('Failed to load adjustments', err);
+    }
+  }, []);
+  React.useEffect(() => { loadAdjustments(); }, [loadAdjustments]);
+
+  const handleDeleteAdjustment = async (m) => {
+    if (!window.confirm(`Delete ${m.user_name || 'this staff member'}'s ${Number(m.quantity_change) > 0 ? '+' : ''}${m.quantity_change} adjustment for "${m.item_name}"? The stock change will be reversed.`)) return;
+    try {
+      await deleteAdjustmentMovement(m, user);
+      setAdjustments((prev) => prev.filter((x) => x.id !== m.id && x.localKey !== m.localKey));
+      await loadAdjustments();
+      const token = localStorage.getItem('token');
+      fetch(`/api/dashboard?tzOffset=${new Date().getTimezoneOffset()}`, { headers: { Authorization: `Bearer ${token}` } })
+        .then((res) => res.ok ? res.json() : null)
+        .then((fresh) => { if (fresh) setData(fresh); })
+        .catch((err) => console.error('Failed to refresh dashboard after delete', err));
+    } catch (err) {
+      alert(err.message || 'Could not delete the adjustment record');
+    }
+  };
 
   if (loading) return <div className="p-8 text-gray-500">Loading dashboard...</div>;
   if (!data) return <div className="p-8 text-gray-500">Failed to load dashboard data.</div>;
@@ -519,6 +553,61 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Staff Stock Adjustments — oversight of cashier stock edits */}
+      {(user?.role === 'admin' || user?.role === 'shop_owner') && (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h3 className="text-lg font-bold text-gray-900 flex items-center">
+              <Wrench className="mr-2 text-orange-500" size={20} /> Staff Stock Adjustments
+            </h3>
+            <span className="bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+              {adjustments.length} record{adjustments.length === 1 ? '' : 's'}
+            </span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left text-gray-500">
+              <thead className="text-xs text-gray-400 uppercase bg-gray-50/50">
+                <tr>
+                  <th scope="col" className="px-6 py-3 font-medium">Item</th>
+                  <th scope="col" className="px-6 py-3 font-medium">Cashier</th>
+                  <th scope="col" className="px-6 py-3 font-medium">Change</th>
+                  <th scope="col" className="px-6 py-3 font-medium">Reason</th>
+                  <th scope="col" className="px-6 py-3 font-medium">Note</th>
+                  <th scope="col" className="px-6 py-3 font-medium">Time</th>
+                  <th scope="col" className="px-6 py-3 font-medium">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {adjustments.length === 0 ? (
+                  <tr><td colSpan="7" className="px-6 py-6 text-center text-gray-400">No stock adjustments recorded yet.</td></tr>
+                ) : adjustments.map((m) => (
+                  <tr key={m.id || m.localKey} className="bg-white border-b border-gray-50 hover:bg-gray-50/80 transition-colors">
+                    <td className="px-6 py-4 font-medium text-gray-900">
+                      {m.item_name}
+                      <span className="block text-[11px] text-gray-400 font-mono">{m.sku}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="bg-gray-100 text-gray-700 px-2.5 py-1 rounded-md text-xs font-medium">{m.user_name || '—'}</span>
+                    </td>
+                    <td className={`px-6 py-4 font-bold ${Number(m.quantity_change) > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      {Number(m.quantity_change) > 0 ? '+' : ''}{m.quantity_change}
+                    </td>
+                    <td className="px-6 py-4">{m.reason || '—'}</td>
+                    <td className="px-6 py-4 max-w-[180px] truncate" title={m.note}>{m.note || '—'}</td>
+                    <td className="px-6 py-4 text-gray-400 whitespace-nowrap">{new Date(m.created_at).toLocaleString()}</td>
+                    <td className="px-6 py-4">
+                      <button onClick={() => handleDeleteAdjustment(m)} className="flex items-center text-rose-600 hover:text-rose-800 text-xs font-medium bg-rose-50 px-3 py-1.5 rounded-lg hover:bg-rose-100 transition-colors">
+                        <Trash2 size={13} className="mr-1" /> Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -540,13 +629,15 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
       <Route path="/sales" element={<ProtectedRoute><Layout><SalesPage /></Layout></ProtectedRoute>} />
-      <Route path="/inventory" element={<ProtectedRoute><Layout><InventoryPage /></Layout></ProtectedRoute>} />
+      <Route path="/inventory" element={<Navigate to="/stock" replace />} />
+      <Route path="/stock" element={<ProtectedRoute><Layout><StockManagementPage /></Layout></ProtectedRoute>} />
       <Route path="/repairs" element={<ProtectedRoute><Layout><RepairPage /></Layout></ProtectedRoute>} />
 
       {/* Admin Only Routes */}
       <Route path="/reports" element={<ProtectedRoute allowedRoles={['admin', 'shop_owner']}><Layout><ReportsPage /></Layout></ProtectedRoute>} />
       <Route path="/sessions" element={<ProtectedRoute allowedRoles={['admin', 'shop_owner']}><Layout><CashSessionHistoryPage /></Layout></ProtectedRoute>} />
       <Route path="/users" element={<ProtectedRoute allowedRoles={['admin', 'shop_owner']}><Layout><UsersPage /></Layout></ProtectedRoute>} />
+      <Route path="/settings" element={<ProtectedRoute allowedRoles={['admin', 'shop_owner']}><Layout><SettingsPage /></Layout></ProtectedRoute>} />
 
       {/* 404 */}
       <Route path="*" element={<Navigate to="/" replace />} />
@@ -556,15 +647,17 @@ function AppRoutes() {
 
 function App() {
   return (
-    <AuthProvider>
-      <SessionProvider>
-        <SyncProvider>
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
-        </SyncProvider>
-      </SessionProvider>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <SessionProvider>
+          <SyncProvider>
+            <BrowserRouter>
+              <AppRoutes />
+            </BrowserRouter>
+          </SyncProvider>
+        </SessionProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

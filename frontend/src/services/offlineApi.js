@@ -1,8 +1,10 @@
 import { getCachedInventory } from '../db/database';
+import { applyLocalOverlaysToInventoryCache } from './stockService';
 
 // Wraps fetch so that reads fall back to the IndexedDB cache when offline.
-// The UI calls this instead of raw fetch for inventory/list reads.
-
+// The fallback route applies pending-local overlays first so offline reads
+// can never miss unsynced stock creates/imports (same rule every page's
+// data loader follows via applyServerInventorySnapshot).
 export const fetchWithOfflineFallback = async (url, options = {}) => {
   try {
     const res = await fetch(url, options);
@@ -16,6 +18,10 @@ export const fetchWithOfflineFallback = async (url, options = {}) => {
     }
     if (url.includes('/api/inventory/accessories')) {
       const cached = await getCachedInventory();
+      if (!cached.accessories?.length) {
+        await applyLocalOverlaysToInventoryCache();
+        return (await getCachedInventory()).accessories;
+      }
       return cached.accessories;
     }
     throw err;

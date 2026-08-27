@@ -6,6 +6,9 @@ import { BadgeCheck, Banknote, Barcode, CreditCard, History, PackageSearch, Prin
 import { addPendingSale, generateLocalReceiptNo } from '../db/database';
 import { refreshInventoryCache } from '../services/syncService';
 import { getCachedInventory } from '../db/database';
+import { applyServerInventorySnapshot } from '../services/stockService';
+import { getReceiptSettings, buildReceiptHtml } from '../utils/receipt';
+import RefundModal from '../components/RefundModal';
 
 const API_BASE = '/api';
 
@@ -38,68 +41,14 @@ const getCashSummary = (receipt) => {
 };
 
 const buildReceiptWindow = (receipt) => {
+    // Build the printable HTML from the shared settings-aware template
+    // (logo, shop name, messages, contact details — all customizable in
+    // Settings and rendered identically in the Settings live preview).
+    const html = buildReceiptHtml(receipt, getReceiptSettings());
+
     const win = window.open('', '_blank', 'width=420,height=760');
     if (!win) return;
-
-    const { cashTendered, changeAmount } = getCashSummary(receipt);
-    const itemsMarkup = receipt.items.map((item) => `
-      <tr>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;">
-          <div style="font-weight:700;">${item.name}</div>
-          <div style="font-size:11px;color:#666;">${item.tracked_by === 'IMEI' ? `IMEI ${item.imei}` : `SKU ${item.sku}`}</div>
-        </td>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:center;">${item.quantity}</td>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(item.unit_price)}</td>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(item.line_total)}</td>
-      </tr>
-    `).join('');
-
-    win.document.write(`
-            <!doctype html>
-            <html>
-                <head>
-                    <title>${receipt.receipt_no} - Loyal Mobile</title>
-          <style>
-            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; color: #111; }
-            .sheet { max-width: 360px; margin: 0 auto; }
-            h1 { margin: 0 0 6px; font-size: 22px; }
-            .muted { color: #666; font-size: 12px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-            .summary { margin-top: 16px; border-top: 1px dashed #aaa; padding-top: 12px; }
-            .row { display: flex; justify-content: space-between; margin: 6px 0; }
-            .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #f3f4f6; font-size: 11px; margin-top: 8px; }
-          </style>
-        </head>
-        <body>
-          <div class="sheet">
-            <h1>Loyal Mobile Receipt</h1>
-            <div class="muted">Receipt ${receipt.receipt_no}</div>
-            <div class="muted">Cashier: ${receipt.cashier_name}</div>
-            <div class="muted">${new Date(receipt.created_at).toLocaleString()}</div>
-            <span class="badge">${receipt.pending_sync ? 'Pending sync' : 'Synced'}</span>
-            <table>
-              <thead>
-                <tr>
-                  <th style="text-align:left;padding-top:12px;">Item</th>
-                  <th style="padding-top:12px;">Qty</th>
-                  <th style="padding-top:12px;text-align:right;">Price</th>
-                  <th style="padding-top:12px;text-align:right;">Total</th>
-                </tr>
-              </thead>
-              <tbody>${itemsMarkup}</tbody>
-            </table>
-            <div class="summary">
-              <div class="row"><span>Subtotal</span><strong>${formatMoney(receipt.subtotal)}</strong></div>
-              <div class="row"><span>Discount</span><strong>- ${formatMoney(receipt.discount_amount)}</strong></div>
-              <div class="row"><span>Payment</span><strong>${receipt.payment_method.replace('_', ' ')}</strong></div>
-              ${receipt.payment_method === 'CASH' ? `<div class="row"><span>Cash</span><strong>${formatMoney(cashTendered)}</strong></div><div class="row"><span>Change</span><strong>${formatMoney(changeAmount)}</strong></div>` : ''}
-              <div class="row" style="font-size:18px;"><span>Total</span><strong>${formatMoney(receipt.total)}</strong></div>
-            </div>
-            <p class="muted" style="margin-top:16px;">Thank you for your purchase.</p>
-          </div>
-        </body>
-      </html>
-    `);
+    win.document.write(html);
     win.document.close();
     win.focus();
     setTimeout(() => win.print(), 200);
@@ -271,8 +220,23 @@ export default function SalesPage() {
                 fetch(`${API_BASE}/sales/config`, { headers: { Authorization: `Bearer ${token}` } })
             ]);
 
-            if (phoneRes.ok) setPhones(await phoneRes.json());
-            if (accessoryRes.ok) setAccessories(await accessoryRes.json());
+            if (phoneRes.ok && accessoryRes.ok) {
+                // Unified stock-data path (stockService): fresh server data is
+                // reconciled with pending offline writes in the shared cache,
+                // then the catalog mirrors it - identical to Stock Management.
+                const [phones, accessories] = await Promise.all([phoneRes.json(), accessoryRes.json()]);
+                await applyServerInventorySnapshot({ phones, accessories });
+                const cached = await getCachedInventory();
+                setPhones(cached.phones);
+                setAccessories(cached.accessories);
+            } else {
+                // Partial success: update only what arrived, never the other list.
+                if (phoneRes.ok) setPhones(await phoneRes.json());
+                if (accessoryRes.ok) {
+                    await applyServerInventorySnapshot({ accessories: await accessoryRes.json() });
+                    setAccessories((await getCachedInventory()).accessories);
+                }
+            }
             if (configRes.ok) setConfig(await configRes.json());
         } catch (err) {
             // Network error: fall back to cached inventory
@@ -442,6 +406,23 @@ export default function SalesPage() {
         buildReceiptWindow(saleReceipt);
     };
 
+    // Start a refund from Sales History (never a free-standing form).
+    // Any signed-in user may open the flow: the backend refund policy decides
+    // whether it applies directly (within limits, same payment method) or
+    // routes to the admin approval queue. Requires a live connection because
+    // refunds restore server-side stock and adjust the cash session.
+    const [refundSale, setRefundSale] = useState(null);
+    const handleRefund = (sale) => {
+        if (sale.refunded) return;
+        if (sale.pending_sync || sale.syncStatus === 'pending') {
+            alert('This sale has not finished syncing yet. Wait for it to sync before refunding.');
+            return;
+        }
+        if (!navigator.onLine) { alert('Refunds require an online connection.'); return; }
+        setSalesError('');
+        setRefundSale(sale);
+    };
+
     // Local-first checkout:
     // 1. Build the receipt locally
     // 2. Write to IndexedDB FIRST (status: pending unless network confirms)
@@ -469,6 +450,22 @@ export default function SalesPage() {
                 bankTransfer: safeNumber(paymentSplit.bankTransfer)
             } : null;
 
+        // Build the local receipt FIRST so both the server payload (which needs
+        // the idempotency token) and the on-screen receipt use the same object.
+        // (Declared before payloadForServer to avoid a temporal-dead-zone error.)
+        const localReceipt = buildLocalReceipt({
+            user,
+            session,
+            cart,
+            paymentMethod,
+            cashReceived,
+            paymentSplit,
+            discountValue,
+            paymentDetails
+        });
+        // Mark as pending sync initially (will flip to synced if the network push succeeds)
+        localReceipt.pending_sync = !navigator.onLine;
+
         const payloadForServer = {
             items: cart.map((item) => ({
                 inventoryType: item.inventoryType,
@@ -480,7 +477,8 @@ export default function SalesPage() {
             paymentDetails,
             discountAmount: discountValue,
             approvalNote: approvalNote.trim() || null,
-            sessionId: session?.id || null
+            sessionId: session?.id || null,
+            clientLocalId: localReceipt.clientLocalId
         };
 
         if (paymentMethod === 'CASH' && safeNumber(cashReceived) < total - 0.01) {
@@ -496,20 +494,7 @@ export default function SalesPage() {
         setCheckoutLoading(true);
 
         try {
-            // STEP 1: Build the local receipt immediately (no network dependency)
-            const localReceipt = buildLocalReceipt({
-                user,
-                session,
-                cart,
-                paymentMethod,
-                cashReceived,
-                paymentSplit,
-                discountValue,
-                paymentDetails
-            });
-            // Mark as pending sync initially (will flip to synced if the network push succeeds)
-            localReceipt.pending_sync = !navigator.onLine;
-
+            // STEP 1: the local receipt was built above (covers cart + payment).
             // STEP 2: Persist to IndexedDB FIRST
             const localKey = await addPendingSale(localReceipt);
 
@@ -966,6 +951,11 @@ export default function SalesPage() {
                                                 <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${sale.pending_sync || sale.syncStatus === 'pending' ? 'bg-amber-100 text-amber-700' : sale.syncStatus === 'failed' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}`}>
                                                     {sale.pending_sync || sale.syncStatus === 'pending' ? 'Pending sync' : sale.syncStatus === 'failed' ? 'Sync failed' : 'Synced'}
                                                 </span>
+                                                {sale.refunded ? (
+                                                    <span className="mt-2 inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-violet-100 text-violet-700">
+                                                        Refunded{ sale.refunded_by_name ? ` by ${sale.refunded_by_name}` : '' }
+                                                    </span>
+                                                ) : null}
                                                 {sale.approval_required ? (
                                                     <div className="mt-2 inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-rose-100 text-rose-700">
                                                         Admin approval flag
@@ -974,9 +964,16 @@ export default function SalesPage() {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-gray-500">{new Date(sale.created_at).toLocaleString()}</td>
                                             <td className="px-6 py-4">
-                                                <button onClick={() => handlePrintReceipt(sale)} className="inline-flex items-center gap-1 rounded-xl border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50">
-                                                    <Printer size={14} /> Print
-                                                </button>
+                                                <div className="flex items-center gap-2">
+                                                    <button onClick={() => handlePrintReceipt(sale)} className="inline-flex items-center gap-1 rounded-xl border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50">
+                                                        <Printer size={14} /> Print
+                                                    </button>
+                                                    {!sale.refunded && !(sale.pending_sync || sale.syncStatus === 'pending') && (
+                                                        <button onClick={() => handleRefund(sale)} className="inline-flex items-center gap-1 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2 text-xs font-semibold text-violet-700 hover:bg-violet-100">
+                                                            <Banknote size={14} /> Refund
+                                                        </button>
+                                                    )}
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
@@ -985,6 +982,15 @@ export default function SalesPage() {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {/* Full / partial refund flow starting from the selected sale */}
+            {refundSale && (
+                <RefundModal
+                    sale={refundSale}
+                    onClose={() => setRefundSale(null)}
+                    onApplied={() => loadSales()}
+                />
             )}
         </div>
     );

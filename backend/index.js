@@ -14,12 +14,19 @@ const {
     RepairJob,
     RepairJobPart,
     CashMovement,
-    DailySession
+    DailySession,
+    StockCategory,
+    StockMovement,
+    StockTake,
+    StockImport,
+    Refund,
+    StoreSetting,
+    CreditNote
 } = require('./models');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretposkey123';
 const SALE_DISCOUNT_APPROVAL_LIMIT_PERCENT = Number(process.env.SALE_DISCOUNT_APPROVAL_LIMIT_PERCENT || 10);
@@ -74,11 +81,211 @@ const formatLocalTime = (date, tzOffsetMinutes) =>
     new Date(date.getTime() - tzOffsetMinutes * 60 * 1000).toISOString().slice(11, 16);
 
 const formatReceiptNo = () => `RCPT-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+const formatRefundRef = () => `RFS-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+
+// Default refund approval policy (overridable per-store via StoreSetting 'refund_policy').
+const DEFAULT_REFUND_POLICY = {
+    maxDays: 30,            // allow refund within N days of the original sale
+    maxAmount: 50000,       // allow direct refund up to this amount (Rs.)
+    sameMethodRequired: true // cash refunds to a different payment method need approval
+};
+
+const REFUND_REASONS = ['Defective', 'Wrong Item', 'Customer Changed Mind', 'Damaged', 'Warranty Return', 'Other'];
+const REFUND_METHODS = ['CASH', 'CARD', 'BANK_TRANSFER', 'SPLIT'];
+
+// Resolve the refund policy, falling back to defaults. Stored as StoreSetting({ key: 'refund_policy' }).
+const getRefundPolicy = async () => {
+    try {
+        await connectDB();
+        const doc = await StoreSetting.findOne({ key: 'refund_policy' });
+        return { ...DEFAULT_REFUND_POLICY, ...(doc?.value || {}) };
+    } catch (err) {
+        console.error('[refund policy] failed, using defaults', err);
+        return { ...DEFAULT_REFUND_POLICY };
+    }
+};
+
+// =============================================
+// Stock Management helpers
+// =============================================
+
+const MOVEMENT_TYPES = ['STOCK_IN', 'SALE', 'REFUND', 'ADJUSTMENT', 'STOCK_TAKE', 'IMPORT'];
+const ADJUSTMENT_REASONS = ['Damaged', 'Lost/Theft', 'Miscount', 'Returned to Supplier', 'Other'];
+
+// Write an immutable audit-trail row for every accessory quantity change.
+const logStockMovement = async ({ accessory, type, quantityChange, resultingQuantity, reason = '', note = '', reference = '', user = {}, localKey = null }) => {
+    const doc = await StockMovement.create({
+        local_key: localKey || crypto.randomBytes(8).toString('hex'),
+        accessory_id: String(accessory._id),
+        sku: accessory.sku,
+        item_name: accessory.name,
+        type,
+        quantity_change: Number(quantityChange) || 0,
+        resulting_quantity: Number(resultingQuantity),
+        reason,
+        note,
+        reference,
+        user_id: user.id ? String(user.id) : '',
+        user_name: user.name || ''
+    });
+    return doc;
+};
+
+const normalizeMovement = (m) => ({
+    id: m._id.toString(),
+    local_key: m.local_key || m._id.toString(),
+    accessory_id: m.accessory_id,
+    sku: m.sku,
+    item_name: m.item_name,
+    type: m.type,
+    quantity_change: m.quantity_change,
+    resulting_quantity: m.resulting_quantity,
+    reason: m.reason || '',
+    note: m.note || '',
+    reference: m.reference || '',
+    user_id: m.user_id || '',
+    user_name: m.user_name || '',
+    created_at: m.created_at
+});
+
+const normalizeCategory = (c) => ({
+    id: c._id.toString(),
+    name: c.name,
+    description: c.description || '',
+    color_tag: c.color_tag || '',
+    is_phone_category: !!c.is_phone_category,
+    active: c.active !== false,
+    created_by: c.created_by || '',
+    created_at: c.created_at
+});
+
+const normalizeStockTake = (t) => ({
+    id: t._id.toString(),
+    status: t.status,
+    scope_type: t.scope_type,
+    scope_category: t.scope_category || '',
+    started_by_id: t.started_by_id || '',
+    started_by_name: t.started_by_name || '',
+    started_at: t.started_at,
+    completed_by_name: t.completed_by_name || '',
+    completed_at: t.completed_at || null,
+    lines: (t.lines || []).map((l) => ({
+        accessory_id: l.accessory_id,
+        sku: l.sku,
+        name: l.name,
+        system_qty: l.system_qty,
+        counted_qty: l.counted_qty === null || l.counted_qty === undefined ? null : l.counted_qty,
+        difference: l.difference === null || l.difference === undefined ? null : l.difference,
+        applied: !!l.applied
+    })),
+    items_counted: t.items_counted || 0,
+    total_variance: t.total_variance || 0
+});
+
+// Full-shape accessory payload used by the Stock Management page.
+const normalizeAccessoryFull = (a) => ({
+    id: a._id.toString(),
+    sku: a.sku,
+    name: a.name,
+    quantity: a.quantity,
+    cost_price: a.cost_price,
+    sell_price: a.sell_price,
+    low_stock_threshold: a.low_stock_threshold,
+    category: a.category,
+    barcodes: a.barcodes || [],
+    unit: a.unit || 'pcs',
+    is_service: !!a.is_service,
+    description: a.description || '',
+    tax_rate: a.tax_rate || 0,
+    markup_percent: a.markup_percent || 0,
+    price_includes_tax: !!a.price_includes_tax,
+    allow_price_override: a.allow_price_override !== false,
+    notes: (a.notes || []).map((n, i) => ({
+        id: `${a._id.toString()}_n${i}`,
+        text: n.text,
+        user_name: n.user_name || '',
+        created_at: n.created_at
+    })),
+    image_url: a.image_url || '',
+    color_tag: a.color_tag || '',
+    added_at: a.added_at || a.created_at
+});
+
+// Pick only the known editable fields from a product form payload.
+const pickAccessoryFields = (body) => {
+    const out = {};
+    if (body.sku !== undefined) out.sku = String(body.sku).trim();
+    if (body.name !== undefined) out.name = String(body.name).trim();
+    if (body.quantity !== undefined) out.quantity = Math.max(0, Number(body.quantity) || 0);
+    if (body.cost_price !== undefined) out.cost_price = body.cost_price === '' || body.cost_price === null ? null : Number(body.cost_price);
+    if (body.sell_price !== undefined) out.sell_price = Number(body.sell_price);
+    if (body.low_stock_threshold !== undefined) out.low_stock_threshold = Number(body.low_stock_threshold) || 0;
+    if (body.category !== undefined) out.category = String(body.category).trim();
+    if (body.barcodes !== undefined) out.barcodes = Array.isArray(body.barcodes) ? body.barcodes.map((b) => String(b).trim()).filter(Boolean) : [];
+    if (body.unit !== undefined) out.unit = String(body.unit || '').trim() || 'pcs';
+    if (body.is_service !== undefined) out.is_service = !!body.is_service;
+    if (body.description !== undefined) out.description = String(body.description || '');
+    if (body.tax_rate !== undefined) out.tax_rate = Number(body.tax_rate) || 0;
+    if (body.markup_percent !== undefined) out.markup_percent = Number(body.markup_percent) || 0;
+    if (body.price_includes_tax !== undefined) out.price_includes_tax = !!body.price_includes_tax;
+    if (body.allow_price_override !== undefined) out.allow_price_override = !!body.allow_price_override;
+    if (body.notes !== undefined) {
+        out.notes = Array.isArray(body.notes)
+            ? body.notes.filter((n) => n && String(n.text || '').trim()).map((n) => ({
+                text: String(n.text).trim(),
+                user_name: n.user_name || '',
+                created_at: n.created_at ? new Date(n.created_at) : new Date()
+            }))
+            : [];
+    }
+    if (body.image_url !== undefined) out.image_url = String(body.image_url || '');
+    if (body.color_tag !== undefined) out.color_tag = String(body.color_tag || '');
+    return out;
+};
+
+// --- Refund helpers ---
+// Total already-refunded quantity per item of a sale (for over-refund prevention).
+const getRefundedTotals = async (saleId) => {
+    const refunds = await Refund.find({ sale_id: saleId, approval_status: { $in: ['APPROVED', 'DIRECT'] } });
+    const totals = new Map();
+    refunds.forEach((r) => {
+        (r.items || []).forEach((it) => {
+            const key = `${it.inventory_type}:${it.inventory_id}`;
+            totals.set(key, (totals.get(key) || 0) + Number(it.quantity || 0));
+        });
+    });
+    return totals;
+};
+
+const normalizeRefund = (refund, opts = {}) => ({
+    id: refund._id.toString(),
+    refund_reference: refund.refund_reference,
+    sale_id: refund.sale_id,
+    sale_receipt_no: refund.sale_receipt_no,
+    items: refund.items || [],
+    subtotal: refund.subtotal,
+    total: refund.total,
+    reason: refund.reason,
+    reason_note: refund.reason_note,
+    refund_method: refund.refund_method,
+    original_payment_method: refund.original_payment_method,
+    requires_approval: refund.requires_approval,
+    approval_status: refund.approval_status,
+    approved_by_id: refund.approved_by_id,
+    approved_by_name: refund.approved_by_name,
+    approved_at: refund.approved_at,
+    initiated_by: refund.initiated_by_name,
+    initiated_at: refund.initiated_at,
+    session_id: refund.session_id,
+    movement_date: refund.movement_date,
+    created_at: refund.created_at || refund.initiated_at
+});
 
 const normalizeSale = (sale) => {
     if (!sale) return null;
     return {
         id: sale._id.toString(),
+        client_local_id: sale.client_local_id || '',
         receipt_no: sale.receipt_no,
         cashier_id: sale.cashier_id,
         cashier_name: sale.cashier_name,
@@ -97,6 +304,11 @@ const normalizeSale = (sale) => {
         approval_note: sale.approval_note,
         session_id: sale.session_id,
         created_at: sale.created_at || sale.createdAt,
+        refunded: !!sale.refunded,
+        refunded_at: sale.refunded_at || null,
+        refund_reason: sale.refund_reason || '',
+        refunded_by_id: sale.refunded_by_id || '',
+        refunded_by_name: sale.refunded_by_name || '',
         pending_sync: false
     };
 };
@@ -416,33 +628,42 @@ app.get('/api/inventory/accessories', authenticateToken, async (req, res) => {
     try {
         await connectDB();
         const accessories = await Accessory.find({}).sort({ created_at: -1 });
-        res.json(accessories.map(a => ({
-            id: a._id.toString(),
-            sku: a.sku,
-            name: a.name,
-            quantity: a.quantity,
-            cost_price: a.cost_price,
-            sell_price: a.sell_price,
-            low_stock_threshold: a.low_stock_threshold,
-            category: a.category,
-            added_at: a.added_at || a.created_at
-        })));
+        res.json(accessories.map(normalizeAccessoryFull));
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Database error' });
     }
 });
 
-app.post('/api/inventory/accessories', authenticateToken, requireAdmin, async (req, res) => {
+// Cashiers may CREATE items (and categories); editing/deleting afterwards is
+// admin/shop-owner only - enforced here on the server as well as in the UI.
+app.post('/api/inventory/accessories', authenticateToken, async (req, res) => {
     try {
         await connectDB();
-        const { sku, name, quantity, cost_price, sell_price, low_stock_threshold, category } = req.body;
-        const accessory = await Accessory.create({
-            sku, name, quantity: quantity || 0,
-            cost_price, sell_price,
-            low_stock_threshold: low_stock_threshold || 5, category
-        });
-        res.status(201).json({ id: accessory._id.toString() });
+        const fields = pickAccessoryFields(req.body);
+        if (!fields.sku) return res.status(400).json({ error: 'SKU is required' });
+        if (!fields.name) return res.status(400).json({ error: 'Name is required' });
+        if (!fields.category) return res.status(400).json({ error: 'Category is required' });
+
+        const existing = await Accessory.findOne({ sku: fields.sku });
+        if (existing) return res.status(409).json({ error: `An item with SKU ${fields.sku} already exists` });
+
+        const accessory = await Accessory.create(fields);
+
+        // Initial stock counts as a Stock In movement.
+        if (Number(accessory.quantity || 0) > 0 && !accessory.is_service) {
+            await logStockMovement({
+                accessory,
+                type: 'STOCK_IN',
+                quantityChange: Number(accessory.quantity),
+                resultingQuantity: Number(accessory.quantity),
+                reason: 'Initial stock',
+                note: 'Item created',
+                user: req.user
+            });
+        }
+
+        res.status(201).json({ id: accessory._id.toString(), accessory: normalizeAccessoryFull(accessory) });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message });
@@ -452,14 +673,30 @@ app.post('/api/inventory/accessories', authenticateToken, requireAdmin, async (r
 app.put('/api/inventory/accessories/:id', authenticateToken, requireAdmin, async (req, res) => {
     try {
         await connectDB();
-        const { sku, name, quantity, cost_price, sell_price, low_stock_threshold, category } = req.body;
-        const accessory = await Accessory.findByIdAndUpdate(
-            req.params.id,
-            { sku, name, quantity, cost_price, sell_price, low_stock_threshold, category },
-            { new: true }
-        );
+        const accessory = await Accessory.findById(req.params.id);
         if (!accessory) return res.status(404).json({ error: 'Accessory not found' });
-        res.json({ success: true, id: req.params.id });
+
+        const fields = pickAccessoryFields(req.body);
+        const prevQty = Number(accessory.quantity || 0);
+
+        Object.assign(accessory, fields);
+        await accessory.save();
+
+        // Quantity edited through the product form is an adjustment.
+        const newQty = Number(accessory.quantity || 0);
+        if (!accessory.is_service && newQty !== prevQty) {
+            await logStockMovement({
+                accessory,
+                type: 'ADJUSTMENT',
+                quantityChange: newQty - prevQty,
+                resultingQuantity: newQty,
+                reason: 'Product edit',
+                note: 'Quantity changed while editing item details',
+                user: req.user
+            });
+        }
+
+        res.json({ success: true, id: accessory._id.toString(), accessory: normalizeAccessoryFull(accessory) });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message });
@@ -502,6 +739,548 @@ app.post('/api/inventory/seed', authenticateToken, requireAdmin, async (req, res
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// =============================================
+// STOCK MANAGEMENT (categories / movements / takes / import / alerts)
+// =============================================
+
+// --- Stock categories ---
+// Everyone (incl. cashiers) may list and create; only admin/shop_owner can
+// edit or delete - matching the shop rule "entered details are immutable".
+app.get('/api/stock/categories', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        let categories = await StockCategory.find({}).sort({ name: 1 });
+        // No auto-seeding: an empty list simply means "no categories yet" and
+        // the frontend shows its empty-state guidance. Never insert demo rows
+        // into a live database behind the user's back.
+        res.json(categories.map(normalizeCategory));
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error loading categories' });
+    }
+});
+
+app.post('/api/stock/categories', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const name = String(req.body.name || '').trim();
+        if (!name) return res.status(400).json({ error: 'Category name is required' });
+
+        const existing = await StockCategory.findOne({ name: { $regex: `^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, $options: 'i' } });
+        if (existing) return res.status(409).json({ error: `Category "${name}" already exists` });
+
+        const category = await StockCategory.create({
+            name,
+            description: String(req.body.description || ''),
+            color_tag: String(req.body.color_tag || ''),
+            is_phone_category: !!req.body.is_phone_category,
+            created_by: req.user.name || ''
+        });
+        res.status(201).json(normalizeCategory(category));
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message || 'Database error creating category' });
+    }
+});
+
+app.put('/api/stock/categories/:id', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const category = await StockCategory.findById(req.params.id);
+        if (!category) return res.status(404).json({ error: 'Category not found' });
+
+        if (req.body.name !== undefined) {
+            const name = String(req.body.name).trim();
+            if (!name) return res.status(400).json({ error: 'Category name is required' });
+            const dupe = await StockCategory.findOne({ _id: { $ne: category._id }, name });
+            if (dupe) return res.status(409).json({ error: `Category "${name}" already exists` });
+            category.name = name;
+        }
+        if (req.body.description !== undefined) category.description = String(req.body.description || '');
+        if (req.body.color_tag !== undefined) category.color_tag = String(req.body.color_tag || '');
+        if (req.body.is_phone_category !== undefined) category.is_phone_category = !!req.body.is_phone_category;
+        if (req.body.active !== undefined) category.active = !!req.body.active;
+
+        await category.save();
+
+        // Keep item labels in sync with a renamed category.
+        if (req.body.propagateRename && req.body.originalName) {
+            await Accessory.updateMany({ category: req.body.originalName }, { $set: { category: category.name } });
+        }
+
+        res.json(normalizeCategory(category));
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message || 'Database error updating category' });
+    }
+});
+
+app.delete('/api/stock/categories/:id', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const category = await StockCategory.findByIdAndDelete(req.params.id);
+        if (!category) return res.status(404).json({ error: 'Category not found' });
+        res.json({ success: true, id: req.params.id });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error deleting category' });
+    }
+});
+
+// --- Manual stock adjustment (+/- with reason) ---
+app.post('/api/stock/adjust', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const { accessoryId, sku, change, reason, note = '', allowNegative = false, localKey = null } = req.body;
+
+        const delta = Number(change);
+        if (!delta || Number.isNaN(delta) || delta === 0) {
+            return res.status(400).json({ error: 'Adjustment amount must be a non-zero number' });
+        }
+        if (!ADJUSTMENT_REASONS.includes(reason)) {
+            return res.status(400).json({ error: 'A valid adjustment reason is required' });
+        }
+
+        const accessory = accessoryId
+            ? await Accessory.findById(accessoryId)
+            : await Accessory.findOne({ sku: String(sku || '').trim() });
+        if (!accessory) return res.status(404).json({ error: 'Item not found' });
+        if (accessory.is_service) return res.status(400).json({ error: 'Service items are not stock-tracked' });
+
+        const newQty = Number(accessory.quantity || 0) + delta;
+        if (newQty < 0 && !allowNegative) {
+            return res.status(400).json({ error: `Adjustment would take stock negative (${newQty}). Enable the negative override to proceed.` });
+        }
+
+        accessory.quantity = newQty;
+        await accessory.save();
+
+        const movement = await logStockMovement({
+            accessory,
+            type: 'ADJUSTMENT',
+            quantityChange: delta,
+            resultingQuantity: newQty,
+            reason,
+            note,
+            user: req.user,
+            localKey
+        });
+
+        res.json({
+            success: true,
+            quantity: newQty,
+            movement: normalizeMovement(movement)
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message || 'Database error adjusting stock' });
+    }
+});
+
+// --- Stock movement ledger (filterable) ---
+app.get('/api/stock/movements', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const { itemId = '', sku = '', type = '', from = '', to = '', user = '', limit = 500 } = req.query;
+        const filter = {};
+
+        if (itemId) filter.accessory_id = String(itemId);
+        if (sku) filter.sku = String(sku).trim();
+        if (type && MOVEMENT_TYPES.includes(type)) filter.type = type;
+        if (user) filter.$or = [{ user_name: { $regex: String(user).trim(), $options: 'i' } }, { user_id: String(user).trim() }];
+        if (from || to) {
+            filter.created_at = {};
+            if (from) filter.created_at.$gte = new Date(`${from}T00:00:00.000`);
+            if (to) filter.created_at.$lte = new Date(`${to}T23:59:59.999`);
+        }
+
+        const movements = await StockMovement.find(filter)
+            .sort({ created_at: -1 })
+            .limit(Math.min(2000, Math.max(1, Number(limit) || 500)));
+        res.json(movements.map(normalizeMovement));
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error loading movements' });
+    }
+});
+
+// --- Delete an ADJUSTMENT movement (admin / shop owner only) ---
+// Deletes a stock-adjustment ledger record and reverses its quantity effect
+// so the item's stock stays honest. Sales/refunds/imports are never deletable.
+app.delete('/api/stock/movements/:id', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const movement = await StockMovement.findById(req.params.id);
+        if (!movement) return res.status(404).json({ error: 'Movement record not found' });
+        if (movement.type !== 'ADJUSTMENT') {
+            return res.status(400).json({ error: 'Only stock adjustment records can be deleted' });
+        }
+
+        // Reverse the adjustment so the current quantity stays honest.
+        const accessory = await Accessory.findById(movement.accessory_id);
+        if (accessory && !accessory.is_service) {
+            accessory.quantity = Math.max(0, Number(accessory.quantity || 0) - Number(movement.quantity_change || 0));
+            await accessory.save();
+        }
+
+        await StockMovement.deleteOne({ _id: movement._id });
+        res.json({ deleted: true, id: String(movement._id), reversedQuantityChange: Number(movement.quantity_change || 0) });
+    } catch (err) {
+        res.status(500).json({ error: err.message || 'Failed to delete movement' });
+    }
+});
+
+// --- Stock takes ---
+// Start: snapshots system quantities into blank counting lines.
+app.post('/api/stock/takes/start', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const scopeType = req.body.scopeType === 'category' ? 'category' : 'all';
+        const scopeCategory = String(req.body.scopeCategory || '').trim();
+        if (scopeType === 'category' && !scopeCategory) {
+            return res.status(400).json({ error: 'Pick a category to count or choose All Items' });
+        }
+
+        const query = scopeType === 'category' ? { category: scopeCategory } : {};
+        const items = await Accessory.find(query).sort({ name: 1 });
+
+        const take = await StockTake.create({
+            status: 'in_progress',
+            scope_type: scopeType,
+            scope_category: scopeType === 'category' ? scopeCategory : '',
+            started_by_id: String(req.user.id || ''),
+            started_by_name: req.user.name || '',
+            lines: items
+                .filter((a) => !a.is_service)
+                .map((a) => ({
+                    accessory_id: a._id.toString(),
+                    sku: a.sku,
+                    name: a.name,
+                    system_qty: Number(a.quantity || 0),
+                    counted_qty: null,
+                    difference: null,
+                    applied: false
+                }))
+        });
+
+        res.status(201).json(normalizeStockTake(take));
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message || 'Database error starting stock take' });
+    }
+});
+
+app.get('/api/stock/takes', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const takes = await StockTake.find({}).sort({ started_at: -1 }).limit(100);
+        res.json(takes.map(normalizeStockTake));
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error loading stock takes' });
+    }
+});
+
+// Save counted quantities while the count is in progress.
+app.put('/api/stock/takes/:id', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const take = await StockTake.findById(req.params.id);
+        if (!take) return res.status(404).json({ error: 'Stock take not found' });
+        if (take.status === 'completed') return res.status(400).json({ error: 'This stock take is already completed' });
+
+        const counts = Array.isArray(req.body.counts) ? req.body.counts : [];
+        for (const c of counts) {
+            const line = take.lines.find((l) => l.accessory_id === String(c.accessoryId));
+            if (!line) continue;
+            line.counted_qty = c.countedQty === null || c.countedQty === undefined || c.countedQty === ''
+                ? null
+                : Math.max(0, Number(c.countedQty) || 0);
+            line.difference = line.counted_qty === null ? null : line.counted_qty - line.system_qty;
+        }
+
+        take.items_counted = take.lines.filter((l) => l.counted_qty !== null).length;
+        await take.save();
+        res.json(normalizeStockTake(take));
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error saving stock take' });
+    }
+});
+
+// Apply corrections: writes STOCK_TAKE movements for every variance and closes the count.
+app.post('/api/stock/takes/:id/apply', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const take = await StockTake.findById(req.params.id);
+        if (!take) return res.status(404).json({ error: 'Stock take not found' });
+        if (take.status === 'completed') return res.status(400).json({ error: 'This stock take is already completed' });
+
+        // Optional client-side recount payload; falls back to stored lines.
+        const submitted = Array.isArray(req.body.lines) ? req.body.lines : null;
+        let correctedCount = 0;
+        let totalVariance = 0;
+        const appliedMovements = [];
+
+        for (const line of take.lines) {
+            const sub = submitted ? submitted.find((l) => String(l.accessoryId) === String(line.accessory_id)) : null;
+            const counted = sub
+                ? (sub.countedQty === null || sub.countedQty === undefined || sub.countedQty === '' ? null : Math.max(0, Number(sub.countedQty) || 0))
+                : line.counted_qty;
+            if (counted === null) continue;
+
+            const difference = counted - line.system_qty;
+            totalVariance += difference;
+
+            if (difference !== 0) {
+                const accessory = await Accessory.findById(line.accessory_id);
+                if (accessory) {
+                    accessory.quantity = counted;
+                    await accessory.save();
+                    const movement = await logStockMovement({
+                        accessory,
+                        type: 'STOCK_TAKE',
+                        quantityChange: difference,
+                        resultingQuantity: counted,
+                        reason: difference > 0 ? 'Miscount' : 'Missing stock',
+                        note: `Stock take correction (${take.scope_type === 'category' ? take.scope_category : 'All items'})`,
+                        reference: `TAKE-${take._id.toString().slice(-6).toUpperCase()}`,
+                        user: req.user,
+                        localKey: sub?.localKey || null
+                    });
+                    appliedMovements.push(normalizeMovement(movement));
+                }
+                correctedCount++;
+            }
+
+            line.counted_qty = counted;
+            line.difference = difference;
+            line.applied = true;
+        }
+
+        take.status = 'completed';
+        take.completed_by_id = String(req.user.id || '');
+        take.completed_by_name = req.user.name || '';
+        take.completed_at = new Date();
+        take.items_counted = take.lines.filter((l) => l.counted_qty !== null).length;
+        take.total_variance = totalVariance;
+        await take.save();
+
+        res.json({
+            success: true,
+            take: normalizeStockTake(take),
+            movements: appliedMovements,
+            correctedItems: correctedCount,
+            totalVariance
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message || 'Database error applying stock take' });
+    }
+});
+
+// --- Bulk import (CSV/Excel export) ---
+// Permanent upload-history shape sent to clients (snake_case like other models).
+const normalizeImport = (r) => ({
+    id: String(r._id || r.id),
+    local_key: r.local_key || null,
+    filename: r.filename,
+    row_count: r.row_count || 0,
+    created: r.created || 0,
+    updated: r.updated || 0,
+    skipped: r.skipped || 0,
+    errors: Array.isArray(r.errors) ? r.errors.slice(0, 50) : [],
+    imported_by_id: r.imported_by_id || null,
+    imported_by_name: r.imported_by_name || 'unknown',
+    created_at: r.created_at || r.createdAt
+});
+
+app.post('/api/stock/import', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const filename = String(req.body.filename || 'import.csv');
+        const overwriteQty = !!req.body.overwrite;
+        const rows = Array.isArray(req.body.rows) ? req.body.rows : [];
+
+        if (rows.length === 0) return res.status(400).json({ error: 'Import contains no rows' });
+        if (rows.length > 1000) return res.status(400).json({ error: 'Row cap exceeded (max 1000 rows per import)' });
+
+        const importRef = `${filename} (${new Date().toLocaleDateString()})`;
+        const results = { created: 0, updated: 0, errors: [], movements: [] };
+
+        for (const row of rows) {
+            try {
+                const sku = String(row.sku || '').trim();
+                const name = String(row.name || '').trim();
+                const category = String(row.category || '').trim();
+                const quantity = row.quantity === '' || row.quantity === undefined ? null : Number(row.quantity);
+                const cost = row.cost_price === '' || row.cost_price === undefined ? null : Number(row.cost_price);
+                const sell = row.sell_price === '' || row.sell_price === undefined ? null : Number(row.sell_price);
+                const threshold = row.low_stock_threshold === '' || row.low_stock_threshold === undefined ? null : Number(row.low_stock_threshold);
+
+                if (!sku) throw new Error('SKU is required');
+                const rowLocalKey = row.localKey || null;
+                if (!name) throw new Error('Name is required');
+                if (!category) throw new Error('Category is required');
+                if (quantity !== null && (Number.isNaN(quantity) || quantity < 0)) throw new Error(`Invalid quantity "${row.quantity}"`);
+                if (cost !== null && Number.isNaN(cost)) throw new Error(`Invalid cost "${row.cost_price}"`);
+                if (sell !== null && Number.isNaN(sell)) throw new Error(`Invalid sell price "${row.sell_price}"`);
+
+                let accessory = await Accessory.findOne({ sku });
+
+                if (accessory) {
+                    // Existing item matched by SKU.
+                    const prevQty = Number(accessory.quantity || 0);
+                    const newQty = quantity === null
+                        ? prevQty
+                        : (overwriteQty ? quantity : prevQty + quantity);
+
+                    accessory.name = name || accessory.name;
+                    accessory.category = category;
+                    if (cost !== null) accessory.cost_price = cost;
+                    if (sell !== null && sell > 0) accessory.sell_price = sell;
+                    if (threshold !== null) accessory.low_stock_threshold = threshold;
+
+                    const qtyChanged = !accessory.is_service && newQty !== prevQty;
+                    accessory.quantity = newQty;
+                    await accessory.save();
+
+                    if (qtyChanged) {
+                        const movement = await logStockMovement({
+                            accessory,
+                            type: 'IMPORT',
+                            quantityChange: newQty - prevQty,
+                            resultingQuantity: newQty,
+                            reason: 'Bulk import',
+                            note: `Quantity ${overwriteQty ? 'overwritten' : 'added'} via ${importRef}`,
+                            reference: importRef,
+                            user: req.user,
+                            localKey: rowLocalKey
+                        });
+                        results.movements.push(normalizeMovement(movement));
+                    }
+                    results.updated++;
+                } else {
+                    if (sell === null || Number.isNaN(sell) || sell <= 0) throw new Error('New items need a valid sell price');
+
+                    accessory = await Accessory.create({
+                        sku,
+                        name,
+                        category,
+                        quantity: quantity || 0,
+                        cost_price: cost,
+                        sell_price: sell,
+                        low_stock_threshold: threshold === null ? 5 : threshold
+                    });
+
+                    if (Number(accessory.quantity) > 0 && !accessory.is_service) {
+                        const movement = await logStockMovement({
+                            accessory,
+                            type: 'IMPORT',
+                            quantityChange: Number(accessory.quantity),
+                            resultingQuantity: Number(accessory.quantity),
+                            reason: 'Bulk import',
+                            note: `New item created via ${importRef}`,
+                            reference: importRef,
+                            user: req.user,
+                            localKey: rowLocalKey
+                        });
+                        results.movements.push(normalizeMovement(movement));
+                    }
+                    results.created++;
+                }
+            } catch (rowErr) {
+                results.errors.push({ sku: row.sku || '(missing)', error: rowErr.message });
+            }
+        }
+
+        // Permanent record of this upload so every file that ever changed
+        // stock is identifiable later (who, when, how many rows, skips).
+        let importRecord = null;
+        try {
+            importRecord = await StockImport.create({
+                local_key: req.body.localKey || null,
+                filename,
+                row_count: rows.length,
+                created: results.created,
+                updated: results.updated,
+                skipped: results.errors.length,
+                errors: results.errors.slice(0, 100),
+                imported_by_id: req.user?.id || null,
+                imported_by_name: req.user?.name || 'unknown'
+            });
+        } catch (histErr) {
+            console.warn('StockImport record failed:', histErr.message);
+        }
+
+        res.json({ success: true, filename, ...results, import: importRecord ? normalizeImport(importRecord) : null });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message || 'Database error importing rows' });
+    }
+});
+
+// --- Alerts: low stock + dead stock ---
+app.get('/api/stock/imports', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const imports = await StockImport.find({}).sort({ created_at: -1 }).limit(50).lean();
+        res.json(imports.map(normalizeImport));
+    } catch (err) {
+        res.status(500).json({ error: err.message || 'Failed to list stock imports' });
+    }
+});
+
+app.get('/api/stock/alerts', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const deadDays = Math.max(1, Number(req.query.deadDays) || 30);
+        const accessories = await Accessory.find({}).sort({ name: 1 });
+
+        const lowStock = accessories
+            .filter((a) => !a.is_service && Number(a.quantity || 0) <= Number(a.low_stock_threshold || 0))
+            .map((a) => ({
+                id: a._id.toString(),
+                sku: a.sku,
+                name: a.name,
+                category: a.category,
+                quantity: Number(a.quantity || 0),
+                low_stock_threshold: Number(a.low_stock_threshold || 0)
+            }));
+
+        // Last sale date per accessory from the sales ledger.
+        const lastSaleAgg = await Sale.aggregate([
+            { $unwind: '$items' },
+            { $match: { 'items.inventory_type': 'accessory' } },
+            { $group: { _id: '$items.inventory_id', lastSaleAt: { $max: '$createdAt' } } }
+        ]);
+        const lastSaleMap = new Map(lastSaleAgg.map((r) => [String(r._id), r.lastSaleAt]));
+
+        const now = Date.now();
+        const deadStock = accessories
+            .filter((a) => !a.is_service && Number(a.quantity || 0) > 0)
+            .map((a) => {
+                const lastSale = lastSaleMap.get(a._id.toString()) || a.added_at || a.createdAt;
+                const days = lastSale ? Math.floor((now - new Date(lastSale).getTime()) / 86400000) : 9999;
+                return {
+                    id: a._id.toString(),
+                    sku: a.sku,
+                    name: a.name,
+                    category: a.category,
+                    quantity: Number(a.quantity || 0),
+                    days_in_stock: days
+                };
+            })
+            .filter((a) => a.days_in_stock >= deadDays)
+            .sort((x, y) => y.days_in_stock - x.days_in_stock);
+
+        res.json({ lowStock, deadStock, deadDays, generatedAt: new Date().toISOString() });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error loading alerts' });
     }
 });
 
@@ -598,6 +1377,276 @@ app.delete('/api/sales/:id', authenticateToken, requireAdmin, async (req, res) =
     }
 });
 
+// Initiate a refund. Cashiers route out-of-policy refunds to the approval queue.
+// Exposed both as POST /api/refunds (modern) and via the legacy /api/sales/:id/refund wrapper.
+const createRefundHandler = async (req, res) => {
+    try {
+        await connectDB();
+        const { saleId, items, reason, reason_note, refund_method, movement_date } = req.body;
+        if (!saleId) return res.status(400).json({ error: 'saleId is required' });
+        if (!Array.isArray(items) || items.length === 0) return res.status(400).json({ error: 'At least one item must be selected' });
+        if (!REFUND_REASONS.includes(reason || '')) return res.status(400).json({ error: 'Invalid reason' });
+        if (String(reason).trim() === 'Other' && !reason_note) return res.status(400).json({ error: 'reason_note is required when reason is Other' });
+
+        const sale = await Sale.findById(saleId);
+        if (!sale) return res.status(404).json({ error: 'Sale not found' });
+        if (sale.refunded === true) return res.status(400).json({ error: 'This sale has already been fully refunded' });
+
+        const originalMethod = String(sale.payment_method || '').toUpperCase();
+        const refundMethod = String(refund_method || originalMethod).toUpperCase();
+        if (!REFUND_METHODS.includes(refundMethod)) return res.status(400).json({ error: 'Invalid refund method' });
+
+        // Per-item quantity validation (<= sold qty - already refunded)
+        const refundedTotals = await getRefundedTotals(sale._id);
+        const itemsMap = new Map((sale.items || []).map((i) => [`${i.inventory_type}:${i.inventory_id}`, i]));
+        let subtotal = 0; const normalizedItems = [];
+        for (const sel of items) {
+            const sType = String(sel.inventory_type || ''); const sId = String(sel.inventory_id || '');
+            const original = itemsMap.get(`${sType}:${sId}`);
+            if (!original) return res.status(400).json({ error: `Item ${sType}:${sId} not found in the original sale` });
+            const remaining = Math.max(0, Number(original.quantity || 0) - Number(refundedTotals.get(`${sType}:${sId}`) || 0));
+            const requested = Number(sel.quantity || 0);
+            if (requested <= 0) return res.status(400).json({ error: `Quantity must be greater than zero for ${original.name}` });
+            if (requested > remaining) return res.status(400).json({ error: `Cannot refund more than remaining (${remaining}) for ${original.name}` });
+            const unit_price = Number(sel.unit_price != null ? sel.unit_price : original.unit_price || 0);
+            const line_total = Math.round((unit_price * requested) * 100) / 100;
+            subtotal += line_total;
+            normalizedItems.push({ inventory_type: sType, inventory_id: sId, name: original.name || sel.name || '', sku: original.sku || sel.sku || '', imei: original.imei || sel.imei || '', unit_price, quantity: requested, line_total });
+        }
+        const total = Math.round(subtotal * 100) / 100;
+
+        const policy = await getRefundPolicy();
+        const isAdminOrOwner = isAdminOrShopOwner(req.user.role);
+        const daysSince = diffDays(new Date(sale.createdAt || sale.created_at || Date.now()));
+        const withinDays = daysSince <= Number(policy.maxDays || DEFAULT_REFUND_POLICY.maxDays);
+        const withinAmount = total <= Number(policy.maxAmount || DEFAULT_REFUND_POLICY.maxAmount);
+        const sameMethodOk = !policy.sameMethodRequired || refundMethod === originalMethod || isAdminOrOwner;
+        const needsApproval = !isAdminOrOwner && (!withinDays || !withinAmount || !sameMethodOk);
+
+        const refund = await Refund.create({
+            sale_id: sale._id.toString(), sale_receipt_no: sale.receipt_no, refund_reference: formatRefundRef(),
+            items: normalizedItems, subtotal, total, reason, reason_note: reason_note || '',
+            refund_method: refundMethod, original_payment_method: originalMethod,
+            initiated_by_id: req.user.id ? String(req.user.id) : '', initiated_by_name: (req.user.name || '').toString(),
+            requires_approval: needsApproval, approval_status: needsApproval ? 'PENDING' : 'DIRECT',
+            session_id: sale.session_id ? String(sale.session_id) : '',
+            // Store as an ISO date (YYYY-MM-DD): the refunds report and the
+            // cash-session summary string-match this field against ranges.
+            movement_date: new Date(movement_date || Date.now()).toISOString().slice(0, 10)
+        });
+
+        if (!needsApproval) {
+            await applyRefundEffects(refund, req.user);
+            return res.status(201).json({ success: true, status: 'APPLIED', refund: normalizeRefund(refund) });
+        }
+        return res.status(201).json({ success: true, status: 'PENDING', refund: normalizeRefund(refund) });
+    } catch (err) {
+        console.error('[refund create]', err);
+        res.status(err.code === 'NOT_FOUND' ? 404 : 500).json({ error: err.message || 'Failed to initiate refund' });
+    }
+};
+app.post('/api/refunds', authenticateToken, (req, res) => { createRefundHandler(req, res).catch((e) => res.status(500).json({ error: e.message || 'Failed to initiate refund' })); });
+// Cashiers may initiate refunds; the approval policy above routes out-of-policy
+// refunds to PENDING (admin/shop-owner approval), otherwise they apply DIRECTly.
+// (applyRefundEffects is defined below; request-time calls resolve after module load)
+// =============================================================
+// REFUNDS (full flow: partial/full, per-item qty, reasons,
+// approval policy, same/cross-method handling, stock + cash +
+// revenue reversal, warranty, printable receipt, reporting)
+// =============================================================
+
+const ObjectNotFoundError = (msg) => { const e = new Error(msg); e.code = 'NOT_FOUND'; return e; };
+
+// Apply the stock / sale / cash-session effects for an APPROVED (or DIRECT) refund.
+const applyRefundEffects = async (refund, approver) => {
+    const sale = await Sale.findById(refund.sale_id);
+    if (!sale) throw ObjectNotFoundError('Sale not found');
+
+    for (const item of refund.items) {
+        const iType = String(item.inventory_type || '');
+        const iId = item.inventory_id;
+        if (iType === 'accessory' && iId) {
+            const accessory = await Accessory.findById(iId);
+            if (accessory && !accessory.is_service) {
+                const qty = Math.max(0, Number(item.quantity || 0));
+                accessory.quantity = Math.max(0, Number(accessory.quantity || 0) + qty);
+                await accessory.save();
+                await logStockMovement({
+                    accessory, type: 'REFUND',
+                    quantityChange: qty, resultingQuantity: Number(accessory.quantity || 0),
+                    reason: refund.reason || 'Sale refund',
+                    note: `Refund ${refund.refund_reference} of receipt ${refund.sale_receipt_no}`,
+                    reference: refund.refund_reference, user: approver, localKey: null
+                });
+            }
+        } else if (iType === 'phone' && iId) {
+            const phone = await Phone.findById(iId);
+            if (phone) {
+                const imeiMatch = String(phone.imei || '') === String(item.imei || '');
+                if (imeiMatch) {
+                    phone.status = 'Available'; phone.warranty = 'None'; phone.warranty_end_date = null;
+                    await phone.save();
+                    await RepairJob.updateOne(
+                        { imei: phone.imei, repair_status: { $ne: 'Completed' } },
+                        { $set: { warranty_end_date: null, refund_note: `IMEI ${phone.imei} refunded via ${refund.refund_reference}` } }
+                    );
+                } else if (phone.status === 'Sold') { phone.status = 'Available'; await phone.save(); }
+            }
+        }
+    }
+
+    const refundedTotals = await getRefundedTotals(sale._id);
+    let fullyRefunded = Array.isArray(sale.items) && sale.items.length > 0;
+    for (const original of (sale.items || [])) {
+        const key = `${original.inventory_type}:${original.inventory_id}`;
+        if (Number(refundedTotals.get(key) || 0) < Number(original.quantity || 0)) { fullyRefunded = false; break; }
+    }
+    if (fullyRefunded) { sale.refunded = true; sale.refunded_at = sale.refunded_at || new Date(); }
+    sale.refunded_by_id = approver.id ? String(approver.id) : (sale.refunded_by_id || '');
+    sale.refunded_by_name = (approver.name || '').toString() || sale.refunded_by_name || '';
+    sale.refund_reason = sale.refund_reason || refund.reason;
+    await sale.save();
+
+    // Cash session adjustment: a REFUND movement removes cash from the day's expected float.
+    await CashMovement.create({
+        local_id: null,
+        cashier_id: String(sale.cashier_id || ''),
+        cashier_name: (sale.cashier_name || '') || (approver.name || '') || '',
+        movement_type: 'REFUND',
+        amount: Number(refund.total || 0),
+        note: `Refund ${refund.refund_reference} of receipt ${sale.receipt_no} (${refund.refund_method})`,
+        movement_date: refund.movement_date
+    });
+
+    refund.approved_by_id = approver.id ? String(approver.id) : '';
+    refund.approved_by_name = (approver.name || '').toString();
+    refund.approved_at = new Date();
+    await refund.save();
+};
+// >>> REFUND_NEW routes (approve / reject / pending / search + legacy wrapper) <<<
+
+// Approve a pending refund (admin / shop owner). PIN gate if configured.
+app.post('/api/refunds/:id/approve', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const refund = await Refund.findById(req.params.id);
+        if (!refund) return res.status(404).json({ error: 'Refund not found' });
+        if (refund.approval_status !== 'PENDING') return res.status(400).json({ error: 'Only pending refunds can be approved' });
+
+        const pinDoc = await StoreSetting.findOne({ key: 'admin_refund_pin' });
+        // The setting may be stored as a bare string or wrapped ({ value: pin }).
+        const storedPinRaw = pinDoc ? pinDoc.value : null;
+        const storedPin = String((storedPinRaw && typeof storedPinRaw === 'object') ? (storedPinRaw.value ?? '') : (storedPinRaw ?? ''));
+        if (storedPin && req.user.role !== 'shop_owner' && storedPin !== String(req.body.approver_pin || '')) {
+            return res.status(403).json({ error: 'Valid admin approval PIN required' });
+        }
+
+        refund.approval_status = 'APPROVED'; refund.requires_approval = true;
+        await refund.save();
+        await applyRefundEffects(refund, req.user);
+        res.json({ success: true, status: 'APPROVED', refund: normalizeRefund(refund) });
+    } catch (err) {
+        console.error('[refund approve]', err);
+        res.status(err.code === 'NOT_FOUND' ? 404 : 500).json({ error: err.message || 'Failed to approve refund' });
+    }
+});
+
+// Reject a pending refund.
+app.post('/api/refunds/:id/reject', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const refund = await Refund.findById(req.params.id);
+        if (!refund) return res.status(404).json({ error: 'Refund not found' });
+        if (refund.approval_status !== 'PENDING') return res.status(400).json({ error: 'Only pending refunds can be rejected' });
+        refund.approval_status = 'REJECTED'; refund.rejection_reason = req.body.reason || '';
+        await refund.save();
+        res.json({ success: true, status: 'REJECTED', refund: normalizeRefund(refund) });
+    } catch (err) {
+        console.error('[refund reject]', err);
+        res.status(500).json({ error: err.message || 'Failed to reject refund' });
+    }
+});
+
+// Pending approval queue (admin / shop owner).
+app.get('/api/refunds/pending', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const rows = await Refund.find({ approval_status: 'PENDING' }).sort({ initiated_at: -1 });
+        res.json(rows.map((r) => normalizeRefund(r)));
+    } catch (err) {
+        console.error('[refunds pending]', err);
+        res.status(500).json({ error: 'Failed to load pending refunds' });
+    }
+});
+
+// Refunds search (used by Sales History + the Refunds Report).
+app.get('/api/refunds', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const { saleId, receipt_no, from, to, status = 'ALL', page, limit } = req.query;
+        const filter = {};
+        if (saleId) filter.sale_id = saleId;
+        if (receipt_no) filter.sale_receipt_no = receipt_no;
+        if (from && to) filter.movement_date = { $gte: from, $lte: to };
+        if (status !== 'ALL') filter.approval_status = status;
+        const query = Refund.find(filter).sort({ movement_date: -1, createdAt: -1 });
+        if (Number(page) > 0 && Number(limit) > 0) query.skip((Number(page) - 1) * Number(limit)).limit(Number(limit));
+        const [rows, total] = await Promise.all([query, Refund.countDocuments(filter)]);
+        res.json({ refunds: rows.map((r) => normalizeRefund(r)), total, count: rows.length });
+    } catch (err) {
+        console.error('[refunds search]', err);
+        res.status(500).json({ error: 'Failed to search refunds' });
+    }
+});
+
+// Refund approval policy (readable by any authenticated user so the UI can show
+// whether a given refund needs admin approval).
+app.get('/api/refunds/policy', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const policy = await getRefundPolicy();
+        res.json(policy);
+    } catch (err) { console.error('[refund policy]', err); res.status(500).json({ error: 'Failed to load refund policy' }); }
+});
+
+// Legacy whole-sale refund wrapper (backward compat) -> delegates to the full flow.
+app.post('/api/sales/:id/refund', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const sale = await Sale.findById(req.params.id);
+        if (!sale) return res.status(404).json({ error: 'Sale not found' });
+        req.body.saleId = sale._id.toString();
+        req.body.items = (sale.items || []).map((i) => ({
+            inventory_type: i.inventory_type, inventory_id: String(i.inventory_id),
+            name: i.name, sku: i.sku, unit_price: i.unit_price, quantity: Number(i.quantity || 1)
+        }));
+        if (!req.body.reason) req.body.reason = 'Other';
+        if (!req.body.refund_method) req.body.refund_method = String(sale.payment_method || '').toUpperCase();
+        req.body.movement_date = req.body.movement_date || new Date().toISOString().slice(0, 10);
+        return createRefundHandler(req, res);
+    } catch (err) { res.status(500).json({ error: err.message || 'Failed to refund sale' }); }
+});
+
+// Generic store-setting read/write (refund policy + admin pin live here).
+app.get('/api/store-settings/:key', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const doc = await StoreSetting.findOne({ key: req.params.key });
+        res.json(doc ? doc.value : null);
+    } catch (err) { res.status(500).json({ error: 'Failed to read store setting' }); }
+});
+app.put('/api/store-settings/:key', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const doc = await StoreSetting.findOneAndUpdate(
+            { key: req.params.key }, { key: req.params.key, value: req.body },
+            { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
+        res.json(doc.value);
+    } catch (err) { res.status(500).json({ error: 'Failed to save store setting' }); }
+});
+
+
 app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
     const {
         items,
@@ -606,7 +1655,8 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
         cashReceived = 0,
         discountAmount = 0,
         approvalNote = '',
-        sessionId
+        sessionId,
+        clientLocalId
     } = req.body;
 
     if (!Array.isArray(items) || items.length === 0) {
@@ -627,8 +1677,20 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
     // Use session for transaction if MongoDB replica set available, otherwise sequential ops
     try {
         await connectDB();
+        // Idempotency: if this same sale (by its device token) was already
+        // recorded — e.g. the background sync raced the immediate push, or a
+        // network retry re-sent it — return the existing record instead of
+        // creating it again (which would double-charge and double-deduct stock).
+        if (clientLocalId) {
+            const existing = await Sale.findOne({ client_local_id: clientLocalId });
+            if (existing) {
+                return res.json({ existing: true, sale: normalizeSale(existing), receipt: normalizeSale(existing), message: 'Sale already recorded' });
+            }
+        }
         let subtotal = 0;
         const normalizedItems = [];
+        // Generated up-front so sale items can reference it in stock movements.
+        const receiptNo = formatReceiptNo();
 
         for (const rawItem of items) {
             const itemType = String(rawItem.inventoryType || '').toLowerCase();
@@ -686,6 +1748,18 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
 
                 accessory.quantity -= quantity;
                 await accessory.save();
+
+                // Immutable audit trail: every sale decrements via a movement.
+                await logStockMovement({
+                    accessory,
+                    type: 'SALE',
+                    quantityChange: -quantity,
+                    resultingQuantity: Number(accessory.quantity),
+                    reason: 'Sale',
+                    note: `Sold ${quantity} x ${accessory.name}`,
+                    reference: receiptNo,
+                    user: req.user
+                });
             }
         }
 
@@ -702,9 +1776,11 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
         if (normalizedPaymentMethod === 'CASH' && cashTendered < total - 0.01) {
             throw new Error('Cash received must cover the total amount');
         }
-        const receiptNo = formatReceiptNo();
 
         const saleDoc = await Sale.create({
+            // Only set client_local_id when provided: the field is uniquely
+            // indexed and MongoDB treats two explicit nulls as duplicates.
+            ...(clientLocalId ? { client_local_id: clientLocalId } : {}),
             receipt_no: receiptNo,
             cashier_id: req.user.id,
             cashier_name: req.user.name,
@@ -730,6 +1806,15 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
             message: 'Sale completed and synced to cloud'
         });
     } catch (err) {
+        // Concurrent duplicate (two pushes of the same sale landing together):
+        // the unique index on client_local_id rejected the second create.
+        // Return the already-recorded sale instead of a confusing error.
+        if (clientLocalId && (err.code === 11000 || String(err.message || '').includes('E11000'))) {
+            const existing = await Sale.findOne({ client_local_id: clientLocalId }).catch(() => null);
+            if (existing) {
+                return res.json({ existing: true, sale: normalizeSale(existing), receipt: normalizeSale(existing), message: 'Sale already recorded' });
+            }
+        }
         console.error(err);
         return res.status(400).json({ error: err.message || 'Unable to complete sale' });
     }
@@ -994,6 +2079,18 @@ app.post('/api/repair-jobs/:id/parts', authenticateToken, async (req, res) => {
         part.quantity -= requestedQty;
         await part.save();
 
+        // Audit trail: spare parts consumed by a repair job.
+        await logStockMovement({
+            accessory: part,
+            type: 'ADJUSTMENT',
+            quantityChange: -requestedQty,
+            resultingQuantity: Number(part.quantity),
+            reason: 'Other',
+            note: `Used in repair job ${job._id.toString().slice(-6).toUpperCase()}`,
+            reference: `REPAIR-${job._id.toString().slice(-4).toUpperCase()}`,
+            user: req.user
+        });
+
         const newPart = await RepairJobPart.create({
             repair_job_id: job.id,
             inventory_id: part._id.toString(),
@@ -1191,13 +2288,17 @@ app.get('/api/reports', authenticateToken, requireAdmin, async (req, res) => {
         const rangeStart = new Date(`${from}T00:00:00.000Z`);
         const rangeEnd = new Date(`${to}T23:59:59.999Z`);
 
-        const [phones, accessories, saleRowsRange, saleRowsAll, deliveredRepairs, cashMovements] = await Promise.all([
+                const [phones, accessories, saleRowsRange, saleRowsAll, deliveredRepairs, cashMovements, refundRows, stockInMovements, usersList, sessionsForPeriod] = await Promise.all([
             Phone.find({}),
             Accessory.find({}),
             Sale.find({ createdAt: { $gte: rangeStart, $lte: rangeEnd } }).sort({ createdAt: -1 }),
             Sale.find({}).sort({ createdAt: -1 }),
             RepairJob.find({ repair_status: 'Delivered', updated_at: { $gte: rangeStart, $lte: rangeEnd } }),
-            CashMovement.find({ movement_date: { $gte: from, $lte: to } })
+            CashMovement.find({ movement_date: { $gte: from, $lte: to } }),
+            Refund.find({ movement_date: { $gte: from, $lte: to } }),
+            StockMovement.find({ type: 'STOCK_IN', created_at: { $gte: rangeStart, $lte: rangeEnd } }),
+            User.find({}),
+            DailySession.find({ date: { $gte: from, $lte: to } }).sort({ date: -1 })
         ]);
 
         const phoneMap = new Map(phones.map((phone) => [phone._id.toString(), phone]));
@@ -1269,7 +2370,6 @@ app.get('/api/reports', authenticateToken, requireAdmin, async (req, res) => {
 
         const salesByCategory = { 'New Phones': 0, 'Used Phones': 0, Accessories: 0, Repairs: 0 };
 
-        const marginRows = [];
         const itemAggregate = new Map();
         const cashierAggregate = new Map();
         const cashierBalanceAggregate = new Map();
@@ -1302,23 +2402,14 @@ app.get('/api/reports', authenticateToken, requireAdmin, async (req, res) => {
                 salesByCategory[category] += revenue;
 
                 const aggregateKey = `${item.name}::${item.inventory_type}`;
-                const current = itemAggregate.get(aggregateKey) || { item_name: item.name, quantity_sold: 0, revenue: 0 };
+                const current = itemAggregate.get(aggregateKey) || { item_name: item.name, category: '', quantity_sold: 0, revenue: 0, cost: 0 };
+                if (!current.category) current.category = current.category || category;
                 current.quantity_sold += qty;
                 current.revenue += revenue;
+                current.cost += cost;
                 itemAggregate.set(aggregateKey, current);
             });
-
-            const profit = saleRevenue - saleCost;
-            marginRows.push({
-                sale_id: row._id.toString(),
-                receipt_no: row.receipt_no,
-                created_at: row.createdAt,
-                cashier_name: row.cashier_name,
-                revenue: saleRevenue,
-                cost: saleCost,
-                profit,
-                margin_percent: saleRevenue > 0 ? (profit / saleRevenue) * 100 : 0
-            });
+                // per-product margin rows are built below from itemAggregate
 
             const cashierKey = `${row.cashier_id}`;
             const cashierCurrent = cashierAggregate.get(cashierKey) || { cashier_id: row.cashier_id, cashier_name: row.cashier_name, sales_total: 0, sale_count: 0 };
@@ -1347,6 +2438,57 @@ app.get('/api/reports', authenticateToken, requireAdmin, async (req, res) => {
 
             balanceCurrent.cash_from_sales += cashContribution;
             cashierBalanceAggregate.set(balanceKey, balanceCurrent);
+        });
+
+        // ---- Refund reversal for revenue reports ----
+        // Only APPROVED / DIRECT (already-applied) refunds reduce revenue. PENDING /
+        // REJECTED refunds leave the original sale figures untouched.
+        const categoryOfItem = (type, id) => {
+            if (type === 'phone') {
+                const ph = phoneMap.get(String(id));
+                return ph && String(ph.condition || '').toLowerCase().includes('used') ? 'Used Phones' : 'New Phones';
+            }
+            return 'Accessories';
+        };
+        const appliedRefunds = refundRows.filter((r) => ['APPROVED', 'DIRECT'].includes(r.approval_status));
+        const refundByDate = new Map();   // date -> { total, cash, card, bank, split }
+        const refundByMethod = { CASH: 0, CARD: 0, BANK_TRANSFER: 0, SPLIT: 0 };
+        appliedRefunds.forEach((r) => {
+            const d = String(r.movement_date || r.created_at || '').slice(0, 10);
+            const amt = Number(r.total || 0);
+            const cur = refundByDate.get(d) || { total: 0, cash: 0, card: 0, bank: 0, split: 0 };
+            cur.total += amt;
+            const m = String(r.refund_method || 'CASH').toUpperCase();
+            if (m === 'CASH') cur.cash += amt;
+            else if (m === 'CARD') cur.card += amt;
+            else if (m === 'BANK_TRANSFER') cur.bank += amt;
+            else if (m === 'SPLIT') cur.split += amt;
+            refundByDate.set(d, cur);
+            if (refundByMethod[m] !== undefined) refundByMethod[m] += amt;
+
+            // Cashier performance totals exclude refunded amounts.
+            const cKey = String(r.initiated_by_id || r.approved_by_id || '');
+            const cAgg = cashierAggregate.get(cKey) || { cashier_id: cKey, cashier_name: r.initiated_by_name || 'System', sales_total: 0, sale_count: 0 };
+            cAgg.sales_total -= amt;
+            cashierAggregate.set(cKey, cAgg);
+
+            (r.items || []).forEach((it) => {
+                const type = String(it.inventory_type || '');
+                const cat = categoryOfItem(type, it.inventory_id);
+                if (salesByCategory[cat] !== undefined) salesByCategory[cat] -= Number(it.line_total || 0);
+
+                const key = `${it.name}::${type}`;
+                const agg = itemAggregate.get(key);
+                if (agg) {
+                    let uc = 0;
+                    if (type === 'phone') uc = Number((phoneMap.get(String(it.inventory_id)) || {}).purchase_price || 0);
+                    else uc = Number((accessoryMap.get(String(it.inventory_id)) || {}).cost_price || 0);
+                    agg.quantity_sold -= Number(it.quantity || 0);
+                    agg.revenue -= Number(it.line_total || 0);
+                    agg.cost -= uc * Number(it.quantity || 0);
+                    itemAggregate.set(key, agg);
+                }
+            });
         });
 
         cashMovements.forEach((movement) => {
@@ -1397,11 +2539,26 @@ app.get('/api/reports', authenticateToken, requireAdmin, async (req, res) => {
 
         const bestSelling = Array.from(itemAggregate.values())
             .sort((a, b) => b.quantity_sold - a.quantity_sold)
-            .slice(0, 10);
+            .slice(0, 10)
+            .map((p) => ({ item_name: p.item_name, category: p.category, quantity_sold: p.quantity_sold, revenue: Math.round(p.revenue * 100) / 100, days_without_sale: 0 }));
 
         const worstSelling = Array.from(itemAggregate.values())
             .sort((a, b) => a.quantity_sold - b.quantity_sold)
-            .slice(0, 10);
+            .slice(0, 10)
+            .map((p) => ({ item_name: p.item_name, category: p.category, quantity_sold: p.quantity_sold, revenue: Math.round(p.revenue * 100) / 100, days_without_sale: 0 }));
+
+        // Profit & Margin report — per-product aggregation (item_name, category, qty, revenue, cost, profit, margin%).
+        const marginRows = Array.from(itemAggregate.values())
+            .map((p) => ({
+                item_name: p.item_name,
+                category: p.category,
+                quantity_sold: p.quantity_sold,
+                revenue: Math.round(p.revenue * 100) / 100,
+                cost: Math.round(p.cost * 100) / 100,
+                profit: Math.round((p.revenue - p.cost) * 100) / 100,
+                margin_percent: p.revenue > 0 ? Math.round(((p.revenue - p.cost) / p.revenue) * 10000) / 100 : 0
+            }))
+            .sort((a, b) => b.profit - a.profit);
 
         const cashierPerformance = Array.from(cashierAggregate.values())
             .sort((a, b) => b.sales_total - a.sales_total);
@@ -1410,6 +2567,99 @@ app.get('/api/reports', authenticateToken, requireAdmin, async (req, res) => {
             ? repairTurnaroundDays.reduce((sum, days) => sum + days, 0) / repairTurnaroundDays.length
             : 0;
 
+                // --- Payment type breakdown (Payment Type Report) ---
+        const paymentBreakdown = { cash: 0, card: 0, bank_transfer: 0, reload: 0, split: 0, bank_transfer: 0 };
+        saleRowsRange.forEach((row) => {
+            const method = String(row.payment_method || '').toUpperCase();
+            const total = Number(row.total || 0);
+            if (method === 'CASH') paymentBreakdown.cash += (Number(row.cash_received || 0) - Number(row.change_amount || 0));
+            else if (method === 'CARD') paymentBreakdown.card += total;
+            else if (method === 'BANK_TRANSFER') paymentBreakdown.bank_transfer += total;
+            else if (method === 'SPLIT') paymentBreakdown.split += total;
+        });
+        // Applied refunds reduce the payment-type totals (revenue is what the shop keeps).
+        paymentBreakdown.cash -= refundByMethod.CASH;
+        paymentBreakdown.card -= refundByMethod.CARD;
+        paymentBreakdown.bank_transfer -= refundByMethod.BANK_TRANSFER;
+        paymentBreakdown.split -= refundByMethod.SPLIT;
+
+        // --- Daily Sales Report (per-date totals + payment method + session cross-ref) ---
+        const dailyMap = new Map();
+        const bump = (d, k, v) => { const r = dailyMap.get(d) || { date: d, sales: 0, orders: 0, cash: 0, card: 0, bank_transfer: 0, split: 0, reload_sales: 0, withdrawals: 0 }; r[k] = (r[k] || 0) + v; dailyMap.set(d, r); return r; };
+        saleRowsRange.forEach((row) => {
+            const dateStr = String(row.createdAt || row.created_at || '').slice(0, 10);
+            const rec = bump(dateStr, 'sales', Number(row.total || 0));
+            rec.orders += 1;
+            const method = String(row.payment_method || '').toUpperCase();
+            if (method === 'CASH') rec.cash += (Number(row.cash_received || 0) - Number(row.change_amount || 0));
+            else if (method === 'CARD') rec.card += Number(row.total || 0);
+            else if (method === 'BANK_TRANSFER') rec.bank_transfer += Number(row.total || 0);
+            else if (method === 'SPLIT') { rec.split += Number(row.total || 0); rec.cash += Number(row.payment_details?.cash || row.payment_details?.cashReceived || 0); }
+            dailyMap.set(dateStr, rec);
+        });
+        cashMovements.forEach((m) => {
+            const d = String(m.movement_date || '').slice(0, 10);
+            const rec = bump(d, 'sales', 0);
+            const mt = String(m.movement_type || '').toUpperCase();
+            if (mt === 'RELOAD' || mt === 'OPENING_BALANCE' || mt === 'CASH_IN') rec.reload_sales += Number(m.amount || 0);
+            else if (mt === 'WITHDRAW' || mt === 'CASH_OUT' || mt === 'REFUND') rec.withdrawals += Number(m.amount || 0);
+            dailyMap.set(d, rec);
+        });
+        // Applied refunds reduce that day's net sales (revenue is net of refunds).
+        refundByDate.forEach((rf, d) => {
+            const rec = dailyMap.get(d);
+            if (!rec) return;
+            rec.sales -= rf.total;
+            rec.cash -= rf.cash;
+            rec.card -= rf.card;
+            rec.bank_transfer -= rf.bank;
+            rec.split -= rf.split;
+            dailyMap.set(d, rec);
+        });
+        const sessionByDate = new Map((sessionsForPeriod || []).map((s) => [String(s.date), s]));
+        const dailySales = Array.from(dailyMap.values())
+            .sort((a, b) => b.date.localeCompare(a.date))
+            .map((rec) => {
+                const sess = sessionByDate.get(rec.date);
+                                return { ...rec, session_expected_cash: sess ? (Number(sess.opening_cash) + Number(rec.cash) - Number(rec.withdrawals)) : null };
+            });
+
+        // --- Refunds Report (summary; detailed list via /api/reports/refunds) ---
+        const refundsList = (refundRows || []).map((r) => normalizeRefund(r));
+        const totalRefunded = refundsList.reduce((sum, r) => sum + Number(r.total || 0), 0);
+                // --- Purchases / Supplier Report (from Stock In movements) ---
+        const supplierMap = new Map();
+        const purchases = (stockInMovements || []).map((m) => {
+            const acc = accessoryMap.get(String(m.accessory_id)) || accessoryMap.get(String(m.sku));
+            const unitCost = Number((acc && acc.cost_price) || 0);
+            const qty = Number(m.quantity_change || 0);
+            const total = unitCost * qty;
+            const supplier = m.note && /supplier[:\s]+([^,;\n]+)/i.test(String(m.note)) ? String(m.note).match(/supplier[:\s]+([^,;\n]+)/i)[1].trim() : 'Unattributed';
+            const rec = supplierMap.get(supplier) || { supplier, total_spend: 0, quantity: 0 };
+            rec.total_spend += total; rec.quantity += qty;
+            supplierMap.set(supplier, rec);
+            return { date: String(m.created_at || '').slice(0, 10), item_name: m.item_name, sku: m.sku, quantity: qty, unit_cost: unitCost, total_cost: total, supplier };
+        });
+        const supplierSpend = Array.from(supplierMap.values()).sort((a, b) => b.total_spend - a.total_spend);
+
+        // --- Credit / Unpaid report (CreditNote OPEN balances) ---
+        const creditNotes = await CreditNote.find({ status: 'OPEN' }).sort({ created_at: -1 }).catch(() => []);
+        const totalOutstanding = creditNotes.reduce((sum, c) => sum + Number(c.balance || 0), 0);
+
+        // --- User Activity / Audit Log ---
+        const activity = [];
+        cashMovements.forEach((m) => activity.push({ date: String(m.created_at || '').slice(0, 10), user_id: m.cashier_id || '', user_name: m.cashier_name || 'System', action: 'cash_movement', type: m.movement_type, amount: Number(m.amount || 0), note: m.note || '' }));
+        refundRows.forEach((r) => activity.push({ date: String(r.created_at || '').slice(0, 10), user_id: r.initiated_by_id || r.approved_by_id || '', user_name: r.initiated_by_name || r.approved_by_name || '', action: 'refund', type: r.approval_status, amount: Number(r.total || 0), note: `${r.reason || ''} - ${r.refund_reference}` }));
+        (sessionsForPeriod || []).forEach((s) => { activity.push({ date: String(s.date), user_id: s.opened_by || '', user_name: '', action: 'session_open', type: 'OPEN', amount: Number(s.opening_cash || 0), note: '' }); if (s.closed_by) activity.push({ date: String(s.closed_at || s.date), user_id: s.closed_by || '', user_name: '', action: 'session_close', type: 'CLOSED', amount: 0, note: `variance ${s.variance || 0}` }); });
+        saleRowsRange.forEach((row) => { if (Number(row.discount_amount || 0) > 0) activity.push({ date: String(row.createdAt || '').slice(0, 10), user_id: row.cashier_id || '', user_name: row.cashier_name || '', action: 'discount_applied', type: String(row.payment_method), amount: Number(row.discount_amount || 0), note: `receipt ${row.receipt_no}` }); });
+        stockInMovements.forEach((m) => activity.push({ date: String(m.created_at || '').slice(0, 10), user_id: m.user_id || '', user_name: m.user_name || '', action: 'stock_in', type: m.type, amount: Number(m.quantity_change || 0), note: `${m.item_name} (${m.sku})` }));
+        saleRowsRange.forEach((row) => { activity.push({ date: String(row.createdAt || '').slice(0, 10), user_id: row.cashier_id || '', user_name: row.cashier_name || '', action: 'sale', type: String(row.payment_method), amount: Number(row.total || 0), note: `receipt ${row.receipt_no}` }); });
+        activity.sort((a, b) => b.date.localeCompare(a.date));
+        const cashiers = (usersList || []).filter((u) => u.role === 'cashier').map((u) => ({ id: u._id.toString(), name: u.name, role: u.role }));
+        const allUsers = (usersList || []).map((u) => ({ id: u._id.toString(), name: u.name, role: u.role }));
+        // NOTE: price changes are not individually audited in the current schema;
+        // stock-ins, cash movements, refunds and discounts are tracked as above.
+        // REPORT_EXTRA_B
         res.json({
             filters: { from, to, deadDays: deadDaysThreshold },
             dead_stock: {
@@ -1424,15 +2674,97 @@ app.get('/api/reports', authenticateToken, requireAdmin, async (req, res) => {
                 delivered_jobs: repairTurnaroundDays.length,
                 average_days: avgTurnaround
             },
-            cashier_balance: cashierBalance,
+                        cashier_balance: cashierBalance,
             best_selling: bestSelling,
             worst_selling: worstSelling,
-            cashier_performance: cashierPerformance
+            cashier_performance: cashierPerformance,
+            payment_breakdown: paymentBreakdown,
+            daily_sales: dailySales,
+            sessions_for_period: sessionsForPeriod.map((s) => ({
+                id: s._id.toString(), date: s.date, opening_cash: s.opening_cash,
+                opening_reload: s.opening_reload, closing_cash: s.closing_cash,
+                closing_reload: s.closing_reload, expected_cash: s.expected_cash,
+                actual_cash: s.actual_cash, variance: s.variance, status: s.status,
+                opened_by: s.opened_by, closed_by: s.closed_by, closed_at: s.closed_at
+            })),
+            refunds: refundsList,
+            total_refunds: totalRefunded,
+            purchases: purchases,
+            supplier_spend: supplierSpend,
+            credit_notes: creditNotes.map((c) => ({
+                note_no: c.note_no, customer_name: c.customer_name, customer_phone: c.customer_phone,
+                amount: c.amount, balance: c.balance, status: c.status, created_at: c.created_at
+            })),
+            total_credit_outstanding: totalOutstanding,
+            user_activity_log: activity,
+            cashiers: cashiers,
+            users: allUsers,
+            generated_at: new Date().toISOString()
         });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message || 'Unable to generate reports' });
     }
+});
+
+app.get('/api/reports/transactions', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const { from, to, cashierId, page = 1, limit = 50 } = req.query;
+        const p = Math.max(1, Number(page)); const l = Math.min(200, Math.max(1, Number(limit)));
+        const match = {};
+        if (from && to) match.createdAt = { $gte: new Date(`${from}T00:00:00.000Z`), $lte: new Date(`${to}T23:59:59.999Z`) };
+        let query = Sale.find(match).sort({ createdAt: -1 });
+        if (cashierId) query = query.where({ cashier_id: String(cashierId) });
+        const [total, rows] = await Promise.all([Sale.countDocuments(match), query.skip((p - 1) * l).limit(l)]);
+        const transactions = rows.map((s) => ({
+            id: s._id.toString(), receipt_no: s.receipt_no, cashier_id: s.cashier_id, cashier_name: s.cashier_name,
+            date: String(s.createdAt || s.created_at || '').slice(0, 10),
+            total: Number(s.total || 0), payment_method: s.payment_method,
+            cash_received: Number(s.cash_received || 0), change_amount: Number(s.change_amount || 0),
+            discount_amount: Number(s.discount_amount || 0), refunded: !!s.refunded
+        }));
+        res.json({ transactions, total, page: p, limit: l });
+    } catch (err) { console.error('[reports transactions]', err); res.status(500).json({ error: 'Failed to load transactions' }); }
+});
+
+app.get('/api/reports/refunds', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const { from, to, status = 'ALL', page = 1, limit = 50 } = req.query;
+        const p = Math.max(1, Number(page)); const l = Math.min(200, Math.max(1, Number(limit)));
+        const filter = {};
+        if (from && to) filter.movement_date = { $gte: from, $lte: to };
+        if (status !== 'ALL') filter.approval_status = status;
+        const [total, rows] = await Promise.all([Refund.countDocuments(filter), Refund.find(filter).sort({ movement_date: -1, createdAt: -1 }).skip((p - 1) * l).limit(l)]);
+        const refunds = rows.map((r) => ({ ...normalizeRefund(r), date: String(r.created_at || r.movement_date || '').slice(0, 10) }));
+        res.json({ refunds, total, count: refunds.length, total_refunded: refunds.reduce((s, r) => s + Number(r.total || 0), 0), page: p, limit: l });
+    } catch (err) { console.error('[reports refunds]', err);     res.status(500).json({ error: 'Failed to load refunds' }); }
+});
+
+app.get('/api/reports/user-activity', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const { from, to, userId, page = 1, limit = 50 } = req.query;
+        const p = Math.max(1, Number(page)); const l = Math.min(200, Math.max(1, Number(limit)));
+        const match = {};
+        if (from && to) match.createdAt = { $gte: new Date(`${from}T00:00:00.000Z`), $lte: new Date(`${to}T23:59:59.999Z`) };
+        const [movements, refundsAct, sessionsAct, salesAct] = await Promise.all([
+            CashMovement.find(match).sort({ created_at: -1 }),
+            Refund.find(from && to ? { movement_date: { $gte: from, $lte: to } } : {}).sort({ initiated_at: -1 }),
+            (from && to) ? DailySession.find({ date: { $gte: from, $lte: to } }).sort({ date: -1 }) : DailySession.find({}).sort({ date: -1 }),
+            Sale.find(match).sort({ createdAt: -1 })
+        ]);
+        const activity = [];
+        movements.forEach((m) => activity.push({ date: String(m.created_at || '').slice(0, 10), user_id: m.cashier_id || '', user_name: m.cashier_name || 'System', action: 'cash_movement', type: m.movement_type, amount: Number(m.amount || 0), note: m.note || '' }));
+        refundsAct.forEach((r) => activity.push({ date: String(r.created_at || '').slice(0, 10), user_id: r.initiated_by_id || r.approved_by_id || '', user_name: r.initiated_by_name || r.approved_by_name || '', action: 'refund', type: r.approval_status, amount: Number(r.total || 0), note: `RFS ${r.refund_reference} - ${r.reason || ''}` }));
+        sessionsAct.forEach((s) => { activity.push({ date: String(s.date), user_id: s.opened_by || '', user_name: '', action: 'session_open', type: 'OPEN', amount: Number(s.opening_cash || 0), note: '' }); if (s.closed_by) activity.push({ date: String(s.closed_at || s.date), user_id: s.closed_by || '', user_name: '', action: 'session_close', type: 'CLOSED', amount: 0, note: `variance ${s.variance || 0}` }); });
+        salesAct.forEach((row) => { if (Number(row.discount_amount || 0) > 0) activity.push({ date: String(row.createdAt || '').slice(0, 10), user_id: row.cashier_id || '', user_name: row.cashier_name || '', action: 'discount_applied', type: String(row.payment_method), amount: Number(row.discount_amount || 0), note: `receipt ${row.receipt_no}` }); });
+        activity.sort((a, b) => b.date.localeCompare(a.date));
+        const filtered = userId ? activity.filter((a) => a.user_id === String(userId)) : activity;
+        const paged = filtered.slice((p - 1) * l, (p - 1) * l + l);
+        res.json({ activity: paged, total: filtered.length, page: p, limit: l });
+    } catch (err) { console.error('[reports user-activity]', err); res.status(500).json({ error: 'Failed to load user activity' }); }
 });
 
 // =============================================
@@ -1447,7 +2779,7 @@ app.get('/api/sessions/current', authenticateToken, async (req, res) => {
 
         const sales = await Sale.find({ session_id: session.id });
 
-        let totalCashSales = 0;
+                let totalCashSales = 0;
         let totalCardSales = 0;
         let totalBankTransfer = 0;
         sales.forEach(sale => {
@@ -1465,7 +2797,15 @@ app.get('/api/sessions/current', authenticateToken, async (req, res) => {
             }
         });
 
-        const expectedCash = session.opening_cash + totalCashSales;
+        // Refunds issued against this session remove cash from the day's expected float.
+        const refundMovements = await CashMovement.find({
+            movement_type: 'REFUND',
+            movement_date: session.date,
+            ...(session.opened_by ? { cashier_id: String(session.opened_by) } : {})
+        });
+        const totalRefunds = refundMovements.reduce((sum, m) => sum + Number(m.amount || 0), 0);
+
+        const expectedCash = (session.opening_cash || 0) + totalCashSales - totalRefunds;
 
         res.json({
             ...session.toObject(),
@@ -1530,9 +2870,18 @@ app.post('/api/sessions/close', authenticateToken, async (req, res) => {
             }
         });
 
-        const actualReloadNum = Number(actualReload || 0);
+                const actualReloadNum = Number(actualReload || 0);
         const reloadsSold = Math.max(0, session.opening_reload - actualReloadNum);
-        const expectedCash = session.opening_cash + totalCashSales + reloadsSold;
+
+        // Refunds issued against this session remove cash from the day's expected float.
+        const refundMovements = await CashMovement.find({
+            movement_type: 'REFUND',
+            movement_date: session.date,
+            ...(session.opened_by ? { cashier_id: String(session.opened_by) } : {})
+        });
+        const totalRefunds = refundMovements.reduce((sum, m) => sum + Number(m.amount || 0), 0);
+
+        const expectedCash = (session.opening_cash || 0) + totalCashSales + reloadsSold - totalRefunds;
         const actualCashNum = Number(actualCash || 0);
         const variance = actualCashNum - expectedCash;
 

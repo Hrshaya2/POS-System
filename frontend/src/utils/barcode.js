@@ -57,7 +57,7 @@ export const renderBarcodeSvg = (code, options = {}) => {
 
 // Open a print-friendly label window sized for label printers.
 // Default 40mm x 30mm; both dimensions are configurable by the caller
-// (persisted in InventoryPage via localStorage).
+// (persisted in Stock Management page via localStorage).
 export const printBarcodeLabel = ({ code, name = '', price = null, widthMm = 40, heightMm = 30 }) => {
     const value = String(code || '').trim();
     if (!value) return;
@@ -123,4 +123,87 @@ export const printBarcodeLabel = ({ code, name = '', price = null, widthMm = 40,
     win.document.close();
     win.focus();
     setTimeout(() => win.print(), 300);
+};
+
+// Batch label printing: one print job containing one page per label.
+// `items` is an array of { code, name, price }; each entry is repeated
+// `copiesPerItem` times (qty-per-item option for sheet-style label rolls).
+export const printBarcodeLabelsBatch = ({ items = [], widthMm = 40, heightMm = 30, copiesPerItem = 1 }) => {
+  const valid = items.filter((it) => String(it?.code || '').trim());
+  if (!valid.length) return;
+
+  const w = Math.max(15, Number(widthMm) || 40);
+  const h = Math.max(10, Number(heightMm) || 30);
+  const copies = Math.max(1, Math.min(1000, Number(copiesPerItem) || 1));
+
+  const esc = (s) => String(s || '').replace(/[<>&]/g, '');
+  const labelsHtml = [];
+  for (const item of valid) {
+    const svgMarkup = renderBarcodeSvg(item.code, { height: Math.round(h * 2.2), width: 2 });
+    if (!svgMarkup) continue;
+    const priceLine = item.price !== null && item.price !== undefined && item.price !== ''
+      ? `<div class="price">Rs. ${Number(item.price).toLocaleString('en-LK')}</div>`
+      : '';
+    const singleLabel = `
+    <div class="label">
+      <div class="name">${esc(item.name)}</div>
+      ${priceLine}
+      ${svgMarkup}
+      <div class="code">${esc(item.code)}</div>
+    </div>`;
+    for (let c = 0; c < copies; c++) labelsHtml.push(singleLabel);
+  }
+
+  if (!labelsHtml.length) return;
+
+  const win = window.open('', '_blank', 'width=460,height=380');
+  if (!win) return;
+
+  win.document.write(`<!doctype html>
+<html>
+<head>
+<title>Batch labels (${labelsHtml.length})</title>
+<style>
+  @page { size: ${w}mm ${h}mm; margin: 0; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  .label {
+    width: ${w}mm;
+    height: ${h}mm;
+    padding: 1.5mm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+    text-align: center;
+    page-break-after: always;
+    break-after: page;
+  }
+  .label:last-child { page-break-after: auto; break-after: auto; }
+  .name {
+    font-size: 9px;
+    font-weight: bold;
+    color: #000;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .price { font-size: 9px; color: #000; margin-top: 0.5mm; }
+  .code { font-size: 8px; letter-spacing: 0.5px; font-family: 'Courier New', monospace; color: #000; margin-top: 0.5mm; }
+  .label svg { max-width: 96%; max-height: 55%; display: block; }
+  .no-print { position: fixed; top: 6px; right: 6px; z-index: 10; }
+  @media print { .no-print { display: none; } }
+</style>
+</head>
+<body>
+  <button class="no-print" onclick="window.print()">Print again (${labelsHtml.length} labels)</button>
+  ${labelsHtml.join('\n')}
+</body>
+</html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => win.print(), 400);
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Activity, CalendarDays, ClipboardList, Package, Search, ShieldCheck, Wrench } from 'lucide-react';
-import { addPendingRepairJob, addPendingRepairStatusUpdate } from '../db/database';
+import { addPendingRepairJob, addPendingRepairStatusUpdate, getCachedInventory } from '../db/database';
+import { mergeAccessoriesIntoCache } from '../services/stockService';
 
 const API_BASE = '/api';
 const REPAIR_STATUSES = ['Received', 'Diagnosing', 'Awaiting Parts', 'In Repair', 'Ready for Pickup', 'Delivered'];
@@ -100,13 +101,19 @@ export default function RepairPage() {
 
   const loadSpareParts = async () => {
     const token = localStorage.getItem('token');
-    const res = await fetch(`${API_BASE}/inventory/accessories`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (res.ok) {
-      const data = await res.json();
-      setSpareParts(data.filter((part) => Number(part.quantity) > 0));
-    }
+    try {
+      const res = await fetch(`${API_BASE}/inventory/accessories`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        // Shared stock-service merge: accepts server truth into the cache
+        // while keeping items created/adjusted in Stock Management whose ops
+        // are still queued, so the parts picker matches what the user sees there.
+        await mergeAccessoriesIntoCache(await res.json());
+      }
+    } catch (_err) { /* offline — serve cache below */ }
+    const cached = await getCachedInventory();
+    setSpareParts(cached.accessories.filter((part) => Number(part.quantity) > 0));
   };
 
   const loadData = async () => {
