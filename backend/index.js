@@ -21,7 +21,8 @@ const {
     StockImport,
     Refund,
     StoreSetting,
-    CreditNote
+    CreditNote,
+    StorageSnapshot
 } = require('./models');
 
 const app = express();
@@ -3090,6 +3091,170 @@ app.get('/api/dashboard', authenticateToken, async (req, res) => {
         res.status(500).json({ error: 'Database error fetching dashboard data' });
     }
 });
+
+// =============================================
+// STORAGE MONITORING (Admin Only)
+// MongoDB Atlas free tier caps storage at 512MB, so admins get real usage
+// numbers straight from the database — the dbStats command and the per-
+// collection $collStats aggregation — never client-side estimates.
+// =============================================
+
+const STORAGE_LIMIT_BYTES = 512 * 1024 * 1024;  // Atlas M0 free tier cap
+// Dashboard warning fires above 500MB (97% of the free tier). Overridable via
+// env var so the banner can be exercised in a test environment with a tiny
+// threshold instead of pushing 500MB of junk data into the real database.
+const STORAGE_WARN_BYTES = Number(process.env.STORAGE_WARN_BYTES || 500 * 1024 * 1024);
+const STORAGE_HISTORY_DAYS = 30;
+
+// User accounts and Inventory/Stock product data are excluded from the
+// per-section breakdown per requirement. These are the mongoose registration
+// names from models.js — their .collection.name gives the real collection
+// names ('users', 'inventoryphones', 'inventoryaccessories').
+const EXCLUDED_STORAGE_MODELS = ['User', 'InventoryPhone', 'InventoryAccessory'];
+const getExcludedCollectionNames = () => {
+    const names = new Set();
+    for (const modelName of EXCLUDED_STORAGE_MODELS) {
+        try {
+            names.add(mongoose.model(modelName).collection.name);
+        } catch (err) {
+            // Model not registered in this build — nothing to exclude for it.
+        }
+    }
+    return names;
+};
+
+// Store today's total usage so the trend chart builds itself over time.
+// Guarded by an in-memory date stamp so both storage endpoints only hit the
+// database with an upsert once per UTC day per server process.
+let lastSnapshotDate = '';
+const captureStorageSnapshot = async (dbStats) => {
+    const today = new Date().toISOString().slice(0, 10);
+    if (lastSnapshotDate === today) return false;
+    try {
+        await StorageSnapshot.updateOne(
+            { date: today },
+            {
+                $set: {
+                    total_data_size: Number(dbStats.dataSize || 0),
+                    total_storage_size: Number(dbStats.storageSize || 0)
+                },
+                $setOnInsert: { captured_at: new Date() }
+            },
+            { upsert: true }
+        );
+        lastSnapshotDate = today;
+        return true;
+    } catch (err) {
+        // A failed snapshot must never break the storage endpoints themselves.
+        console.error('Failed to store daily storage snapshot:', err.message);
+        return false;
+    }
+};
+
+// Lightweight check used by the Dashboard warning banner: total usage vs the
+// 512MB limit and whether the 500MB warning threshold is exceeded.
+const getStorageUsage = async () => {
+    await connectDB();
+    const dbStats = await mongoose.connection.db.command({ dbStats: 1 });
+    const usedBytes = Number(dbStats.dataSize || 0);
+    await captureStorageSnapshot(dbStats);
+    return {
+        usedBytes,
+        storageBytes: Number(dbStats.storageSize || 0),
+        indexBytes: Number(dbStats.indexSize || 0),
+        objectCount: Number(dbStats.objects || 0),
+        limitBytes: STORAGE_LIMIT_BYTES,
+        warnThresholdBytes: STORAGE_WARN_BYTES,
+        percentUsed: STORAGE_LIMIT_BYTES > 0
+            ? Number(((usedBytes / STORAGE_LIMIT_BYTES) * 100).toFixed(1))
+            : 0,
+        warning: usedBytes > STORAGE_WARN_BYTES
+    };
+};
+
+app.get('/api/storage/usage', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        res.json(await getStorageUsage());
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to read MongoDB storage stats' });
+    }
+});
+
+// Full breakdown for the Manage Storage page: real dbStats plus accurate
+// per-collection sizes via $collStats, sorted largest data size first.
+const getStorageBreakdown = async () => {
+    await connectDB();
+    const db = mongoose.connection.db;
+    const dbStats = await db.command({ dbStats: 1 });
+
+    const excluded = getExcludedCollectionNames();
+    const collectionNames = (await db.listCollections().toArray())
+        .map((c) => c.name)
+        .filter((name) => !name.startsWith('system.') && !excluded.has(name));
+
+    // $collStats returns exactly the numbers Atlas reports (data size, on-disk
+    // storage size, document count) — not an estimate from record counts.
+    const collections = [];
+    for (const name of collectionNames) {
+        try {
+            const [row] = await db.collection(name)
+                .aggregate([{ $collStats: { storageStats: {} } }])
+                .toArray();
+            const s = (row && row.storageStats) || {};
+            collections.push({
+                name,
+                count: Number(s.count || 0),
+                size: Number(s.size || 0),                // logical data size (bytes)
+                storageSize: Number(s.storageSize || 0)   // on-disk compressed size (bytes)
+            });
+        } catch (err) {
+            console.error(`Failed to read stats for collection "${name}":`, err.message);
+        }
+    }
+    collections.sort((a, b) => b.size - a.size); // largest first
+
+    const snapshotCaptured = await captureStorageSnapshot(dbStats);
+    const snapshots = await StorageSnapshot.find({}).sort({ date: -1 }).limit(STORAGE_HISTORY_DAYS);
+    const history = snapshots
+        .reverse()
+        .map((s) => ({
+            date: s.date,
+            totalDataSize: Number(s.total_data_size || 0),
+            totalStorageSize: Number(s.total_storage_size || 0)
+        }));
+
+    return {
+        db: {
+            name: dbStats.db || mongoose.connection.name,
+            dataSize: Number(dbStats.dataSize || 0),
+            storageSize: Number(dbStats.storageSize || 0),
+            indexSize: Number(dbStats.indexSize || 0),
+            objects: Number(dbStats.objects || 0),
+            collections: Number(dbStats.collections || 0)
+        },
+        limitBytes: STORAGE_LIMIT_BYTES,
+        warnThresholdBytes: STORAGE_WARN_BYTES,
+        collections,
+        excludedCollections: Array.from(excluded),
+        history,
+        snapshotCaptured,
+        generatedAt: new Date().toISOString()
+    };
+};
+
+app.get('/api/storage', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        res.json(await getStorageBreakdown());
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to read MongoDB storage breakdown' });
+    }
+});
+
+// Exposed for verification tooling (backend/verify_storage.js) without
+// changing the module export shape used by the Vercel serverless entry.
+app.storage = { getStorageUsage, getStorageBreakdown };
 
 // =============================================
 // Vercel Export

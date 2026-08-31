@@ -1,0 +1,27 @@
+===== started 31/08/2026 10:16:45.09 =====  
+'/c' is not recognized as an internal or external command,
+operable program or batch file.
+===== started 31/08/2026 10:19:04.17 =====  
+◇ injected env (4) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+(node:2104) [MONGOOSE] Warning: `errors` is a reserved schema pathname and may break some functionality. You are allowed to use it, but use at your own risk. To disable this warning pass `suppressReservedKeysWarning` as a schema option.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Connected to MongoDB Atlas
+Server is running on port 5000
+===== started 31/08/2026 10:22:13.16 =====  
+◇ injected env (4) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+(node:10996) [MONGOOSE] Warning: `errors` is a reserved schema pathname and may break some functionality. You are allowed to use it, but use at your own risk. To disable this warning pass `suppressReservedKeysWarning` as a schema option.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Connected to MongoDB Atlas
+Server is running on port 5000
+===== started 31/08/2026 10:23:11.89 =====  
+◇ injected env (4) from .env // tip: ⌘ suppress logs { quiet: true }
+(node:20968) [MONGOOSE] Warning: `errors` is a reserved schema pathname and may break some functionality. You are allowed to use it, but use at your own risk. To disable this warning pass `suppressReservedKeysWarning` as a schema option.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Connected to MongoDB Atlas
+Server is running on port 5000
+===== started 31/08/2026 10:29:51.08 =====  
+◇ injected env (4) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+(node:7016) [MONGOOSE] Warning: `errors` is a reserved schema pathname and may break some functionality. You are allowed to use it, but use at your own risk. To disable this warning pass `suppressReservedKeysWarning` as a schema option.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Connected to MongoDB Atlas
+Server is running on port 5000

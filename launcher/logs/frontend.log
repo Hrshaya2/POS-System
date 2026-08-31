@@ -1,0 +1,91 @@
+===== started 31/08/2026 10:16:45.10 =====  
+'/c' is not recognized as an internal or external command,
+operable program or batch file.
+===== started 31/08/2026 10:19:04.18 =====  
+
+> frontend@0.0.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v8.2.1[39m  [2mready in [0m[1m2440[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+===== started 31/08/2026 10:22:13.17 =====  
+
+> frontend@0.0.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v8.2.1[39m  [2mready in [0m[1m980[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m10:22:15[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m10:22:15[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+===== started 31/08/2026 10:23:11.92 =====  
+
+> frontend@0.0.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v8.2.1[39m  [2mready in [0m[1m1386[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+===== started 31/08/2026 10:29:51.11 =====  
+
+> frontend@0.0.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v8.2.1[39m  [2mready in [0m[1m1155[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m10:29:53[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m11:02:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m11:02:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m11:02:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m11:02:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m11:02:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m11:03:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m11:04:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/ManageStoragePage.jsx[22m
+[2m11:15:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m11:15:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m11:15:31[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m11:15:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/ManageStoragePage.jsx[22m
+[2m11:15:33[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m11:15:33[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/storage[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m11:15:33[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/storage[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)

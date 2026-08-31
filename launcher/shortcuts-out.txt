@@ -1,0 +1,9 @@
+﻿desktop: True
+launcher files:
+  logs  1B
+  create-shortcuts.ps1  1036B
+  make-icon.ps1  2546B
+  pos.ico  7534B
+  shortcuts-out.txt  47B
+  StartPOS.cs  8840B
+  StartPOS.exe  16896B

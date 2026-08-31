@@ -1,13 +1,14 @@
 // Section 7: low stock banner + dead stock indicator.
-// Low stock items are clickable (jumps to that item's category);
+// Low stock items are clickable (jumps to that item's category) and the whole
+// low-stock list can be exported as a PDF reorder report;
 // dead stock answers "what's not moving" with a 30/60/90-day selector.
 import React, { useEffect, useState } from 'react';
-import { AlertTriangle, TrendingDown } from 'lucide-react';
+import { AlertTriangle, TrendingDown, FileDown } from 'lucide-react';
 import { getAlerts } from '../../services/stockService';
 
 const DEAD_STOCK_WINDOWS = [30, 60, 90];
 
-export default function AlertsPanel({ onJumpToItem }) {
+export default function AlertsPanel({ onJumpToItem, onExportLowStockPdf }) {
   const [deadDays, setDeadDays] = useState(30);
   const [data, setData] = useState({ lowStock: [], deadStock: [] });
   const [loading, setLoading] = useState(true);
@@ -24,16 +25,16 @@ export default function AlertsPanel({ onJumpToItem }) {
 
   return (
     <div className="space-y-5">
-      <LowStockCard data={data} loading={loading} onJumpToItem={onJumpToItem} />
+      <LowStockCard data={data} loading={loading} onJumpToItem={onJumpToItem} onExportLowStockPdf={onExportLowStockPdf} />
       <DeadStockCard data={data} loading={loading} deadDays={deadDays} setDeadDays={setDeadDays} onJumpToItem={onJumpToItem} />
     </div>
   );
 }
 
-function LowStockCard({ data, loading, onJumpToItem }) {
+function LowStockCard({ data, loading, onJumpToItem, onExportLowStockPdf }) {
   return (
     <div className={`rounded-2xl border overflow-hidden ${data.lowStock.length > 0 ? 'bg-rose-50/60 border-rose-200' : 'bg-white border-gray-100'}`}>
-      <div className="px-6 py-4">
+      <div className="px-6 py-4 flex items-center justify-between gap-3 flex-wrap">
         <h3 className="text-lg font-bold text-gray-900 flex items-center flex-wrap">
           <AlertTriangle size={20} className={`mr-2 ${data.lowStock.length > 0 ? 'text-rose-500' : 'text-emerald-500'}`} />
           Low Stock
@@ -41,6 +42,15 @@ function LowStockCard({ data, loading, onJumpToItem }) {
             <span className="ml-2 text-xs font-bold bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full">{data.lowStock.length} at/below threshold</span>
           )}
         </h3>
+        {!loading && data.lowStock.length > 0 && onExportLowStockPdf && (
+          <button
+            onClick={onExportLowStockPdf}
+            title="Export all low-stock items to a PDF reorder report"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow-sm transition-colors"
+          >
+            <FileDown size={14} /> Export PDF
+          </button>
+        )}
       </div>
       {loading ? (
         <p className="px-6 pb-5 text-sm text-gray-400">Checking stock levels…</p>

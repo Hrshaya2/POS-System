@@ -7,7 +7,7 @@ import {
   Boxes, Search, Plus, Pencil, Trash2, Wrench,
   Barcode as BarcodeIcon, CheckSquare, Square, Printer,
   History, ClipboardCheck, Upload, TrendingDown, LayoutGrid,
-  FileSpreadsheet, FileText
+  FileSpreadsheet, FileText, AlertTriangle
 } from 'lucide-react';
 import { exportToExcelWithTotals, exportToPdf } from '../utils/reportExport';
 import { useAuth } from '../context/AuthContext';
@@ -51,11 +51,11 @@ const STOCK_EXPORT_COLS = [
   { key: 'sku', label: 'SKU', type: 'text' },
   { key: 'barcode', label: 'Barcode', type: 'text' },
   { key: 'unit', label: 'Unit', type: 'text' },
-  { key: 'quantity', label: 'Qty', type: 'number' },
-  { key: 'low_stock_threshold', label: 'Low Stock At', type: 'number' },
-  { key: 'cost_price', label: 'Unit Cost', type: 'money' },
-  { key: 'sell_price', label: 'Unit Price', type: 'money' },
-  { key: 'stock_value', label: 'Stock Value (cost)', type: 'money' },
+  { key: 'quantity', label: 'Qty', type: 'number', align: 'center' },
+  { key: 'low_stock_threshold', label: 'Low Stock At', type: 'number', align: 'center' },
+  { key: 'cost_price', label: 'Unit Cost', type: 'money', align: 'right' },
+  { key: 'sell_price', label: 'Unit Price', type: 'money', align: 'right' },
+  { key: 'stock_value', label: 'Stock Value (cost)', type: 'money', align: 'right' },
   { key: 'status', label: 'Status', type: 'text' },
   { key: 'sync', label: 'Sync', type: 'text' }
 ];
@@ -90,6 +90,30 @@ const exportStock = (rows, format) => {
   const name = `stock_export_${date}`;
   if (format === 'excel') exportToExcelWithTotals(rows, name, STOCK_EXPORT_COLS, stockExportTotals(rows));
   else exportToPdf(STOCK_EXPORT_COLS, rows, `Stock Export ${date}`, stockExportTotals(rows));
+};
+
+// ---- Low-stock export (PDF reorder report) ----
+// Slimmer column set than the full stock export: just what a reorder decision
+// needs. Reuses the shared stock row mapper so the figures match exactly.
+const LOW_STOCK_EXPORT_COLS = [
+  { key: 'category', label: 'Category', type: 'text' },
+  { key: 'name', label: 'Item', type: 'text' },
+  { key: 'sku', label: 'SKU', type: 'text' },
+  { key: 'quantity', label: 'Qty', type: 'number', align: 'center' },
+  { key: 'low_stock_threshold', label: 'Low Stock At', type: 'number', align: 'center' },
+  { key: 'cost_price', label: 'Unit Cost', type: 'money', align: 'right' },
+  { key: 'stock_value', label: 'Stock Value (cost)', type: 'money', align: 'right' },
+  { key: 'status', label: 'Status', type: 'text' }
+];
+
+const exportLowStockPdf = (list) => {
+  const rows = stockExportRows(list || []);
+  if (!rows.length) {
+    alert('Nothing to export — no items are at or below their low-stock threshold.');
+    return;
+  }
+  const date = new Date().toISOString().slice(0, 10);
+  exportToPdf(LOW_STOCK_EXPORT_COLS, rows, `Low Stock Export ${date}`, stockExportTotals(rows));
 };
 
 export default function StockManagementPage() {
@@ -170,10 +194,21 @@ export default function StockManagementPage() {
     });
   }, [items, activeCategory, searchTerm]);
 
-  const lowStockCount = useMemo(
-    () => items.filter((i) => !i.is_service && Number(i.quantity || 0) <= Number(i.low_stock_threshold ?? 5)).length,
+  // All non-service items at/below their own low-stock threshold — the same
+  // rule as the Alerts tab. Sorted most-critical first (out of stock on top),
+  // this backs the tab badge count and the low-stock PDF export.
+  const lowStockItems = useMemo(
+    () => items
+      .filter((i) => !i.is_service && Number(i.quantity || 0) <= Number(i.low_stock_threshold ?? 5))
+      .sort((a, b) =>
+        (Number(a.quantity) || 0) - (Number(b.quantity) || 0)
+        || String(a.name || '').localeCompare(String(b.name || ''))
+      ),
     [items]
   );
+  const lowStockCount = lowStockItems.length;
+
+  const handleExportLowStockPdf = () => exportLowStockPdf(lowStockItems);
 
   const toggleSelect = (id) => {
     setSelectedIds((prev) => {
@@ -279,6 +314,7 @@ export default function StockManagementPage() {
       onDeleteItem={handleDeleteItem}
       onAdjustConfirm={handleAdjustConfirm}
       onPrintLabel={printSingleLabel}
+      onExportLowStockPdf={handleExportLowStockPdf}
       onJumpToItem={jumpToItem}
       onBulkCreateCategories={handleBulkCreateCategories}
     />
@@ -294,7 +330,7 @@ function PageShell(props) {
     activeCategory, setActiveCategory, searchTerm, setSearchTerm,
     selectedIds, toggleSelect, setDetailItem,
     setProductFormState, setAdjustItem, setBatchPrintOpen,
-    reload, onJumpToItem, onDeleteItem, onPrintLabel
+    reload, onJumpToItem, onDeleteItem, onPrintLabel, onExportLowStockPdf
   } = props;
 
   return (
@@ -324,6 +360,16 @@ function PageShell(props) {
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-medium shadow-sm"
           >
             <FileText size={16} /> Export PDF
+          </button>
+          <button
+            onClick={onExportLowStockPdf}
+            disabled={lowStockCount === 0}
+            title={lowStockCount === 0
+              ? 'No items are at or below their low-stock threshold'
+              : `Export all ${lowStockCount} low-stock item${lowStockCount === 1 ? '' : 's'} to PDF`}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <AlertTriangle size={16} /> Low Stock PDF
           </button>
         </div>
       </div>
@@ -369,7 +415,7 @@ function PageShell(props) {
       ) : pageTab === 'import' ? (
         <ImportTab items={items} categories={categories} imports={imports} user={user} onDataChanged={reload} />
       ) : pageTab === 'alerts' ? (
-        <AlertsPanel onJumpToItem={onJumpToItem} />
+        <AlertsPanel onJumpToItem={onJumpToItem} onExportLowStockPdf={onExportLowStockPdf} />
       ) : (
         <ItemsSection
           activeCategory={activeCategory} setActiveCategory={setActiveCategory}

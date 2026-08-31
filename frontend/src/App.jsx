@@ -15,7 +15,8 @@ import {
   Coins,
   Boxes,
   Trash2,
-  Settings
+  Settings,
+  Database
 } from 'lucide-react';
 import {
   AreaChart,
@@ -44,6 +45,8 @@ import RepairPage from './pages/RepairPage';
 import ReportsPage from './pages/ReportsPage';
 import CashSessionHistoryPage from './pages/CashSessionHistoryPage';
 import SettingsPage from './pages/SettingsPage';
+import ManageStoragePage from './pages/ManageStoragePage';
+import StorageWarningBanner from './components/StorageWarningBanner';
 
 // MOCK DATA REMOVED - using live backend API instead
 
@@ -115,6 +118,7 @@ const Layout = ({ children }) => {
               <SidebarItem icon={Coins} label="Sessions" path="/sessions" />
               <SidebarItem icon={Users} label="Users" path="/users" />
               <SidebarItem icon={Settings} label="Settings" path="/settings" />
+              <SidebarItem icon={Database} label="Manage Storage" path="/storage" />
             </>
           )}
         </nav>
@@ -366,6 +370,9 @@ const Dashboard = () => {
           </Link>
         </div>
       </div>
+
+      {/* MongoDB storage warning — admins only, appears automatically above 500MB */}
+      <StorageWarningBanner />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -638,6 +645,7 @@ function AppRoutes() {
       <Route path="/sessions" element={<ProtectedRoute allowedRoles={['admin', 'shop_owner']}><Layout><CashSessionHistoryPage /></Layout></ProtectedRoute>} />
       <Route path="/users" element={<ProtectedRoute allowedRoles={['admin', 'shop_owner']}><Layout><UsersPage /></Layout></ProtectedRoute>} />
       <Route path="/settings" element={<ProtectedRoute allowedRoles={['admin', 'shop_owner']}><Layout><SettingsPage /></Layout></ProtectedRoute>} />
+      <Route path="/storage" element={<ProtectedRoute allowedRoles={['admin', 'shop_owner']}><Layout><ManageStoragePage /></Layout></ProtectedRoute>} />
 
       {/* 404 */}
       <Route path="*" element={<Navigate to="/" replace />} />

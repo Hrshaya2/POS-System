@@ -300,6 +300,17 @@ const creditNoteSchema = new mongoose.Schema({
     created_at: { type: Date, default: Date.now }
 }, { timestamps: true });
 
+// --- STORAGE SNAPSHOTS (daily MongoDB usage readings for the Manage Storage page) ---
+// One document per UTC day so the Manage Storage page can draw a 30-day usage
+// trend. Snapshots start collecting from the day this feature ships; the trend
+// chart fills in gradually as days pass. Sizes are bytes straight from dbStats.
+const storageSnapshotSchema = new mongoose.Schema({
+    date: { type: String, required: true, unique: true }, // UTC 'YYYY-MM-DD'
+    total_data_size: { type: Number, default: 0 },        // dbStats.dataSize in bytes
+    total_storage_size: { type: Number, default: 0 },     // dbStats.storageSize in bytes
+    captured_at: { type: Date, default: Date.now }
+}, { timestamps: true });
+
 module.exports = {
     User: mongoose.model('User', userSchema),
     Phone: mongoose.model('InventoryPhone', phoneSchema),
@@ -315,5 +326,6 @@ module.exports = {
     StockImport: mongoose.model('StockImport', stockImportSchema),
     Refund: mongoose.model('Refund', refundSchema),
     StoreSetting: mongoose.model('StoreSetting', storeSettingSchema),
-    CreditNote: mongoose.model('CreditNote', creditNoteSchema)
+    CreditNote: mongoose.model('CreditNote', creditNoteSchema),
+    StorageSnapshot: mongoose.model('StorageSnapshot', storageSnapshotSchema)
 };

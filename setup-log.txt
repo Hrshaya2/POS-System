@@ -1,0 +1,21 @@
+﻿[2026-08-31 10:33:51] [INFO] Nangi POS Setup started
+[2026-08-31 10:33:51] [INFO] Script directory: D:\Nangi\POS
+[2026-08-31 10:33:51] [INFO] PowerShell version: 5.1.26100.9168
+[2026-08-31 10:33:51] [INFO] OS: Microsoft Windows NT 10.0.26200.0
+[2026-08-31 10:33:51] [INFO] Architecture detected: x64
+[2026-08-31 10:33:51] [INFO] STEP: Checking Node.js installation...
+[2026-08-31 10:33:51] [INFO] SUCCESS: Node.js found: vv24.19.0
+[2026-08-31 10:33:52] [INFO] SUCCESS: npm found: v11.17.0
+[2026-08-31 10:33:52] [INFO] STEP: Checking Git (optional)...
+[2026-08-31 10:33:52] [INFO] SUCCESS: Git found: git version 2.52.0.windows.1
+[2026-08-31 10:33:52] [INFO] STEP: Verifying project structure...
+[2026-08-31 10:33:52] [INFO] SUCCESS: Project structure verified (backend/ and frontend/ found)
+[2026-08-31 10:33:52] [INFO] STEP: Checking backend environment configuration...
+[2026-08-31 10:33:52] [INFO] SUCCESS: backend/.env already exists - keeping existing configuration
+[2026-08-31 10:33:52] [INFO] STEP: Installing backend dependencies (npm install)...
+[2026-08-31 10:33:52] [INFO] Running npm install in: D:\Nangi\POS\backend
+[2026-08-31 10:33:55] [INFO] SUCCESS: Backend dependencies installed successfully
+[2026-08-31 10:33:55] [INFO] Backend npm install completed (exit code 0)
+[2026-08-31 10:33:55] [INFO] STEP: Installing frontend dependencies (npm install)...
+[2026-08-31 10:33:55] [INFO] Running npm install in: D:\Nangi\POS\frontend
+[2026-08-31 10:33:58] [INFO] ERROR: Frontend npm install threw an exception: npm warn allow-scripts 1 package has install scripts not yet covered by allowScripts:
