@@ -10,16 +10,18 @@ import {
 import {
   Database, RefreshCw, AlertTriangle, Lightbulb, TrendingUp,
   Receipt, Wrench, Coins, History, ClipboardList, FileSpreadsheet,
-  Tags, Settings, BadgeDollarSign, ExternalLink, Info, HardDrive
+  Tags, Settings, BadgeDollarSign, ExternalLink, Info, HardDrive, Trash2, X, CheckCircle2
 } from 'lucide-react';
 
 const BYTES_PER_MB = 1024 * 1024;
 const BYTES_PER_KB = 1024;
 
-// Display metadata per MongoDB collection: friendly name, icon, and the
+// Display metadata per MongoDB collection: friendly name, icon, the
 // existing page where an admin can browse that data (View link omitted when
-// there is no page). `users`, `inventoryphones` and `inventoryaccessories`
-// never reach this page — the backend excludes them per requirement.
+// there is no page), and an extra warning shown in the Clear confirmation
+// modal for sections that hold configuration rather than logs. `users`,
+// `inventoryphones` and `inventoryaccessories` never reach this page — the
+// backend excludes them per requirement (and refuses to clear them).
 const SECTION_META = {
   sales:            { label: 'Sales / Transactions', icon: Receipt,         viewPath: '/sales' },
   repairjobs:       { label: 'Repair Jobs',          icon: Wrench,          viewPath: '/repairs' },
@@ -31,11 +33,28 @@ const SECTION_META = {
   stockmovements:   { label: 'Stock Movement Logs',  icon: History,         viewPath: '/stock' },
   stocktakes:       { label: 'Stock Take Sessions',  icon: ClipboardList,   viewPath: '/stock' },
   stockimports:     { label: 'Stock Imports',        icon: FileSpreadsheet, viewPath: '/stock' },
-  stockcategories:  { label: 'Categories',           icon: Tags,            viewPath: '/stock' },
-  storesettings:    { label: 'Store Settings',       icon: Settings,        viewPath: '/settings' },
-  taxrates:         { label: 'Tax Rates',            icon: Settings,        viewPath: '/settings' },
-  storagesnapshots: { label: 'Storage Snapshots',    icon: Database,        viewPath: null }
+  stockcategories:  {
+    label: 'Categories', icon: Tags, viewPath: '/stock',
+    warn: 'Categories are shared configuration used to group stock items. Clearing them affects how products are organised.'
+  },
+  storesettings:    {
+    label: 'Store Settings', icon: Settings, viewPath: '/settings',
+    warn: 'Store Settings holds configuration such as the refund policy and the approval PIN. Clearing it removes that configuration.'
+  },
+  taxrates:         {
+    label: 'Tax Rates', icon: Settings, viewPath: '/settings',
+    warn: 'Tax Rates is configuration data — clearing it removes your tax setup.'
+  },
+  storagesnapshots: {
+    label: 'Storage Snapshots', icon: Database, viewPath: null,
+    warn: 'Snapshots power the 30-day trend chart. Clearing them resets the history; today\'s snapshot is re-captured automatically.'
+  }
 };
+
+// Collections without a reliable schema date field cannot be cleared by date
+// (the backend only accepts "all" for these — must match STORAGE_CLEARABLE).
+const DATE_FILTER_UNSUPPORTED = ['taxrates'];
+const CLEAR_DAY_OPTIONS = [30, 90, 180, 365];
 
 const ICON_COLORS = [
   'bg-blue-50 text-blue-600',
@@ -70,7 +89,7 @@ const usageTone = (percent) => (percent > 90
     ? { color: '#f59e0b', text: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200', chip: 'bg-amber-100 text-amber-700' }
     : { color: '#10b981', text: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', chip: 'bg-emerald-100 text-emerald-700' });
 
-const SectionCard = ({ section, totalBytes, index }) => {
+const SectionCard = ({ section, totalBytes, index, onClear }) => {
   const meta = SECTION_META[section.name]
     || { label: prettifyCollectionName(section.name), icon: Database, viewPath: null };
   const Icon = meta.icon;
@@ -89,14 +108,24 @@ const SectionCard = ({ section, totalBytes, index }) => {
             <span className="ml-2 text-xs text-gray-400">({sharePct}% of data)</span>
           </p>
         </div>
-        {meta.viewPath && (
-          <Link
-            to={meta.viewPath}
-            className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+        <div className="flex items-center gap-2 shrink-0">
+          {meta.viewPath && (
+            <Link
+              to={meta.viewPath}
+              className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+            >
+              View <ExternalLink size={13} />
+            </Link>
+          )}
+          <button
+            onClick={() => onClear(section)}
+            disabled={section.count === 0}
+            title={section.count === 0 ? 'Nothing to clear' : `Clear records from ${meta.label}`}
+            className="flex items-center gap-1.5 text-sm font-semibold text-rose-600 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            View <ExternalLink size={13} />
-          </Link>
-        )}
+            <Trash2 size={13} /> Clear
+          </button>
+        </div>
       </div>
       <div className="mt-3 h-1.5 bg-gray-100 rounded-full overflow-hidden">
         <div
@@ -107,6 +136,132 @@ const SectionCard = ({ section, totalBytes, index }) => {
     </div>
   );
 };
+
+// Confirmation modal for clearing one storage section. Offers "all records"
+// or "older than N days" (where the collection has a schema-backed date), an
+// explicit per-section warning for configuration data, and a red destructive
+// confirm button. onConfirm throws on failure — the modal stays open.
+function ClearStorageModal({ section, onClose, onConfirm }) {
+  const meta = SECTION_META[section.name]
+    || { label: prettifyCollectionName(section.name), icon: Database };
+  // Date-based cleanup needs a schema-backed createdAt — only known
+  // model-backed sections offer it (legacy/raw ones are "all" only).
+  const supportsDateFilter = !!SECTION_META[section.name]
+    && !DATE_FILTER_UNSUPPORTED.includes(section.name);
+  const [mode, setMode] = useState('all');
+  const [days, setDays] = useState(90);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleConfirm = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      await onConfirm({
+        collection: section.name,
+        mode,
+        days: mode === 'olderThan' ? days : null
+      });
+      onClose();
+    } catch (err) {
+      alert(err.message || 'Failed to clear this section');
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
+          <div className="min-w-0">
+            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <Trash2 size={18} className="text-rose-600" /> Clear Data
+            </h3>
+            <p className="text-xs text-gray-500 truncate">{meta.label}</p>
+          </div>
+          <button onClick={onClose} disabled={submitting} className="p-2 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-40">
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-5">
+          <div className={`rounded-xl border px-4 py-3 text-sm ${meta.warn ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-rose-200 bg-rose-50 text-rose-700'}`}>
+            <p className="font-semibold flex items-center gap-2 mb-1">
+              <AlertTriangle size={15} className="shrink-0" />
+              This permanently deletes records from {meta.label}.
+            </p>
+            {meta.warn && <p className="mt-1">{meta.warn}</p>}
+            <p className="mt-1">
+              Currently holding {formatCount(section.count)} record{section.count === 1 ? '' : 's'} ({formatBytes(section.size)}).
+              Deletion cannot be undone — export from Reports first if you need an archive.
+            </p>
+          </div>
+
+          {supportsDateFilter ? (
+            <ClearModePicker mode={mode} setMode={setMode} days={days} setDays={setDays} />
+          ) : (
+            <p className="text-sm text-gray-500">
+              This section can only be cleared entirely (date-based cleanup is not available for it).
+            </p>
+          )}
+        </div>
+
+        <div className="px-6 py-4 border-t border-gray-100 flex justify-end space-x-3 bg-gray-50 rounded-b-2xl">
+          <button
+            onClick={onClose}
+            disabled={submitting}
+            className="px-5 py-2.5 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-40"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleConfirm}
+            disabled={submitting}
+            className="px-6 py-2.5 bg-rose-600 hover:bg-rose-700 disabled:opacity-40 text-white font-semibold rounded-lg shadow-md transition-colors"
+          >
+            {submitting ? 'Deleting…' : mode === 'olderThan' ? `Delete Records Older Than ${days} Days` : 'Delete All Records'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// "All records" vs "Older than N days" selection with the age threshold picker.
+function ClearModePicker({ mode, setMode, days, setDays }) {
+  const optionClass = (active) => `py-2.5 px-3 rounded-xl border-2 font-semibold text-sm text-left transition-colors ${
+    active ? 'border-rose-500 bg-rose-50 text-rose-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+  }`;
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">What to delete</label>
+      <div className="grid grid-cols-2 gap-2">
+        <button type="button" onClick={() => setMode('all')} className={optionClass(mode === 'all')}>
+          All records
+        </button>
+        <button type="button" onClick={() => setMode('olderThan')} className={optionClass(mode === 'olderThan')}>
+          Older than N days
+        </button>
+      </div>
+      {mode === 'olderThan' && (
+        <div className="mt-3">
+          <label className="block text-xs font-semibold text-gray-500 mb-1">Age threshold</label>
+          <select
+            value={days}
+            onChange={(e) => setDays(Number(e.target.value))}
+            className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring focus:border-rose-300 bg-white"
+          >
+            {CLEAR_DAY_OPTIONS.map((d) => (
+              <option key={d} value={d}>Older than {d} days</option>
+            ))}
+          </select>
+          <p className="text-xs text-gray-400 mt-1.5">
+            Recent records are kept — only records created before the cutoff are removed.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ManageStoragePage() {
   const [data, setData] = useState(null);
@@ -141,6 +296,28 @@ export default function ManageStoragePage() {
 
   // Real dbStats are fetched fresh on every page load; the button re-fetches.
   useEffect(() => { load(false); }, [load]);
+
+  // Per-section clearing: which section's confirmation modal is open, plus the
+  // outcome banner shown after a successful clear.
+  const [clearTarget, setClearTarget] = useState(null);
+  const [clearResult, setClearResult] = useState(null);
+
+  const handleClearConfirm = async ({ collection, mode, days }) => {
+    const token = localStorage.getItem('token');
+    const res = await fetch('/api/storage/clear', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ collection, mode, days })
+    });
+    const result = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      // Include the HTTP status: a 404 here almost always means the backend
+      // server is running old code and needs a restart to expose the endpoint.
+      throw new Error(result.error || `Clear failed (HTTP ${res.status})`);
+    }
+    setClearResult({ message: result.message || `Deleted ${result.deletedCount} record(s)`, collection });
+    await load(true); // re-read dbStats so the gauge and cards reflect the deletion
+  };
 
   if (loading) {
     return (
@@ -216,6 +393,26 @@ export default function ManageStoragePage() {
           {refreshing ? 'Refreshing...' : 'Refresh'}
         </button>
       </div>
+
+      {/* Outcome banner after a successful section clear */}
+      {clearResult && (
+        <div
+          className="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl px-5 py-4 flex items-center gap-3"
+          role="status"
+          data-testid="storage-clear-result"
+        >
+          <CheckCircle2 size={20} className="shrink-0 text-emerald-600" />
+          <p className="text-sm font-semibold flex-1">{clearResult.message}</p>
+          <button
+            onClick={() => setClearResult(null)}
+            className="text-emerald-700 hover:text-emerald-900 p-1 rounded-lg hover:bg-emerald-100 transition-colors"
+            title="Dismiss"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
+
       {/* Gauge + live numbers */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
@@ -312,7 +509,7 @@ export default function ManageStoragePage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {collections.map((c, i) => (
-              <SectionCard key={c.name} section={c} totalBytes={totalSectionBytes} index={i} />
+              <SectionCard key={c.name} section={c} totalBytes={totalSectionBytes} index={i} onClear={setClearTarget} />
             ))}
           </div>
         )}
@@ -326,7 +523,7 @@ export default function ManageStoragePage() {
         <ul className="space-y-3 text-sm text-gray-600">
           <li className="flex gap-3">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 shrink-0" />
-            <span>Stock Movement Logs and snapshot data grow continuously — consider cleaning up log entries older than 90 days from Stock History.</span>
+            <span>Stock Movement Logs and snapshot data grow continuously — use the Clear button on those sections above to remove records older than 90 days.</span>
           </li>
           <li className="flex gap-3">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 shrink-0" />
@@ -342,6 +539,15 @@ export default function ManageStoragePage() {
           </li>
         </ul>
       </div>
+
+      {/* Per-section clear confirmation */}
+      {clearTarget && (
+        <ClearStorageModal
+          section={clearTarget}
+          onClose={() => setClearTarget(null)}
+          onConfirm={handleClearConfirm}
+        />
+      )}
     </div>
   );
 }

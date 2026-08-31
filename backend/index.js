@@ -3242,6 +3242,115 @@ const getStorageBreakdown = async () => {
         generatedAt: new Date().toISOString()
     };
 };
+// =============================================
+// PER-SECTION CLEARING (Admin / Shop Owner only)
+// Lets the Manage Storage page delete a section's records to reclaim space.
+// Only the collections surfaced in the breakdown are clearable, and user
+// accounts + inventory/stock product data are NEVER clearable — the whitelist
+// below cannot express them, so a bad or forged request fails safe.
+// =============================================
+const STORAGE_CLEARABLE = {
+    sales:            { model: Sale,            label: 'Sales / Transactions' },
+    repairjobs:       { model: RepairJob,       label: 'Repair Jobs' },
+    repairjobparts:   { model: RepairJobPart,   label: 'Repair Job Parts' },
+    dailysessions:    { model: DailySession,    label: 'Daily Cash Sessions' },
+    cashmovements:    { model: CashMovement,    label: 'Cash Movements' },
+    refunds:          { model: Refund,          label: 'Refunds' },
+    creditnotes:      { model: CreditNote,      label: 'Credit Notes / Unpaid' },
+    stockmovements:   { model: StockMovement,   label: 'Stock Movement Logs' },
+    stocktakes:       { model: StockTake,       label: 'Stock Take Sessions' },
+    stockimports:     { model: StockImport,     label: 'Stock Imports' },
+    stockcategories:  { model: StockCategory,   label: 'Categories' },
+    storesettings:    { model: StoreSetting,    label: 'Store Settings' },
+    // Legacy raw collection (no Mongoose model): 'all' mode only, because its
+    // document shape and date fields are not guaranteed by a schema.
+    taxrates:         { model: null,            label: 'Tax Rates' },
+    storagesnapshots: { model: StorageSnapshot, label: 'Storage Snapshots' }
+};
+
+// Every schema above is declared with { timestamps: true }, so each document
+// carries a Mongoose-managed createdAt regardless of the explicit created_at
+// fields — that makes createdAt the one reliable date field for "older than
+// N days" clearing across all model-backed sections.
+const STORAGE_CLEAR_DATE_FIELD = 'createdAt';
+const STORAGE_CLEAR_MAX_DAYS = 36500; // ~100 years — sanity cap
+
+// Clearing policy (mirrored by the Manage Storage page UI):
+//   - whitelisted Mongoose-backed sections: "all" or "olderThan N days"
+//   - raw/legacy collections (no model, e.g. legacy "categories"): "all" only
+//   - user accounts + inventory/stock product data: NEVER clearable
+const clearStorageCollection = async ({ collection, mode = 'all', days = null }) => {
+    await connectDB();
+    const name = String(collection || '');
+    if (!name || name.startsWith('system.') || getExcludedCollectionNames().has(name)) {
+        const err = new Error(`Collection "${name}" is protected or unknown — it cannot be cleared from Manage Storage`);
+        err.status = 400;
+        throw err;
+    }
+    if (mode !== 'all' && mode !== 'olderThan') {
+        const err = new Error(`Invalid clear mode "${mode}" (expected "all" or "olderThan")`);
+        err.status = 400;
+        throw err;
+    }
+
+    const entry = STORAGE_CLEARABLE[name] || null;
+    const label = entry ? entry.label : name;
+    const model = entry && entry.model ? entry.model : null;
+
+    const filter = {};
+    if (mode === 'olderThan') {
+        if (!model) {
+            const err = new Error(`"${label}" does not support date-based clearing — use "Clear all" instead`);
+            err.status = 400;
+            throw err;
+        }
+        const n = Number(days);
+        if (!Number.isInteger(n) || n < 1 || n > STORAGE_CLEAR_MAX_DAYS) {
+            const err = new Error('"days" must be a whole number between 1 and 36500');
+            err.status = 400;
+            throw err;
+        }
+        filter[STORAGE_CLEAR_DATE_FIELD] = { $lt: new Date(Date.now() - n * 24 * 60 * 60 * 1000) };
+    }
+
+    const result = model
+        ? await model.deleteMany(filter)
+        : await mongoose.connection.db.collection(name).deleteMany(filter);
+
+    // After wiping snapshots the in-memory date stamp would suppress today's
+    // re-capture — reset it so the next storage read writes a fresh snapshot
+    // and the trend chart keeps its "today" point.
+    if (name === 'storagesnapshots' && mode === 'all') lastSnapshotDate = '';
+
+    return {
+        collection: name,
+        label,
+        mode,
+        days: mode === 'olderThan' ? Number(days) : null,
+        deletedCount: Number(result.deletedCount || 0)
+    };
+};
+
+app.post('/api/storage/clear', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const { collection = '', mode = 'all', days = null } = req.body || {};
+        const result = await clearStorageCollection({ collection, mode, days });
+        res.json({
+            success: true,
+            deletedCount: result.deletedCount,
+            collection: result.collection,
+            mode: result.mode,
+            days: result.days,
+            message: `Deleted ${result.deletedCount} record(s) from ${result.label}`
+        });
+    } catch (err) {
+        if (err && err.status === 400) {
+            return res.status(400).json({ error: err.message });
+        }
+        console.error('Failed to clear storage section:', err);
+        res.status(500).json({ error: 'Database error clearing storage section' });
+    }
+});
 
 app.get('/api/storage', authenticateToken, requireAdmin, async (req, res) => {
     try {
@@ -3254,7 +3363,7 @@ app.get('/api/storage', authenticateToken, requireAdmin, async (req, res) => {
 
 // Exposed for verification tooling (backend/verify_storage.js) without
 // changing the module export shape used by the Vercel serverless entry.
-app.storage = { getStorageUsage, getStorageBreakdown };
+app.storage = { getStorageUsage, getStorageBreakdown, clearStorageCollection };
 
 // =============================================
 // Vercel Export
