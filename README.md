@@ -43,7 +43,7 @@ A robust, offline-first Point of Sale (POS) system tailored for mobile phone ret
 
 - **Frontend:** React, React Router, Vite, Tailwind CSS, Lucide Icons, Recharts (Data Visualization).
 - **Backend Node Server:** Express.js, JSON Web Tokens (Auth).
-- **Database Architecture:** SQLite3 (Local Primary Offline), MongoDB (Cloud Secondary).
+- **Database Architecture:** MongoDB (Cloud Primary) + SQLite3 (Local SQLite mirror/backup). The system checks whether a local SQLite database exists on start and on the Dashboard; when the local database is unavailable the system runs online-only (MongoDB only) and shows a dismissible warning.
 
 ## 📦 Getting Started
 

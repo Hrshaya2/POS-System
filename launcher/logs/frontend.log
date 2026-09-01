@@ -239,3 +239,11 @@ AggregateError [ECONNREFUSED]:
       at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
       at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
 [2m12:01:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/ManageStoragePage.jsx[22m
+[2m14:17:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/ManageStoragePage.jsx[22m
+[2m16:49:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m16:49:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m16:54:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m
+[2m16:54:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m
+[2m16:54:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m
+[2m16:55:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m
+[2m16:55:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m

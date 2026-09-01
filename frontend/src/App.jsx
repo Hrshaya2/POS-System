@@ -47,6 +47,7 @@ import CashSessionHistoryPage from './pages/CashSessionHistoryPage';
 import SettingsPage from './pages/SettingsPage';
 import ManageStoragePage from './pages/ManageStoragePage';
 import StorageWarningBanner from './components/StorageWarningBanner';
+import LocalDbWarningBanner from './components/LocalDbWarningBanner';
 
 // MOCK DATA REMOVED - using live backend API instead
 
@@ -373,6 +374,9 @@ const Dashboard = () => {
 
       {/* MongoDB storage warning — admins only, appears automatically above 500MB */}
       <StorageWarningBanner />
+
+      {/* Local SQLite warning — appears when running online-only (no local DB) */}
+      <LocalDbWarningBanner />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

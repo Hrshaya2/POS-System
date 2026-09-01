@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const localDb = require('./local-db');
 
 const {
     User,
@@ -83,6 +84,14 @@ const formatLocalTime = (date, tzOffsetMinutes) =>
 
 const formatReceiptNo = () => `RCPT-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
 const formatRefundRef = () => `RFS-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+
+// Record a business operation into the local SQLite mirror (backend/database.sqlite).
+// Fire-and-forget: the local DB is optional and must NEVER slow down or break
+// the MongoDB flow. When the local DB is unavailable (online-only mode) the
+// dashboard shows a dismissible warning instead of an error.
+const recordLocalOp = (entity, op, itemKey, payload) => {
+    localDb.logOp({ entity, op, itemKey, payload }).catch(() => { });
+};
 
 // Default refund approval policy (overridable per-store via StoreSetting 'refund_policy').
 const DEFAULT_REFUND_POLICY = {
@@ -474,6 +483,7 @@ app.post('/api/users', authenticateToken, requireAdmin, async (req, res) => {
 
         const hash = await bcrypt.hash(password, 10);
         const newUser = await User.create({ name, email: email.toLowerCase(), password: hash, role });
+        recordLocalOp('users', 'create', newUser._id.toString(), { name, email, role });
         res.status(201).json({ id: newUser._id.toString(), name, email, role });
     } catch (err) {
         console.error(err);
@@ -585,6 +595,7 @@ app.post('/api/inventory/phones', authenticateToken, requireAdmin, async (req, r
             purchase_price, selling_price,
             warranty, status: status || 'In Stock', category
         });
+        recordLocalOp('inventory_phones', 'create', phone._id.toString(), { imei, brand, model, category, selling_price: Number(selling_price || 0) });
         res.status(201).json({ id: phone._id.toString() });
     } catch (err) {
         console.error(err);
@@ -664,6 +675,7 @@ app.post('/api/inventory/accessories', authenticateToken, async (req, res) => {
             });
         }
 
+        recordLocalOp('inventory_accessories', 'create', accessory._id.toString(), { sku: fields.sku, name: fields.name, quantity: Number(accessory.quantity || 0), category: fields.category });
         res.status(201).json({ id: accessory._id.toString(), accessory: normalizeAccessoryFull(accessory) });
     } catch (err) {
         console.error(err);
@@ -780,6 +792,7 @@ app.post('/api/stock/categories', authenticateToken, async (req, res) => {
             is_phone_category: !!req.body.is_phone_category,
             created_by: req.user.name || ''
         });
+        recordLocalOp('stock_categories', 'create', category._id.toString(), { name, description: String(req.body.description || '') });
         res.status(201).json(normalizeCategory(category));
     } catch (err) {
         console.error(err);
@@ -870,6 +883,7 @@ app.post('/api/stock/adjust', authenticateToken, async (req, res) => {
             localKey
         });
 
+        recordLocalOp('stock_movements', 'adjust', accessory._id.toString(), { sku: accessory.sku, change: delta, resultingQuantity: newQty, reason });
         res.json({
             success: true,
             quantity: newQty,
@@ -1438,8 +1452,10 @@ const createRefundHandler = async (req, res) => {
 
         if (!needsApproval) {
             await applyRefundEffects(refund, req.user);
+            recordLocalOp('refunds', 'create', refund.refund_reference, { status: 'APPLIED', total, sale: sale.receipt_no });
             return res.status(201).json({ success: true, status: 'APPLIED', refund: normalizeRefund(refund) });
         }
+        recordLocalOp('refunds', 'create', refund.refund_reference, { status: 'PENDING', total, sale: sale.receipt_no });
         return res.status(201).json({ success: true, status: 'PENDING', refund: normalizeRefund(refund) });
     } catch (err) {
         console.error('[refund create]', err);
@@ -1545,6 +1561,7 @@ app.post('/api/refunds/:id/approve', authenticateToken, requireAdmin, async (req
         refund.approval_status = 'APPROVED'; refund.requires_approval = true;
         await refund.save();
         await applyRefundEffects(refund, req.user);
+        recordLocalOp('refunds', 'approve', refund.refund_reference, { total: Number(refund.total || 0) });
         res.json({ success: true, status: 'APPROVED', refund: normalizeRefund(refund) });
     } catch (err) {
         console.error('[refund approve]', err);
@@ -1561,6 +1578,7 @@ app.post('/api/refunds/:id/reject', authenticateToken, requireAdmin, async (req,
         if (refund.approval_status !== 'PENDING') return res.status(400).json({ error: 'Only pending refunds can be rejected' });
         refund.approval_status = 'REJECTED'; refund.rejection_reason = req.body.reason || '';
         await refund.save();
+        recordLocalOp('refunds', 'reject', refund.refund_reference, { reason: String(req.body.reason || '') });
         res.json({ success: true, status: 'REJECTED', refund: normalizeRefund(refund) });
     } catch (err) {
         console.error('[refund reject]', err);
@@ -1801,6 +1819,7 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
             session_id: sessionId || null
         });
 
+        recordLocalOp('sales', 'checkout', receiptNo, { total, paymentMethod: normalizedPaymentMethod, itemCount: normalizedItems.length });
         return res.status(201).json({
             sale: normalizeSale(saleDoc),
             receipt: normalizeSale(saleDoc),
@@ -1869,6 +1888,7 @@ app.post('/api/sales/import', authenticateToken, async (req, res) => {
             createdAt
         });
 
+        recordLocalOp('sales', 'import', String(s.receipt_no), { total: Number(s.total || 0), cashier: s.cashier_name || req.user.name });
         res.status(201).json({ sale: normalizeSale(saleDoc), imported: true, message: 'Offline sale imported' });
     } catch (err) {
         console.error(err);
@@ -1985,6 +2005,7 @@ app.post('/api/repair-jobs', authenticateToken, async (req, res) => {
             repair_status: 'Received'
         });
 
+        recordLocalOp('repair_jobs', 'create', job._id.toString(), { imei: job.imei, device_model: job.device_model, status: 'Received' });
         res.status(201).json({
             id: job._id.toString(),
             ...job.toObject(),
@@ -2255,6 +2276,7 @@ app.post('/api/cash-movements', authenticateToken, requireAdmin, async (req, res
             movement_date: resolvedDate
         });
 
+        recordLocalOp('cash_movements', 'create', movement._id.toString(), { movement_type: normalizedType, amount: normalizedAmount });
         res.status(201).json({
             id: movement._id.toString(),
             cashier_id: movement.cashier_id,
@@ -2838,6 +2860,7 @@ app.post('/api/sessions/open', authenticateToken, async (req, res) => {
             status: 'open'
         });
 
+        recordLocalOp('daily_sessions', 'open', session._id.toString(), { date: dateStr, opening_cash: session.opening_cash });
         res.status(201).json({ ...session.toObject(), id: session._id.toString() });
     } catch (err) {
         console.error(err);
@@ -2896,6 +2919,7 @@ app.post('/api/sessions/close', authenticateToken, async (req, res) => {
         session.closed_at = new Date();
         await session.save();
 
+        recordLocalOp('daily_sessions', 'close', session._id.toString(), { date: session.date, variance });
         res.json({
             ...session.toObject(),
             id: session._id.toString(),
@@ -2924,6 +2948,53 @@ app.get('/api/sessions', authenticateToken, requireAdmin, async (req, res) => {
 
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'Nangi POS Backend is running' });
+});
+
+// Combined DB status: online (MongoDB) + local (SQLite). The dashboard uses the
+// `onlineOnly` flag to warn when the system is running only against the cloud
+// because no local SQLite database is available on this host.
+app.get('/api/system/db-status', authenticateToken, async (req, res) => {
+    try {
+        const mongoConnected = mongoose.connection.readyState === 1;
+        const local = await localDb.getStatus();
+        res.json({
+            mongo: {
+                configured: Boolean(MONGO_URI),
+                connected: mongoConnected
+            },
+            local,
+            onlineOnly: mongoConnected && !local.available
+        });
+    } catch (err) {
+        console.error('[db-status]', err);
+        res.status(500).json({ error: 'Failed to read database status' });
+    }
+});
+
+// Admin action: (re)initialize / open the local SQLite database. On hosts with
+// a read-only filesystem (e.g. Vercel serverless functions) this reports why
+// the local database cannot be created so admins know the system is online-only.
+app.post('/api/system/local-db/init', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await localDb.ensure();
+        const local = await localDb.getStatus();
+        if (!local.available) {
+            return res.status(400).json({
+                success: false,
+                error: local.error || 'Local SQLite database is not available on this host',
+                onlineOnly: true
+            });
+        }
+        res.json({
+            success: true,
+            path: local.path,
+            tables: local.tables,
+            legacy: local.legacy
+        });
+    } catch (err) {
+        console.error('[local-db init]', err);
+        res.status(500).json({ error: err.message || 'Failed to initialize the local SQLite database' });
+    }
 });
 
 app.get('/api/sync-status', authenticateToken, async (req, res) => {
@@ -3379,6 +3450,20 @@ if (require.main === module) {
     connectDB()
         .then(() => {
             console.log('Connected to MongoDB Atlas');
+            // Open/create the local SQLite mirror (optional — never blocks or
+            // breaks startup). When unavailable the system runs online-only and
+            // the dashboard shows a dismissible warning.
+            localDb.ensure()
+                .then((handle) => {
+                    if (handle) {
+                        console.log(`Local SQLite database ready: ${localDb.getDbPath()}`);
+                    } else {
+                        console.warn('Local SQLite database is unavailable — the system is running online-only (cloud MongoDB only).');
+                    }
+                })
+                .catch((err) => {
+                    console.warn('Local SQLite database is unavailable — the system is running online-only (cloud MongoDB only).', err && err.message);
+                });
             app.listen(PORT, () => {
                 console.log(`Server is running on port ${PORT}`);
             });
