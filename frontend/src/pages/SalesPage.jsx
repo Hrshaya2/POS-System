@@ -26,6 +26,15 @@ const safeNumber = (value) => {
     return Number.isFinite(parsed) ? parsed : 0;
 };
 
+// Unit cost (what the shop paid) for a cart line item. Phones record cost as
+// purchase_price, accessories as cost_price. Used only by the on-screen
+// profit/loss indicator — never stored on the sale or printed on receipts.
+const unitCostOf = (item) => (
+    item?.inventoryType === 'phone'
+        ? safeNumber(item.source?.purchase_price)
+        : safeNumber(item.source?.cost_price)
+);
+
 const getCashSummary = (receipt) => {
     const total = Number(receipt?.total || 0);
     const paymentDetails = receipt?.payment_details || {};
@@ -199,6 +208,19 @@ export default function SalesPage() {
     const splitTotal = safeNumber(paymentSplit.cash) + safeNumber(paymentSplit.card) + safeNumber(paymentSplit.bankTransfer);
     const cashChange = paymentMethod === 'CASH' ? Math.max(0, safeNumber(cashReceived) - total) : 0;
     const cashDue = paymentMethod === 'CASH' ? Math.max(0, total - safeNumber(cashReceived)) : 0;
+
+    // Live profit/loss vs what the shop paid for the items (checkout screen
+    // only — this is a cashier aid and is NEVER sent to the receipt/printer).
+    const totalCost = useMemo(() => cart.reduce((sum, item) => sum + unitCostOf(item) * item.quantity, 0), [cart]);
+    const costKnown = useMemo(
+        () => cart.length > 0 && cart.every((item) => {
+            const cost = item.inventoryType === 'phone' ? item.source?.purchase_price : item.source?.cost_price;
+            return cost !== undefined && cost !== null && cost !== '';
+        }),
+        [cart]
+    );
+    const expectedProfit = total - totalCost;
+    const profitMarginPercent = totalCost > 0 ? (expectedProfit / totalCost) * 100 : (subtotal > 0 ? 100 : 0);
 
     const loadInventory = async () => {
         try {
@@ -747,6 +769,33 @@ export default function SalesPage() {
                                     {approvalRequired ? ' - admin approval flag will be recorded.' : ''}
                                 </div>
                             </div>
+
+                            {/* Live profit/loss vs item cost — checkout screen only, never printed */}
+                            {cart.length > 0 && (
+                                <div className={`rounded-2xl border px-4 py-3 mb-5 ${expectedProfit >= 0 ? 'border-emerald-200 bg-emerald-50' : 'border-rose-200 bg-rose-50'}`}>
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="text-gray-600 font-medium">Total cost (what we paid)</span>
+                                        <span className="font-semibold text-gray-800">{formatMoney(totalCost)}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between text-sm mt-1.5">
+                                        <span className="text-gray-600 font-medium">Profit vs cost</span>
+                                        <strong className={`font-bold ${expectedProfit >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+                                            {expectedProfit > 0 ? 'Profit' : expectedProfit < 0 ? 'Loss' : 'Break even'}
+                                            &nbsp;{formatMoney(Math.abs(expectedProfit))}
+                                            {totalCost > 0 && (
+                                                <span className="ml-1 text-xs font-semibold opacity-60">
+                                                    ({profitMarginPercent >= 0 ? '+' : ''}{profitMarginPercent.toFixed(1)}%)
+                                                </span>
+                                            )}
+                                        </strong>
+                                    </div>
+                                    {!costKnown && (
+                                        <p className="text-[11px] text-gray-500 mt-1.5">
+                                            Some items have no unit cost recorded - profit shown is an estimate.
+                                        </p>
+                                    )}
+                                </div>
+                            )}
 
                             <div className="space-y-3 mb-5">
                                 <label className="text-sm font-semibold text-gray-700">Payment method</label>
