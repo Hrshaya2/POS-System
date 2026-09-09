@@ -114,6 +114,14 @@ export const buildReceiptHtml = (receipt, settings) => {
   <head>
     <title>${esc(receipt.receipt_no)} - Receipt</title>
     <style>
+      /* Print at the exact roll width and let the page height auto-size to the
+         receipt's own content (size: <roll width>mm auto). This makes the
+         browser stop feeding paper immediately after the last receipt line
+         instead of padding it out to a fixed A4/Letter page length. */
+      @media print {
+        @page { size: ${s.widthMm}mm auto; margin: 0; }
+        html, body { margin: 0; padding: 0; }
+      }
       body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 20px; color: #111; }
       .sheet { width: ${sheetWidthPx}px; max-width: 100%; margin: 0 auto; }
       table { width: 100%; border-collapse: collapse; margin-top: 14px; }
@@ -204,6 +212,12 @@ export const buildRefundReceiptHtml = (refund, settings) => {
   <head>
     <title>${esc(refund.refund_reference)} - Refund</title>
     <style>
+      /* Same auto-height @page rule as the sales receipt: the height must be
+         "auto" so the roll stops feeding right after the refund content ends. */
+      @media print {
+        @page { size: ${s.widthMm}mm auto; margin: 0; }
+        html, body { margin: 0; padding: 0; }
+      }
       body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 20px; color: #111; }
       .sheet { width: ${mmToPx(s.widthMm)}px; max-width: 100%; margin: 0 auto; }
       table { width: 100%; border-collapse: collapse; margin-top: 14px; }

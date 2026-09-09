@@ -247,3 +247,5 @@ AggregateError [ECONNREFUSED]:
 [2m16:54:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m
 [2m16:55:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m
 [2m16:55:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m
+[2m07:27:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/SalesPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx[22m
+[2m07:27:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/SalesPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx[22m
