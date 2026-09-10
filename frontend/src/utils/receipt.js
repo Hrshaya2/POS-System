@@ -1,3 +1,5 @@
+import { renderBarcodeSvg } from './barcode';
+
 // Receipt printing settings + a shared receipt->HTML generator.
 // Both the real print (SalesPage) and the Settings live preview render with the
 // exact same markup so what you see while editing is what prints.
@@ -20,8 +22,16 @@ export const DEFAULT_RECEIPT_SETTINGS = {
   website: '',
   showFooterMessage: true,
   footerMessage: 'Thank you for your purchase!',
+  // System-generated barcode printed at the bottom of receipts. When barcodeText
+  // is empty, the value is auto-filled from the receipt number so every receipt
+  // carries a scannable code tied to its own transaction.
+  showBarcode: true,
+  barcodeText: '',
   // Width of the receipt paper in millimetres (print roll width).
-  widthMm: 58
+  widthMm: 58,
+  // Base font size (px) for the receipt. All receipt text sizes are defined in
+  // em units so a single change here scales the whole receipt proportionally.
+  fontSize: 12
 };
 
 const KEY = 'pos_receipt_settings';
@@ -60,6 +70,27 @@ const formatMoney = (value) => `Rs. ${Number(value || 0).toLocaleString('en-LK',
 // Convert a millimetre width into CSS pixels (96dpi: 1in = 25.4mm = 96px).
 export const mmToPx = (mm) => Math.max(40, Math.round((Number(mm) || 58) * 96 / 25.4));
 
+// Build the scannable CODE128 barcode markup for the bottom of a receipt.
+// The value auto-defaults to the receipt/refund number (a "system generated"
+// code) whenever no custom barcode text is configured. Rendered from the same
+// shared JSBarcode util as the stock labels, and returns '' in non-browser
+// environments (or for empty/invalid values) so a receipt can never break.
+const receiptBarcodeMarkup = (code, s) => {
+  if (!s.showBarcode) return '';
+  const value = String(code || '').trim();
+  if (!value) return '';
+  if (typeof document === 'undefined' || typeof XMLSerializer === 'undefined') return '';
+  const svg = renderBarcodeSvg(value, {
+    height: Math.max(20, Math.round((Number(s.fontSize) || 12) * 3.2)),
+    width: 2
+  });
+  if (!svg) return '';
+  return `<div class="barcode" style="text-align:center;margin-top:1.2em;">${svg}<div style="font-size:0.9em;color:#333;margin-top:0.25em;letter-spacing:1px;">${esc(value)}</div></div>`;
+};
+
+const barcodeValueOf = (receipt, s) =>
+  (String(s.barcodeText || '').trim() || receipt.receipt_no || receipt.receipt_number || '').trim();
+
 
 
 // Build the complete printable receipt HTML from a sale/receipt object plus the
@@ -71,13 +102,13 @@ export const buildReceiptHtml = (receipt, settings) => {
 
   const itemsMarkup = (receipt.items || []).map((item) => `
       <tr>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;">
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;">
           <div style="font-weight:700;">${esc(item.name)}</div>
-          <div style="font-size:11px;color:#666;">${item.tracked_by === 'IMEI' ? `IMEI ${esc(item.imei)}` : `SKU ${esc(item.sku)}`}</div>
+          <div style="font-size:0.9em;color:#666;">${item.tracked_by === 'IMEI' ? `IMEI ${esc(item.imei)}` : `SKU ${esc(item.sku)}`}</div>
         </td>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:center;">${item.quantity}</td>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(item.unit_price)}</td>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(item.line_total)}</td>
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:center;">${item.quantity}</td>
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(item.unit_price)}</td>
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(item.line_total)}</td>
       </tr>
     `).join('');
 
@@ -85,10 +116,10 @@ export const buildReceiptHtml = (receipt, settings) => {
     ? `<img src="${s.logo}" alt="logo" style="max-width:120px;max-height:60px;object-fit:contain;margin-bottom:6px;" />`
     : '';
   const shopNameMarkup = s.showShopName && s.shopName
-    ? `<div style="font-size:18px;font-weight:800;margin-bottom:2px;">${esc(s.shopName)}</div>`
+    ? `<div style="font-size:1.5em;font-weight:800;margin-bottom:2px;">${esc(s.shopName)}</div>`
     : '';
   const headerMessage = s.showHeaderMessage && s.headerMessage
-    ? `<div style="font-size:11px;color:#666;margin-top:6px;white-space:pre-wrap;">${esc(s.headerMessage)}</div>`
+    ? `<div style="font-size:0.92em;color:#666;margin-top:0.5em;white-space:pre-wrap;">${esc(s.headerMessage)}</div>`
     : '';
 
   const contactLines = [];
@@ -97,17 +128,20 @@ export const buildReceiptHtml = (receipt, settings) => {
   if (s.email) contactLines.push(esc(s.email));
   if (s.website) contactLines.push(esc(s.website));
   const contactMarkup = s.showContact && contactLines.length
-    ? `<div style="font-size:11px;color:#444;margin-top:6px;line-height:1.5;">${contactLines.join('<br/>')}</div>`
+    ? `<div style="font-size:0.92em;color:#444;margin-top:0.5em;line-height:1.5;">${contactLines.join('<br/>')}</div>`
     : '';
 
   const footerMarkup = s.showFooterMessage && s.footerMessage
-    ? `<p style="margin-top:16px;text-align:center;font-size:12px;color:#555;white-space:pre-wrap;">${esc(s.footerMessage)}</p>`
+    ? `<p style="margin-top:1.3em;text-align:center;font-size:1em;color:#555;white-space:pre-wrap;">${esc(s.footerMessage)}</p>`
     : '';
 
-  const divider = `<div style="border-top:1px dashed #aaa;margin:10px 0;"></div>`;
+  const divider = `<div style="border-top:1px dashed #aaa;margin:0.85em 0;"></div>`;
 
   // Paper width: drives the sheet so the printed receipt matches the roll size.
   const sheetWidthPx = mmToPx(s.widthMm);
+
+  // System-generated barcode (defaults to the receipt number) at the bottom.
+  const barcode = receiptBarcodeMarkup(barcodeValueOf(receipt, s), s);
 
   return `<!doctype html>
 <html>
@@ -122,12 +156,13 @@ export const buildReceiptHtml = (receipt, settings) => {
         @page { size: ${s.widthMm}mm auto; margin: 0; }
         html, body { margin: 0; padding: 0; }
       }
-      body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 20px; color: #111; }
+      body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 20px; color: #111; font-size: ${s.fontSize}px; }
       .sheet { width: ${sheetWidthPx}px; max-width: 100%; margin: 0 auto; }
-      table { width: 100%; border-collapse: collapse; margin-top: 14px; }
-      .muted { color: #666; font-size: 12px; }
-      .row { display: flex; justify-content: space-between; margin: 6px 0; }
-      .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #f3f4f6; font-size: 11px; margin-top: 8px; }
+      table { width: 100%; border-collapse: collapse; margin-top: 1.2em; }
+      .muted { color: #666; font-size: 1em; }
+      .row { display: flex; justify-content: space-between; margin: 0.5em 0; }
+      .badge { display: inline-block; padding: 0.3em 0.7em; border-radius: 999px; background: #f3f4f6; font-size: 0.92em; margin-top: 0.7em; }
+      .barcode svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
     </style>
   </head>
   <body>
@@ -141,10 +176,10 @@ export const buildReceiptHtml = (receipt, settings) => {
       <table>
         <thead>
           <tr>
-            <th style="text-align:left;padding-top:12px;">Item</th>
-            <th style="padding-top:12px;">Qty</th>
-            <th style="padding-top:12px;text-align:right;">Price</th>
-            <th style="padding-top:12px;text-align:right;">Total</th>
+            <th style="text-align:left;padding-top:1em;">Item</th>
+            <th style="padding-top:1em;">Qty</th>
+            <th style="padding-top:1em;text-align:right;">Price</th>
+            <th style="padding-top:1em;text-align:right;">Total</th>
           </tr>
         </thead>
         <tbody>${itemsMarkup}</tbody>
@@ -154,9 +189,10 @@ export const buildReceiptHtml = (receipt, settings) => {
       <div class="row"><span>Discount</span><strong>- ${formatMoney(receipt.discount_amount)}</strong></div>
       <div class="row"><span>Payment</span><strong>${esc(String(receipt.payment_method || '').replace('_', ' '))}</strong></div>
       ${receipt.payment_method === 'CASH' ? `<div class="row"><span>Cash</span><strong>${formatMoney(receipt.cash_received || 0)}</strong></div><div class="row"><span>Change</span><strong>${formatMoney(receipt.change_amount || 0)}</strong></div>` : ''}
-      <div class="row" style="font-size:18px;"><span>Total</span><strong>${formatMoney(receipt.total)}</strong></div>
+      <div class="row" style="font-size:1.5em;"><span>Total</span><strong>${formatMoney(receipt.total)}</strong></div>
       ${contactMarkup ? `${divider}${contactMarkup}` : ''}
       ${footerMarkup}
+      ${barcode}
     </div>
   </body>
 </html>`;
@@ -185,13 +221,13 @@ export const buildRefundReceiptHtml = (refund, settings) => {
   const s = settings || getReceiptSettings();
   const itemsMarkup = (refund.items || []).map((item) => `
       <tr>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;">
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;">
           <div style="font-weight:700;">${esc(item.name)}</div>
-          <div style="font-size:11px;color:#666;">${item.tracked_by === 'IMEI' ? `IMEI ${esc(item.imei)}` : `SKU ${esc(item.sku)}`}</div>
+          <div style="font-size:0.9em;color:#666;">${item.tracked_by === 'IMEI' ? `IMEI ${esc(item.imei)}` : `SKU ${esc(item.sku)}`}</div>
         </td>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:center;">${item.quantity}</td>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(item.unit_price)}</td>
-        <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(-Math.abs(item.line_total))}</td>
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:center;">${item.quantity}</td>
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(item.unit_price)}</td>
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(-Math.abs(item.line_total))}</td>
       </tr>
     `).join('');
 
@@ -199,13 +235,14 @@ export const buildRefundReceiptHtml = (refund, settings) => {
     ? `<img src="${s.logo}" alt="logo" style="max-width:120px;max-height:60px;object-fit:contain;margin-bottom:6px;" />`
     : '';
   const shopNameMarkup = s.showShopName && s.shopName
-    ? `<div style="font-size:18px;font-weight:800;margin-bottom:2px;">${esc(s.shopName)}</div>`
+    ? `<div style="font-size:1.5em;font-weight:800;margin-bottom:2px;">${esc(s.shopName)}</div>`
     : '';
 
-  const isRefund = true;
   const badge = `<span class="badge" style="background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;">REFUND</span>`;
   const total = -Math.abs(Number(refund.total || 0));
   const refundMethod = (refund.refund_method || refund.original_payment_method || '').replace('_', ' ');
+
+  const barcode = receiptBarcodeMarkup(barcodeValueOf(refund, s), s);
 
   return `<!doctype html>
 <html>
@@ -218,12 +255,13 @@ export const buildRefundReceiptHtml = (refund, settings) => {
         @page { size: ${s.widthMm}mm auto; margin: 0; }
         html, body { margin: 0; padding: 0; }
       }
-      body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 20px; color: #111; }
+      body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 20px; color: #111; font-size: ${s.fontSize}px; }
       .sheet { width: ${mmToPx(s.widthMm)}px; max-width: 100%; margin: 0 auto; }
-      table { width: 100%; border-collapse: collapse; margin-top: 14px; }
-      .muted { color: #666; font-size: 12px; }
-      .row { display: flex; justify-content: space-between; margin: 6px 0; }
-      .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; font-size: 11px; margin-top: 8px; }
+      table { width: 100%; border-collapse: collapse; margin-top: 1.2em; }
+      .muted { color: #666; font-size: 1em; }
+      .row { display: flex; justify-content: space-between; margin: 0.5em 0; }
+      .badge { display: inline-block; padding: 0.3em 0.7em; border-radius: 999px; font-size: 0.92em; margin-top: 0.7em; }
+      .barcode svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
     </style>
   </head>
   <body>
@@ -239,18 +277,19 @@ export const buildRefundReceiptHtml = (refund, settings) => {
       <table>
         <thead>
           <tr>
-            <th style="text-align:left;padding-top:12px;">Item</th>
-            <th style="padding-top:12px;">Qty</th>
-            <th style="padding-top:12px;text-align:right;">Price</th>
-            <th style="padding-top:12px;text-align:right;">Total</th>
+            <th style="text-align:left;padding-top:1em;">Item</th>
+            <th style="padding-top:1em;">Qty</th>
+            <th style="padding-top:1em;text-align:right;">Price</th>
+            <th style="padding-top:1em;text-align:right;">Total</th>
           </tr>
         </thead>
         <tbody>${itemsMarkup}</tbody>
       </table>
       <div class="row"><span>Subtotal</span><strong>- ${formatMoney(refund.subtotal)}</strong></div>
       <div class="row"><span>Refund method</span><strong>${esc(refundMethod)}</strong></div>
-      <div class="row" style="font-size:20px;border-top:1px dashed #aaa;margin-top:8px;padding-top:8px;"><span>Total Refunded</span><strong style="color:#b91c1c;">${formatMoney(total)}</strong></div>
-      ${s.showFooterMessage && s.footerMessage ? `<p style="margin-top:16px;text-align:center;font-size:12px;color:#555;white-space:pre-wrap;">${esc(s.footerMessage)}</p>` : ''}
+      <div class="row" style="font-size:1.5em;border-top:1px dashed #aaa;margin-top:0.7em;padding-top:0.7em;"><span>Total Refunded</span><strong style="color:#b91c1c;">${formatMoney(total)}</strong></div>
+      ${s.showFooterMessage && s.footerMessage ? `<p style="margin-top:1.3em;text-align:center;font-size:1em;color:#555;white-space:pre-wrap;">${esc(s.footerMessage)}</p>` : ''}
+      ${barcode}
     </div>
   </body>
 </html>`;

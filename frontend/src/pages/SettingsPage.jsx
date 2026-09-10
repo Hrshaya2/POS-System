@@ -12,6 +12,7 @@ import {
   Globe,
   Type,
   Image as ImageIcon,
+  Barcode as BarcodeIcon,
   Check
 } from 'lucide-react';
 import { getReceiptSettings, saveReceiptSettings, buildReceiptHtml, SAMPLE_RECEIPT, mmToPx } from '../utils/receipt';
@@ -223,6 +224,53 @@ export default function SettingsPage() {
                 />
                 <span className="text-xs text-gray-400 flex items-center">= {mmToPx(settings.widthMm)} px</span>
               </div>
+            </Field>
+          </div>
+
+          {/* Receipt barcode (bottom of receipt) */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
+            <h3 className="text-lg font-bold text-gray-900 flex items-center mb-1">
+              <BarcodeIcon size={18} className="mr-2 text-blue-600" /> Receipt Barcode
+            </h3>
+            <p className="text-sm text-gray-500">Print a scannable barcode at the bottom of every receipt. By default it encodes the receipt number.</p>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Show barcode on receipt</span>
+              <Toggle checked={settings.showBarcode} onChange={(v) => update({ showBarcode: v })} label="Show barcode" />
+            </div>
+            <Field label="Barcode value (optional)">
+              <input className={inputClass} value={settings.barcodeText}
+                onChange={(e) => update({ barcodeText: e.target.value })}
+                placeholder="Leave empty to use the receipt number" />
+            </Field>
+          </div>
+
+          {/* Font size */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
+            <h3 className="text-lg font-bold text-gray-900 flex items-center mb-1">
+              <Type size={18} className="mr-2 text-blue-600" /> Receipt Font Size
+            </h3>
+            <p className="text-sm text-gray-500">Base text size for the whole receipt (all text scales together).</p>
+            <div className="flex flex-wrap gap-2">
+              {[10, 12, 14, 16].map((px) => (
+                <button
+                  key={px}
+                  type="button"
+                  onClick={() => update({ fontSize: px })}
+                  className={`px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${settings.fontSize === px ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'}`}
+                >
+                  {px}px
+                </button>
+              ))}
+            </div>
+            <Field label="Custom size (px)">
+              <input
+                type="number"
+                min="8"
+                max="24"
+                value={settings.fontSize}
+                onChange={(e) => update({ fontSize: Math.min(24, Math.max(8, Number(e.target.value) || 12)) })}
+                className={inputClass}
+              />
             </Field>
           </div>
 
