@@ -82,9 +82,13 @@ export const printBarcodeLabel = ({ code, name = '', price = null, widthMm = 40,
   @page { size: ${w}mm ${h}mm; margin: 0; }
   * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   html, body { margin: 0; padding: 0; background: #fff; }
+  /* NOTE: the printed box is intentionally a hair shorter than the physical
+     page (${h}mm). When the box equals the page height exactly, sub-pixel
+     rounding makes it overflow the page by ~1px and the printer feeds ONE
+     EXTRA (blank) sticker. The 0.6mm safety gap removes that blank label. */
   .label {
     width: ${w}mm;
-    height: ${h}mm;
+    height: calc(${h}mm - 0.6mm);
     padding: 1.5mm;
     display: flex;
     flex-direction: column;
@@ -93,6 +97,8 @@ export const printBarcodeLabel = ({ code, name = '', price = null, widthMm = 40,
     font-family: Arial, Helvetica, sans-serif;
     overflow: hidden;
     text-align: center;
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
   .name {
     font-size: 9px;
@@ -167,9 +173,11 @@ export const printBarcodeLabelsBatch = ({ items = [], widthMm = 40, heightMm = 3
   @page { size: ${w}mm ${h}mm; margin: 0; }
   * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   html, body { margin: 0; padding: 0; background: #fff; }
+  /* Box is a hair shorter than the page (${h}mm) so sub-pixel rounding can't
+     push the label onto a second page and feed an extra blank sticker. */
   .label {
     width: ${w}mm;
-    height: ${h}mm;
+    height: calc(${h}mm - 0.6mm);
     padding: 1.5mm;
     display: flex;
     flex-direction: column;
@@ -178,6 +186,8 @@ export const printBarcodeLabelsBatch = ({ items = [], widthMm = 40, heightMm = 3
     font-family: Arial, Helvetica, sans-serif;
     overflow: hidden;
     text-align: center;
+    page-break-inside: avoid;
+    break-inside: avoid;
     page-break-after: always;
     break-after: page;
   }
