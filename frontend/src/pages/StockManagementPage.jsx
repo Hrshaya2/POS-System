@@ -243,20 +243,7 @@ export default function StockManagementPage() {
   const existingSkus = useMemo(() => items.map((i) => i.sku), [items]);
 
   // Search: global across all categories at grid level; local inside one.
-  const filteredItems = useMemo(() => {
-    const q = searchTerm.trim().toLowerCase();
-    return items.filter((i) => {
-      if (activeCategory && i.category !== activeCategory) return false;
-      if (!q) return true;
-      return (
-        String(i.name || '').toLowerCase().includes(q)
-        || String(i.sku || '').toLowerCase().includes(q)
-        || String(i.category || '').toLowerCase().includes(q)
-        || (Array.isArray(i.barcodes) && i.barcodes.some((b) => String(b).toLowerCase().includes(q)))
-      );
-    });
-  }, [items, activeCategory, searchTerm]);
-
+  //
   // Searching a CATEGORY NAME must return that category, even when it holds no
   // matching item - otherwise typing a category name looks like a dead search.
   // Tombstoned categories stay hidden so deleted ones can't reappear via search.
@@ -267,6 +254,32 @@ export default function StockManagementPage() {
       String(c?.name || '').toLowerCase().includes(q)
     );
   }, [categories, searchTerm, activeCategory]);
+
+  // Categories hit by NAME. Their items are pulled into the results even when the
+  // item text itself doesn't contain the query - searching "Chargers" must show
+  // the chargers, not only items with "Chargers" written in their name.
+  const matchedCategoryNames = useMemo(
+    () => new Set(matchingCategories.map((c) => String(c?.name || '').trim())),
+    [matchingCategories]
+  );
+
+  const filteredItems = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    return items.filter((i) => {
+      if (activeCategory && i.category !== activeCategory) return false;
+      if (!q) return true;
+      // Belongs to a category whose name matched -> always include.
+      if (matchedCategoryNames.has(String(i.category || '').trim())) return true;
+      return (
+        String(i.name || '').toLowerCase().includes(q)
+        || String(i.sku || '').toLowerCase().includes(q)
+        || String(i.category || '').toLowerCase().includes(q)
+        || String(i.description || '').toLowerCase().includes(q)
+        || String(i.barcode || '').toLowerCase().includes(q)
+        || (Array.isArray(i.barcodes) && i.barcodes.some((b) => String(b).toLowerCase().includes(q)))
+      );
+    });
+  }, [items, activeCategory, searchTerm, matchedCategoryNames]);
 
   // All non-service items at/below their own low-stock threshold — the same
   // rule as the Alerts tab. Sorted most-critical first (out of stock on top),
@@ -734,6 +747,26 @@ function ItemsSection(props) {
 
   const selectedCount = filteredItems.filter((i) => selectedIds.has(i.id)).length;
 
+  const searchInputRef = useRef(null);
+
+  // Hardware barcode scanners "type" the code and then send Enter. Focus the box
+  // on mount so a scan lands here straight after the page loads - otherwise the
+  // digits go nowhere and it looks like the reader isn't working.
+  useEffect(() => {
+    searchInputRef.current?.focus();
+  }, []);
+
+  // A scan ends with Enter. If that single scan matched exactly one item, open it
+  // immediately - this is what makes the reader feel instant. Multiple matches
+  // keep the list so the user can pick.
+  const handleSearchKeyDown = (e) => {
+    if (e.key !== 'Enter' || !searchTerm.trim()) return;
+    if (filteredItems.length === 1) {
+      e.preventDefault();
+      onView(filteredItems[0]);
+    }
+  };
+
   // Search results are grouped by category so related items stay together
   // instead of arriving as one long mixed list. Categories are sorted
   // alphabetically, then items by name within each group.
@@ -762,9 +795,11 @@ function ItemsSection(props) {
         <div className="relative flex-1">
           <Search size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
+            ref={searchInputRef}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder={activeCategory ? `Search within ${activeCategory}…` : 'Search all items across categories…'}
+            onKeyDown={handleSearchKeyDown}
+            placeholder={activeCategory ? `Search within ${activeCategory}…` : 'Search items, SKUs, barcodes or categories…'}
             className="w-full pl-10 pr-10 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-300 shadow-sm"
           />
           {searchTerm && (
@@ -877,14 +912,19 @@ function ItemsSection(props) {
             </div>
           )}
 
-          <CategoryGrid
-            categories={categories}
-            items={items}
-            onOpenCategory={(name) => { setActiveCategory(name); setSearchTerm(''); }}
-            onManageCategories={onManageCategories}
-            onAddItem={onAddItem}
-            isAdmin={isAdmin}
-          />
+          {/* The full grid is hidden while a search is active: leaving it on
+              screen underneath the results made it look like the search had
+              done nothing. Clear the box (or the x) to get the grid back. */}
+          {!searchTerm.trim() && (
+            <CategoryGrid
+              categories={categories}
+              items={items}
+              onOpenCategory={(name) => { setActiveCategory(name); setSearchTerm(''); }}
+              onManageCategories={onManageCategories}
+              onAddItem={onAddItem}
+              isAdmin={isAdmin}
+            />
+          )}
         </>
       ) : (
         /* ---- Drill-in: item table for this category ---- */
