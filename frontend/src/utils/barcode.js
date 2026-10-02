@@ -79,28 +79,32 @@ export const printBarcodeLabel = ({ code, name = '', price = null, widthMm = 40,
 <head>
 <title>Label ${value}</title>
 <style>
-  @page { size: ${w}mm ${h}mm; margin: 0; }
   * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  /* Pin the whole document to EXACTLY one label. html/body are given the page
-     size and overflow:hidden so a sub-pixel (~0.1px) round-off is clipped.
-     Without this, Chrome slips that tiny overflow onto a SECOND page and a
-     roll label printer feeds it as an EXTRA BLANK sticker. */
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: ${w}mm;
-    height: ${h}mm;
-    overflow: hidden;
-    background: #fff;
+  html, body { margin: 0; padding: 0; background: #fff; }
+  /* The printed page is EXACTLY the label size - never taller. Nothing in this
+     document can make it longer: the page box is fixed at ${h}mm by @page, and
+     the label box below is shorter still. If the browser print PREVIEW still
+     shows a tall page, the paper size selected in the print dialog (usually A4)
+     overrides @page - that is a dialog/driver setting, not something CSS can
+     force. Select the 35x25mm roll there to see the true output. */
+  @media print {
+    @page { size: ${w}mm ${h}mm; margin: 0; }
+    html, body {
+      width: ${w}mm;
+      height: ${h}mm;
+      margin: 0;
+      padding: 0;
+      overflow: hidden !important;
+    }
   }
-  @media print { html, body { overflow: hidden !important; } }
   .label {
     width: ${w}mm;
-    /* STRICTLY shorter than the page. A box that is exactly the page height
-       sits right on the page-break boundary, so Chrome resolves the sub-pixel
-       round-off by emitting a SECOND, empty page — which a roll label printer
-       then feeds as an extra BLANK sticker. The 1mm slack removes the
-       ambiguity. (overflow:hidden alone does NOT prevent this.) */
+    /* STRICTLY shorter than the page, and NOT ${h}mm. A box that is exactly the
+       page height sits right on the page-break boundary, so Chrome resolves the
+       sub-pixel round-off by emitting a SECOND, empty page - which a roll label
+       printer then feeds as an extra BLANK sticker. The 1mm slack is what keeps
+       one label on one sticker; it costs 1mm of trailing whitespace, which is
+       inside the label and harmless. (overflow:hidden alone does NOT prevent it.) */
     height: calc(${h}mm - 1mm);
     padding: 1.2mm;
     display: flex;
@@ -185,16 +189,22 @@ export const printBarcodeLabelsBatch = ({ items = [], widthMm = 40, heightMm = 3
 <head>
 <title>Batch labels (${labelsHtml.length})</title>
 <style>
-  @page { size: ${w}mm ${h}mm; margin: 0; }
   * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  /* One label per page. The box is a hair shorter than the page (${h}mm) AND
-     clips its own overflow, so a sub-pixel round-off can never spill onto the
-     next page and feed an extra blank sticker. */
-  html, body {
-    margin: 0; padding: 0; width: ${w}mm; height: ${h}mm;
-    overflow: hidden; background: #fff;
+  html, body { margin: 0; padding: 0; background: #fff; }
+  /* One label per page, and the page is EXACTLY ${h}mm - never taller. Each label
+     box is a hair shorter than that (see below) AND clips its own overflow, so
+     a sub-pixel round-off can never spill onto the next page and feed an extra
+     blank sticker. If the print PREVIEW looks taller than the label, the paper
+     size chosen in the print dialog (usually A4) is overriding @page. */
+  @media print {
+    @page { size: ${w}mm ${h}mm; margin: 0; }
+    html, body {
+      width: ${w}mm;
+      margin: 0;
+      padding: 0;
+      overflow: hidden !important;
+    }
   }
-  @media print { html, body { overflow: hidden !important; } }
   .label {
     width: ${w}mm;
     /* Strictly shorter than the page, so a sub-pixel round-off can never spill
