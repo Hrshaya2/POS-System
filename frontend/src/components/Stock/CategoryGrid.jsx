@@ -2,6 +2,7 @@
 // Each card: name, item count, total stock qty. Click drills into the list.
 import React from 'react';
 import { Package, Smartphone, Layers, Plus } from 'lucide-react';
+import { getDeletedCategoryNames } from '../../services/stockService';
 
 const CARD_COLORS = [
   'from-blue-500 to-indigo-500',
@@ -15,12 +16,27 @@ const CARD_COLORS = [
 const colorForIndex = (i) => CARD_COLORS[i % CARD_COLORS.length];
 
 export default function CategoryGrid({ categories, items, onOpenCategory, onManageCategories, onAddItem, isAdmin }) {
+  // Categories the user explicitly deleted. Item rows keep their plain-text
+  // category label, so without this the grid would immediately re-synthesise a
+  // card for a category that was just removed.
+  // categories/items are listed as deps on purpose: the tombstones live in
+  // localStorage, which React cannot observe, so a change in either list is what
+  // tells us to re-read them.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const deletedNames = React.useMemo(() => new Set(getDeletedCategoryNames()), [categories, items]);
+
+  const visibleCategories = React.useMemo(
+    () => (categories || []).filter((c) => !deletedNames.has(String(c?.name || '').trim())),
+    [categories, deletedNames]
+  );
+
   const stats = React.useMemo(() => {
     const map = new Map();
-    for (const cat of categories) {
+    for (const cat of visibleCategories) {
       map.set(cat.name, { count: 0, qty: 0 });
     }
     for (const item of items) {
+      if (deletedNames.has(String(item?.category || '').trim())) continue;
       const entry = map.get(item.category);
       if (entry) {
         entry.count += 1;
@@ -31,15 +47,15 @@ export default function CategoryGrid({ categories, items, onOpenCategory, onMana
       }
     }
     return map;
-  }, [categories, items]);
+  }, [visibleCategories, items, deletedNames]);
 
   // Merge in categories that only exist as item labels (legacy data).
   const allNames = Array.from(new Set([
-    ...categories.filter((c) => c.active !== false).map((c) => c.name),
+    ...visibleCategories.filter((c) => c.active !== false).map((c) => c.name),
     ...Array.from(stats.keys())
   ])).sort((a, b) => a.localeCompare(b));
 
-  const phoneCategoryNames = new Set(categories.filter((c) => c.is_phone_category).map((c) => c.name));
+  const phoneCategoryNames = new Set(visibleCategories.filter((c) => c.is_phone_category).map((c) => c.name));
 
   return (
     <div>

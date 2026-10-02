@@ -20,6 +20,7 @@ import {
   putCachedTake,
   putCachedImport,
   getCachedImports,
+  removeCachedImport,
   removeCachedImportByLocalKey,
   enqueueStockOp
 } from '../db/database';
@@ -379,6 +380,44 @@ const cancelPendingCreate = async (entityType, localKey) => {
 
 // ---- Categories ----
 
+// Deleting a category row is not enough to make it disappear from the grid:
+// the item list still carries `category: "<name>"` text labels, and CategoryGrid
+// synthesises a card for any label that has no matching category row (legacy
+// data support). That resurrects the deleted category as a "ghost" card.
+// So we keep a tombstone of explicitly-deleted names and filter them out of the
+// grid. Re-creating a category with the same name clears its tombstone.
+const DELETED_CATS_KEY = 'pos_deleted_categories';
+
+const readDeletedCats = () => {
+  try {
+    const raw = JSON.parse(localStorage.getItem(DELETED_CATS_KEY));
+    return new Set(Array.isArray(raw) ? raw.map((n) => String(n)) : []);
+  } catch {
+    return new Set();
+  }
+};
+
+const writeDeletedCats = (set) => {
+  try { localStorage.setItem(DELETED_CATS_KEY, JSON.stringify([...set])); } catch { /* ignore */ }
+};
+
+export const getDeletedCategoryNames = () => [...readDeletedCats()];
+
+const tombstoneCategory = (name) => {
+  const n = String(name || '').trim();
+  if (!n) return;
+  const set = readDeletedCats();
+  set.add(n);
+  writeDeletedCats(set);
+};
+
+const clearCategoryTombstone = (name) => {
+  const n = String(name || '').trim();
+  if (!n) return;
+  const set = readDeletedCats();
+  if (set.delete(n)) writeDeletedCats(set);
+};
+
 export const createCategory = async ({ name, description = '', color_tag = '', is_phone_category = false }, user) => {
   const localKey = newLocalKey();
   const row = {
@@ -393,6 +432,7 @@ export const createCategory = async ({ name, description = '', color_tag = '', i
     created_at: new Date().toISOString(),
     syncStatus: 'pending'
   };
+  clearCategoryTombstone(row.name);
   await upsertCachedCategory(row);
   await enqueueStockOp({
     entityType: 'category',
@@ -406,6 +446,14 @@ export const createCategory = async ({ name, description = '', color_tag = '', i
 export const updateCategory = async (category, fields) => {
   const pending = category.syncStatus === 'pending' || isInternalItemId(category.id);
   const next = { ...category, ...fields, name: String(fields.name ?? category.name).trim() };
+
+  // A rename leaves the old name behind on any item that wasn't propagated.
+  // Tombstone it so it can't come back as a ghost card, and clear the new name
+  // in case the user is restoring a previously deleted category.
+  if (next.name !== category.name) {
+    tombstoneCategory(category.name);
+    clearCategoryTombstone(next.name);
+  }
 
   if (pending) {
     // Not on the server yet - fold into the queued create.
@@ -450,6 +498,7 @@ const queueCategoryDelete = async (category) => {
       payload: { id: category.id }
     });
   }
+  tombstoneCategory(category.name);
   await removeCachedCategory(category.id);
 };
 
@@ -895,4 +944,57 @@ export const runBulkImport = async ({ filename, rows, overwrite = false }, user)
   attemptImmediateFlush();
 
   return { created, updated, movementsLogged: movementsToCache.length, importId: batchKey };
+};
+
+// ---- Uploaded-file history ----
+
+// Removes ONE row from the "Uploaded Files" list. This deletes the history
+// record ONLY - the items, quantities and stock movements the file created are
+// deliberately left untouched, so removing an entry can never roll back or
+// corrupt real stock data.
+export const deleteImportRecord = async (record) => {
+  const id = String(record?.id || '').trim();
+  if (!id) throw new Error('This file record has no id');
+
+  // A row that never reached the server has no id to delete server-side, and its
+  // queued op is what actually applies the stock changes - cancelling that would
+  // lose the imported data. Those must sync first.
+  if (isInternalItemId(id) || record?.syncStatus === 'pending') {
+    throw new Error('This file is still uploading. Wait for it to finish syncing, then remove it.');
+  }
+
+  if (navigator.onLine) {
+    const res = await fetch(`/api/stock/imports/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || 'Could not remove the file record');
+    }
+  }
+
+  // Drop both the server-id copy and any local twin carrying the same localKey.
+  await removeCachedImport(id);
+  if (record?.localKey) await removeCachedImportByLocalKey(record.localKey);
+  return { success: true, id };
+};
+
+// Bulk variant behind "Remove all" in the Uploaded Files panel. Deletes the
+// history rows only, one server call each, continuing past individual failures
+// so one bad record can't block the rest.
+export const deleteImportRecords = async (records) => {
+  const list = (records || []).filter((r) => r && r.id);
+  if (!list.length) return { ok: 0, failed: 0, errors: [] };
+  let ok = 0;
+  const errors = [];
+  for (const r of list) {
+    try {
+      await deleteImportRecord(r);
+      ok += 1;
+    } catch (err) {
+      errors.push({ filename: r.filename, error: err.message || 'Could not remove' });
+    }
+  }
+  return { ok, failed: list.length - ok, errors };
 };

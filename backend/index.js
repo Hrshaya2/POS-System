@@ -1249,6 +1249,24 @@ app.get('/api/stock/imports', authenticateToken, async (req, res) => {
     }
 });
 
+// Removes ONE upload-history record. History only - the items, quantities and
+// stock movements the file produced are intentionally left alone, so this can
+// never roll back real stock data.
+app.delete('/api/stock/imports/:id', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(400).json({ error: 'Invalid file record id' });
+        }
+        const removed = await StockImport.findByIdAndDelete(req.params.id);
+        if (!removed) return res.status(404).json({ error: 'File record not found' });
+        res.json({ success: true, id: req.params.id });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message || 'Database error deleting file record' });
+    }
+});
+
 app.get('/api/stock/alerts', authenticateToken, async (req, res) => {
     try {
         await connectDB();

@@ -3,9 +3,9 @@
 // errors flagged and excluded) -> SKU matching (add qty by default, optional
 // overwrite) -> apply + movement logging. Hard row cap of 1000.
 import React, { useMemo, useRef, useState } from 'react';
-import { Upload, FileDown, CheckCircle2, AlertTriangle, SlidersHorizontal, Clock, FileText } from 'lucide-react';
+import { Upload, FileDown, CheckCircle2, AlertTriangle, SlidersHorizontal, Clock, FileText, Trash2 } from 'lucide-react';
 import { downloadCsv, parseCsvTable, applyColumnMapping } from '../../utils/csv';
-import { runBulkImport } from '../../services/stockService';
+import { runBulkImport, deleteImportRecords } from '../../services/stockService';
 import { IMPORT_ROW_CAP } from './constants';
 
 const TEMPLATE_HEADERS = ['SKU', 'Name', 'Category', 'Quantity', 'Cost', 'Sell Price', 'Low Stock Threshold'];
@@ -15,6 +15,9 @@ const TEMPLATE_SAMPLE_ROWS = [
 ];
 
 export default function ImportTab({ items, user, imports = [], onDataChanged }) {
+  // Removing an upload-history record is an admin action, matching the rule
+  // used for deleting categories and items elsewhere on the page.
+  const isAdmin = user?.role === 'admin' || user?.role === 'shop_owner';
   // Raw parsed file + the column mapping that turns foreign exports (other
   // POS systems) into our canonical row shape. `rows` is always derived from
   // (rawRows, mapping), so adjusting the mapping live-refreshes the preview.
@@ -184,7 +187,13 @@ export default function ImportTab({ items, user, imports = [], onDataChanged }) 
         />
       )}
 
-      {imports.length > 0 && <RecentImportsPanel imports={imports} />}
+      {imports.length > 0 && (
+        <RecentImportsPanel
+          imports={imports}
+          isAdmin={isAdmin}
+          onChanged={onDataChanged}
+        />
+      )}
     </div>
   );
 }
@@ -379,12 +388,72 @@ function ColumnMapper({ headers, mapping, setMapping, rawRows }) {
 }
 
 // Upload-history panel body. Kept ASCII-simple for reliability of edits.
-function RecentImportsPanel({ imports = [] }) {
+function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
   const [openId, setOpenId] = useState(null);
+  const [selected, setSelected] = useState(() => new Set());
+  const [busy, setBusy] = useState(false);
+  const [confirmAll, setConfirmAll] = useState(false);
+  const [error, setError] = useState('');
   const rows = useMemo(
     () => [...imports].sort((a, b) => new Date(b.created_at || b.createdAt || 0) - new Date(a.created_at || a.createdAt || 0)),
     [imports]
   );
+
+  // Rows still syncing have no server record to delete yet, so they must be
+  // excluded from selection - otherwise "Remove all" would report failures.
+  const removableIds = useMemo(
+    () => new Set(rows
+      .filter((r) => r.syncStatus !== 'pending' && r.syncStatus !== 'failed' && r.id)
+      .map((r) => String(r.id))),
+    [rows]
+  );
+
+  const allSelected = removableIds.size > 0 && [...removableIds].every((id) => selected.has(id));
+  const selectedRows = rows.filter((r) => selected.has(String(r.id)));
+
+  const toggleOne = (id) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      const key = String(id);
+      if (next.has(key)) next.delete(key); else next.add(key);
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    setSelected(allSelected ? new Set() : new Set(removableIds));
+    setConfirmAll(false);
+  };
+
+  const runDelete = async (records) => {
+    if (!records.length) return;
+    setBusy(true);
+    setError('');
+    try {
+      const res = await deleteImportRecords(records);
+      setSelected(new Set());
+      setConfirmAll(false);
+      if (res.failed) {
+        setError(
+          `Removed ${res.ok}, but ${res.failed} could not be removed. `
+          + res.errors.slice(0, 3).map((e) => `${e.filename}: ${e.error}`).join('; ')
+        );
+      }
+      await onChanged?.();
+    } catch (err) {
+      setError(err.message || 'Could not remove the file record');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const removeOne = async (record) => {
+    if (!window.confirm(
+      `Remove "${record.filename}" from the uploaded files list?\n\n`
+      + 'This clears the history entry only. The items and stock it added are not affected.'
+    )) return;
+    await runDelete([record]);
+  };
 
   const fmtDate = (iso) => {
     try { return iso ? new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '-'; }
@@ -401,13 +470,68 @@ function RecentImportsPanel({ imports = [] }) {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
       <div className="p-6 pb-4">
-        <h3 className="text-lg font-bold text-gray-900 flex items-center flex-wrap gap-x-3">
-          <Clock size={20} className="text-blue-600" /> Uploaded Files
-          <span className="text-xs font-semibold text-gray-400">{rows.length} on record · click a file for details</span>
-        </h3>
-        <p className="text-sm text-gray-500 mt-1">
-          Every file ever imported into stock - who uploaded it, when, and exactly what it changed.
-        </p>
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <h3 className="text-lg font-bold text-gray-900 flex items-center flex-wrap gap-x-3">
+              <Clock size={20} className="text-blue-600" /> Uploaded Files
+              <span className="text-xs font-semibold text-gray-400">{rows.length} on record · click a file for details</span>
+            </h3>
+            <p className="text-sm text-gray-500 mt-1">
+              Every file ever imported into stock - who uploaded it, when, and exactly what it changed.
+            </p>
+          </div>
+
+          {isAdmin && removableIds.size > 0 && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                onClick={toggleAll}
+                disabled={busy}
+                className="px-3 py-2 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                {allSelected ? 'Deselect all' : 'Select all'}
+              </button>
+
+              {selectedRows.length > 0 && (
+                !confirmAll ? (
+                  <button
+                    onClick={() => setConfirmAll(true)}
+                    disabled={busy}
+                    className="flex items-center gap-1.5 px-3 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors disabled:opacity-50"
+                  >
+                    <Trash2 size={14} /> Remove selected ({selectedRows.length})
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => { runDelete(selectedRows); }}
+                      disabled={busy}
+                      className="flex items-center gap-1.5 px-3 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors disabled:opacity-50"
+                    >
+                      {busy ? 'Removing…' : `Yes, remove ${selectedRows.length}`}
+                    </button>
+                    <button
+                      onClick={() => setConfirmAll(false)}
+                      disabled={busy}
+                      className="px-3 py-2 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )
+              )}
+            </div>
+          )}
+        </div>
+
+        {confirmAll && (
+          <p className="mt-3 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2 flex items-center">
+            <AlertTriangle size={14} className="mr-2 shrink-0" />
+            This removes {selectedRows.length} file record(s) from the list. The items and stock they added are NOT affected.
+          </p>
+        )}
+        {error && (
+          <p className="mt-3 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">{error}</p>
+        )}
       </div>
 
       <ul className="divide-y divide-gray-50 max-h-[430px] overflow-y-auto border-t border-gray-50">
@@ -417,10 +541,28 @@ function RecentImportsPanel({ imports = [] }) {
           const skipped = (r.skipped || 0) + errs;
           return (
             <li key={r.id}>
-              <button
-                onClick={() => setOpenId(isOpen ? null : r.id)}
-                className="w-full px-6 py-3.5 hover:bg-gray-50/70 flex items-center gap-3 text-left transition-colors"
-              >
+              <div className="flex items-stretch hover:bg-gray-50/70 transition-colors">
+              <div className="px-6 py-3.5 flex items-center gap-3 text-left flex-1 min-w-0">
+                {isAdmin && removableIds.has(String(r.id)) ? (
+                  <input
+                    type="checkbox"
+                    checked={selected.has(String(r.id))}
+                    onChange={() => toggleOne(r.id)}
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label={`Select ${r.filename}`}
+                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 shrink-0 cursor-pointer"
+                  />
+                ) : isAdmin ? (
+                  <span
+                    title="This file has not finished syncing yet"
+                    className="w-4 h-4 rounded border border-dashed border-gray-300 shrink-0"
+                  />
+                ) : null}
+
+                <button
+                  onClick={() => setOpenId(isOpen ? null : r.id)}
+                  className="flex items-center gap-3 text-left flex-1 min-w-0"
+                >
                 <FileText size={18} className={`shrink-0 ${isOpen ? 'text-blue-500' : 'text-gray-300'}`} />
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-semibold text-gray-900 truncate">{r.filename}</span>
@@ -437,7 +579,24 @@ function RecentImportsPanel({ imports = [] }) {
                   )}
                 </span>
                 {pill(r)}
-              </button>
+                </button>
+              </div>
+
+              {isAdmin && (
+                <div className="pr-5 pl-1 flex items-center">
+                  <button
+                    onClick={() => removeOne(r)}
+                    disabled={busy}
+                    title={removableIds.has(String(r.id))
+                      ? 'Remove this file record'
+                      : 'This file has not finished syncing yet'}
+                    className="p-2 rounded-lg text-gray-300 hover:text-rose-600 hover:bg-rose-50 transition-colors disabled:opacity-40 disabled:hover:text-gray-300"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              )}
+              </div>
 
               {isOpen && (
                 <div className="px-6 pb-4 pt-2 bg-gray-50/40 border-b border-gray-100 text-sm">
