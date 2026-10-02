@@ -559,6 +559,16 @@ const writeDeletedCats = (set) => {
 
 export const getDeletedCategoryNames = () => [...readDeletedCats()];
 
+// Central filter for deleted categories. Callers should run their category list
+// through this so a deleted category can't reappear in ANY consumer - the grid,
+// the item form's category dropdown, stock-take, exports or the CSV import -
+// not just in the grid that originally showed the bug.
+export const filterDeletedCategories = (list) => {
+  const deleted = readDeletedCats();
+  if (!deleted.size) return Array.isArray(list) ? list : [];
+  return (list || []).filter((c) => c && !deleted.has(String(c.name || '').trim()));
+};
+
 const tombstoneCategory = (name) => {
   const n = String(name || '').trim();
   if (!n) return;
@@ -746,6 +756,44 @@ export const deleteItem = async (item) => {
   }
   await db.inventoryAccessories.delete(item.id);
   if (!pending) attemptImmediateFlush();
+};
+
+// ---- Remove every item and category ----
+
+// Wipes ALL items and categories from the server and the local cache.
+// Movement history, stock takes and import records are deliberately KEPT, so
+// there is still an audit trail of what the stock used to contain.
+export const deleteAllStock = async () => {
+  const [cats, items] = await Promise.all([
+    db.stockCategories.toArray(),
+    db.inventoryAccessories.toArray()
+  ]);
+
+  // 1. Drop every queued item/category op FIRST. A pending CREATE that is
+  //    replayed after the wipe would immediately re-insert the very rows we
+  //    just deleted - this is the mechanism that resurrects deleted data.
+  const ops = await db.pendingStockOps.toArray();
+  for (const op of ops) {
+    if (op.entityType === 'item' || op.entityType === 'category') {
+      await db.pendingStockOps.delete(op.id);
+    }
+  }
+
+  // 2. Reuse the normal per-row delete paths so local and server stay
+  //    consistent (queue op + drop local row + tombstone the name).
+  for (const c of cats) await queueCategoryDelete(c);
+  for (const i of items) await deleteItem(i);
+
+  // 3. Awaited: a caller that reloads immediately must not race the flush.
+  await attemptImmediateFlush();
+
+  // 4. Clear anything left over (e.g. rows whose delete could not be queued).
+  await db.transaction('rw', db.stockCategories, db.inventoryAccessories, async () => {
+    await db.stockCategories.clear();
+    await db.inventoryAccessories.clear();
+  });
+
+  return { categories: cats.length, items: items.length };
 };
 
 // ---- Manual stock adjustment ----

@@ -25,3 +25,11 @@ Server is running on port 5000
 (Use `node --trace-warnings ...` to show where the warning was created)
 Connected to MongoDB Atlas
 Server is running on port 5000
+===== started 02/10/2026 16:28:19.73 =====  
+◇ injected env (4) from .env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (0) from .env // tip: ⌘ override existing { override: true }
+(node:14348) [MONGOOSE] Warning: `errors` is a reserved schema pathname and may break some functionality. You are allowed to use it, but use at your own risk. To disable this warning pass `suppressReservedKeysWarning` as a schema option.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Connected to MongoDB Atlas
+Local SQLite database ready: D:\Nangi\POS\backend\database.sqlite
+Server is running on port 5000

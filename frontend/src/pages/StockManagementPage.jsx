@@ -2,19 +2,20 @@
 //   Items (category-first browser), History, Stock Take, Import, Alerts.
 // Offline-first: reads come from the IndexedDB cache; every write mutates the
 // cache optimistically and rides the pendingStockOps queue to the server.
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Boxes, Search, Plus, Pencil, Trash2, Wrench,
   Barcode as BarcodeIcon, CheckSquare, Square, Printer,
   History, ClipboardCheck, Upload, TrendingDown, LayoutGrid,
-  FileSpreadsheet, FileText, AlertTriangle, RefreshCw
+  FileSpreadsheet, FileText, AlertTriangle, RefreshCw,
+  ChevronDown, MoreHorizontal, Layers
 } from 'lucide-react';
 import { exportToExcelWithTotals, exportToPdf } from '../utils/reportExport';
 import { useAuth } from '../context/AuthContext';
 import {
   refreshStockData, loadStockData, createCategory, updateCategory,
   deleteCategory, deleteCategories, saveItem, deleteItem, adjustStock,
-  resetLocalStockCache
+  resetLocalStockCache, filterDeletedCategories, deleteAllStock
 } from '../services/stockService';
 import CategoryGrid from '../components/Stock/CategoryGrid';
 import ManageCategoriesModal from '../components/Stock/ManageCategoriesModal';
@@ -35,6 +36,12 @@ const PAGE_TABS = [
   { id: 'import', label: 'Import', icon: Upload },
   { id: 'alerts', label: 'Alerts', icon: TrendingDown }
 ];
+
+// How many items to show under one category heading in the global search
+// results. Kept short so the category-first structure stays readable; anything
+// beyond this collapses into a "click to view all" line that drills into the
+// full category list.
+const SEARCH_GROUP_LIMIT = 6;
 
 // Saved label sizes from an older build (the original 40x30 default) would
 // silently override the intended 35x25 sticker, so they are discarded. The
@@ -149,7 +156,10 @@ export default function StockManagementPage() {
   const [labelSize, setLabelSize] = useState(loadLabelSize);
 
   const applyData = useCallback((data) => {
-    setCategories(data.categories);
+    // Deleted categories are filtered HERE, at the one place all page data
+    // enters. Previously only CategoryGrid filtered them, so a deleted category
+    // kept showing in the item form's dropdown, stock-take, exports and import.
+    setCategories(filterDeletedCategories(data.categories));
     setItems(data.items);
     setTakes(data.takes);
     setImports(data.imports || []);
@@ -186,6 +196,23 @@ export default function StockManagementPage() {
       alert(err.message || 'Could not reset the local stock data');
     }
   }, [reload]);
+
+  // Removes EVERY item and category. Two confirms because this is not
+  // recoverable - the rows are deleted from the database, not just hidden.
+  const handleDeleteAllStock = useCallback(async () => {
+    const count = `${items.length} item(s) and ${categories.length} category(ies)`;
+    if (!window.confirm(`Permanently delete ALL ${count} from stock?\n\nThis removes them from the database and cannot be undone.`)) return;
+    if (!window.confirm('Are you sure? All stock items and categories will be deleted.')) return;
+    try {
+      const res = await deleteAllStock();
+      setActiveCategory(null);
+      setSelectedIds(new Set());
+      await reload();
+      alert(`Deleted ${res.items} item(s) and ${res.categories} category(ies).`);
+    } catch (err) {
+      alert(err.message || 'Could not delete all stock data');
+    }
+  }, [items.length, categories.length, reload]);
 
   useEffect(() => {
     let cancelled = false;
@@ -229,6 +256,17 @@ export default function StockManagementPage() {
       );
     });
   }, [items, activeCategory, searchTerm]);
+
+  // Searching a CATEGORY NAME must return that category, even when it holds no
+  // matching item - otherwise typing a category name looks like a dead search.
+  // Tombstoned categories stay hidden so deleted ones can't reappear via search.
+  const matchingCategories = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q || activeCategory) return [];
+    return filterDeletedCategories(categories).filter((c) =>
+      String(c?.name || '').toLowerCase().includes(q)
+    );
+  }, [categories, searchTerm, activeCategory]);
 
   // All non-service items at/below their own low-stock threshold — the same
   // rule as the Alerts tab. Sorted most-critical first (out of stock on top),
@@ -337,9 +375,11 @@ export default function StockManagementPage() {
       onAddItem={() => setProductFormState({ item: null })}
       onRefresh={handleRefresh}
       onResetLocal={handleResetLocal}
+      onDeleteAllStock={handleDeleteAllStock}
       categories={categories} items={items} takes={takes} user={user}
       imports={imports}
       existingSkus={existingSkus} filteredItems={filteredItems}
+      matchingCategories={matchingCategories}
       activeCategory={activeCategory} setActiveCategory={setActiveCategory}
       searchTerm={searchTerm} setSearchTerm={setSearchTerm}
       selectedIds={selectedIds} toggleSelect={toggleSelect}
@@ -360,17 +400,71 @@ export default function StockManagementPage() {
   );
 }
 
+// Small self-contained dropdown. Closes on outside click and Escape, and closes
+// after any item is chosen, so keyboard and mouse users get the same behaviour.
+function ActionMenu({ label, icon: Icon, children }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onDown = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  // Closes the menu first, then runs the action, so the dialog that opens
+  // (confirm/print) never renders underneath a leftover overlay.
+  const pick = (fn) => () => { setOpen(false); if (typeof fn === 'function') fn(); };
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-semibold shadow-sm transition-colors"
+      >
+        {Icon && <Icon size={16} />}
+        <span>{label}</span>
+        <ChevronDown size={15} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div
+          role="menu"
+          className="absolute right-0 z-30 mt-2 min-w-[250px] bg-white rounded-xl border border-gray-200 shadow-xl py-1 overflow-hidden"
+        >
+          {React.Children.map(children, (child) => (
+            React.isValidElement(child) && typeof child.props.onClick === 'function'
+              ? React.cloneElement(child, { onClick: pick(child.props.onClick) })
+              : child
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const MENU_ITEM = 'w-full text-left px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors flex items-center gap-2.5 disabled:opacity-40 disabled:hover:bg-transparent';
+
 function PageShell(props) {
   const {
     pageTab, setPageTab, isAdmin, lowStockCount, loading,
     onManageCategories, onAddItem,
     categories, items, takes, user, filteredItems,
+    matchingCategories,
     imports,
     activeCategory, setActiveCategory, searchTerm, setSearchTerm,
     selectedIds, toggleSelect, setDetailItem,
     setProductFormState, setAdjustItem, setBatchPrintOpen,
     reload, onJumpToItem, onDeleteItem, onPrintLabel, onExportLowStockPdf,
-    onRefresh, onResetLocal
+    onRefresh, onResetLocal, onDeleteAllStock
   } = props;
 
   return (
@@ -386,45 +480,93 @@ function PageShell(props) {
             {!isAdmin && <span className="ml-1 text-gray-400">You can add items &amp; categories; edits/deletes need admin.</span>}
           </p>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        {/* Primary actions only. Secondary/destructive actions live in the two
+            menus beside them so the header stays readable on smaller screens -
+            the header used to render six full-width buttons that wrapped onto
+            three lines on a laptop.
+            The lead button is Add Category: the page is category-first, so a
+            new category has to exist before items can be filed under it. Adding
+            an item still happens inside a category ("Add Item here"), and is
+            also kept in the More menu for the grid level. */}
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
           <button
-            onClick={onRefresh}
-            title="Fetch the latest stock data from the database"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium shadow-sm"
+            onClick={onManageCategories}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold shadow-sm transition-colors"
           >
-            <RefreshCw size={16} /> Refresh
+            <Plus size={16} /> Add Category
           </button>
-          <button
-            onClick={onResetLocal}
-            title="Clear the stock data saved on this device and reload from the database (use if phantom categories/items appear)"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium shadow-sm"
-          >
-            <Trash2 size={16} /> Reset Local
-          </button>
-          <button
-            onClick={() => exportStock(stockExportRows(filteredItems), 'excel')}
-            title="Export the current filtered stock list to Excel"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium shadow-sm"
-          >
-            <FileSpreadsheet size={16} /> Export Excel
-          </button>
-          <button
-            onClick={() => exportStock(stockExportRows(filteredItems), 'pdf')}
-            title="Export the current filtered stock list to PDF"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-medium shadow-sm"
-          >
-            <FileText size={16} /> Export PDF
-          </button>
-          <button
-            onClick={onExportLowStockPdf}
-            disabled={lowStockCount === 0}
-            title={lowStockCount === 0
-              ? 'No items are at or below their low-stock threshold'
-              : `Export all ${lowStockCount} low-stock item${lowStockCount === 1 ? '' : 's'} to PDF`}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <AlertTriangle size={16} /> Low Stock PDF
-          </button>
+
+          <ActionMenu label="Export" icon={FileSpreadsheet}>
+            <button
+              type="button"
+              onClick={() => exportStock(stockExportRows(filteredItems), 'excel')}
+              className={MENU_ITEM}
+            >
+              <FileSpreadsheet size={15} className="text-emerald-600" /> Export stock list (Excel)
+            </button>
+            <button
+              type="button"
+              onClick={() => exportStock(stockExportRows(filteredItems), 'pdf')}
+              className={MENU_ITEM}
+            >
+              <FileText size={15} className="text-rose-600" /> Export stock list (PDF)
+            </button>
+            <button
+              type="button"
+              onClick={onExportLowStockPdf}
+              disabled={lowStockCount === 0}
+              title={lowStockCount === 0 ? 'No items are at or below their low-stock threshold' : `Export ${lowStockCount} low-stock item(s)`}
+              className={MENU_ITEM}
+            >
+              <AlertTriangle size={15} className="text-amber-500" />
+              Low-stock report (PDF){lowStockCount > 0 ? ` (${lowStockCount})` : ''}
+            </button>
+          </ActionMenu>
+
+          <ActionMenu label="More" icon={MoreHorizontal}>
+            <button
+              type="button"
+              onClick={onAddItem}
+              title="Add a product item (items belong inside a category)"
+              className={MENU_ITEM}
+            >
+              <Plus size={15} className="text-blue-500" /> Add item
+            </button>
+            <button
+              type="button"
+              onClick={onManageCategories}
+              className={MENU_ITEM}
+            >
+              <Layers size={15} className="text-gray-500" /> Manage categories
+            </button>
+            <button
+              type="button"
+              onClick={onRefresh}
+              className={MENU_ITEM}
+            >
+              <RefreshCw size={15} className="text-gray-500" /> Refresh from database
+            </button>
+            <button
+              type="button"
+              onClick={onResetLocal}
+              title="Clear stock data saved on this device and reload from the database"
+              className={MENU_ITEM}
+            >
+              <Trash2 size={15} className="text-gray-500" /> Reset local cache
+            </button>
+            {isAdmin && onDeleteAllStock && (
+              <>
+                <div className="my-1 border-t border-gray-100" />
+                <button
+                  type="button"
+                  onClick={onDeleteAllStock}
+                  className={`${MENU_ITEM} text-rose-600 hover:bg-rose-50 hover:text-rose-700`}
+                >
+                  <Trash2 size={15} /> Delete all items &amp; categories
+                </button>
+              </>
+            )}
+          </ActionMenu>
         </div>
       </div>
 
@@ -475,6 +617,7 @@ function PageShell(props) {
           activeCategory={activeCategory} setActiveCategory={setActiveCategory}
           searchTerm={searchTerm} setSearchTerm={setSearchTerm}
           items={items} categories={categories} filteredItems={filteredItems} isAdmin={isAdmin}
+          matchingCategories={matchingCategories}
           selectedIds={selectedIds} toggleSelect={toggleSelect}
           onManageCategories={onManageCategories}
           onAddItem={onAddItem}
@@ -572,7 +715,7 @@ function PageModals(props) {
 function ItemsSection(props) {
   const {
     activeCategory, setActiveCategory, searchTerm, setSearchTerm,
-    items, categories, filteredItems, isAdmin,
+    items, categories, filteredItems, isAdmin, matchingCategories = [],
     selectedIds, toggleSelect,
     onManageCategories, onAddItem,
     onAdd, onView, onEdit, onDelete, onAdjust, onPrintLabel, onBatchPrint
@@ -590,6 +733,27 @@ function ItemsSection(props) {
   }, [items]);
 
   const selectedCount = filteredItems.filter((i) => selectedIds.has(i.id)).length;
+
+  // Search results are grouped by category so related items stay together
+  // instead of arriving as one long mixed list. Categories are sorted
+  // alphabetically, then items by name within each group.
+  const searchGroups = useMemo(() => {
+    const groups = new Map();
+    for (const item of filteredItems) {
+      const name = String(item.category || '').trim() || 'Uncategorised';
+      if (!groups.has(name)) groups.set(name, []);
+      groups.get(name).push(item);
+    }
+    return [...groups.entries()]
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([name, list]) => ({
+        name,
+        items: [...list].sort((x, y) =>
+          String(x.name || '').localeCompare(String(y.name || ''))
+          || String(x.sku || '').localeCompare(String(y.sku || ''))
+        )
+      }));
+  }, [filteredItems]);
 
   return (
     <div className="space-y-4">
@@ -614,25 +778,102 @@ function ItemsSection(props) {
       {!activeCategory ? (
         /* ---- Grid level: category cards + global search results ---- */
         <>
-          {searchTerm.trim() && filteredItems.length > 0 && (
-            <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-              <p className="px-5 py-2.5 text-xs font-semibold text-gray-500 border-b border-gray-50">
-                {filteredItems.length} result(s) across all categories
-              </p>
-              <div className="divide-y divide-gray-50 max-h-96 overflow-y-auto">
-                {filteredItems.slice(0, 30).map((item) => (
-                  <button key={item.id} onClick={() => onView(item)} className="w-full flex items-center justify-between px-5 py-2.5 hover:bg-blue-50/40 text-left transition-colors">
-                    <div className="min-w-0">
-                      <span className="text-sm font-semibold text-gray-900">{item.name}</span>
-                      <span className="ml-2 text-[11px] font-mono text-gray-400">{item.sku}</span>
-                      <span className="ml-2 text-[11px] text-gray-400">· {item.category}</span>
+          {searchTerm.trim() && (
+            <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+              {filteredItems.length === 0 && matchingCategories.length === 0 ? (
+                /* No matches: the filter produced nothing, so say so explicitly.
+                   Without this the results panel vanished and the untouched
+                   CategoryGrid below looked like the search had done nothing. */
+                <div className="px-5 py-8 text-center">
+                  <p className="text-sm font-semibold text-gray-700">
+                    No items or categories match “{searchTerm.trim()}”
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Searched category names, item names, SKUs and manufacturer barcodes.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  {matchingCategories.length > 0 && (
+                    /* Matching CATEGORIES first - typing a category name is a
+                       legitimate search that previously returned nothing at all
+                       unless an item also happened to match. */
+                    <div className="px-5 py-3 border-b border-gray-50 bg-gray-50/50">
+                      <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
+                        {matchingCategories.length} categor{matchingCategories.length === 1 ? 'y' : 'ies'}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {matchingCategories.map((c) => (
+                          <button
+                            key={c.id || c.name}
+                            type="button"
+                            onClick={() => { setActiveCategory(c.name); setSearchTerm(''); }}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-blue-200 text-blue-700 rounded-lg text-xs font-semibold hover:bg-blue-50 transition-colors"
+                          >
+                            <Layers size={12} />
+                            {c.name}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                    <span className={`text-sm font-bold ${Number(item.quantity) <= Number(item.low_stock_threshold ?? 5) ? 'text-rose-600' : 'text-gray-600'}`}>
-                      {item.quantity}
-                    </span>
-                  </button>
+                  )}
+                  {filteredItems.length > 0 && (
+                    <>
+                  <p className="px-5 py-2.5 text-xs font-semibold text-gray-500 border-b border-gray-50">
+                    {filteredItems.length} result{filteredItems.length === 1 ? '' : 's'} in {searchGroups.length} categor{searchGroups.length === 1 ? 'y' : 'ies'}
+                  </p>
+
+              <div className="max-h-[26rem] overflow-y-auto">
+                {searchGroups.map((group) => (
+                  <section key={group.name} className="border-b border-gray-100 last:border-b-0">
+                    {/* Clicking the header drills into that category with the
+                        search term kept, so you land on the full list. */}
+                    <button
+                      type="button"
+                      onClick={() => { setActiveCategory(group.name); setSearchTerm(''); }}
+                      title={`Open the ${group.name} category`}
+                      className="w-full flex items-center justify-between gap-3 px-5 py-2 bg-gray-50/80 hover:bg-blue-50/70 transition-colors text-left"
+                    >
+                      <span className="flex items-center gap-2 min-w-0">
+                        <span className="text-xs font-bold text-gray-700 uppercase tracking-wide truncate">
+                          {group.name}
+                        </span>
+                        <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white text-gray-500 border border-gray-200">
+                          {group.items.length}
+                        </span>
+                      </span>
+                      <span className="shrink-0 text-[11px] text-blue-600 font-medium">View all</span>
+                    </button>
+
+                    <div className="divide-y divide-gray-50">
+                      {group.items.slice(0, SEARCH_GROUP_LIMIT).map((item) => (
+                        <button key={item.id} onClick={() => onView(item)} className="w-full flex items-center justify-between gap-3 px-5 py-2.5 hover:bg-blue-50/40 text-left transition-colors">
+                          <div className="min-w-0">
+                            <span className="text-sm font-semibold text-gray-900">{item.name}</span>
+                            <span className="ml-2 text-[11px] font-mono text-gray-400">{item.sku}</span>
+                          </div>
+                          <span className={`shrink-0 text-sm font-bold ${Number(item.quantity) <= Number(item.low_stock_threshold ?? 5) ? 'text-rose-600' : 'text-gray-600'}`}>
+                            {item.quantity}
+                          </span>
+                        </button>
+                      ))}
+                      {group.items.length > SEARCH_GROUP_LIMIT && (
+                        <button
+                          type="button"
+                          onClick={() => { setActiveCategory(group.name); setSearchTerm(''); }}
+                          className="w-full px-5 py-2 text-left text-[11px] font-semibold text-blue-600 hover:bg-blue-50/50 transition-colors"
+                        >
+                          +{group.items.length - SEARCH_GROUP_LIMIT} more in {group.name} — click to view all
+                        </button>
+                      )}
+                    </div>
+                  </section>
                 ))}
               </div>
+                    </>
+                  )}
+                </>
+              )}
             </div>
           )}
 
@@ -673,7 +914,7 @@ function ItemsSection(props) {
 
 function CategoryTable(props) {
   const {
-    categoryName, stat, items, isAdmin,
+    categoryName, stat, items, isAdmin, searchTerm = '',
     selectedIds, toggleSelect,
     onBack, onAdd, onBatchPrint,
     selectedCount, onView, onEdit, onDelete, onAdjust, onPrintLabel
@@ -708,13 +949,14 @@ function CategoryTable(props) {
       </div>
 
       <ItemRows items={items} isAdmin={isAdmin} selectedIds={selectedIds} toggleSelect={toggleSelect}
+        searchTerm={searchTerm}
         onView={onView} onEdit={onEdit} onDelete={onDelete} onAdjust={onAdjust} onPrintLabel={onPrintLabel} />
     </div>
   );
 }
 
 // Rows implemented below.
-function ItemRows({ items, isAdmin, selectedIds, toggleSelect, onView, onEdit, onDelete, onAdjust, onPrintLabel }) {
+function ItemRows({ items, isAdmin, selectedIds, toggleSelect, onView, onEdit, onDelete, onAdjust, onPrintLabel, searchTerm = '' }) {
   const fmt = (v) => (v === null || v === undefined ? '-' : Number(v).toLocaleString());
 
   return (
@@ -734,8 +976,13 @@ function ItemRows({ items, isAdmin, selectedIds, toggleSelect, onView, onEdit, o
         </thead>
         <tbody className="divide-y divide-gray-50">
           {items.length === 0 ? (
+            /* A failed search and a genuinely empty category are different states
+               and must not share one message - claiming "no items here yet"
+               after a search wrongly implies the category is empty. */
             <tr><td colSpan={isAdmin ? 8 : 7} className="px-6 py-10 text-center text-gray-400">
-              No items here yet — use "Add Item here".
+              {searchTerm.trim()
+                ? <>No items in this category match “{searchTerm.trim()}”.</>
+                : 'No items here yet — use "Add Item here".'}
             </td></tr>
           ) : items.map((item) => (
             <ItemRow

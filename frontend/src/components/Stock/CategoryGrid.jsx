@@ -1,8 +1,11 @@
 // Section 1: category-first navigation grid.
 // Each card: name, item count, total stock qty. Click drills into the list.
 import React from 'react';
-import { Package, Smartphone, Layers, Plus } from 'lucide-react';
+import { Package, Smartphone, Plus } from 'lucide-react';
 import { getDeletedCategoryNames } from '../../services/stockService';
+
+// onAddItem / onManageCategories are intentionally unused: those actions moved
+// to the page header toolbar so they aren't duplicated inside the grid.
 
 const CARD_COLORS = [
   'from-blue-500 to-indigo-500',
@@ -59,28 +62,12 @@ export default function CategoryGrid({ categories, items, onOpenCategory, onMana
 
   return (
     <div>
+      {/* Add Item / Manage Categories now live in the page header toolbar, so
+          they are not repeated here. */}
       <div className="flex justify-between items-center mb-4">
         <div>
           <h3 className="text-lg font-bold text-gray-900">Product Categories</h3>
           <p className="text-sm text-gray-500">Pick a category to view and manage its items</p>
-        </div>
-        <div className="flex items-center space-x-2">
-          {onAddItem && (
-            <button
-              onClick={onAddItem}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md transition-colors"
-            >
-              <Plus size={16} />
-              <span>Add Item</span>
-            </button>
-          )}
-          <button
-            onClick={onManageCategories}
-            className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors shadow-sm"
-          >
-            <Layers size={16} />
-            <span>Manage Categories</span>
-          </button>
         </div>
       </div>
 
