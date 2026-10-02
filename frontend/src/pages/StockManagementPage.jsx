@@ -13,7 +13,7 @@ import { exportToExcelWithTotals, exportToPdf } from '../utils/reportExport';
 import { useAuth } from '../context/AuthContext';
 import {
   refreshStockData, loadStockData, createCategory, updateCategory,
-  deleteCategory, saveItem, deleteItem, adjustStock
+  deleteCategory, deleteCategories, saveItem, deleteItem, adjustStock
 } from '../services/stockService';
 import CategoryGrid from '../components/Stock/CategoryGrid';
 import ManageCategoriesModal from '../components/Stock/ManageCategoriesModal';
@@ -464,6 +464,13 @@ function PageModals(props) {
           onDelete={async (cat) => {
             await deleteCategory(cat);
             setActiveCategory((c) => (c === cat.name ? null : c));
+            await reload();
+          }}
+          onBulkDelete={async (cats) => {
+            const names = new Set(cats.map((c) => c.name));
+            await deleteCategories(cats);
+            // Drop the grid filter if it pointed at a category just removed.
+            setActiveCategory((c) => (names.has(c) ? null : c));
             await reload();
           }}
         />

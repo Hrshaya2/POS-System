@@ -124,10 +124,39 @@ const overlayLocalCreates = async () => {
       .where('syncStatus').equals('pending')
       .and((op) => (op.entityType === 'category' || op.entityType === 'item') && op.opType === 'delete')
       .toArray();
-    const doomedKeys = new Set(delOps.map((o) => String(o.payload?.localKey || o.payload?.id || '')));
-    const alive = (row) => String(row?.id || '').startsWith('loc-') && !doomedKeys.has(String(row.localKey || row.id));
-    const keepCats = cats.filter(alive);
-    const keepAccs = accs.filter(alive);
+    // Split per entity so a category id can never be matched against an item.
+    const doomedFor = (entityType) => new Set(
+      delOps
+        .filter((o) => o.entityType === entityType)
+        .map((o) => String(o.payload?.localKey || o.payload?.id || ''))
+        .filter(Boolean)
+    );
+    const doomedCats = doomedFor('category');
+    const doomedAccs = doomedFor('item');
+    const matches = (keys, row) => keys.has(String(row?.id || '')) || (!!row?.localKey && keys.has(String(row.localKey)));
+
+    const aliveCat = (row) => String(row?.id || '').startsWith('loc-') && !matches(doomedCats, row);
+    const aliveAcc = (row) => String(row?.id || '').startsWith('loc-') && !matches(doomedAccs, row);
+    const keepCats = cats.filter(aliveCat);
+    const keepAccs = accs.filter(aliveAcc);
+
+    // A delete op still sitting in the queue has NOT reached the server yet, so
+    // the snapshot merged above still contains that row. Drop it here, otherwise
+    // the freshly-deleted category/item reappears in the UI on the next refresh
+    // and the delete looks like it silently did nothing.
+    const deadCats = cats.filter((row) => !aliveCat(row) && matches(doomedCats, row));
+    const deadAccs = accs.filter((row) => !aliveAcc(row) && matches(doomedAccs, row));
+    if (deadCats.length) {
+      await db.transaction('rw', db.stockCategories, async () => {
+        for (const c of deadCats) await db.stockCategories.delete(c.id);
+      });
+    }
+    if (deadAccs.length) {
+      await db.transaction('rw', db.inventoryAccessories, async () => {
+        for (const a of deadAccs) await db.inventoryAccessories.delete(a.id);
+      });
+    }
+
     if (keepCats.length) {
       await db.transaction('rw', db.stockCategories, async () => {
         for (const c of keepCats) await db.stockCategories.put(c);
@@ -408,7 +437,9 @@ export const updateCategory = async (category, fields) => {
   return next;
 };
 
-export const deleteCategory = async (category) => {
+// Queue the removal of one category: cancel its create op if it never reached
+// the server, otherwise enqueue a delete op. Either way the cached row goes.
+const queueCategoryDelete = async (category) => {
   const pending = category.syncStatus === 'pending' || isInternalItemId(category.id);
   if (pending) {
     await cancelPendingCreate('category', category.localKey || category.id);
@@ -420,7 +451,24 @@ export const deleteCategory = async (category) => {
     });
   }
   await removeCachedCategory(category.id);
-  if (!pending) attemptImmediateFlush();
+};
+
+export const deleteCategory = async (category) => {
+  await queueCategoryDelete(category);
+  // Awaited, not fire-and-forget: a caller that reloads immediately after must
+  // not race an in-flight flush. attemptSync() is guarded by a `syncInProgress`
+  // flag and returns early when busy, so a fire-and-forget call would often be
+  // skipped and the follow-up refresh would pull a server snapshot that still
+  // lists the category, overwriting the cache and resurrecting the row.
+  await attemptImmediateFlush();
+};
+
+// Bulk variant behind "select all / delete selected" in Manage Categories.
+export const deleteCategories = async (categories) => {
+  const list = (categories || []).filter((c) => c && c.id);
+  if (!list.length) return;
+  for (const category of list) await queueCategoryDelete(category);
+  await attemptImmediateFlush();
 };
 
 // ---- Items (accessories / spare parts) ----

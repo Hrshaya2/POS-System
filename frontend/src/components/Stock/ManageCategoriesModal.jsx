@@ -2,16 +2,61 @@
 // Everyone can ADD a category; only admin/shop_owner can EDIT or DELETE
 // (shop rule: entered details are immutable for cashiers).
 import React, { useMemo, useState } from 'react';
-import { X, Plus, Pencil, Trash2, Check, AlertTriangle, Lock, ToggleLeft } from 'lucide-react';
+import { X, Plus, Pencil, Trash2, Check, AlertTriangle, Lock, ToggleLeft, CheckSquare } from 'lucide-react';
 
 const emptyForm = { name: '', description: '', is_phone_category: false };
 
-export default function ManageCategoriesModal({ categories, items = [], isAdmin, onClose, onCreate, onUpdate, onDelete, onBulkCreate }) {
+export default function ManageCategoriesModal({ categories, items = [], isAdmin, onClose, onCreate, onUpdate, onDelete, onBulkDelete, onBulkCreate }) {
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [editFields, setEditFields] = useState({});
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [error, setError] = useState('');
+
+  // Selection state for the bulk "select all / delete selected" action.
+  const [selectedIds, setSelectedIds] = useState(() => new Set());
+  const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
+  const [bulkBusy, setBulkBusy] = useState(false);
+
+  // Rows can leave the list while selected (deleted / renamed elsewhere), so
+  // derive the effective selection instead of trusting the raw Set.
+  const selectableIds = useMemo(
+    () => categories.filter((c) => editingId !== c.id).map((c) => String(c.id)),
+    [categories, editingId]
+  );
+  const selected = useMemo(
+    () => categories.filter((c) => selectedIds.has(String(c.id)) && editingId !== c.id),
+    [categories, selectedIds, editingId]
+  );
+  const allSelected = selectableIds.length > 0 && selectableIds.every((id) => selectedIds.has(id));
+
+  const toggleSelect = (id) => {
+    const key = String(id);
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key); else next.add(key);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    setSelectedIds(allSelected ? new Set() : new Set(selectableIds));
+  };
+
+  const runBulkDelete = async () => {
+    if (!selected.length || bulkBusy) return;
+    setBulkBusy(true);
+    setError('');
+    try {
+      await onBulkDelete(selected);
+      setSelectedIds(new Set());
+      setConfirmBulkDelete(false);
+    } catch (err) {
+      setError(err.message || 'Could not delete categories');
+    } finally {
+      setBulkBusy(false);
+    }
+  };
 
   // Product-group labels present on existing items but missing from the
   // managed category list (typical for data imported before this feature).
@@ -151,6 +196,56 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
             </div>
           )}
 
+          {isAdmin && categories.length > 0 && (
+            <div className="flex items-center justify-between gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5">
+              <label className="flex items-center space-x-2 text-xs font-semibold text-gray-700 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={toggleSelectAll}
+                  className="rounded"
+                />
+                <span>{allSelected ? 'Deselect all' : 'Select all'}</span>
+              </label>
+
+              {selected.length > 0 && (
+                <div className="flex items-center space-x-1.5">
+                  <span className="text-[11px] font-semibold text-gray-500">
+                    {selected.length} selected
+                  </span>
+                  {confirmBulkDelete ? (
+                    <>
+                      <span className="text-[11px] font-semibold text-rose-600 flex items-center">
+                        <AlertTriangle size={12} className="mr-1" />Delete {selected.length}?
+                      </span>
+                      <button
+                        onClick={runBulkDelete}
+                        disabled={bulkBusy}
+                        className="px-2.5 py-1.5 bg-rose-600 disabled:opacity-50 text-white rounded-lg text-xs font-bold hover:bg-rose-700"
+                      >
+                        {bulkBusy ? 'Deleting…' : 'Yes, delete all'}
+                      </button>
+                      <button
+                        onClick={() => setConfirmBulkDelete(false)}
+                        disabled={bulkBusy}
+                        className="px-2.5 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-xs font-semibold"
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => setConfirmBulkDelete(true)}
+                      className="px-2.5 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-bold hover:bg-rose-700 flex items-center"
+                    >
+                      <CheckSquare size={13} className="mr-1.5" /> Delete selected
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           <CategoryList
             categories={categories}
             isAdmin={isAdmin}
@@ -163,6 +258,8 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
             startEdit={startEdit}
             saveEdit={saveEdit}
             onDelete={onDelete}
+            selectedIds={selectedIds}
+            toggleSelect={toggleSelect}
           />
 
           {!isAdmin && (
@@ -179,7 +276,8 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
 
 function CategoryList({
   categories, isAdmin, editingId, editFields, confirmDeleteId,
-  setEditFields, setConfirmDeleteId, setEditingId, startEdit, saveEdit, onDelete
+  setEditFields, setConfirmDeleteId, setEditingId, startEdit, saveEdit, onDelete,
+  selectedIds, toggleSelect
 }) {
   return (
     <div className="space-y-2">
@@ -214,11 +312,22 @@ function CategoryList({
 
         return (
           <div key={cat.id} className="flex items-center justify-between bg-white border border-gray-100 rounded-xl px-4 py-2.5 shadow-sm">
-            <div className="min-w-0">
-              <div className="font-semibold text-gray-900 text-sm truncate">{cat.name}</div>
-              <div className="text-[11px] text-gray-400 truncate">
-                {cat.is_phone_category ? 'Phone category' : 'Accessory / part'}
-                {isPending && ' · pending sync'}
+            <div className="flex items-center space-x-2.5 min-w-0">
+              {isAdmin && (
+                <input
+                  type="checkbox"
+                  checked={selectedIds.has(String(cat.id))}
+                  onChange={() => toggleSelect(cat.id)}
+                  className="rounded shrink-0"
+                  title={`Select ${cat.name}`}
+                />
+              )}
+              <div className="min-w-0">
+                <div className="font-semibold text-gray-900 text-sm truncate">{cat.name}</div>
+                <div className="text-[11px] text-gray-400 truncate">
+                  {cat.is_phone_category ? 'Phone category' : 'Accessory / part'}
+                  {isPending && ' · pending sync'}
+                </div>
               </div>
             </div>
             <div className="flex items-center space-x-1.5 shrink-0 ml-2">
