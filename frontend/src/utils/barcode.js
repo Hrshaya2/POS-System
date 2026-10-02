@@ -81,15 +81,28 @@ export const printBarcodeLabel = ({ code, name = '', price = null, widthMm = 40,
 <style>
   @page { size: ${w}mm ${h}mm; margin: 0; }
   * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  html, body { margin: 0; padding: 0; background: #fff; }
-  /* NOTE: the printed box is intentionally a hair shorter than the physical
-     page (${h}mm). When the box equals the page height exactly, sub-pixel
-     rounding makes it overflow the page by ~1px and the printer feeds ONE
-     EXTRA (blank) sticker. The 0.6mm safety gap removes that blank label. */
+  /* Pin the whole document to EXACTLY one label. html/body are given the page
+     size and overflow:hidden so a sub-pixel (~0.1px) round-off is clipped.
+     Without this, Chrome slips that tiny overflow onto a SECOND page and a
+     roll label printer feeds it as an EXTRA BLANK sticker. */
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: ${w}mm;
+    height: ${h}mm;
+    overflow: hidden;
+    background: #fff;
+  }
+  @media print { html, body { overflow: hidden !important; } }
   .label {
     width: ${w}mm;
-    height: calc(${h}mm - 0.6mm);
-    padding: 1.5mm;
+    /* STRICTLY shorter than the page. A box that is exactly the page height
+       sits right on the page-break boundary, so Chrome resolves the sub-pixel
+       round-off by emitting a SECOND, empty page — which a roll label printer
+       then feeds as an extra BLANK sticker. The 1mm slack removes the
+       ambiguity. (overflow:hidden alone does NOT prevent this.) */
+    height: calc(${h}mm - 1mm);
+    padding: 1.2mm;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -112,7 +125,9 @@ export const printBarcodeLabel = ({ code, name = '', price = null, widthMm = 40,
   .price { font-size: 9px; color: #000; margin-top: 0.5mm; }
   .code { font-size: 8px; letter-spacing: 0.5px; font-family: 'Courier New', monospace; color: #000; margin-top: 0.5mm; }
   .label svg { max-width: 96%; max-height: 55%; display: block; }
-  .no-print { position: fixed; top: 6px; right: 6px; }
+  /* absolute, NOT fixed: a fixed element is repeated on every printed page and
+     can pull extra page boxes into the paginated output. */
+  .no-print { position: absolute; top: 6px; right: 6px; }
   @media print { .no-print { display: none; } }
 </style>
 </head>
@@ -172,13 +187,20 @@ export const printBarcodeLabelsBatch = ({ items = [], widthMm = 40, heightMm = 3
 <style>
   @page { size: ${w}mm ${h}mm; margin: 0; }
   * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  html, body { margin: 0; padding: 0; background: #fff; }
-  /* Box is a hair shorter than the page (${h}mm) so sub-pixel rounding can't
-     push the label onto a second page and feed an extra blank sticker. */
+  /* One label per page. The box is a hair shorter than the page (${h}mm) AND
+     clips its own overflow, so a sub-pixel round-off can never spill onto the
+     next page and feed an extra blank sticker. */
+  html, body {
+    margin: 0; padding: 0; width: ${w}mm; height: ${h}mm;
+    overflow: hidden; background: #fff;
+  }
+  @media print { html, body { overflow: hidden !important; } }
   .label {
     width: ${w}mm;
-    height: calc(${h}mm - 0.6mm);
-    padding: 1.5mm;
+    /* Strictly shorter than the page, so a sub-pixel round-off can never spill
+       onto a next page and feed an extra blank sticker. */
+    height: calc(${h}mm - 1mm);
+    padding: 1.2mm;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -204,7 +226,7 @@ export const printBarcodeLabelsBatch = ({ items = [], widthMm = 40, heightMm = 3
   .price { font-size: 9px; color: #000; margin-top: 0.5mm; }
   .code { font-size: 8px; letter-spacing: 0.5px; font-family: 'Courier New', monospace; color: #000; margin-top: 0.5mm; }
   .label svg { max-width: 96%; max-height: 55%; display: block; }
-  .no-print { position: fixed; top: 6px; right: 6px; z-index: 10; }
+  .no-print { position: absolute; top: 6px; right: 6px; z-index: 10; }
   @media print { .no-print { display: none; } }
 </style>
 </head>
