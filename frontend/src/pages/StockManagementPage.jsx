@@ -26,6 +26,7 @@ import StockHistoryTab from '../components/Stock/StockHistoryTab';
 import StockTakeTab from '../components/Stock/StockTakeTab';
 import ImportTab from '../components/Stock/ImportTab';
 import AlertsPanel from '../components/Stock/AlertsPanel';
+import { DEFAULT_LABEL_WIDTH_MM, DEFAULT_LABEL_HEIGHT_MM, LABEL_SIZE_VERSION } from '../utils/barcode';
 
 const PAGE_TABS = [
   { id: 'items', label: 'Items', icon: LayoutGrid },
@@ -35,12 +36,18 @@ const PAGE_TABS = [
   { id: 'alerts', label: 'Alerts', icon: TrendingDown }
 ];
 
+// Saved label sizes from an older build (the original 40x30 default) would
+// silently override the intended 35x25 sticker, so they are discarded. The
+// version stamp is only added by newer builds, which means "no stamp" is also
+// treated as stale. Settings the user changes after this version are kept.
 const loadLabelSize = () => {
   try {
     const saved = JSON.parse(localStorage.getItem('pos_label_size'));
-    if (saved?.widthMm && saved?.heightMm) return saved;
+    if (saved?.version === LABEL_SIZE_VERSION && saved?.widthMm && saved?.heightMm) {
+      return { widthMm: Number(saved.widthMm), heightMm: Number(saved.heightMm) };
+    }
   } catch (err) { /* ignore malformed cache */ }
-  return { widthMm: 40, heightMm: 30 };
+  return { widthMm: DEFAULT_LABEL_WIDTH_MM, heightMm: DEFAULT_LABEL_HEIGHT_MM };
 };
 
 // ---- Stock export (Excel / PDF) ----
@@ -250,7 +257,8 @@ export default function StockManagementPage() {
   const updateLabelSizeField = (key, value) => {
     const num = Math.max(10, Math.min(200, Number(value) || 0));
     setLabelSize((prev) => {
-      const next = { ...prev, [key]: num };
+      // Stamp the version so loadLabelSize keeps this choice on future loads.
+      const next = { ...prev, [key]: num, version: LABEL_SIZE_VERSION };
       try { localStorage.setItem('pos_label_size', JSON.stringify(next)); } catch (err) { /* ignore */ }
       return next;
     });

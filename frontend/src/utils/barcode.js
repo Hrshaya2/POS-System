@@ -32,11 +32,51 @@ export const generateInternalSku = (existingSkus = []) => {
     return sku;
 };
 
+// ---- Physical label geometry -------------------------------------------
+// The sticker roll is 35mm x 25mm. Geometry below is expressed in MILLIMETRES,
+// not pixels, so the printed result is a real physical size. Single-label and
+// batch printing share these numbers so the two can never drift apart.
+export const DEFAULT_LABEL_WIDTH_MM = 35;
+export const DEFAULT_LABEL_HEIGHT_MM = 25;
+
+// Bumped whenever the intended default sticker size changes. Settings saved by
+// an older build (e.g. the original 40x30) are discarded rather than silently
+// overriding the intended 35x25; changes made after this version are kept.
+export const LABEL_SIZE_VERSION = 2;
+
+const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
+// Source units for the generated SVG. The printer rescales this vector artwork
+// to the real millimetre size, so these only need to be large enough to keep
+// bar edges crisp - they are NOT the printed size.
+const BAR_SOURCE_HEIGHT = 100;
+const BAR_SOURCE_MODULE_WIDTH = 2;
+
+const resolveLabelSize = (widthMm, heightMm) => {
+    const w = clamp(Number(widthMm) || DEFAULT_LABEL_WIDTH_MM, 15, 200);
+    const h = clamp(Number(heightMm) || DEFAULT_LABEL_HEIGHT_MM, 10, 200);
+    const pad = clamp(h * 0.045, 0.8, 1.6);
+    return {
+        w, h, pad,
+        innerW: w - pad * 2,
+        // Text and bar height scale with the label so a custom size still fits.
+        // For 35x25 this yields ~2.6mm text and a 10.5mm bar - well above the
+        // ~5mm symbol height needed for reliable laser scanning.
+        nameSize: clamp(h * 0.105, 1.9, 3.4),
+        metaSize: clamp(h * 0.095, 1.7, 3.0),
+        codeSize: clamp(h * 0.09, 1.6, 2.6),
+        barHeight: clamp(h * 0.42, 4.5, 12),
+        gap: clamp(h * 0.02, 0.2, 0.6)
+    };
+};
+
 // Render a scannable CODE128 barcode and return it as an SVG markup string.
 // Returns '' when the code cannot be encoded (e.g. empty/invalid input).
-export const renderBarcodeSvg = (code, options = {}) => {
+// The public shape is unchanged (BarcodePreview and the receipt printer use
+// it); buildLabelBarcode below adds the physical sizing print needs.
+const buildBarcodeElement = (code, options = {}) => {
     const value = String(code || '').trim();
-    if (!value) return '';
+    if (!value) return null;
     try {
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         JsBarcode(svg, value, {
@@ -48,77 +88,133 @@ export const renderBarcodeSvg = (code, options = {}) => {
             background: options.background || '#ffffff',
             lineColor: options.lineColor || '#000000'
         });
-        return new XMLSerializer().serializeToString(svg);
+        return {
+            el: svg,
+            width: Number(svg.getAttribute('width')) || 0,
+            height: Number(svg.getAttribute('height')) || 0
+        };
     } catch (err) {
         console.warn('[barcode] Unable to render barcode:', err.message);
-        return '';
+        return null;
     }
 };
 
-// Open a print-friendly label window sized for label printers.
-// Default 40mm x 30mm; both dimensions are configurable by the caller
-// (persisted in Stock Management page via localStorage).
-export const printBarcodeLabel = ({ code, name = '', price = null, widthMm = 40, heightMm = 30 }) => {
-    const value = String(code || '').trim();
-    if (!value) return;
+export const renderBarcodeSvg = (code, options = {}) => {
+    const built = buildBarcodeElement(code, options);
+    return built ? new XMLSerializer().serializeToString(built.el) : '';
+};
 
-    const svgMarkup = renderBarcodeSvg(value, { height: Math.round(heightMm * 2.2), width: 2 });
-    if (!svgMarkup) return;
+// Emit the barcode at an exact physical size that fits the space left on the
+// sticker. Both axes are scaled by the SAME factor, so the intrinsic aspect
+// ratio is preserved and bars are never stretched or squashed. A long
+// manufacturer code simply gets a shorter (still scannable) bar rather than
+// overflowing the label.
+const buildLabelBarcode = (code, m) => {
+    const built = buildBarcodeElement(code, { height: BAR_SOURCE_HEIGHT, width: BAR_SOURCE_MODULE_WIDTH });
+    if (!built || !built.width || !built.height) return '';
+    const scale = Math.min(m.innerW / built.width, m.barHeight / built.height);
+    built.el.setAttribute('width', `${(built.width * scale).toFixed(2)}mm`);
+    built.el.setAttribute('height', `${(built.height * scale).toFixed(2)}mm`);
+    return new XMLSerializer().serializeToString(built.el);
+};
 
-    const w = Math.max(15, Number(widthMm) || 40);
-    const h = Math.max(10, Number(heightMm) || 30);
-    const priceLine = price !== null && price !== undefined && price !== ''
-        ? `<div class="price">Rs. ${Number(price).toLocaleString('en-LK')}</div>`
-        : '';
+const escapeHtml = (s) => String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 
+const priceLineHtml = (price) => (
+    price !== null && price !== undefined && price !== ''
+        ? `<div class="price">Rs. ${escapeHtml(Number(price).toLocaleString('en-LK'))}</div>`
+        : ''
+);
+
+// Print on the next animation frame instead of an arbitrary timeout, so the
+// barcode is laid out before the dialog opens without guessing a delay.
+const printWhenReady = (win) => {
+    const run = () => {
+        try { win.focus(); win.print(); } catch (err) { console.warn('[barcode] print failed:', err); }
+    };
+    const schedule = () => {
+        const raf = win.requestAnimationFrame || ((fn) => win.setTimeout(fn, 0));
+        raf(() => raf(run));
+    };
+    if (win.document.readyState === 'complete') schedule();
+    else win.addEventListener('load', schedule, { once: true });
+};
+
+const openLabelWindow = (title, html) => {
     const win = window.open('', '_blank', 'width=460,height=380');
-    if (!win) return;
+    if (!win) {
+        console.warn('[barcode] The print window was blocked by the popup blocker - allow popups to print labels.');
+        return null;
+    }
+    win.document.write(html);
+    win.document.close();
+    return win;
+};
 
-    win.document.write(`<!doctype html>
+// The printable document for a label window. Single and batch share this so the
+// two can never drift apart in page size, margins or typography.
+//
+// `paginate: true` (batch) gives every label its own page. `paginate: false`
+// (single) omits page-break rules entirely - one label, one page, no trailing
+// break to turn into an extra blank sticker.
+const labelDocumentHtml = ({ title, body, m, paginate }) => {
+    const { w, h, pad, innerW, nameSize, metaSize, codeSize, barHeight, gap } = m;
+    const breakRules = paginate ? `
+    page-break-after: always;
+    break-after: page;` : '';
+
+    return `<!doctype html>
 <html>
 <head>
-<title>Label ${value}</title>
+<title>${escapeHtml(title)}</title>
 <style>
   * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  html, body { margin: 0; padding: 0; background: #fff; }
-  /* The printed page is EXACTLY the label size - never taller. Nothing in this
-     document can make it longer: the page box is fixed at ${h}mm by @page, and
-     the label box below is shorter still. If the browser print PREVIEW still
-     shows a tall page, the paper size selected in the print dialog (usually A4)
-     overrides @page - that is a dialog/driver setting, not something CSS can
-     force. Select the 35x25mm roll there to see the true output. */
+  /* Reset every browser default that could add height around the label. */
+  html, body { margin: 0; padding: 0; border: 0; background: #fff; }
+  /* @page requests the exact sticker size. The print dialog's paper selector
+     can override it (it defaults to A4) - if the preview is much taller than the
+     label, choose the 35x25mm roll there. That is a driver setting; no CSS can
+     force unsupported hardware. */
+  @page { size: ${w}mm ${h}mm; margin: 0; }
   @media print {
-    @page { size: ${w}mm ${h}mm; margin: 0; }
     html, body {
       width: ${w}mm;
-      height: ${h}mm;
       margin: 0;
       padding: 0;
+      /* No height here on purpose: the label box below sets its own, and a body
+         height fighting pagination is what produced extra blank stickers. */
       overflow: hidden !important;
     }
   }
   .label {
     width: ${w}mm;
-    /* STRICTLY shorter than the page, and NOT ${h}mm. A box that is exactly the
-       page height sits right on the page-break boundary, so Chrome resolves the
-       sub-pixel round-off by emitting a SECOND, empty page - which a roll label
-       printer then feeds as an extra BLANK sticker. The 1mm slack is what keeps
-       one label on one sticker; it costs 1mm of trailing whitespace, which is
-       inside the label and harmless. (overflow:hidden alone does NOT prevent it.) */
+    /* STRICTLY shorter than the page. A box exactly ${h}mm tall sits ON the
+       page-break boundary; Chrome resolves the sub-pixel round-off by emitting a
+       SECOND, empty page, which a roll printer feeds as a blank sticker. The 1mm
+       slack keeps one label on one sticker. It costs 1mm of trailing whitespace
+       INSIDE the label, which the printer cuts away anyway. overflow:hidden does
+       NOT prevent the phantom page on its own. */
     height: calc(${h}mm - 1mm);
-    padding: 1.2mm;
+    padding: ${pad}mm;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: ${gap}mm;
     font-family: Arial, Helvetica, sans-serif;
     overflow: hidden;
     text-align: center;
     page-break-inside: avoid;
-    break-inside: avoid;
+    break-inside: avoid;${breakRules}
   }
+  ${paginate ? '.label:last-child { page-break-after: auto; break-after: auto; }' : ''}
   .name {
-    font-size: 9px;
+    font-size: ${nameSize}mm;
+    line-height: 1.15;
     font-weight: bold;
     color: #000;
     max-width: 100%;
@@ -126,126 +222,97 @@ export const printBarcodeLabel = ({ code, name = '', price = null, widthMm = 40,
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .price { font-size: 9px; color: #000; margin-top: 0.5mm; }
-  .code { font-size: 8px; letter-spacing: 0.5px; font-family: 'Courier New', monospace; color: #000; margin-top: 0.5mm; }
-  .label svg { max-width: 96%; max-height: 55%; display: block; }
+  .price { font-size: ${metaSize}mm; line-height: 1.15; color: #000; }
+  .bars { display: flex; align-items: center; justify-content: center; max-width: 100%; height: ${barHeight}mm; }
+  .bars svg { max-width: ${innerW}mm; max-height: ${barHeight}mm; display: block; }
+  .code { font-size: ${codeSize}mm; line-height: 1.15; letter-spacing: 0.04em; font-family: 'Courier New', monospace; color: #000; }
   /* absolute, NOT fixed: a fixed element is repeated on every printed page and
      can pull extra page boxes into the paginated output. */
-  .no-print { position: absolute; top: 6px; right: 6px; }
+  .no-print { position: absolute; top: 2mm; right: 2mm; }
   @media print { .no-print { display: none; } }
 </style>
 </head>
 <body>
-  <button class="no-print" onclick="window.print()">Print again</button>
-  <div class="label">
-    <div class="name">${String(name || '').replace(/[<>&]/g, '')}</div>
-    ${priceLine}
-    ${svgMarkup}
-    <div class="code">${value.replace(/[<>&]/g, '')}</div>
-  </div>
+${body}
 </body>
-</html>`);
-    win.document.close();
-    win.focus();
-    setTimeout(() => win.print(), 300);
+</html>`;
+};
+
+// One printable label. Barcode geometry comes from buildLabelBarcode so the SVG
+// is sized in millimetres and keeps its aspect ratio.
+const labelHtml = ({ code, name, price }, m) => `
+    <div class="label">
+      <div class="name">${escapeHtml(name)}</div>
+      ${priceLineHtml(price)}
+      <div class="bars">${buildLabelBarcode(code, m)}</div>
+      <div class="code">${escapeHtml(code)}</div>
+    </div>`;
+
+// Open a print-friendly label window sized for label printers.
+// Default 35mm x 25mm; both dimensions remain configurable by the caller
+// (persisted in Stock Management page via localStorage).
+export const printBarcodeLabel = ({
+    code, name = '', price = null,
+    widthMm = DEFAULT_LABEL_WIDTH_MM, heightMm = DEFAULT_LABEL_HEIGHT_MM
+}) => {
+    const value = String(code || '').trim();
+    if (!value) return;
+
+    const m = resolveLabelSize(widthMm, heightMm);
+    const label = labelHtml({ code: value, name, price }, m);
+    // Never open a print window for a label with no barcode in it.
+    if (!label.includes('<svg')) {
+        console.warn('[barcode] Could not build a barcode for:', value);
+        return;
+    }
+
+    const win = openLabelWindow(`Label ${value}`, labelDocumentHtml({
+        title: `Label ${value}`,
+        body: `<button class="no-print" onclick="window.print()">Print again</button>\n${label}`,
+        m,
+        paginate: false
+    }));
+    if (win) printWhenReady(win);
 };
 
 // Batch label printing: one print job containing one page per label.
 // `items` is an array of { code, name, price }; each entry is repeated
 // `copiesPerItem` times (qty-per-item option for sheet-style label rolls).
-export const printBarcodeLabelsBatch = ({ items = [], widthMm = 40, heightMm = 30, copiesPerItem = 1 }) => {
-  const valid = items.filter((it) => String(it?.code || '').trim());
-  if (!valid.length) return;
+export const printBarcodeLabelsBatch = ({
+    items = [],
+    widthMm = DEFAULT_LABEL_WIDTH_MM,
+    heightMm = DEFAULT_LABEL_HEIGHT_MM,
+    copiesPerItem = 1
+}) => {
+    const valid = items.filter((it) => String(it?.code || '').trim());
+    if (!valid.length) return;
 
-  const w = Math.max(15, Number(widthMm) || 40);
-  const h = Math.max(10, Number(heightMm) || 30);
-  const copies = Math.max(1, Math.min(1000, Number(copiesPerItem) || 1));
+    const m = resolveLabelSize(widthMm, heightMm);
+    const copies = Math.max(1, Math.min(1000, Number(copiesPerItem) || 1));
 
-  const esc = (s) => String(s || '').replace(/[<>&]/g, '');
-  const labelsHtml = [];
-  for (const item of valid) {
-    const svgMarkup = renderBarcodeSvg(item.code, { height: Math.round(h * 2.2), width: 2 });
-    if (!svgMarkup) continue;
-    const priceLine = item.price !== null && item.price !== undefined && item.price !== ''
-      ? `<div class="price">Rs. ${Number(item.price).toLocaleString('en-LK')}</div>`
-      : '';
-    const singleLabel = `
-    <div class="label">
-      <div class="name">${esc(item.name)}</div>
-      ${priceLine}
-      ${svgMarkup}
-      <div class="code">${esc(item.code)}</div>
-    </div>`;
-    for (let c = 0; c < copies; c++) labelsHtml.push(singleLabel);
-  }
-
-  if (!labelsHtml.length) return;
-
-  const win = window.open('', '_blank', 'width=460,height=380');
-  if (!win) return;
-
-  win.document.write(`<!doctype html>
-<html>
-<head>
-<title>Batch labels (${labelsHtml.length})</title>
-<style>
-  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  html, body { margin: 0; padding: 0; background: #fff; }
-  /* One label per page, and the page is EXACTLY ${h}mm - never taller. Each label
-     box is a hair shorter than that (see below) AND clips its own overflow, so
-     a sub-pixel round-off can never spill onto the next page and feed an extra
-     blank sticker. If the print PREVIEW looks taller than the label, the paper
-     size chosen in the print dialog (usually A4) is overriding @page. */
-  @media print {
-    @page { size: ${w}mm ${h}mm; margin: 0; }
-    html, body {
-      width: ${w}mm;
-      margin: 0;
-      padding: 0;
-      overflow: hidden !important;
+    // One .label per sticker. Copying the rendered string is what makes each
+    // requested copy a separate physical label - nothing is re-scaled or reused,
+    // so N items x M copies always yields exactly N x M stickers, no gaps.
+    const labelsHtml = [];
+    for (const item of valid) {
+        const markup = labelHtml({ code: item.code, name: item.name, price: item.price }, m);
+        if (!markup.includes('<svg')) {
+            console.warn('[barcode] Skipping unprintable code:', item.code);
+            continue;
+        }
+        for (let c = 0; c < copies; c++) labelsHtml.push(markup);
     }
-  }
-  .label {
-    width: ${w}mm;
-    /* Strictly shorter than the page, so a sub-pixel round-off can never spill
-       onto a next page and feed an extra blank sticker. */
-    height: calc(${h}mm - 1mm);
-    padding: 1.2mm;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: Arial, Helvetica, sans-serif;
-    overflow: hidden;
-    text-align: center;
-    page-break-inside: avoid;
-    break-inside: avoid;
-    page-break-after: always;
-    break-after: page;
-  }
-  .label:last-child { page-break-after: auto; break-after: auto; }
-  .name {
-    font-size: 9px;
-    font-weight: bold;
-    color: #000;
-    max-width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .price { font-size: 9px; color: #000; margin-top: 0.5mm; }
-  .code { font-size: 8px; letter-spacing: 0.5px; font-family: 'Courier New', monospace; color: #000; margin-top: 0.5mm; }
-  .label svg { max-width: 96%; max-height: 55%; display: block; }
-  .no-print { position: absolute; top: 6px; right: 6px; z-index: 10; }
-  @media print { .no-print { display: none; } }
-</style>
-</head>
-<body>
-  <button class="no-print" onclick="window.print()">Print again (${labelsHtml.length} labels)</button>
-  ${labelsHtml.join('\n')}
-</body>
-</html>`);
-  win.document.close();
-  win.focus();
-  setTimeout(() => win.print(), 400);
+
+    if (!labelsHtml.length) return;
+
+    const win = openLabelWindow(
+        `Batch labels (${labelsHtml.length})`,
+        labelDocumentHtml({
+            title: `Batch labels (${labelsHtml.length})`,
+            body: `<button class="no-print" onclick="window.print()">Print again (${labelsHtml.length} labels)</button>\n${labelsHtml.join('\n')}`,
+            m,
+            paginate: true
+        })
+    );
+    if (win) printWhenReady(win);
 };
