@@ -181,10 +181,55 @@ export const applyLocalOverlaysToInventoryCache = async () => {
 // route through here, so an item can never vanish or show stale quantity in
 // one page while being correct in another just because its write op hasn't
 // finished syncing. Either list may be omitted to keep the cached copy.
+const evictStaleCachedItems = async (serverIds) => {
+  const cached = await db.inventoryAccessories.toArray();
+  const serverIdSet = new Set(serverIds.map((id) => String(id)));
+
+  // Any queued item/import op still references these rows; they must survive
+  // until their op is applied server-side.
+  const pendingOps = await db.pendingStockOps
+    .where('syncStatus').equals('pending')
+    .and((op) => op.entityType === 'item' || op.entityType === 'import')
+    .toArray();
+  const protectedIds = new Set();
+  const protectedSkus = new Set();
+  for (const op of pendingOps) {
+    const id = String(op.payload?.localKey || op.payload?.id || '');
+    if (id) protectedIds.add(id);
+    // Import ops address rows by SKU, and create brand-new items the server has
+    // never seen - those are re-created by overlayPendingImports anyway.
+    for (const row of op.payload?.rows || []) {
+      const sku = String(row?.sku || '').trim().toUpperCase();
+      if (sku) protectedSkus.add(sku);
+    }
+    if (op.opType !== 'run') {
+      const sku = String(op.payload?.sku || '').trim().toUpperCase();
+      if (sku) protectedSkus.add(sku);
+    }
+  }
+
+  const stale = cached.filter((row) => {
+    const id = String(row?.id || '');
+    if (protectedIds.has(id) || protectedIds.has(String(row?.localKey || ''))) return false;
+    if (id.startsWith('loc-')) return false;
+    if (protectedSkus.has(String(row?.sku || '').trim().toUpperCase())) return false;
+    return !serverIdSet.has(id);
+  });
+
+  if (stale.length) {
+    await db.transaction('rw', db.inventoryAccessories, async () => {
+      for (const row of stale) await db.inventoryAccessories.delete(row.id);
+    });
+    console.warn('[stockService] Evicted stale cached items:', stale.map((s) => s.sku || s.id));
+  }
+  return stale.length;
+};
+
 export const applyServerInventorySnapshot = async ({ phones = null, accessories = null } = {}) => {
   const prev = await getCachedInventory();
   const nextPhones = Array.isArray(phones) ? phones : (Array.isArray(prev?.phones) ? prev.phones : []);
   const nextAccessories = Array.isArray(accessories) ? accessories : (Array.isArray(prev?.accessories) ? prev.accessories : []);
+  if (Array.isArray(accessories)) await evictStaleCachedItems(accessories.map((a) => a.id));
   await cacheInventory({ phones: nextPhones, accessories: nextAccessories });
   await applyLocalOverlaysToInventoryCache();
 };
@@ -210,6 +255,9 @@ export const refreshStockData = async () => {
     if (catsRes.ok && accRes.ok) {
       const categories = await catsRes.json();
       const items = await accRes.json();
+      // Drop cached rows the server no longer knows about BEFORE the overlays
+      // re-add genuinely-pending local work on top of the fresh snapshot.
+      await evictStaleCachedCategories(categories.map((c) => c.id));
       await cacheStockCategories(categories);
       // Phones untouched here; accessories merged through the shared
       // reconcile path that preserves pending local writes.
@@ -379,6 +427,46 @@ const cancelPendingCreate = async (entityType, localKey) => {
 };
 
 // ---- Categories ----
+
+// A successful server fetch is AUTHORITATIVE: any cached row the server no
+// longer returns is stale (deleted directly in the DB, wiped, or restored from
+// an old backup) and must be evicted, otherwise the Stock page keeps rendering
+// items/categories the database does not contain.
+// Local work that hasn't reached the server yet is preserved - those rows are
+// protected by the pending-op checks below.
+const evictStaleCachedCategories = async (serverIds) => {
+  const cached = await db.stockCategories.toArray();
+  const serverIdSet = new Set(serverIds.map((id) => String(id)));
+
+  const pendingOps = await db.pendingStockOps
+    .where('syncStatus').equals('pending')
+    .and((op) => op.entityType === 'category')
+    .toArray();
+  // Ids referenced by any queued category op (create OR delete) must survive:
+  // a queued create hasn't been applied server-side yet, and a queued delete is
+  // still in flight.
+  const protectedIds = new Set(
+    pendingOps
+      .map((op) => String(op.payload?.localKey || op.payload?.id || ''))
+      .filter(Boolean)
+  );
+
+  const stale = cached.filter((row) => {
+    const id = String(row?.id || '');
+    if (protectedIds.has(id) || protectedIds.has(String(row?.localKey || ''))) return false;
+    // Locally-created rows aren't on the server yet; overlayLocalCreates owns them.
+    if (id.startsWith('loc-')) return false;
+    return !serverIdSet.has(id);
+  });
+
+  if (stale.length) {
+    await db.transaction('rw', db.stockCategories, async () => {
+      for (const row of stale) await db.stockCategories.delete(row.id);
+    });
+    console.warn('[stockService] Evicted stale cached categories:', stale.map((s) => s.name));
+  }
+  return stale.length;
+};
 
 // Deleting a category row is not enough to make it disappear from the grid:
 // the item list still carries `category: "<name>"` text labels, and CategoryGrid
