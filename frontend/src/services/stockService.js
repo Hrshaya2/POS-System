@@ -121,10 +121,24 @@ const overlayLocalCreates = async () => {
       db.stockCategories.toArray(),
       db.inventoryAccessories.toArray()
     ]);
-    const delOps = await db.pendingStockOps
+    const stockOps = await db.pendingStockOps
       .where('syncStatus').equals('pending')
-      .and((op) => (op.entityType === 'category' || op.entityType === 'item') && op.opType === 'delete')
+      .and((op) => op.entityType === 'category' || op.entityType === 'item')
       .toArray();
+    const delOps = stockOps.filter((op) => op.opType === 'delete');
+    // A `loc-` row is only legitimate while its CREATE op is still queued.
+    // Once that op has synced (or been dropped), the row is an orphan left in
+    // the cache and must NOT be preserved - otherwise deleted/unsynced-then-
+    // dropped categories keep reappearing after every refresh, even though the
+    // server has no such record.
+    const pendingCreateKeys = (entityType) => new Set(
+      stockOps
+        .filter((o) => o.entityType === entityType && o.opType === 'create')
+        .map((o) => String(o.payload?.localKey || o.payload?.localId || o.payload?.id || ''))
+        .filter(Boolean)
+    );
+    const createCats = pendingCreateKeys('category');
+    const createAccs = pendingCreateKeys('item');
     // Split per entity so a category id can never be matched against an item.
     const doomedFor = (entityType) => new Set(
       delOps
@@ -136,10 +150,34 @@ const overlayLocalCreates = async () => {
     const doomedAccs = doomedFor('item');
     const matches = (keys, row) => keys.has(String(row?.id || '')) || (!!row?.localKey && keys.has(String(row.localKey)));
 
-    const aliveCat = (row) => String(row?.id || '').startsWith('loc-') && !matches(doomedCats, row);
-    const aliveAcc = (row) => String(row?.id || '').startsWith('loc-') && !matches(doomedAccs, row);
+    // Keep a `loc-` row ONLY while its create op is still queued AND it isn't
+// being deleted. Anything else is an orphan and gets evicted below.
+const aliveCat = (row) => String(row?.id || '').startsWith('loc-')
+      && !matches(doomedCats, row)
+      && (createCats.has(String(row?.id || '')) || createCats.has(String(row?.localKey || '')));
+    const aliveAcc = (row) => String(row?.id || '').startsWith('loc-')
+      && !matches(doomedAccs, row)
+      && (createAccs.has(String(row?.id || '')) || createAccs.has(String(row?.localKey || '')));
     const keepCats = cats.filter(aliveCat);
     const keepAccs = accs.filter(aliveAcc);
+
+    // Orphaned `loc-` rows: their create op already synced or was discarded, so
+    // nothing on the server backs them. Left in place they would be re-saved by
+    // every later refresh and reappear as phantom categories/items.
+    const orphanCats = cats.filter((row) => String(row?.id || '').startsWith('loc-') && !aliveCat(row));
+    const orphanAccs = accs.filter((row) => String(row?.id || '').startsWith('loc-') && !aliveAcc(row));
+    if (orphanCats.length) {
+      await db.transaction('rw', db.stockCategories, async () => {
+        for (const c of orphanCats) await db.stockCategories.delete(c.id);
+      });
+      console.warn('[stockService] Dropped orphaned local categories:', orphanCats.map((c) => c.name));
+    }
+    if (orphanAccs.length) {
+      await db.transaction('rw', db.inventoryAccessories, async () => {
+        for (const a of orphanAccs) await db.inventoryAccessories.delete(a.id);
+      });
+      console.warn('[stockService] Dropped orphaned local items:', orphanAccs.map((a) => a.sku));
+    }
 
     // A delete op still sitting in the queue has NOT reached the server yet, so
     // the snapshot merged above still contains that row. Drop it here, otherwise
@@ -223,6 +261,36 @@ const evictStaleCachedItems = async (serverIds) => {
     console.warn('[stockService] Evicted stale cached items:', stale.map((s) => s.sku || s.id));
   }
   return stale.length;
+};
+
+// ---- Local cache reset ----
+
+// Nukes the browser-side stock cache and the queued stock-op queue so the next
+// read comes purely from the server. Use when locally-cached rows shadow what
+// the database actually holds (e.g. phantom categories after a direct DB edit).
+// Never touches the server: queued writes are discarded, so warn the caller.
+export const resetLocalStockCache = async () => {
+  const discardedOps = await db.pendingStockOps.count();
+  await db.transaction(
+    'rw',
+    db.stockCategories,
+    db.inventoryAccessories,
+    db.pendingStockOps,
+    db.stockTakes,
+    db.stockImports,
+    async () => {
+      await db.stockCategories.clear();
+      await db.inventoryAccessories.clear();
+      await db.pendingStockOps.clear();
+      await db.stockTakes.clear();
+      await db.stockImports.clear();
+    }
+  );
+  // Category tombstones are display state derived from deletes that may no
+  // longer exist server-side; clear them so nothing stays hidden.
+  try { localStorage.removeItem('pos_deleted_categories'); } catch (err) { /* ignore */ }
+  console.warn('[stockService] Local stock cache reset; discarded ops:', discardedOps);
+  return { discardedOps };
 };
 
 export const applyServerInventorySnapshot = async ({ phones = null, accessories = null } = {}) => {

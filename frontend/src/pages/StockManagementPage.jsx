@@ -7,13 +7,14 @@ import {
   Boxes, Search, Plus, Pencil, Trash2, Wrench,
   Barcode as BarcodeIcon, CheckSquare, Square, Printer,
   History, ClipboardCheck, Upload, TrendingDown, LayoutGrid,
-  FileSpreadsheet, FileText, AlertTriangle
+  FileSpreadsheet, FileText, AlertTriangle, RefreshCw
 } from 'lucide-react';
 import { exportToExcelWithTotals, exportToPdf } from '../utils/reportExport';
 import { useAuth } from '../context/AuthContext';
 import {
   refreshStockData, loadStockData, createCategory, updateCategory,
-  deleteCategory, deleteCategories, saveItem, deleteItem, adjustStock
+  deleteCategory, deleteCategories, saveItem, deleteItem, adjustStock,
+  resetLocalStockCache
 } from '../services/stockService';
 import CategoryGrid from '../components/Stock/CategoryGrid';
 import ManageCategoriesModal from '../components/Stock/ManageCategoriesModal';
@@ -150,6 +151,34 @@ export default function StockManagementPage() {
   const reload = useCallback(async () => {
     applyData(await refreshStockData());
   }, [applyData]);
+
+  // "Refresh" re-pulls from the server. On a failed fetch it would silently
+  // re-serve the stale cache, so make that outcome visible instead of letting
+  // the phantom rows quietly come back.
+  const handleRefresh = useCallback(async () => {
+    try {
+      await reload();
+    } catch (err) {
+      alert('Could not reach the server, so the saved data on this device is still being shown. Check that the backend is running, then try again.');
+    }
+  }, [reload]);
+
+  // Clears this device's stock cache + queued writes, then reloads from the
+  // server. Guarded because it discards anything not yet uploaded.
+  const handleResetLocal = useCallback(async () => {
+    const ok = window.confirm(
+      'Clear the stock data saved on THIS device and reload from the database?\n\n' +
+      'Use this if categories or items appear here that are not in the database.\n\n' +
+      'WARNING: any changes still waiting to upload will be discarded.'
+    );
+    if (!ok) return;
+    try {
+      await resetLocalStockCache();
+      await reload();
+    } catch (err) {
+      alert(err.message || 'Could not reset the local stock data');
+    }
+  }, [reload]);
 
   useEffect(() => {
     let cancelled = false;
@@ -298,6 +327,8 @@ export default function StockManagementPage() {
       updateLabelSizeField={updateLabelSizeField}
       onManageCategories={() => setShowManageCategories(true)}
       onAddItem={() => setProductFormState({ item: null })}
+      onRefresh={handleRefresh}
+      onResetLocal={handleResetLocal}
       categories={categories} items={items} takes={takes} user={user}
       imports={imports}
       existingSkus={existingSkus} filteredItems={filteredItems}
@@ -330,7 +361,8 @@ function PageShell(props) {
     activeCategory, setActiveCategory, searchTerm, setSearchTerm,
     selectedIds, toggleSelect, setDetailItem,
     setProductFormState, setAdjustItem, setBatchPrintOpen,
-    reload, onJumpToItem, onDeleteItem, onPrintLabel, onExportLowStockPdf
+    reload, onJumpToItem, onDeleteItem, onPrintLabel, onExportLowStockPdf,
+    onRefresh, onResetLocal
   } = props;
 
   return (
@@ -347,6 +379,20 @@ function PageShell(props) {
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={onRefresh}
+            title="Fetch the latest stock data from the database"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium shadow-sm"
+          >
+            <RefreshCw size={16} /> Refresh
+          </button>
+          <button
+            onClick={onResetLocal}
+            title="Clear the stock data saved on this device and reload from the database (use if phantom categories/items appear)"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium shadow-sm"
+          >
+            <Trash2 size={16} /> Reset Local
+          </button>
           <button
             onClick={() => exportStock(stockExportRows(filteredItems), 'excel')}
             title="Export the current filtered stock list to Excel"
