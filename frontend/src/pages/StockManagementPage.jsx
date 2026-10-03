@@ -27,7 +27,13 @@ import StockHistoryTab from '../components/Stock/StockHistoryTab';
 import StockTakeTab from '../components/Stock/StockTakeTab';
 import ImportTab from '../components/Stock/ImportTab';
 import AlertsPanel from '../components/Stock/AlertsPanel';
-import { DEFAULT_LABEL_WIDTH_MM, DEFAULT_LABEL_HEIGHT_MM, LABEL_SIZE_VERSION } from '../utils/barcode';
+// Static (not dynamic) import: `window.open()` must run inside the click handler's
+// user-gesture context. A dynamic import() defers it into a promise callback,
+// which the browser treats as NOT user-initiated and silently blocks.
+import {
+  DEFAULT_LABEL_WIDTH_MM, DEFAULT_LABEL_HEIGHT_MM, LABEL_SIZE_VERSION,
+  printBarcodeLabel
+} from '../utils/barcode';
 
 const PAGE_TABS = [
   { id: 'items', label: 'Items', icon: LayoutGrid },
@@ -343,12 +349,14 @@ export default function StockManagementPage() {
     await reload();
   };
 
+  // `printBarcodeLabel` is imported statically at the top of this file. It MUST
+  // NOT be loaded with a dynamic `import()` here: that defers `window.open()`
+  // into a promise callback, outside the click's user-gesture context, so the
+  // browser silently blocks the popup and the button appears to do nothing.
   const printSingleLabel = (item) => {
-    import('../utils/barcode').then(({ printBarcodeLabel }) => {
-      printBarcodeLabel({
-        code: item.sku, name: item.name, price: item.sell_price,
-        widthMm: labelSize.widthMm, heightMm: labelSize.heightMm
-      });
+    printBarcodeLabel({
+      code: item.sku, name: item.name, price: item.sell_price,
+      widthMm: labelSize.widthMm, heightMm: labelSize.heightMm
     });
   };
 

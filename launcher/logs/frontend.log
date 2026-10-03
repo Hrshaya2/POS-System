@@ -565,3 +565,1186 @@ AggregateError [ECONNREFUSED]:
 [2m21:04:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
 [2m21:04:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
 [2m21:05:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m21:41:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m21:42:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m21:42:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m21:48:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m21:50:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m21:52:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m21:52:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m21:52:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m21:55:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m21:57:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m21:59:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m22:01:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m22:01:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m22:02:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m22:02:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m22:03:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m22:04:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m22:04:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m22:05:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m22:06:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m22:06:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m22:07:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m06:29:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/OfflineBanner.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/StorageWarningBanner.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:35:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:35:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:35:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:35:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:35:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:37:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:37:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:37:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:37:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:37:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:37:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:37:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:37:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:37:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:37:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:38:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:38:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:38:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:38:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:38:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:38:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:38:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:38:30[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:38:30[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:38:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:38:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:38:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:38:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:38:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:39:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:39:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:39:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:39:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:39:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:39:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:39:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:39:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:39:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:39:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:39:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:39:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:39:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:39:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:39:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:39:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:39:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:40:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:40:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:40:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:40:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:40:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:40:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:40:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:40:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:40:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:41:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:41:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:41:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:41:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:41:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:41:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:41:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:41:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:41:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:41:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:41:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:41:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:41:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:41:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:41:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:41:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:41:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:41:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:42:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:42:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:42:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:42:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:42:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:42:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:42:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:43:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:43:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:43:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:43:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:43:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:43:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:43:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:43:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:43:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:43:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:43:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:43:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:43:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:43:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:44:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:44:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:44:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:44:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:44:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:44:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:44:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:44:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:44:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:44:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:44:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:44:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:44:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:44:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:44:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:44:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:44:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:44:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:44:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m06:51:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m06:59:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m06:59:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:59:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m06:59:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m06:59:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/StorageWarningBanner.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/StockTakeTab.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/ErrorBoundary.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/LocalDbWarningBanner.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/OfflineBanner.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/RefundModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/AdjustStockModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/BarcodePreview.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/BatchPrintModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ImportTab.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ItemDetailModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/MovementBadge.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ProductFormModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/StockHistoryTab.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/CategoryGrid.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Reports/ReportTable.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Reports/ReportFilterBar.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/CashSession/CloseSessionModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/App.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/CashSession/OpenSessionModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/SettingsPage.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/StockManagementPage.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/UsersPage.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/StorageWarningBanner.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/AdjustStockModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/BarcodePreview.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/BatchPrintModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/CategoryGrid.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ImportTab.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ItemDetailModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/MovementBadge.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ProductFormModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/StockHistoryTab.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/StockTakeTab.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Reports/ReportFilterBar.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Reports/ReportTable.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/CashSessionHistoryPage.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/Login.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/ManageStoragePage.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/RepairPage.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/ReportsPage.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/SalesPage.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/App.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/CashSession/CloseSessionModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/CashSession/OpenSessionModal.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/ErrorBoundary.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/LocalDbWarningBanner.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/OfflineBanner.jsx[22m
+[2m07:01:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/RefundModal.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/App.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/CashSession/CloseSessionModal.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/ErrorBoundary.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Reports/ReportFilterBar.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/AdjustStockModal.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/CashSessionHistoryPage.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/CashSession/OpenSessionModal.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/LocalDbWarningBanner.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/OfflineBanner.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/RefundModal.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/StorageWarningBanner.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Reports/ReportTable.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/BarcodePreview.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/BatchPrintModal.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/CategoryGrid.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ImportTab.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ItemDetailModal.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/MovementBadge.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ProductFormModal.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/StockHistoryTab.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/StockTakeTab.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/Login.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/ManageStoragePage.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/RepairPage.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/ReportsPage.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/SalesPage.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/SettingsPage.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/StockManagementPage.jsx[22m
+[2m07:01:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/UsersPage.jsx[22m
+[2m07:01:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:01:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/components/Stock/ProductFormModal.jsx[22m
+[2m07:01:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/MovementBadge.jsx[22m Could not Fast Refresh ("MOVEMENT_TYPES" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:01:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Stock/StockHistoryTab.jsx[22m
+node:internal/fs/watchers:323
+    const error = new UVException({
+                  ^
+
+Error: EBUSY: resource busy or locked, watch 'D:\Nangi\POS\frontend\chk.cjs'
+    at FSWatcher.<computed> (node:internal/fs/watchers:323:19)
+    at Object.watch (node:fs:2609:36)
+    at createFsWatchInstance (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:9408:16)
+    at setFsWatchListener (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:9450:14)
+    at NodeFsHandler._watchWithNodeFs (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:9565:20)
+    at NodeFsHandler._handleFile (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:9609:24)
+    at NodeFsHandler._addToNodeFs (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:9783:26)
+Emitted 'error' event on FSWatcher instance at:
+    at FSWatcher._handleError (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:10582:146)
+    at NodeFsHandler._addToNodeFs (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:9788:18) {
+  errno: -4082,
+  syscall: 'watch',
+  code: 'EBUSY',
+  path: 'D:\\Nangi\\POS\\frontend\\chk.cjs',
+  filename: 'D:\\Nangi\\POS\\frontend\\chk.cjs'
+}
+
+Node.js v24.19.0
+===== started 03/10/2026  7:09:05.73 =====  
+
+> frontend@0.0.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v8.2.1[39m  [2mready in [0m[1m1020[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m07:12:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:12:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:12:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:16:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:16:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:16:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:17:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:17:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:17:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:17:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:17:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m07:17:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:17:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:17:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m07:18:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m07:18:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:21:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:21:33[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:21:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:21:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:21:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:22:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:22:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:22:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:22:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:22:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:23:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:23:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:23:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:23:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:23:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:23:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:23:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:24:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:24:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:24:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:24:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:24:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:25:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:25:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:27:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:30:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:31:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:31:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:34:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:34:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:37:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:38:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:38:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:39:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:39:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:39:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m07:39:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:39:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:39:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m07:39:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:39:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:39:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m07:40:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:40:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:40:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m07:40:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:40:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:40:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m07:42:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:42:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/OfflineBanner.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/StorageWarningBanner.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:45:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:51:17[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:51:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:51:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:51:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:51:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:51:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:51:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:52:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:54:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:54:33[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/OfflineBanner.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/StorageWarningBanner.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:54:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:54:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:55:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:55:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m07:55:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/MovementBadge.jsx[22m Could not Fast Refresh ("MOVEMENT_TYPES" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:55:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Stock/StockHistoryTab.jsx, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:55:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:55:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:55:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:56:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:56:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:56:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m07:56:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/MovementBadge.jsx[22m Could not Fast Refresh ("MOVEMENT_TYPES" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:56:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Stock/StockHistoryTab.jsx, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:56:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:56:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:56:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:57:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:58:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:58:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:58:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:58:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:58:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:58:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:58:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m07:58:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:58:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/MovementBadge.jsx[22m Could not Fast Refresh ("MOVEMENT_TYPES" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:58:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Stock/StockHistoryTab.jsx, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:58:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/hooks/useTheme.js[22m
+[2m07:58:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:58:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:58:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m07:58:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:58:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:58:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m
+[2m07:58:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/LocalDbWarningBanner.jsx, /src/index.css[22m
+[2m07:58:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/OfflineBanner.jsx, /src/index.css[22m
+[2m07:58:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:58:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/StorageWarningBanner.jsx, /src/index.css[22m
+[2m07:58:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:59:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m07:59:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:59:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Reports/ReportFilterBar.jsx[22m Could not Fast Refresh ("DATE_PRESETS" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:59:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx[22m
+[2m07:59:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:59:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:59:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:59:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:59:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:59:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:59:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:59:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m11:38:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m11:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m11:38:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m11:42:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m11:43:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m11:43:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m11:43:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m11:43:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m11:47:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m11:47:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m11:49:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m11:50:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m11:50:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m11:50:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m11:50:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m11:50:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:00:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:00:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:00:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:01:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:01:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:01:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:01:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:01:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:01:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:03:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:03:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:03:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:03:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:04:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m12:04:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m12:05:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m

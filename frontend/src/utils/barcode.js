@@ -51,6 +51,9 @@ const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 // bar edges crisp - they are NOT the printed size.
 const BAR_SOURCE_HEIGHT = 100;
 const BAR_SOURCE_MODULE_WIDTH = 2;
+// Used only if JsBarcode reports no usable size for a code, so a render that
+// actually succeeded is never thrown away over missing dimension attributes.
+const BAR_SOURCE_FALLBACK_WIDTH = 200;
 
 const resolveLabelSize = (widthMm, heightMm) => {
     const w = clamp(Number(widthMm) || DEFAULT_LABEL_WIDTH_MM, 15, 200);
@@ -68,6 +71,28 @@ const resolveLabelSize = (widthMm, heightMm) => {
         barHeight: clamp(h * 0.42, 4.5, 12),
         gap: clamp(h * 0.02, 0.2, 0.6)
     };
+};
+
+// JsBarcode does not guarantee `width`/`height` attributes on the <svg>: depending
+// on how it builds the element it may only emit a `viewBox`. Reading the
+// attributes alone therefore yields 0, which made every label bail out with
+// "Could not build a barcode" and the print button appear dead. Read the viewBox
+// as a fallback so both shapes work.
+const readSvgSize = (svg) => {
+    const attrW = Number(svg.getAttribute('width')) || 0;
+    const attrH = Number(svg.getAttribute('height')) || 0;
+    if (attrW > 0 && attrH > 0) return { width: attrW, height: attrH };
+
+    const box = (svg.getAttribute('viewBox') || '')
+        .trim()
+        .split(/[\s,]+/)
+        .map(Number);
+    // viewBox = "minX minY width height"
+    const vbW = Number.isFinite(box[2]) ? box[2] : 0;
+    const vbH = Number.isFinite(box[3]) ? box[3] : 0;
+    if (vbW > 0 && vbH > 0) return { width: vbW, height: vbH };
+
+    return { width: attrW, height: attrH };
 };
 
 // Render a scannable CODE128 barcode and return it as an SVG markup string.
@@ -88,11 +113,8 @@ const buildBarcodeElement = (code, options = {}) => {
             background: options.background || '#ffffff',
             lineColor: options.lineColor || '#000000'
         });
-        return {
-            el: svg,
-            width: Number(svg.getAttribute('width')) || 0,
-            height: Number(svg.getAttribute('height')) || 0
-        };
+        const size = readSvgSize(svg);
+        return { el: svg, width: size.width, height: size.height };
     } catch (err) {
         console.warn('[barcode] Unable to render barcode:', err.message);
         return null;
@@ -109,12 +131,27 @@ export const renderBarcodeSvg = (code, options = {}) => {
 // ratio is preserved and bars are never stretched or squashed. A long
 // manufacturer code simply gets a shorter (still scannable) bar rather than
 // overflowing the label.
+//
+// The SVG is also given a viewBox plus explicit mm width/height. Without the
+// viewBox the printer has no intrinsic size to scale from, and without real
+// dimensions the artwork collapses - both of which look like a blank sticker.
 const buildLabelBarcode = (code, m) => {
     const built = buildBarcodeElement(code, { height: BAR_SOURCE_HEIGHT, width: BAR_SOURCE_MODULE_WIDTH });
-    if (!built || !built.width || !built.height) return '';
-    const scale = Math.min(m.innerW / built.width, m.barHeight / built.height);
-    built.el.setAttribute('width', `${(built.width * scale).toFixed(2)}mm`);
-    built.el.setAttribute('height', `${(built.height * scale).toFixed(2)}mm`);
+    if (!built) return '';
+
+    // Last-resort dimensions so a successful render is never discarded: the
+    // module count is unknown here, so fall back to a plausible symbol box.
+    const srcW = built.width > 0 ? built.width : BAR_SOURCE_FALLBACK_WIDTH;
+    const srcH = built.height > 0 ? built.height : BAR_SOURCE_HEIGHT;
+
+    const scale = Math.min(m.innerW / srcW, m.barHeight / srcH);
+    const outW = srcW * scale;
+    const outH = srcH * scale;
+
+    built.el.setAttribute('viewBox', `0 0 ${srcW} ${srcH}`);
+    built.el.setAttribute('preserveAspectRatio', 'none');
+    built.el.setAttribute('width', `${outW.toFixed(2)}mm`);
+    built.el.setAttribute('height', `${outH.toFixed(2)}mm`);
     return new XMLSerializer().serializeToString(built.el);
 };
 
@@ -130,24 +167,41 @@ const priceLineHtml = (price) => (
         : ''
 );
 
-// Print on the next animation frame instead of an arbitrary timeout, so the
-// barcode is laid out before the dialog opens without guessing a delay.
+// Print once the label window has finished parsing, with no arbitrary delay and
+// no dependence on requestAnimationFrame.
+//
+// rAF is NOT usable here: a freshly opened window is backgrounded until focused,
+// and browsers throttle/pause rAF in background tabs. The frames may never
+// arrive, `win.print()` is never reached, and the click appears to do nothing.
 const printWhenReady = (win) => {
+    let settled = false;
     const run = () => {
-        try { win.focus(); win.print(); } catch (err) { console.warn('[barcode] print failed:', err); }
+        if (settled) return;
+        settled = true;
+        try {
+            win.focus();
+            win.print();
+        } catch (err) {
+            console.warn('[barcode] print failed:', err);
+        }
     };
-    const schedule = () => {
-        const raf = win.requestAnimationFrame || ((fn) => win.setTimeout(fn, 0));
-        raf(() => raf(run));
-    };
-    if (win.document.readyState === 'complete') schedule();
-    else win.addEventListener('load', schedule, { once: true });
+    if (win.document.readyState === 'complete') win.setTimeout(run, 0);
+    else {
+        win.addEventListener('load', () => win.setTimeout(run, 0), { once: true });
+        // Safety net: if `load` never fires the dialog would never open at all.
+        win.setTimeout(run, 1000);
+    }
 };
 
 const openLabelWindow = (title, html) => {
     const win = window.open('', '_blank', 'width=460,height=380');
     if (!win) {
+        // Never fail silently: a blocked popup used to look like a dead button.
         console.warn('[barcode] The print window was blocked by the popup blocker - allow popups to print labels.');
+        alert(
+            'The print window was blocked by your browser.\n\n' +
+            'Allow pop-ups for this site (the blocked-popup icon in the address bar), then press Print again.'
+        );
         return null;
     }
     win.document.write(html);
@@ -256,13 +310,20 @@ export const printBarcodeLabel = ({
     widthMm = DEFAULT_LABEL_WIDTH_MM, heightMm = DEFAULT_LABEL_HEIGHT_MM
 }) => {
     const value = String(code || '').trim();
-    if (!value) return;
+    if (!value) {
+        // Previously returned with no message at all, which looks like a dead
+        // button. Always say why nothing happened.
+        console.warn('[barcode] No barcode/SKU supplied to print.');
+        alert('Cannot print label: this item has no SKU / barcode.');
+        return;
+    }
 
     const m = resolveLabelSize(widthMm, heightMm);
     const label = labelHtml({ code: value, name, price }, m);
     // Never open a print window for a label with no barcode in it.
     if (!label.includes('<svg')) {
         console.warn('[barcode] Could not build a barcode for:', value);
+        alert(`Cannot print label: the barcode for "${value}" could not be generated. Check the browser console for details.`);
         return;
     }
 
@@ -285,7 +346,11 @@ export const printBarcodeLabelsBatch = ({
     copiesPerItem = 1
 }) => {
     const valid = items.filter((it) => String(it?.code || '').trim());
-    if (!valid.length) return;
+    if (!valid.length) {
+        console.warn('[barcode] Batch print called with no printable items.');
+        alert('Nothing to print: no items with a barcode / SKU were selected.');
+        return;
+    }
 
     const m = resolveLabelSize(widthMm, heightMm);
     const copies = Math.max(1, Math.min(1000, Number(copiesPerItem) || 1));
