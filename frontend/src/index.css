@@ -51,6 +51,29 @@ html.theme-transition * {
   }
 }
 
+/* ---- Loading logo ------------------------------------------------------- */
+/* A soft scale + opacity pulse on the brand mark. Defined here rather than with
+   a Tailwind utility so the timing is easy to tune in one place. */
+@keyframes logo-pulse {
+  0%, 100% { transform: scale(1);    opacity: 1; }
+  50%      { transform: scale(1.06); opacity: 0.72; }
+}
+
+.logo-loader-mark {
+  animation: logo-pulse 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  will-change: transform, opacity;
+  /* No layout shift while it pulses. */
+  object-fit: contain;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Honour the OS setting: show the logo statically rather than animating it. */
+  .logo-loader-mark {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 #root {
   width: 100%;
 }

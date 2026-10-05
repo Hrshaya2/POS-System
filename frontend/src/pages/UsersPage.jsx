@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Users, UserPlus, Edit2, Trash2, X, Shield, ShieldCheck, User, Crown, AlertCircle, Check } from 'lucide-react';
+import LogoLoader from '../components/LogoLoader';
 
 export default function UsersPage() {
     const { user } = useAuth();
@@ -268,10 +269,7 @@ export default function UsersPage() {
                         <tbody>
                             {loading ? (
                                 <tr><td colSpan="5" className="px-6 py-8 text-center">
-                                    <div className="flex items-center justify-center space-x-2">
-                                        <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                                        <span>Loading users...</span>
-                                    </div>
+                                    <LogoLoader size={48} label="Loading users…" />
                                 </td></tr>
                             ) : usersList.length === 0 ? (
                                 <tr><td colSpan="5" className="px-6 py-8 text-center text-gray-400 dark:text-slate-500">No users found.</td></tr>

@@ -13,6 +13,7 @@ import {
   Tags, Settings, BadgeDollarSign, ExternalLink, Info, HardDrive, Trash2, X, CheckCircle2
 } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme.jsx';
+import LogoLoader from '../components/LogoLoader';
 
 const BYTES_PER_MB = 1024 * 1024;
 const BYTES_PER_KB = 1024;
@@ -326,8 +327,8 @@ export default function ManageStoragePage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-[60vh] text-gray-500 dark:text-slate-400">
-        <RefreshCw size={20} className="animate-spin mr-3" /> Loading storage stats...
+      <div className="h-[60vh]">
+        <LogoLoader size={80} label="Loading storage stats…" />
       </div>
     );
   }

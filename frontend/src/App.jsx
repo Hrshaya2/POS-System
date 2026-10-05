@@ -34,6 +34,7 @@ import { SessionProvider, useSession } from './context/SessionContext';
 import { SyncProvider, useSync } from './context/SyncContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import ThemeToggle from './components/ThemeToggle';
+import LogoLoader from './components/LogoLoader';
 import { ThemeProvider, useTheme } from './hooks/useTheme.jsx';
 import OpenSessionModal from './components/CashSession/OpenSessionModal';
 import CloseSessionModal from './components/CashSession/CloseSessionModal';
@@ -58,7 +59,14 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading: authLoading } = useAuth();
   const { isOpen, loading: sessionLoading } = useSession();
 
-  if (authLoading || sessionLoading) return <div>Loading...</div>;
+  if (authLoading || sessionLoading) {
+    // First paint of the app: show the brand mark rather than bare text.
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-[#0b1220] flex items-center justify-center">
+        <LogoLoader size={88} label="Starting Loyal Mobile…" />
+      </div>
+    );
+  }
   if (!user) return <Navigate to="/login" replace />;
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to="/" replace />; // Unauthorized
