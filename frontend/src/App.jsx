@@ -33,6 +33,8 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { SessionProvider, useSession } from './context/SessionContext';
 import { SyncProvider, useSync } from './context/SyncContext';
 import ErrorBoundary from './components/ErrorBoundary';
+import ThemeToggle from './components/ThemeToggle';
+import { ThemeProvider, useTheme } from './hooks/useTheme.jsx';
 import OpenSessionModal from './components/CashSession/OpenSessionModal';
 import CloseSessionModal from './components/CashSession/CloseSessionModal';
 import SyncStatusIndicator from './components/SyncStatusIndicator';
@@ -95,9 +97,9 @@ const Layout = ({ children }) => {
   const [showOpenModal, setShowOpenModal] = React.useState(false);
 
   return (
-    <div className="flex h-screen bg-gray-50 text-gray-900 font-sans overflow-hidden">
+    <div className="flex h-screen bg-gray-50 dark:bg-slate-950 dark:bg-[#0b1220] text-gray-900 dark:text-slate-100 font-sans overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 h-full flex flex-col shadow-2xl z-10 border-r border-gray-800">
+      <aside className="w-64 bg-gray-900 dark:bg-slate-950 h-full flex flex-col shadow-2xl z-10 border-r border-gray-800 dark:border-slate-800">
         <div className="p-6 flex items-center space-x-3">
           <div className="p-0">
             <img src="/logo.png" alt="Loyal Mobile" className="w-14 12 object-cover rounded-full border-3 order-white shadow-md" />
@@ -124,8 +126,8 @@ const Layout = ({ children }) => {
           )}
         </nav>
 
-        <div className="p-4 border-t border-gray-800">
-          <button onClick={logout} className="flex items-center space-x-3 px-4 py-3 w-full text-left text-gray-400 hover:bg-gray-800 hover:text-white rounded-xl transition-colors">
+        <div className="p-4 border-t border-gray-800 dark:border-slate-700">
+          <button onClick={logout} className="flex items-center space-x-3 px-4 py-3 w-full text-left text-gray-400 dark:text-slate-500 hover:bg-gray-800 hover:dark:bg-slate-900 hover:text-white rounded-xl transition-colors">
             <LogOut size={20} />
             <span className="font-medium">Logout</span>
           </button>
@@ -133,36 +135,38 @@ const Layout = ({ children }) => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 h-full overflow-y-auto bg-[#f8fafc]">
+      <main className="flex-1 h-full overflow-y-auto bg-[#f8fafc] dark:bg-[#0b1220]">
         {/* Offline Banner (only shows when offline) */}
         <OfflineBanner />
 
         {/* Top Header */}
-        <header className="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200 px-8 py-4 flex justify-between items-center shadow-sm">
-          <h2 className="text-xl font-semibold text-gray-800">Branch: Main Store (Colombo)</h2>
+        <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200 dark:border-slate-800 px-8 py-4 flex justify-between items-center shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-slate-100">Branch: Main Store (Colombo)</h2>
           <div className="flex items-center space-x-4">
             <SyncStatusIndicator />
             {isOpen ? (
               <button
                 onClick={() => setShowCloseModal(true)}
-                className="bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center space-x-2"
+                className="bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 hover:bg-rose-100 px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center space-x-2"
               >
                 <span>End Day</span>
               </button>
             ) : (
               <button
                 onClick={() => setShowOpenModal(true)}
-                className="bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100 px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center space-x-2"
+                className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center space-x-2"
               >
                 <span>Open Day</span>
               </button>
             )}
+            {/* Light/Dark toggle sits immediately left of the admin profile. */}
+            <ThemeToggle />
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md uppercase">
               {user?.name?.charAt(0) || 'U'}
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-700">{user?.name || 'User'}</p>
-              <p className="text-xs text-gray-500 uppercase">{user?.role || 'Guest'}</p>
+              <p className="text-sm font-semibold text-gray-700 dark:text-slate-300">{user?.name || 'User'}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">{user?.role || 'Guest'}</p>
             </div>
           </div>
         </header>
@@ -180,11 +184,11 @@ const Layout = ({ children }) => {
 };
 
 const StatCard = ({ title, value, subtitle, icon: Icon, colorClass, bgClass }) => (
-  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+  <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-800 hover:shadow-md transition-shadow">
     <div className="flex justify-between items-start">
       <div>
-        <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
-        <h3 className="text-3xl font-bold text-gray-900">{value}</h3>
+        <p className="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">{title}</p>
+        <h3 className="text-3xl font-bold text-gray-900 dark:text-slate-100">{value}</h3>
       </div>
       <div className={`p-3 rounded-xl ${bgClass}`}>
         <Icon size={24} className={colorClass} />
@@ -192,7 +196,7 @@ const StatCard = ({ title, value, subtitle, icon: Icon, colorClass, bgClass }) =
     </div>
     <div className="mt-4 flex items-center space-x-2 text-sm">
       <TrendingUp size={16} className="text-emerald-500" />
-      <span className="text-emerald-500 font-medium">{subtitle}</span>
+      <span className="text-emerald-500 dark:text-emerald-400 font-medium">{subtitle}</span>
       <span className="text-gray-400">vs last month</span>
     </div>
   </div>
@@ -239,7 +243,7 @@ const SyncStatusBadge = () => {
 
   if (loading) {
     return (
-      <div className="bg-gray-50 border border-gray-200 text-gray-500 px-4 py-2 rounded-xl text-sm font-medium flex items-center space-x-2">
+      <div className="bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 px-4 py-2 rounded-xl text-sm font-medium flex items-center space-x-2">
         <RefreshCw size={16} className="animate-spin" />
         <span>Checking sync...</span>
       </div>
@@ -248,7 +252,7 @@ const SyncStatusBadge = () => {
 
   if (!status?.mongoConfigured) {
     return (
-      <div className="bg-gray-50 border border-gray-200 text-gray-500 px-4 py-2 rounded-xl text-sm font-medium flex items-center space-x-2">
+      <div className="bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 px-4 py-2 rounded-xl text-sm font-medium flex items-center space-x-2">
         <CloudOff size={16} />
         <span>Sync not configured</span>
       </div>
@@ -257,7 +261,7 @@ const SyncStatusBadge = () => {
 
   if (!status?.connected) {
     return (
-      <div className="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center space-x-2">
+      <div className="bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 px-4 py-2 rounded-xl text-sm font-bold flex items-center space-x-2">
         <AlertCircle size={16} />
         <span>MongoDB Not Connected</span>
       </div>
@@ -265,11 +269,11 @@ const SyncStatusBadge = () => {
   }
 
   return (
-    <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center space-x-2">
+    <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 px-4 py-2 rounded-xl text-sm font-bold flex items-center space-x-2">
       <CheckCircle2 size={16} />
       <span>Cloud Synced</span>
       {status.lastSyncAt && (
-        <span className="text-xs font-medium text-emerald-600 opacity-80">
+        <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 opacity-80">
           {new Date(status.lastSyncAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </span>
       )}
@@ -280,6 +284,9 @@ const SyncStatusBadge = () => {
 const Dashboard = () => {
   const { user } = useAuth();
   const { status: syncStatus } = useSync();
+  // Charts take colours as props, not classes, so their axis/grid/tooltip
+  // colours are read from the active theme rather than left hardcoded light.
+  const { isDark } = useTheme();
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 
@@ -351,8 +358,8 @@ const Dashboard = () => {
     }
   };
 
-  if (loading) return <div className="p-8 text-gray-500">Loading dashboard...</div>;
-  if (!data) return <div className="p-8 text-gray-500">Failed to load dashboard data.</div>;
+  if (loading) return <div className="p-8 text-gray-500 dark:text-slate-400">Loading dashboard...</div>;
+  if (!data) return <div className="p-8 text-gray-500 dark:text-slate-400">Failed to load dashboard data.</div>;
 
   const { stats, repairStatusCounts, recentSales, deadStockList, salesTrend } = data;
 
@@ -360,8 +367,8 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-end mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
-          <p className="text-gray-500 mt-1">Welcome back, {user?.name}! Here's what's happening today.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">Dashboard Overview</h1>
+          <p className="text-gray-500 dark:text-slate-400 mt-1">Welcome back, {user?.name}! Here's what's happening today.</p>
         </div>
         <div className="flex items-center space-x-3">
           <SyncStatusBadge />
@@ -416,10 +423,10 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart */}
-        <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-800">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-bold text-gray-900">Sales Trend (Last 7 Days)</h3>
-            <select className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Sales Trend (Last 7 Days)</h3>
+            <select className="bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2">
               <option>Last 7 days</option>
               <option>This Month</option>
             </select>
@@ -433,11 +440,19 @@ const Dashboard = () => {
                     <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dx={-10} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#1e293b' : '#f1f5f9'} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: isDark ? '#94a3b8' : '#64748b', fontSize: 12 }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: isDark ? '#94a3b8' : '#64748b', fontSize: 12 }} dx={-10} />
                 <Tooltip
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  contentStyle={{
+                    borderRadius: '12px',
+                    border: 'none',
+                    backgroundColor: isDark ? '#1e293b' : '#ffffff',
+                    color: isDark ? '#e2e8f0' : '#0f172a',
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.3)'
+                  }}
+                  labelStyle={{ color: isDark ? '#e2e8f0' : '#0f172a' }}
+                  itemStyle={{ color: isDark ? '#e2e8f0' : '#0f172a' }}
                   formatter={(value) => [`Rs. ${value}`, 'Sales']}
                 />
                 <Area type="monotone" dataKey="sales" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorSales)" />
@@ -447,33 +462,33 @@ const Dashboard = () => {
         </div>
 
         {/* Repair Jobs Status */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col">
-          <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
-            <Wrench className="mr-2 text-indigo-500" size={20} /> Repair Status
+        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-800 flex flex-col">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 mb-6 flex items-center">
+            <Wrench className="mr-2 text-indigo-500 dark:text-indigo-400" size={20} /> Repair Status
           </h3>
           <div className="flex-1 flex flex-col justify-center space-y-6">
-            <div className="flex items-center justify-between p-4 bg-amber-50 rounded-xl border border-amber-100">
+            <div className="flex items-center justify-between p-4 bg-amber-50 dark:bg-amber-500/10 rounded-xl border border-amber-100 dark:border-amber-500/20">
               <div className="flex items-center space-x-3">
                 <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-                <span className="font-medium text-amber-900">Received</span>
+                <span className="font-medium text-amber-900 dark:text-amber-100">Received</span>
               </div>
-              <span className="text-xl font-bold text-amber-700">{repairStatusCounts.Received || 0}</span>
+              <span className="text-xl font-bold text-amber-700 dark:text-amber-300">{repairStatusCounts.Received || 0}</span>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-100">
+            <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-500/10 rounded-xl border border-blue-100 dark:border-blue-500/20">
               <div className="flex items-center space-x-3">
                 <div className="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
-                <span className="font-medium text-blue-900">In Repair</span>
+                <span className="font-medium text-blue-900 dark:text-blue-100">In Repair</span>
               </div>
-              <span className="text-xl font-bold text-blue-700">{repairStatusCounts['In Repair'] || 0}</span>
+              <span className="text-xl font-bold text-blue-700 dark:text-blue-300">{repairStatusCounts['In Repair'] || 0}</span>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+            <div className="flex items-center justify-between p-4 bg-emerald-50 dark:bg-emerald-500/10 rounded-xl border border-emerald-100 dark:border-emerald-500/20">
               <div className="flex items-center space-x-3">
                 <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-                <span className="font-medium text-emerald-900">Ready for Pickup</span>
+                <span className="font-medium text-emerald-900 dark:text-emerald-100">Ready for Pickup</span>
               </div>
-              <span className="text-xl font-bold text-emerald-700">{repairStatusCounts['Ready for Pickup'] || 0}</span>
+              <span className="text-xl font-bold text-emerald-700 dark:text-emerald-300">{repairStatusCounts['Ready for Pickup'] || 0}</span>
             </div>
           </div>
         </div>
@@ -481,16 +496,16 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Recent Sales Table */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center">
-              <Clock className="mr-2 text-blue-500" size={20} /> Recent Sales
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
+          <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
+              <Clock className="mr-2 text-blue-500 dark:text-blue-400" size={20} /> Recent Sales
             </h3>
-            <button className="text-sm text-blue-600 font-medium hover:text-blue-700">View All</button>
+            <button className="text-sm text-blue-600 dark:text-blue-400 font-medium hover:text-blue-700">View All</button>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-gray-500">
-              <thead className="text-xs text-gray-400 uppercase bg-gray-50/50">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-slate-400">
+              <thead className="text-xs text-gray-400 dark:text-slate-500 uppercase bg-gray-50/50 dark:bg-slate-950/50">
                 <tr>
                   <th scope="col" className="px-6 py-3 font-medium">Txn ID</th>
                   <th scope="col" className="px-6 py-3 font-medium">Item</th>
@@ -501,16 +516,16 @@ const Dashboard = () => {
               </thead>
               <tbody>
                 {recentSales.length === 0 ? (
-                  <tr><td colSpan="5" className="px-6 py-6 text-center text-gray-400">No sales recorded yet today.</td></tr>
+                  <tr><td colSpan="5" className="px-6 py-6 text-center text-gray-400 dark:text-slate-500">No sales recorded yet today.</td></tr>
                 ) : recentSales.map((sale) => (
-                  <tr key={sale.id} className="bg-white border-b border-gray-50 hover:bg-gray-50/80 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{sale.id}</td>
+                  <tr key={sale.id} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 transition-colors">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-slate-100 whitespace-nowrap">{sale.id}</td>
                     <td className="px-6 py-4">{sale.item}</td>
-                    <td className="px-6 py-4 font-semibold text-gray-900">{sale.amount}</td>
+                    <td className="px-6 py-4 font-semibold text-gray-900 dark:text-slate-100">{sale.amount}</td>
                     <td className="px-6 py-4">
-                      <span className="bg-gray-100 text-gray-700 px-2.5 py-1 rounded-md text-xs font-medium">{sale.cashier}</span>
+                      <span className="bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 px-2.5 py-1 rounded-md text-xs font-medium">{sale.cashier}</span>
                     </td>
-                    <td className="px-6 py-4 text-gray-400">{sale.time}</td>
+                    <td className="px-6 py-4 text-gray-400 dark:text-slate-500">{sale.time}</td>
                   </tr>
                 ))}
               </tbody>
@@ -519,16 +534,16 @@ const Dashboard = () => {
         </div>
 
         {/* Dead Stock Alert */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center">
-              <AlertTriangle className="mr-2 text-rose-500" size={20} /> Dead Stock Alert
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
+          <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
+              <AlertTriangle className="mr-2 text-rose-500 dark:text-rose-400" size={20} /> Dead Stock Alert
             </h3>
-            <span className="bg-rose-100 text-rose-700 text-xs font-semibold px-2.5 py-1 rounded-full">{'30+ Days'}</span>
+            <span className="bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 text-xs font-semibold px-2.5 py-1 rounded-full">{'30+ Days'}</span>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-gray-500">
-              <thead className="text-xs text-gray-400 uppercase bg-gray-50/50">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-slate-400">
+              <thead className="text-xs text-gray-400 dark:text-slate-500 uppercase bg-gray-50/50 dark:bg-slate-950/50">
                 <tr>
                   <th scope="col" className="px-6 py-3 font-medium">Item Name</th>
                   <th scope="col" className="px-6 py-3 font-medium">Days Unsold</th>
@@ -538,10 +553,10 @@ const Dashboard = () => {
               </thead>
               <tbody>
                 {deadStockList.length === 0 ? (
-                  <tr><td colSpan="4" className="px-6 py-4 text-center text-gray-500">No dead stock found!</td></tr>
+                  <tr><td colSpan="4" className="px-6 py-4 text-center text-gray-500 dark:text-slate-400">No dead stock found!</td></tr>
                 ) : deadStockList.map((item) => (
-                  <tr key={item.id} className="bg-white border-b border-gray-50 hover:bg-gray-50/80 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900">{item.name}</td>
+                  <tr key={item.id} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 transition-colors">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-slate-100">{item.name}</td>
                     <td className="px-6 py-4">
                       <span className={`font-medium ${item.days > 90 ? 'text-rose-600' : 'text-orange-500'}`}>
                         {item.days} days
@@ -550,11 +565,11 @@ const Dashboard = () => {
                     <td className="px-6 py-4">{item.qty}</td>
                     <td className="px-6 py-4">
                       {(user?.role === 'admin' || user?.role === 'shop_owner') ? (
-                        <button className="text-blue-600 hover:text-blue-800 text-xs font-medium bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors">
+                        <button className="text-blue-600 dark:text-blue-400 hover:text-blue-800 text-xs font-medium bg-blue-50 dark:bg-blue-500/10 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors">
                           View
                         </button>
                       ) : (
-                        <span className="text-gray-400 text-xs">No Access</span>
+                        <span className="text-gray-400 dark:text-slate-500 text-xs">No Access</span>
                       )}
                     </td>
                   </tr>
@@ -567,18 +582,18 @@ const Dashboard = () => {
 
       {/* Staff Stock Adjustments — oversight of cashier stock edits */}
       {(user?.role === 'admin' || user?.role === 'shop_owner') && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center">
-              <Wrench className="mr-2 text-orange-500" size={20} /> Staff Stock Adjustments
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
+          <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
+              <Wrench className="mr-2 text-orange-500 dark:text-orange-400" size={20} /> Staff Stock Adjustments
             </h3>
-            <span className="bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+            <span className="bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-300 text-xs font-semibold px-2.5 py-1 rounded-full">
               {adjustments.length} record{adjustments.length === 1 ? '' : 's'}
             </span>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-gray-500">
-              <thead className="text-xs text-gray-400 uppercase bg-gray-50/50">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-slate-400">
+              <thead className="text-xs text-gray-400 dark:text-slate-500 uppercase bg-gray-50/50 dark:bg-slate-950/50">
                 <tr>
                   <th scope="col" className="px-6 py-3 font-medium">Item</th>
                   <th scope="col" className="px-6 py-3 font-medium">Cashier</th>
@@ -591,24 +606,24 @@ const Dashboard = () => {
               </thead>
               <tbody>
                 {adjustments.length === 0 ? (
-                  <tr><td colSpan="7" className="px-6 py-6 text-center text-gray-400">No stock adjustments recorded yet.</td></tr>
+                  <tr><td colSpan="7" className="px-6 py-6 text-center text-gray-400 dark:text-slate-500">No stock adjustments recorded yet.</td></tr>
                 ) : adjustments.map((m) => (
-                  <tr key={m.id || m.localKey} className="bg-white border-b border-gray-50 hover:bg-gray-50/80 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900">
+                  <tr key={m.id || m.localKey} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 transition-colors">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-slate-100">
                       {m.item_name}
-                      <span className="block text-[11px] text-gray-400 font-mono">{m.sku}</span>
+                      <span className="block text-[11px] text-gray-400 dark:text-slate-500 font-mono">{m.sku}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="bg-gray-100 text-gray-700 px-2.5 py-1 rounded-md text-xs font-medium">{m.user_name || '—'}</span>
+                      <span className="bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 px-2.5 py-1 rounded-md text-xs font-medium">{m.user_name || '—'}</span>
                     </td>
                     <td className={`px-6 py-4 font-bold ${Number(m.quantity_change) > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                       {Number(m.quantity_change) > 0 ? '+' : ''}{m.quantity_change}
                     </td>
                     <td className="px-6 py-4">{m.reason || '—'}</td>
                     <td className="px-6 py-4 max-w-[180px] truncate" title={m.note}>{m.note || '—'}</td>
-                    <td className="px-6 py-4 text-gray-400 whitespace-nowrap">{new Date(m.created_at).toLocaleString()}</td>
+                    <td className="px-6 py-4 text-gray-400 dark:text-slate-500 whitespace-nowrap">{new Date(m.created_at).toLocaleString()}</td>
                     <td className="px-6 py-4">
-                      <button onClick={() => handleDeleteAdjustment(m)} className="flex items-center text-rose-600 hover:text-rose-800 text-xs font-medium bg-rose-50 px-3 py-1.5 rounded-lg hover:bg-rose-100 transition-colors">
+                      <button onClick={() => handleDeleteAdjustment(m)} className="flex items-center text-rose-600 dark:text-rose-400 hover:text-rose-800 text-xs font-medium bg-rose-50 dark:bg-rose-500/10 px-3 py-1.5 rounded-lg hover:bg-rose-100 transition-colors">
                         <Trash2 size={13} className="mr-1" /> Delete
                       </button>
                     </td>
@@ -626,9 +641,9 @@ const Dashboard = () => {
 // Placeholder pages
 const PlaceholderPage = ({ title }) => (
   <div className="flex flex-col items-center justify-center h-[60vh] text-center">
-    <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 max-w-md w-full">
+    <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 max-w-md w-full">
       <Package size={48} className="mx-auto text-blue-200 mb-4" />
-      <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">{title}</h2>
       <p className="text-gray-500">This module is under construction.</p>
     </div>
   </div>
@@ -660,15 +675,17 @@ function AppRoutes() {
 function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <SessionProvider>
-          <SyncProvider>
-            <BrowserRouter>
-              <AppRoutes />
-            </BrowserRouter>
-          </SyncProvider>
-        </SessionProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <SessionProvider>
+            <SyncProvider>
+              <BrowserRouter>
+                <AppRoutes />
+              </BrowserRouter>
+            </SyncProvider>
+          </SessionProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

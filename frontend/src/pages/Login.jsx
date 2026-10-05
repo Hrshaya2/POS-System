@@ -29,17 +29,17 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="flex justify-center flex-col items-center">
                     <div className="p-0">
                         <img src="/logo.png" alt="Loyal Mobile" className="w-26 h-26 object-cover rounded-full border-3 order-white shadow-md" />
                     </div>
-                    <h2 className="text-center text-3xl font-extrabold text-gray-900">
+                    <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-slate-100">
                         LOYAL <span className="text-blue-500">MOBILE</span>
                     </h2>
-                    <p className="text-center text-sm text-gray-400">Loyal For All</p>
-                    <p className="mt-2 text-center text-sm text-gray-600">
+                    <p className="text-center text-sm text-gray-400 dark:text-slate-500">Loyal For All</p>
+                    <p className="mt-2 text-center text-sm text-gray-600 dark:text-slate-400">
                         Sign in to access your dashboard
                     </p>
                 </div>
@@ -49,11 +49,11 @@ export default function Login() {
                 <SingleDeviceWarning />
 
                 {!navigator.onLine && (
-                    <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 flex items-start space-x-3 text-sm">
-                        <WifiOff size={18} className="text-rose-600 mt-0.5 shrink-0" />
+                    <div className="bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 rounded-2xl p-4 flex items-start space-x-3 text-sm">
+                        <WifiOff size={18} className="text-rose-600 dark:text-rose-400 mt-0.5 shrink-0" />
                         <div>
-                            <p className="font-bold text-rose-800">You are offline.</p>
-                            <p className="text-rose-700 mt-1">
+                            <p className="font-bold text-rose-800 dark:text-rose-200">You are offline.</p>
+                            <p className="text-rose-700 dark:text-rose-300 mt-1">
                                 If you have signed in on this browser before, refresh the page to continue using the app
                                 with offline billing. Otherwise, connect to the internet once to log in.
                             </p>
@@ -61,17 +61,17 @@ export default function Login() {
                     </div>
                 )}
 
-                <div className="bg-white py-8 px-4 shadow-xl shadow-blue-900/5 sm:rounded-2xl sm:px-10 border border-gray-100">
+                <div className="bg-white dark:bg-slate-800 py-8 px-4 shadow-xl shadow-blue-900/5 sm:rounded-2xl sm:px-10 border border-gray-100 dark:border-slate-800">
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         {error && (
-                            <div className="bg-rose-50 border border-rose-100 text-rose-600 p-3 rounded-xl flex items-center space-x-2 text-sm">
+                            <div className="bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 text-rose-600 dark:text-rose-400 p-3 rounded-xl flex items-center space-x-2 text-sm">
                                 <AlertCircle size={18} />
                                 <span>{error}</span>
                             </div>
                         )}
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                                 Email address
                             </label>
                             <div className="mt-1">
@@ -80,14 +80,14 @@ export default function Login() {
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="appearance-none block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors bg-gray-50 focus:bg-white"
+                                    className="appearance-none block w-full px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm placeholder-gray-400 dark:placeholder-slate-500 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors bg-gray-50 dark:bg-slate-950 focus:bg-white"
                                     placeholder="test@testmail.com"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
                                 Password
                             </label>
                             <div className="mt-1">
@@ -96,7 +96,7 @@ export default function Login() {
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="appearance-none block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors bg-gray-50 focus:bg-white"
+                                    className="appearance-none block w-full px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm placeholder-gray-400 dark:placeholder-slate-500 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors bg-gray-50 dark:bg-slate-950 focus:bg-white"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -117,7 +117,7 @@ export default function Login() {
                     <div className="mt-6">
                         <div className="relative">
                             <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-gray-200" />
+                                <div className="w-full border-t border-gray-200 dark:border-slate-700" />
                             </div>
                         </div>
                     </div>

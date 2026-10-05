@@ -17,7 +17,7 @@ export default function BarcodePreview({ code, height = 56, className = '' }) {
   return (
     <div className={`flex flex-col items-center justify-center bg-white border border-gray-200 rounded-lg py-3 px-2 overflow-hidden ${className}`}>
       <div className="w-full flex justify-center" dangerouslySetInnerHTML={{ __html: svg }} />
-      <span className="font-mono text-xs tracking-widest text-gray-700 mt-1">{code}</span>
+      <span className="font-mono text-xs tracking-widest text-gray-700 dark:text-slate-300 mt-1">{code}</span>
     </div>
   );
 }

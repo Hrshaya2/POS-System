@@ -19,13 +19,13 @@ export default class ErrorBoundary extends React.Component {
   render() {
     if (this.state.error) {
       return (
-        <div className="min-h-screen bg-gray-50 p-8 flex items-center justify-center">
-          <div className="max-w-2xl w-full bg-white border border-rose-200 rounded-2xl shadow-sm p-6">
-            <h1 className="text-lg font-bold text-rose-700 mb-2">Something went wrong</h1>
-            <p className="text-sm text-gray-600 mb-4">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 p-8 flex items-center justify-center">
+          <div className="max-w-2xl w-full bg-white dark:bg-slate-800 border border-rose-200 dark:border-rose-500/30 rounded-2xl shadow-sm p-6">
+            <h1 className="text-lg font-bold text-rose-700 dark:text-rose-300 mb-2">Something went wrong</h1>
+            <p className="text-sm text-gray-600 dark:text-slate-400 mb-4">
               The page crashed while rendering. Details below help pinpoint the cause.
             </p>
-            <pre className="bg-gray-900 text-emerald-300 text-xs rounded-xl p-4 overflow-auto max-h-72 whitespace-pre-wrap">
+            <pre className="bg-gray-900 dark:bg-slate-950 text-emerald-300 text-xs rounded-xl p-4 overflow-auto max-h-72 whitespace-pre-wrap">
               {String(this.state.error?.message || this.state.error)}
               {'\n\n'}
               {String(this.state.error?.stack || '')}

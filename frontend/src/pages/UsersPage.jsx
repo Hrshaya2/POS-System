@@ -178,9 +178,9 @@ export default function UsersPage() {
 
     const getRoleBadgeClass = (role) => {
         switch (role) {
-            case 'admin': return 'bg-amber-100 text-amber-700 border border-amber-200';
-            case 'shop_owner': return 'bg-indigo-100 text-indigo-700 border border-indigo-200';
-            default: return 'bg-emerald-100 text-emerald-700 border border-emerald-200';
+            case 'admin': return 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30';
+            case 'shop_owner': return 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30';
+            default: return 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/30';
         }
     };
 
@@ -221,13 +221,13 @@ export default function UsersPage() {
         <div className="space-y-6">
             {/* Toast Messages */}
             {formError && (
-                <div className="fixed top-6 right-6 z-50 bg-rose-50 border border-rose-200 text-rose-700 px-5 py-3 rounded-xl shadow-lg flex items-center space-x-2 animate-slide-in">
+                <div className="fixed top-6 right-6 z-50 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 px-5 py-3 rounded-xl shadow-lg flex items-center space-x-2 animate-slide-in">
                     <AlertCircle size={18} />
                     <span className="text-sm font-medium">{formError}</span>
                 </div>
             )}
             {formSuccess && (
-                <div className="fixed top-6 right-6 z-50 bg-emerald-50 border border-emerald-200 text-emerald-700 px-5 py-3 rounded-xl shadow-lg flex items-center space-x-2 animate-slide-in">
+                <div className="fixed top-6 right-6 z-50 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 px-5 py-3 rounded-xl shadow-lg flex items-center space-x-2 animate-slide-in">
                     <Check size={18} />
                     <span className="text-sm font-medium">{formSuccess}</span>
                 </div>
@@ -235,8 +235,8 @@ export default function UsersPage() {
 
             <div className="flex justify-between items-end mb-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-                    <p className="text-gray-500 mt-1">Manage admin, shop owner, and cashier accounts.</p>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">User Management</h1>
+                    <p className="text-gray-500 dark:text-slate-400 mt-1">Manage admin, shop owner, and cashier accounts.</p>
                 </div>
                 <button
                     onClick={() => { setFormError(''); setShowAddModal(true); }}
@@ -247,16 +247,16 @@ export default function UsersPage() {
                 </button>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                    <h3 className="text-lg font-bold text-gray-900 flex items-center">
-                        <Users className="mr-2 text-blue-500" size={20} /> All Users
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
+                <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
+                        <Users className="mr-2 text-blue-500 dark:text-blue-400" size={20} /> All Users
                     </h3>
-                    <span className="text-sm text-gray-400">{usersList.length} user{usersList.length !== 1 ? 's' : ''}</span>
+                    <span className="text-sm text-gray-400 dark:text-slate-500">{usersList.length} user{usersList.length !== 1 ? 's' : ''}</span>
                 </div>
                 <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left text-gray-500">
-                        <thead className="text-xs text-gray-400 uppercase bg-gray-50/50">
+                    <table className="w-full text-sm text-left text-gray-500 dark:text-slate-400">
+                        <thead className="text-xs text-gray-400 dark:text-slate-500 uppercase bg-gray-50/50 dark:bg-slate-950/50">
                             <tr>
                                 <th scope="col" className="px-6 py-3 font-medium">Name</th>
                                 <th scope="col" className="px-6 py-3 font-medium">Email</th>
@@ -274,11 +274,11 @@ export default function UsersPage() {
                                     </div>
                                 </td></tr>
                             ) : usersList.length === 0 ? (
-                                <tr><td colSpan="5" className="px-6 py-8 text-center text-gray-400">No users found.</td></tr>
+                                <tr><td colSpan="5" className="px-6 py-8 text-center text-gray-400 dark:text-slate-500">No users found.</td></tr>
                             ) : (
                                 usersList.map((u) => (
-                                    <tr key={u.id} className="bg-white border-b border-gray-50 hover:bg-gray-50/80 transition-colors">
-                                        <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    <tr key={u.id} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 transition-colors">
+                                        <td className="px-6 py-4 font-medium text-gray-900 dark:text-slate-100 whitespace-nowrap">
                                             <div className="flex items-center space-x-3">
                                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs uppercase ${u.role === 'admin' ? 'bg-gradient-to-r from-amber-500 to-orange-500' :
                                                     u.role === 'shop_owner' ? 'bg-gradient-to-r from-indigo-500 to-purple-500' :
@@ -288,7 +288,7 @@ export default function UsersPage() {
                                                 </div>
                                                 <div>
                                                     <p className="font-semibold">{u.name}</p>
-                                                    {u.id === user?.id && <span className="text-xs text-blue-500">(You)</span>}
+                                                    {u.id === user?.id && <span className="text-xs text-blue-500 dark:text-blue-400">(You)</span>}
                                                 </div>
                                             </div>
                                         </td>
@@ -303,7 +303,7 @@ export default function UsersPage() {
                                             {formatLastLogin(u.last_login) ? (
                                                 <span className="text-gray-600">{formatLastLogin(u.last_login)}</span>
                                             ) : (
-                                                <span className="text-gray-300 italic">Never logged in</span>
+                                                <span className="text-gray-300 dark:text-slate-600 italic">Never logged in</span>
                                             )}
                                         </td>
                                         <td className="px-6 py-4">
@@ -343,61 +343,61 @@ export default function UsersPage() {
             {/* Add User Modal */}
             {showAddModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-                    <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 w-full max-w-md mx-4 overflow-hidden">
-                        <div className="flex justify-between items-center p-6 border-b border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 flex items-center">
-                                <UserPlus className="mr-2 text-blue-500" size={20} /> Add New User
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 w-full max-w-md mx-4 overflow-hidden">
+                        <div className="flex justify-between items-center p-6 border-b border-gray-100 dark:border-slate-800">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
+                                <UserPlus className="mr-2 text-blue-500 dark:text-blue-400" size={20} /> Add New User
                             </h3>
-                            <button onClick={() => setShowAddModal(false)} className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                            <button onClick={() => setShowAddModal(false)} className="text-gray-400 dark:text-slate-500 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 hover:dark:bg-slate-800 transition-colors cursor-pointer">
                                 <X size={20} />
                             </button>
                         </div>
                         <form onSubmit={handleAddUser} className="p-6 space-y-4">
                             {formError && (
-                                <div className="bg-rose-50 border border-rose-100 text-rose-600 p-3 rounded-xl flex items-center space-x-2 text-sm">
+                                <div className="bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 text-rose-600 dark:text-rose-400 p-3 rounded-xl flex items-center space-x-2 text-sm">
                                     <AlertCircle size={16} />
                                     <span>{formError}</span>
                                 </div>
                             )}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Full Name</label>
                                 <input
                                     type="text"
                                     required
                                     value={addForm.name}
                                     onChange={(e) => setAddForm({ ...addForm, name: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors"
                                     placeholder="Enter full name"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Email</label>
                                 <input
                                     type="email"
                                     required
                                     value={addForm.email}
                                     onChange={(e) => setAddForm({ ...addForm, email: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors"
                                     placeholder="user@example.com"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Password</label>
                                 <input
                                     type="password"
                                     required
                                     value={addForm.password}
                                     onChange={(e) => setAddForm({ ...addForm, password: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors"
                                     placeholder="••••••••"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Role</label>
                                 <select
                                     value={addForm.role}
                                     onChange={(e) => setAddForm({ ...addForm, role: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors cursor-pointer"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors cursor-pointer"
                                 >
                                     {availableRoles().map(r => (
                                         <option key={r} value={r}>{r.charAt(0).toUpperCase() + r.slice(1)}</option>
@@ -408,7 +408,7 @@ export default function UsersPage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowAddModal(false)}
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer"
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer"
                                 >
                                     Cancel
                                 </button>
@@ -428,59 +428,59 @@ export default function UsersPage() {
             {/* Edit User Modal */}
             {showEditModal && editUser && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-                    <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 w-full max-w-md mx-4 overflow-hidden">
-                        <div className="flex justify-between items-center p-6 border-b border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 flex items-center">
-                                <Edit2 className="mr-2 text-blue-500" size={20} /> Edit User
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 w-full max-w-md mx-4 overflow-hidden">
+                        <div className="flex justify-between items-center p-6 border-b border-gray-100 dark:border-slate-800">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
+                                <Edit2 className="mr-2 text-blue-500 dark:text-blue-400" size={20} /> Edit User
                             </h3>
-                            <button onClick={() => { setShowEditModal(false); setEditUser(null); }} className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                            <button onClick={() => { setShowEditModal(false); setEditUser(null); }} className="text-gray-400 dark:text-slate-500 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 hover:dark:bg-slate-800 transition-colors cursor-pointer">
                                 <X size={20} />
                             </button>
                         </div>
                         <form onSubmit={handleEditUser} className="p-6 space-y-4">
                             {formError && (
-                                <div className="bg-rose-50 border border-rose-100 text-rose-600 p-3 rounded-xl flex items-center space-x-2 text-sm">
+                                <div className="bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 text-rose-600 dark:text-rose-400 p-3 rounded-xl flex items-center space-x-2 text-sm">
                                     <AlertCircle size={16} />
                                     <span>{formError}</span>
                                 </div>
                             )}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Full Name</label>
                                 <input
                                     type="text"
                                     required
                                     value={editForm.name}
                                     onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Email</label>
                                 <input
                                     type="email"
                                     required
                                     value={editForm.email}
                                     onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">New Password <span className="text-gray-400 text-xs">(leave blank to keep current)</span></label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">New Password <span className="text-gray-400 dark:text-slate-500 text-xs">(leave blank to keep current)</span></label>
                                 <input
                                     type="password"
                                     value={editForm.password}
                                     onChange={(e) => setEditForm({ ...editForm, password: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors"
                                     placeholder="••••••••"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Role</label>
                                 <select
                                     disabled={user?.role === 'shop_owner'}
                                     value={editForm.role}
                                     onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors cursor-pointer disabled:opacity-50"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors cursor-pointer disabled:opacity-50"
                                 >
                                     {availableRoles().includes(editForm.role) && <option value={editForm.role}>{editForm.role.charAt(0).toUpperCase() + editForm.role.slice(1)}</option>}
                                     {availableRoles().map(r => (
@@ -492,7 +492,7 @@ export default function UsersPage() {
                                 <button
                                     type="button"
                                     onClick={() => { setShowEditModal(false); setEditUser(null); }}
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer"
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer"
                                 >
                                     Cancel
                                 </button>

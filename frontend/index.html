@@ -14,6 +14,23 @@
     <meta name="apple-mobile-web-app-title" content="Loyal POS" />
     <link rel="manifest" href="/manifest.json" />
     <title>Loyal Mobile POS - Point of Sale</title>
+    <!--
+      Apply the saved theme BEFORE the app renders. Without this the page paints
+      light first and then snaps to dark, which is a jarring white flash on every
+      reload. Kept inline and tiny on purpose; the real logic lives in
+      src/hooks/useTheme.jsx and must stay in sync with STORAGE_KEY there.
+    -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('pos_theme');
+          if (saved === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.style.colorScheme = 'dark';
+          }
+        } catch (e) { /* storage blocked - fall back to light */ }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

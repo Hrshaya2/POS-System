@@ -66,16 +66,16 @@ export default function CategoryGrid({ categories, items, onOpenCategory, onMana
           they are not repeated here. */}
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h3 className="text-lg font-bold text-gray-900">Product Categories</h3>
-          <p className="text-sm text-gray-500">Pick a category to view and manage its items</p>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Product Categories</h3>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Pick a category to view and manage its items</p>
         </div>
       </div>
 
       {allNames.length === 0 ? (
-        <div className="bg-white border border-dashed border-gray-300 rounded-2xl p-10 text-center">
-          <Package size={40} className="mx-auto text-gray-300 mb-3" />
-          <p className="text-gray-500 font-medium">No categories yet</p>
-          <p className="text-sm text-gray-400">Create your first category to start adding items.</p>
+        <div className="bg-white dark:bg-slate-800 border border-dashed border-gray-300 dark:border-slate-700 rounded-2xl p-10 text-center">
+          <Package size={40} className="mx-auto text-gray-300 dark:text-slate-600 mb-3" />
+          <p className="text-gray-500 dark:text-slate-400 font-medium">No categories yet</p>
+          <p className="text-sm text-gray-400 dark:text-slate-500">Create your first category to start adding items.</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -86,13 +86,13 @@ export default function CategoryGrid({ categories, items, onOpenCategory, onMana
               <button
                 key={name}
                 onClick={() => onOpenCategory(name)}
-                className="group bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-left"
+                className="group bg-white dark:bg-slate-800 rounded-2xl p-5 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-left"
               >
                 <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${colorForIndex(i)} flex items-center justify-center text-white shadow-md mb-3`}>
                   {isPhone ? <Smartphone size={20} /> : <Package size={20} />}
                 </div>
-                <div className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">{name}</div>
-                <div className="flex items-center space-x-3 mt-1.5 text-xs text-gray-500">
+                <div className="font-bold text-gray-900 dark:text-slate-100 group-hover:text-blue-600 group-hover:dark:text-blue-400 transition-colors truncate">{name}</div>
+                <div className="flex items-center space-x-3 mt-1.5 text-xs text-gray-500 dark:text-slate-400">
                   <span>{stat.count} items</span>
                   <span className="text-gray-300">|</span>
                   <span>{stat.qty.toLocaleString()} in stock</span>
@@ -104,7 +104,7 @@ export default function CategoryGrid({ categories, items, onOpenCategory, onMana
       )}
 
       {!isAdmin && (
-        <p className="text-xs text-gray-400 mt-3 flex items-center">
+        <p className="text-xs text-gray-400 dark:text-slate-500 mt-3 flex items-center">
           <Plus size={12} className="mr-1" />
           You can add new items and categories; editing or deleting existing records requires admin access.
         </p>

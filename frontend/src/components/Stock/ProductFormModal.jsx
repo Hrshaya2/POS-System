@@ -151,16 +151,16 @@ export default function ProductFormModal({
 function ModalShell({ item, activeTab, setActiveTab, isValid, submitting, canEdit, handleSave, onClose, children }) {
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <form onSubmit={handleSave} className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] flex flex-col">
-        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
-          <h3 className="text-lg font-bold text-gray-900">
+      <form onSubmit={handleSave} className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] flex flex-col">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 dark:border-slate-800">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">
             {item ? `Edit Item — ${item.name}` : 'Add New Item'}
-            {!canEdit && <span className="ml-2 text-xs font-medium text-gray-400">(read-only)</span>}
+            {!canEdit && <span className="ml-2 text-xs font-medium text-gray-400 dark:text-slate-500">(read-only)</span>}
           </h3>
-          <button type="button" onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors"><X size={18} /></button>
+          <button type="button" onClick={onClose} className="p-2 hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>
         </div>
 
-        <div className="px-6 pt-4 border-b border-gray-100 flex space-x-1 overflow-x-auto">
+        <div className="px-6 pt-4 border-b border-gray-100 dark:border-slate-800 flex space-x-1 overflow-x-auto">
           {TABS.map((tab) => (
             <button
               key={tab.id}
@@ -180,10 +180,10 @@ function ModalShell({ item, activeTab, setActiveTab, isValid, submitting, canEdi
         <div className="flex-1 overflow-y-auto p-6">{children}</div>
 
         {/* Persistent footer - identical on every tab */}
-        <div className="px-6 py-4 border-t border-gray-100 flex justify-between items-center bg-gray-50 rounded-b-2xl">
-          <span className="text-xs text-gray-400 hidden sm:block">Fields marked * are required</span>
+        <div className="px-6 py-4 border-t border-gray-100 dark:border-slate-800 flex justify-between items-center bg-gray-50 dark:bg-slate-950 rounded-b-2xl">
+          <span className="text-xs text-gray-400 dark:text-slate-500 hidden sm:block">Fields marked * are required</span>
           <div className="flex space-x-3 ml-auto">
-            <button type="button" onClick={onClose} className="px-5 py-2.5 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors">
+            <button type="button" onClick={onClose} className="px-5 py-2.5 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors">
               Cancel
             </button>
             <button
@@ -204,8 +204,8 @@ function ModalShell({ item, activeTab, setActiveTab, isValid, submitting, canEdi
 
 const inputClass = (hasError) =>
   `w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${hasError ? 'border-rose-300 bg-rose-50/40' : 'border-gray-200'}`;
-const ErrText = ({ msg }) => (msg ? <p className="text-xs text-rose-600 mt-1">{msg}</p> : null);
-const Label = ({ children }) => <label className="block text-sm font-medium text-gray-700 mb-1">{children}</label>;
+const ErrText = ({ msg }) => (msg ? <p className="text-xs text-rose-600 dark:text-rose-400 mt-1">{msg}</p> : null);
+const Label = ({ children }) => <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">{children}</label>;
 
 function DetailsTab({ form, setField, isPhoneCategory, categories, errors, handleGenerateBarcode }) {
   const [barcodeInput, setBarcodeInput] = React.useState('');
@@ -229,7 +229,7 @@ function DetailsTab({ form, setField, isPhoneCategory, categories, errors, handl
                 type="button"
                 onClick={() => setField('sku', generateInternalSku(form.barcodes))}
                 title="Generate internal SKU"
-                className="px-3 py-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap"
+                className="px-3 py-2 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 rounded-lg hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors whitespace-nowrap"
               >
                 <Wand2 size={16} />
               </button>
@@ -249,12 +249,12 @@ function DetailsTab({ form, setField, isPhoneCategory, categories, errors, handl
           <Label>Barcodes (multiple allowed)</Label>
           <div className="flex flex-wrap gap-2 mb-2">
             {form.barcodes.length === 0 && (
-              <span className="text-xs text-gray-400">No extra barcodes — the SKU above acts as the primary code.</span>
+              <span className="text-xs text-gray-400 dark:text-slate-500">No extra barcodes — the SKU above acts as the primary code.</span>
             )}
             {form.barcodes.map((code) => (
-              <span key={code} className="inline-flex items-center bg-gray-100 border border-gray-200 rounded-lg pl-2.5 pr-1 py-1 font-mono text-xs">
+              <span key={code} className="inline-flex items-center bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg pl-2.5 pr-1 py-1 font-mono text-xs">
                 {code}
-                <button type="button" onClick={() => setField('barcodes', form.barcodes.filter((b) => b !== code))} className="p-1 text-gray-400 hover:text-rose-500">
+                <button type="button" onClick={() => setField('barcodes', form.barcodes.filter((b) => b !== code))} className="p-1 text-gray-400 dark:text-slate-500 hover:text-rose-500 hover:dark:text-rose-400">
                   <Trash2 size={12} />
                 </button>
               </span>
@@ -267,7 +267,7 @@ function DetailsTab({ form, setField, isPhoneCategory, categories, errors, handl
             onAddBarcode={(code) => setField('barcodes', [...form.barcodes, code])}
             onGenerate={handleGenerateBarcode}
           />
-          <p className="text-[11px] text-gray-400 mt-1">Generate creates a unique internal LM-code for items without a manufacturer barcode.</p>
+          <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-1">Generate creates a unique internal LM-code for items without a manufacturer barcode.</p>
         </div>
 
         <CategoryQtyFields form={form} setField={setField} categories={categories} errors={errors} />
@@ -282,9 +282,9 @@ function DetailsTab({ form, setField, isPhoneCategory, categories, errors, handl
 
       {/* Live barcode preview (Section 3) */}
       <div>
-        <p className="text-sm font-medium text-gray-700 mb-1">Live Barcode Preview</p>
+        <p className="text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Live Barcode Preview</p>
         <BarcodePreview code={primaryBarcode || form.sku} height={56} />
-        <p className="text-[11px] text-gray-400 mt-2">CODE128 · rendered exactly as printed on labels.</p>
+        <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-2">CODE128 · rendered exactly as printed on labels.</p>
       </div>
     </div>
   );
@@ -303,19 +303,19 @@ function NotesTab({ form, setField }) {
 
   return (
     <div className="space-y-3 max-w-xl">
-      <p className="text-sm text-gray-500">Freeform notes for this item — condition notes, handling instructions, supplier remarks…</p>
+      <p className="text-sm text-gray-500 dark:text-slate-400">Freeform notes for this item — condition notes, handling instructions, supplier remarks…</p>
 
       {(form.notes || []).length > 0 && (
         <ul className="space-y-2">
           {form.notes.map((note, idx) => (
-            <li key={`${idx}-${String(note.text).slice(0, 8)}`} className="flex items-start justify-between bg-amber-50/70 border border-amber-100 rounded-xl px-4 py-2.5">
+            <li key={`${idx}-${String(note.text).slice(0, 8)}`} className="flex items-start justify-between bg-amber-50/70 border border-amber-100 dark:border-amber-500/20 rounded-xl px-4 py-2.5">
               <div className="min-w-0">
-                <p className="text-sm text-gray-800 whitespace-pre-wrap break-words">{note.text}</p>
-                <p className="text-[11px] text-gray-400 mt-0.5">
+                <p className="text-sm text-gray-800 dark:text-slate-200 whitespace-pre-wrap break-words">{note.text}</p>
+                <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-0.5">
                   {note.user_name ? `${note.user_name} · ` : ''}{note.created_at ? new Date(note.created_at).toLocaleString() : ''}
                 </p>
               </div>
-              <button type="button" onClick={() => setField('notes', form.notes.filter((_, i) => i !== idx))} className="p-1.5 text-gray-400 hover:text-rose-500 shrink-0 ml-2">
+              <button type="button" onClick={() => setField('notes', form.notes.filter((_, i) => i !== idx))} className="p-1.5 text-gray-400 dark:text-slate-500 hover:text-rose-500 hover:dark:text-rose-400 shrink-0 ml-2">
                 <Trash2 size={14} />
               </button>
             </li>
@@ -354,21 +354,21 @@ function ImageColorTab({ form, setField, COLOR_PRESETS }) {
         <Label>Item image</Label>
         {form.image_url ? (
           <div className="relative">
-            <img src={form.image_url} alt="Item" className="w-full max-w-[220px] h-[160px] object-cover rounded-xl border border-gray-200" />
+            <img src={form.image_url} alt="Item" className="w-full max-w-[220px] h-[160px] object-cover rounded-xl border border-gray-200 dark:border-slate-700" />
             <button
               type="button"
               onClick={() => setField('image_url', '')}
-              className="absolute top-2 right-2 p-1.5 bg-white/90 border border-gray-200 text-rose-500 rounded-lg hover:bg-white shadow-sm"
+              className="absolute top-2 right-2 p-1.5 bg-white/90 border border-gray-200 dark:border-slate-700 text-rose-500 dark:text-rose-400 rounded-lg hover:bg-white hover:dark:bg-slate-800 shadow-sm"
               title="Remove image"
             >
               <Trash2 size={14} />
             </button>
           </div>
         ) : (
-          <label className="flex flex-col items-center justify-center w-full max-w-[220px] h-[160px] border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-300 hover:bg-blue-50/40 transition-colors">
-            <Upload size={24} className="text-gray-400 mb-2" />
-            <span className="text-xs text-gray-500 font-medium">Click to upload</span>
-            <span className="text-[10px] text-gray-400">JPG / PNG / WebP</span>
+          <label className="flex flex-col items-center justify-center w-full max-w-[220px] h-[160px] border-2 border-dashed border-gray-300 dark:border-slate-700 rounded-xl cursor-pointer hover:border-blue-300 hover:bg-blue-50/40 transition-colors">
+            <Upload size={24} className="text-gray-400 dark:text-slate-500 mb-2" />
+            <span className="text-xs text-gray-500 dark:text-slate-400 font-medium">Click to upload</span>
+            <span className="text-[10px] text-gray-400 dark:text-slate-500">JPG / PNG / WebP</span>
             <input type="file" accept="image/*" onChange={(e) => {
               const file = e.target.files?.[0];
               if (!file) return;
@@ -399,7 +399,7 @@ function ImageColorTab({ form, setField, COLOR_PRESETS }) {
           ))}
         </div>
         {form.color_tag && (
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-2">
             Tagged as <span className="inline-flex items-center"><span className={`inline-block w-2.5 h-2.5 rounded-full mr-1 ${activePreset?.class}`} />{form.color_tag}</span>
           </p>
         )}
@@ -411,8 +411,8 @@ function ImageColorTab({ form, setField, COLOR_PRESETS }) {
 function PhoneFields({ form, setField, visible }) {
   if (!visible) return null;
   return (
-    <div className="border border-indigo-100 bg-indigo-50/50 rounded-xl p-4 space-y-3">
-      <p className="text-xs font-bold text-indigo-700 uppercase tracking-wide">Phone details (IMEI-tracked)</p>
+    <div className="border border-indigo-100 dark:border-indigo-500/20 bg-indigo-50/50 rounded-xl p-4 space-y-3">
+      <p className="text-xs font-bold text-indigo-700 dark:text-indigo-300 uppercase tracking-wide">Phone details (IMEI-tracked)</p>
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label>IMEI</Label>
@@ -444,7 +444,7 @@ function Toggle({ checked, onChange, label }) {
         <input type="checkbox" checked={!!checked} onChange={onChange} className="sr-only" />
         <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform mt-0.5 ${checked ? 'translate-x-5 ml-0.5' : 'translate-x-0.5'}`} />
       </span>
-      <span className="text-sm text-gray-700">{label}</span>
+      <span className="text-sm text-gray-700 dark:text-slate-300">{label}</span>
     </label>
   );
 }
@@ -488,14 +488,14 @@ function PriceTaxTab({ form, setField, handleCostChange, handleMarkupChange, han
         <div className="flex items-center space-x-3">
           <input type="number" min="0" step="0.01" value={form.sell_price ?? ''} onChange={(e) => handlePriceChange(e.target.value)} className={`${inputClass(false)} max-w-[180px] text-lg font-bold`} placeholder="0.00" />
           {cost > 0 && (
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-gray-400 dark:text-slate-500">
               auto-calculated from Cost + Markup — still editable
             </span>
           )}
         </div>
       </div>
 
-      <div className="bg-blue-50/60 border border-blue-100 rounded-xl p-4 grid grid-cols-2 gap-3 text-sm">
+      <div className="bg-blue-50/60 border border-blue-100 dark:border-blue-500/20 rounded-xl p-4 grid grid-cols-2 gap-3 text-sm">
         <div className="flex items-center justify-between"><span className="text-gray-500">Cost</span><span className="font-semibold">Rs. {cost.toLocaleString()}</span></div>
         <div className="flex items-center justify-between"><span className="text-gray-500">Markup</span><span className="font-semibold">{Number(form.markup_percent) || 0}%</span></div>
         <div className="flex items-center justify-between"><span className="text-gray-500">Tax ({Number(form.tax_rate) || 0}%)</span><span className="font-semibold">Rs. {Math.round(taxAmount * 100) / 100}</span></div>
@@ -534,10 +534,10 @@ function DetailsExtraRows({ barcodeInput, setBarcodeInput, existing, onAddBarcod
         placeholder="Scan or type a manufacturer barcode"
         className={`${inputClass(false)} font-mono`}
       />
-      <button type="button" onClick={tryAdd} className="px-3 py-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors">
+      <button type="button" onClick={tryAdd} className="px-3 py-2 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 rounded-lg hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors">
         <Plus size={16} />
       </button>
-      <button type="button" onClick={onGenerate} className="px-3 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg hover:bg-indigo-100 transition-colors text-sm font-semibold whitespace-nowrap">
+      <button type="button" onClick={onGenerate} className="px-3 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300 rounded-lg hover:bg-indigo-100 transition-colors text-sm font-semibold whitespace-nowrap">
         Generate Barcode
       </button>
     </div>

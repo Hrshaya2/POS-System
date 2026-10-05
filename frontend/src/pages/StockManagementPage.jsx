@@ -450,7 +450,7 @@ function ActionMenu({ label, icon: Icon, children }) {
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-semibold shadow-sm transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 text-gray-700 dark:text-slate-300 text-sm font-semibold shadow-sm transition-colors"
       >
         {Icon && <Icon size={16} />}
         <span>{label}</span>
@@ -459,7 +459,7 @@ function ActionMenu({ label, icon: Icon, children }) {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-30 mt-2 min-w-[250px] bg-white rounded-xl border border-gray-200 shadow-xl py-1 overflow-hidden"
+          className="absolute right-0 z-30 mt-2 min-w-[250px] bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-xl py-1 overflow-hidden"
         >
           {React.Children.map(children, (child) => (
             React.isValidElement(child) && typeof child.props.onClick === 'function'
@@ -472,7 +472,7 @@ function ActionMenu({ label, icon: Icon, children }) {
   );
 }
 
-const MENU_ITEM = 'w-full text-left px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors flex items-center gap-2.5 disabled:opacity-40 disabled:hover:bg-transparent';
+const MENU_ITEM = 'w-full text-left px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 hover:text-gray-900 transition-colors flex items-center gap-2.5 disabled:opacity-40 disabled:hover:bg-transparent';
 
 function PageShell(props) {
   const {
@@ -493,12 +493,12 @@ function PageShell(props) {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-            <Boxes size={26} className="mr-2.5 text-blue-600" /> Stock Management
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 flex items-center">
+            <Boxes size={26} className="mr-2.5 text-blue-600 dark:text-blue-400" /> Stock Management
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
             Categories, products, movements and counts — everything inventory in one place.
-            {!isAdmin && <span className="ml-1 text-gray-400">You can add items &amp; categories; edits/deletes need admin.</span>}
+            {!isAdmin && <span className="ml-1 text-gray-400 dark:text-slate-500">You can add items &amp; categories; edits/deletes need admin.</span>}
           </p>
         </div>
         {/* Primary actions only. Secondary/destructive actions live in the two
@@ -577,7 +577,7 @@ function PageShell(props) {
             </button>
             {isAdmin && onDeleteAllStock && (
               <>
-                <div className="my-1 border-t border-gray-100" />
+                <div className="my-1 border-t border-gray-100 dark:border-slate-800" />
                 <button
                   type="button"
                   onClick={onDeleteAllStock}
@@ -592,7 +592,7 @@ function PageShell(props) {
       </div>
 
       {/* Internal section tabs */}
-      <div className="bg-white rounded-xl border border-gray-100 p-1.5 inline-flex flex-wrap gap-1 shadow-sm sticky top-0 z-20">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-800 p-1.5 inline-flex flex-wrap gap-1 shadow-sm sticky top-0 z-20">
         {PAGE_TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = pageTab === tab.id;
@@ -618,7 +618,7 @@ function PageShell(props) {
 
       {/* Section bodies */}
       {loading ? (
-        <p className="text-gray-400 p-8 text-center">Loading stock data…</p>
+        <p className="text-gray-400 dark:text-slate-500 p-8 text-center">Loading stock data…</p>
       ) : pageTab === 'history' ? (
         <StockHistoryTab
           items={items}
@@ -808,10 +808,10 @@ function ItemsSection(props) {
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={handleSearchKeyDown}
             placeholder={activeCategory ? `Search within ${activeCategory}…` : 'Search items, SKUs, barcodes or categories…'}
-            className="w-full pl-10 pr-10 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-300 shadow-sm"
+            className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-blue-300 shadow-sm"
           />
           {searchTerm && (
-            <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-700">
+            <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 dark:text-slate-500 hover:text-gray-700">
               ×
             </button>
           )}
@@ -822,7 +822,7 @@ function ItemsSection(props) {
         /* ---- Grid level: category cards + global search results ---- */
         <>
           {searchTerm.trim() && (
-            <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+            <div className="bg-white rounded-2xl border border-gray-100 dark:border-slate-800 overflow-hidden shadow-sm">
               {filteredItems.length === 0 && matchingCategories.length === 0 ? (
                 /* No matches: the filter produced nothing, so say so explicitly.
                    Without this the results panel vanished and the untouched
@@ -851,7 +851,7 @@ function ItemsSection(props) {
                             key={c.id || c.name}
                             type="button"
                             onClick={() => { setActiveCategory(c.name); setSearchTerm(''); }}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-blue-200 text-blue-700 rounded-lg text-xs font-semibold hover:bg-blue-50 transition-colors"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-slate-800 border border-blue-200 dark:border-blue-500/30 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-semibold hover:bg-blue-50 hover:dark:bg-blue-500/10 transition-colors"
                           >
                             <Layers size={12} />
                             {c.name}
@@ -862,13 +862,13 @@ function ItemsSection(props) {
                   )}
                   {filteredItems.length > 0 && (
                     <>
-                  <p className="px-5 py-2.5 text-xs font-semibold text-gray-500 border-b border-gray-50">
+                  <p className="px-5 py-2.5 text-xs font-semibold text-gray-500 dark:text-slate-400 border-b border-gray-50">
                     {filteredItems.length} result{filteredItems.length === 1 ? '' : 's'} in {searchGroups.length} categor{searchGroups.length === 1 ? 'y' : 'ies'}
                   </p>
 
               <div className="max-h-[26rem] overflow-y-auto">
                 {searchGroups.map((group) => (
-                  <section key={group.name} className="border-b border-gray-100 last:border-b-0">
+                  <section key={group.name} className="border-b border-gray-100 dark:border-slate-800 last:border-b-0">
                     {/* Clicking the header drills into that category with the
                         search term kept, so you land on the full list. */}
                     <button
@@ -904,7 +904,7 @@ function ItemsSection(props) {
                         <button
                           type="button"
                           onClick={() => { setActiveCategory(group.name); setSearchTerm(''); }}
-                          className="w-full px-5 py-2 text-left text-[11px] font-semibold text-blue-600 hover:bg-blue-50/50 transition-colors"
+                          className="w-full px-5 py-2 text-left text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-50/50 transition-colors"
                         >
                           +{group.items.length - SEARCH_GROUP_LIMIT} more in {group.name} — click to view all
                         </button>
@@ -969,7 +969,7 @@ function CategoryTable(props) {
   } = props;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
       {/* Breadcrumb + toolbar */}
       <div className="px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -978,7 +978,7 @@ function CategoryTable(props) {
             <span className="mx-1.5">/</span>
             <span className="font-bold text-gray-900">{categoryName}</span>
           </div>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
             {items.length} item(s) · {Number(stat?.qty || 0).toLocaleString()} units in stock
           </p>
         </div>
@@ -1010,7 +1010,7 @@ function ItemRows({ items, isAdmin, selectedIds, toggleSelect, onView, onEdit, o
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
-        <thead className="text-xs text-gray-400 uppercase bg-gray-50/70">
+        <thead className="text-xs text-gray-400 dark:text-slate-500 uppercase bg-gray-50/70">
           <tr>
             <th className="pl-6 pr-2 py-3 w-10"></th>
             <th className="px-3 py-3 text-left font-medium">SKU</th>
@@ -1073,29 +1073,29 @@ function ItemRow({ item, isAdmin, isSelected, toggleSelect, onView, onEdit, onDe
       <td className={`px-3 py-3 text-center font-bold ${low ? 'text-rose-600' : 'text-gray-800'}`}>
         {item.is_service ? '—' : qty}
       </td>
-      {isAdmin && <td className="px-3 py-3 text-right text-gray-500">{fmt(item.cost_price)}</td>}
-      <td className="px-3 py-3 text-right font-semibold text-gray-900">{fmt(item.sell_price)}</td>
+      {isAdmin && <td className="px-3 py-3 text-right text-gray-500 dark:text-slate-400">{fmt(item.cost_price)}</td>}
+      <td className="px-3 py-3 text-right font-semibold text-gray-900 dark:text-slate-100">{fmt(item.sell_price)}</td>
       <td className="px-3 py-3 text-center">
         {item.is_service
-          ? <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">N/A</span>
-          : qty <= 0 ? <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-rose-100 text-rose-700 border border-rose-200">OUT</span>
-          : low ? <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-orange-100 text-orange-700 border border-orange-200">LOW</span>
-          : <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">OK</span>}
+          ? <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30">N/A</span>
+          : qty <= 0 ? <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/30">OUT</span>
+          : low ? <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-500/30">LOW</span>
+          : <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/30">OK</span>}
       </td>
       <td className="px-6 py-3">
         <div className="flex justify-end space-x-1">
-          <button onClick={() => onAdjust(item)} disabled={item.is_service} title="Adjust stock" className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors disabled:opacity-30">
+          <button onClick={() => onAdjust(item)} disabled={item.is_service} title="Adjust stock" className="p-2 text-orange-600 dark:text-orange-400 hover:bg-orange-50 hover:dark:bg-orange-500/10 rounded-lg transition-colors disabled:opacity-30">
             <Wrench size={16} />
           </button>
-          <button onClick={() => onPrintLabel(item)} title="Print barcode label" className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+          <button onClick={() => onPrintLabel(item)} title="Print barcode label" className="p-2 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 hover:dark:bg-indigo-500/10 rounded-lg transition-colors">
             <BarcodeIcon size={16} />
           </button>
           {isAdmin && (
             <>
-              <button onClick={() => onEdit(item)} title="Edit details" className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+              <button onClick={() => onEdit(item)} title="Edit details" className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 hover:dark:bg-blue-500/10 rounded-lg transition-colors">
                 <Pencil size={16} />
               </button>
-              <button onClick={() => onDelete(item)} title="Delete item" className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors">
+              <button onClick={() => onDelete(item)} title="Delete item" className="p-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 hover:dark:bg-rose-500/10 rounded-lg transition-colors">
                 <Trash2 size={16} />
               </button>
             </>
@@ -1115,9 +1115,9 @@ function SelectAllButton({ items, selectedIds, toggleSelect }) {
         if (allSelected === selectedIds.has(i.id)) toggleSelect(i.id);
       })}
       disabled={selectable.length === 0}
-      className="flex items-center px-3 py-2 border border-gray-200 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-40"
+      className="flex items-center px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors disabled:opacity-40"
     >
-      {allSelected ? <CheckSquare size={15} className="mr-1.5 text-indigo-600" /> : <Square size={15} className="mr-1.5 text-gray-400" />}
+      {allSelected ? <CheckSquare size={15} className="mr-1.5 text-indigo-600 dark:text-indigo-400" /> : <Square size={15} className="mr-1.5 text-gray-400 dark:text-slate-500" />}
       Select all
     </button>
   );

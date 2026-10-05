@@ -19,12 +19,12 @@ export default function ReportTable({ columns, rows, total, page, limit, onPage,
     };
 
     if (loading) {
-        return <tr><td colSpan={columns.length} className="px-4 py-10 text-center text-gray-400">Loading…</td></tr>;
+        return <tr><td colSpan={columns.length} className="px-4 py-10 text-center text-gray-400 dark:text-slate-500">Loading…</td></tr>;
     }
     if (!rows || rows.length === 0) {
         return (
             <tr>
-                <td colSpan={columns.length} className="px-4 py-12 text-center text-gray-400">
+                <td colSpan={columns.length} className="px-4 py-12 text-center text-gray-400 dark:text-slate-500">
                     <div className="flex flex-col items-center gap-2">
                         <AlertCircle size={28} className="text-gray-300" />
                         <span>{noDataText || 'No data for the selected filters.'}</span>
@@ -36,7 +36,7 @@ export default function ReportTable({ columns, rows, total, page, limit, onPage,
 
     return (
         <>
-            <tbody className="bg-white divide-y divide-gray-100">
+            <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-100 dark:divide-slate-800">
                 {rows.map((row, i) => (
                     <tr key={row.id || row._id || i} className={i % 2 ? 'bg-gray-50/40' : ''}>
                         {columns.map((col) => (
@@ -50,7 +50,7 @@ export default function ReportTable({ columns, rows, total, page, limit, onPage,
             {total !== undefined && (
                 <tfoot className="bg-gray-50">
                     <tr>
-                        <td colSpan={columns.length} className="px-4 py-3 text-xs text-gray-500">
+                        <td colSpan={columns.length} className="px-4 py-3 text-xs text-gray-500 dark:text-slate-400">
                             Showing {start}–{end} of {formatNumber(total)}
                         </td>
                     </tr>
@@ -64,13 +64,13 @@ export const PaginationControls = ({ page, limit, total, onPage }) => {
     const totalPages = limit > 0 ? Math.ceil((total || 0) / limit) : 0;
     if (totalPages <= 1) return null;
     return (
-        <div className="flex items-center justify-between px-1 py-3 text-sm text-gray-600">
+        <div className="flex items-center justify-between px-1 py-3 text-sm text-gray-600 dark:text-slate-400">
             <span>Page {page} of {totalPages}</span>
             <div className="flex gap-1">
-                <button onClick={() => onPage(Math.max(1, page - 1))} disabled={page <= 1} className="px-2.5 py-1 rounded-lg border border-gray-200 disabled:opacity-40">
+                <button onClick={() => onPage(Math.max(1, page - 1))} disabled={page <= 1} className="px-2.5 py-1 rounded-lg border border-gray-200 dark:border-slate-700 disabled:opacity-40">
                     <ChevronLeft size={14} />
                 </button>
-                <button onClick={() => onPage(Math.min(totalPages, page + 1))} disabled={page >= totalPages} className="px-2.5 py-1 rounded-lg border border-gray-200 disabled:opacity-40">
+                <button onClick={() => onPage(Math.min(totalPages, page + 1))} disabled={page >= totalPages} className="px-2.5 py-1 rounded-lg border border-gray-200 dark:border-slate-700 disabled:opacity-40">
                     <ChevronRight size={14} />
                 </button>
             </div>

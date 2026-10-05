@@ -45,10 +45,10 @@ const actCols = [
 function Xls({ rows, cols, totals, name }) { return <button onClick={() => exportToExcelWithTotals(rows, name, cols, totals)} className="ml-auto mb-3 flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium"><FileSpreadsheet size={16} />Excel</button>; }
 function Pdf({ cols, rows, name, totals }) { return <button onClick={() => exportToPdf(cols, rows, name, totals)} className="ml-auto mb-3 flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-sm font-medium"><FileText size={16} />PDF</button>; }
 function TableBox({ cols, rows, total, page, limit, onPage, loading, noData, name, totals }) {
-  return (<div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto">
+  return (<div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-x-auto">
     <div className="flex justify-end p-3"><Xls rows={rows} cols={cols} totals={totals} name={name} /><Pdf cols={cols} rows={rows} name={name} totals={totals} /></div>
-    <table className="w-full text-sm text-left text-gray-600">
-      <thead className="bg-gray-50 text-xs uppercase text-gray-400"><tr>{cols.map((c) => <th key={c.key} className={`px-4 py-3 ${c.align === 'right' ? 'text-right' : c.align === 'center' ? 'text-center' : 'text-left'}`}>{c.label}</th>)}</tr></thead>
+    <table className="w-full text-sm text-left text-gray-600 dark:text-slate-400">
+      <thead className="bg-gray-50 dark:bg-slate-950 text-xs uppercase text-gray-400 dark:text-slate-500"><tr>{cols.map((c) => <th key={c.key} className={`px-4 py-3 ${c.align === 'right' ? 'text-right' : c.align === 'center' ? 'text-center' : 'text-left'}`}>{c.label}</th>)}</tr></thead>
       <ReportTable columns={cols} rows={rows} total={total} page={page} limit={limit} onPage={onPage} loading={loading} noDataText={noData} />
     </table>
     <PaginationControls page={page} limit={limit} total={total} onPage={onPage} />
@@ -101,19 +101,19 @@ function PendingRefundApprovals({ onChanged }) {
     }
   };
 
-  if (rows === null) return <div className="text-sm text-gray-400">Loading approvals…</div>;
-  if (err) return <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-sm text-rose-700">{err}</div>;
+  if (rows === null) return <div className="text-sm text-gray-400 dark:text-slate-500">Loading approvals…</div>;
+  if (err) return <div className="rounded-xl border border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 px-4 py-2.5 text-sm text-rose-700 dark:text-rose-300">{err}</div>;
   if (rows.length === 0) return null;
 
   return (
-    <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-3">
-      <h3 className="font-bold text-amber-900 flex items-center gap-2 text-sm"><ShieldAlert size={16} /> Pending refund approvals ({rows.length})</h3>
+    <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-4 space-y-3">
+      <h3 className="font-bold text-amber-900 dark:text-amber-100 flex items-center gap-2 text-sm"><ShieldAlert size={16} /> Pending refund approvals ({rows.length})</h3>
       <div className="space-y-2">
         {rows.map((row) => (
-          <div key={row.id} className="bg-white rounded-xl border border-amber-100 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div key={row.id} className="bg-white dark:bg-slate-800 rounded-xl border border-amber-100 dark:border-amber-500/20 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
             <div className="min-w-0">
-              <div className="font-semibold text-gray-900 text-sm truncate">-{fmtM(row.total)} · {(row.items || []).length} item(s) · {row.reason}</div>
-              <div className="text-xs text-gray-400 truncate">
+              <div className="font-semibold text-gray-900 dark:text-slate-100 text-sm truncate">-{fmtM(row.total)} · {(row.items || []).length} item(s) · {row.reason}</div>
+              <div className="text-xs text-gray-400 dark:text-slate-500 truncate">
                 Refund {row.refund_reference} of {row.sale_receipt_no} · initiated by {row.initiated_by || '—'} · {String(row.created_at || '').slice(0, 10)}
               </div>
             </div>
@@ -121,7 +121,7 @@ function PendingRefundApprovals({ onChanged }) {
               <button disabled={busyId === row.id} onClick={() => act(row, 'approve')}
                 className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-xs font-bold">Approve (PIN)</button>
               <button disabled={busyId === row.id} onClick={() => act(row, 'reject')}
-                className="px-3 py-2 rounded-lg border border-gray-200 text-xs font-semibold text-gray-600 hover:bg-gray-50 disabled:opacity-60">Reject</button>
+                className="px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950 disabled:opacity-60">Reject</button>
             </div>
           </div>
         ))}
@@ -181,9 +181,9 @@ export default function ReportsPage() {
 
   return (<div className="space-y-6">
     <div className="flex flex-wrap items-center justify-between gap-4">
-      <div><h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2"><BarChart3 size={24} /> Reports</h1>
-        <p className="text-sm text-gray-500">Admin &amp; shop owner reporting. Filters apply across every tab.</p></div>
-      {stale && (<div className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-1.5 flex items-center gap-2"><Clock size={14} /><span>Data may be stale — {status.isSyncing ? 'syncing…' : status.lastSyncAt ? `last sync ${new Date(status.lastSyncAt).toLocaleTimeString()}` : 'not yet synced'}.</span></div>)}
+      <div><h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2"><BarChart3 size={24} /> Reports</h1>
+        <p className="text-sm text-gray-500 dark:text-slate-400">Admin &amp; shop owner reporting. Filters apply across every tab.</p></div>
+      {stale && (<div className="text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl px-3 py-1.5 flex items-center gap-2"><Clock size={14} /><span>Data may be stale — {status.isSyncing ? 'syncing…' : status.lastSyncAt ? `last sync ${new Date(status.lastSyncAt).toLocaleTimeString()}` : 'not yet synced'}.</span></div>)}
     </div>
         <div className="flex gap-2 flex-wrap">{REPORTS.map((rep) => { const Icon = rep.icon; return (<button key={rep.id} onClick={() => setActive(rep.id)} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition ${active === rep.id ? 'bg-blue-600 text-white shadow' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'}`}><Icon size={16} /> {rep.label}</button>); })}</div>
 
@@ -194,8 +194,8 @@ export default function ReportsPage() {
       { key: 'supplier', render: (f, set) => active === 'purchases' && (<input type="text" placeholder="Supplier" value={f.supplier || ''} onChange={(e) => set((p) => ({ ...p, supplier: e.target.value }))} className="px-3 py-2 border rounded-lg text-sm w-36" />) }
     ]} />
 
-    {loading && <div className="text-center py-10 text-gray-400">Loading report…</div>}
-    {error && <div className="text-rose-600 text-center py-6">{error}</div>}
+    {loading && <div className="text-center py-10 text-gray-400 dark:text-slate-500">Loading report…</div>}
+    {error && <div className="text-rose-600 dark:text-rose-400 text-center py-6">{error}</div>}
     {!loading && !error && (
       <>
         {active === 'daily' && (<div className="space-y-4">
@@ -206,9 +206,9 @@ export default function ReportsPage() {
             <SummaryTile label="Bank Transfer" value={pb.bank_transfer} icon={Landmark} />
             <SummaryTile label="Split" value={pb.split} icon={Landmark} />
           </div>
-          <h2 className="text-lg font-bold text-gray-900">Transactions</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">Transactions</h2>
           <TableBox cols={txnCols} rows={txn.rows} total={txn.total} page={txn.page} limit={L} onPage={(p) => loadPage('/reports/transactions', setTxn, p)} loading={txn.loading} noData="No sales in the selected date range." name="Daily Sales Transactions" totals={{ total: sales }} />
-          <h2 className="text-lg font-bold text-gray-900 mt-6">Daily Breakdown</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100 mt-6">Daily Breakdown</h2>
           <DailyBreakdown daily={r.daily_sales || []} />
         </div>)}
 
@@ -256,13 +256,13 @@ function DailyBreakdown({ daily }) {
   const cols = [{ k: 'date', l: 'Date' }, { k: 'orders', l: 'Orders', t: 'n' }, { k: 'sales', l: 'Sales' }, { k: 'cash', l: 'Cash' }, { k: 'card', l: 'Card' }, { k: 'bank_transfer', l: 'Bank' }, { k: 'split', l: 'Split' }, { k: 'reload_sales', l: 'Reload' }, { k: 'withdrawals', l: 'Refunds/Wd' }];
   const t = daily.reduce((a, d) => { a.orders += d.orders; ['sales','cash','card','bank_transfer','split','reload_sales','withdrawals'].forEach((k) => a[k] += d[k] || 0); return a; }, { orders: 0, sales: 0, cash: 0, card: 0, bank_transfer: 0, split: 0, reload_sales: 0, withdrawals: 0 });
   const xcols = cols.map((c) => ({ key: c.k, label: c.l, type: c.t === 'n' ? 'number' : 'money', align: 'right' }));
-  return (<div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto">
+  return (<div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-x-auto">
     <div className="flex justify-end p-3"><button onClick={() => exportToExcelWithTotals(daily, 'Daily Sales Breakdown', xcols, t)} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium"><FileSpreadsheet size={16} />Excel</button></div>
-    <table className="w-full text-sm text-left text-gray-600">
-      <thead className="bg-gray-50 text-xs uppercase text-gray-400"><tr>{cols.map((c) => <th key={c.k} className="px-4 py-3">{c.l}</th>)}</tr></thead>
-      <tbody className="divide-y divide-gray-100">
-        {daily.length === 0 ? <tr><td colSpan={9} className="px-4 py-8 text-center text-gray-400">No sales in the selected date range.</td></tr> : daily.map((d) => (<tr key={d.date} className="odd:bg-gray-50/40"><td className="px-4 py-2.5 font-medium">{d.date}</td><td className="px-4 py-2.5">{d.orders}</td>{cols.slice(2).map((c) => <td key={c.k} className="px-4 py-2.5 tabular-nums text-right">{fmt(d[c.k])}</td>)}</tr>))}
-        <tr className="bg-gray-50 font-bold"><td className="px-4 py-2.5">TOTAL</td><td className="px-4 py-2.5">{t.orders}</td>{cols.slice(2).map((c) => <td key={c.k} className="px-4 py-2.5 tabular-nums text-right">{fmt(t[c.k])}</td>)}</tr>
+    <table className="w-full text-sm text-left text-gray-600 dark:text-slate-400">
+      <thead className="bg-gray-50 dark:bg-slate-950 text-xs uppercase text-gray-400 dark:text-slate-500"><tr>{cols.map((c) => <th key={c.k} className="px-4 py-3">{c.l}</th>)}</tr></thead>
+      <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+        {daily.length === 0 ? <tr><td colSpan={9} className="px-4 py-8 text-center text-gray-400 dark:text-slate-500">No sales in the selected date range.</td></tr> : daily.map((d) => (<tr key={d.date} className="odd:bg-gray-50/40"><td className="px-4 py-2.5 font-medium">{d.date}</td><td className="px-4 py-2.5">{d.orders}</td>{cols.slice(2).map((c) => <td key={c.k} className="px-4 py-2.5 tabular-nums text-right">{fmt(d[c.k])}</td>)}</tr>))}
+        <tr className="bg-gray-50 dark:bg-slate-950 font-bold"><td className="px-4 py-2.5">TOTAL</td><td className="px-4 py-2.5">{t.orders}</td>{cols.slice(2).map((c) => <td key={c.k} className="px-4 py-2.5 tabular-nums text-right">{fmt(t[c.k])}</td>)}</tr>
       </tbody>
     </table>
   </div>);
@@ -279,12 +279,12 @@ function ProfitMargin({ pm, rev, cost }) {
     { key: 'margin_percent', label: 'Margin %', type: 'number', align: 'right' }
   ];
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-x-auto">
       <div className="flex justify-end p-3"><button onClick={() => exportToExcelWithTotals(pm, 'Profit Margin', cols, { revenue: rev, cost, profit: rev - cost })} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium"><FileSpreadsheet size={16} />Excel</button></div>
-      <table className="w-full text-sm text-left text-gray-600">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-400"><tr>{cols.map((c) => <th key={c.key} className={`px-4 py-3 ${c.align === 'right' ? 'text-right' : 'text-left'}`}>{c.label}</th>)}</tr></thead>
-        <tbody className="divide-y divide-gray-100">
-          {pm.length === 0 ? <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">No product sales in the selected date range.</td></tr> :
+      <table className="w-full text-sm text-left text-gray-600 dark:text-slate-400">
+        <thead className="bg-gray-50 dark:bg-slate-950 text-xs uppercase text-gray-400 dark:text-slate-500"><tr>{cols.map((c) => <th key={c.key} className={`px-4 py-3 ${c.align === 'right' ? 'text-right' : 'text-left'}`}>{c.label}</th>)}</tr></thead>
+        <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+          {pm.length === 0 ? <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400 dark:text-slate-500">No product sales in the selected date range.</td></tr> :
             pm.map((row, i) => (<tr key={row.sale_id || i} className="odd:bg-gray-50/40"><td className="px-4 py-2.5">{row.item_name}</td><td className="px-4 py-2.5">{row.category}</td>
               <td className="px-4 py-2.5 tabular-nums text-right">{fmtN(row.quantity_sold)}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmt(row.revenue)}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmt(row.cost)}</td>
               <td className="px-4 py-2.5 tabular-nums text-right">{fmt(row.profit)}</td><td className="px-4 py-2.5 tabular-nums text-right">{row.margin_percent.toFixed(2)}%</td></tr>))}
@@ -298,13 +298,13 @@ function PaymentType({ pb, total }) {
   const rows = Object.entries(pb || {}).map(([k, v]) => ({ method: k.toUpperCase(), total: v }));
   const cols = [{ key: 'method', label: 'Payment Method' }, { key: 'total', label: 'Total', type: 'money', align: 'right' }];
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-x-auto">
       <div className="flex justify-end p-3"><button onClick={() => exportToExcelWithTotals(rows, 'Payment Type', cols, { total })} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium"><FileSpreadsheet size={16} />Excel</button></div>
-      <table className="w-full text-sm text-left text-gray-600">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-400"><tr><th className="px-4 py-3">Payment Method</th><th className="px-4 py-3 text-right">Total</th></tr></thead>
-        <tbody className="divide-y divide-gray-100">
+      <table className="w-full text-sm text-left text-gray-600 dark:text-slate-400">
+        <thead className="bg-gray-50 dark:bg-slate-950 text-xs uppercase text-gray-400 dark:text-slate-500"><tr><th className="px-4 py-3">Payment Method</th><th className="px-4 py-3 text-right">Total</th></tr></thead>
+        <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
           {rows.map((r) => <tr key={r.method} className="odd:bg-gray-50/40"><td className="px-4 py-2.5">{r.method}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmt(r.total)}</td></tr>)}
-          <tr className="bg-gray-50 font-bold"><td className="px-4 py-2.5">TOTAL</td><td className="px-4 py-2.5 tabular-nums text-right">{fmt(total)}</td></tr>
+          <tr className="bg-gray-50 dark:bg-slate-950 font-bold"><td className="px-4 py-2.5">TOTAL</td><td className="px-4 py-2.5 tabular-nums text-right">{fmt(total)}</td></tr>
         </tbody>
       </table>
     </div>
@@ -325,12 +325,12 @@ function Credit({ credits, outstanding }) {
         <SummaryTile label="Open Credit Notes" value={credits.length} valueType="number" icon={Receipt} />
         <SummaryTile label="Avg Balance" value={credits.length ? outstanding / credits.length : 0} icon={BadgeDollarSign} />
       </div>
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-x-auto">
         <div className="flex justify-end p-3"><button onClick={() => exportToExcelWithTotals(credits, 'Credit Notes', cols, { amount: credits.reduce((s, c) => s + Number(c.amount), 0), balance: outstanding })} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium"><FileSpreadsheet size={16} />Excel</button></div>
-        <table className="w-full text-sm text-left text-gray-600">
-          <thead className="bg-gray-50 text-xs uppercase text-gray-400"><tr><th className="px-4 py-3">Note #</th><th className="px-4 py-3">Customer</th><th className="px-4 py-3">Phone</th><th className="px-4 py-3 text-right">Amount</th><th className="px-4 py-3 text-right">Balance</th><th className="px-4 py-3">Status</th></tr></thead>
-          <tbody className="divide-y divide-gray-100">
-            {credits.length === 0 ? <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">No outstanding credit notes.</td></tr> :
+        <table className="w-full text-sm text-left text-gray-600 dark:text-slate-400">
+          <thead className="bg-gray-50 dark:bg-slate-950 text-xs uppercase text-gray-400 dark:text-slate-500"><tr><th className="px-4 py-3">Note #</th><th className="px-4 py-3">Customer</th><th className="px-4 py-3">Phone</th><th className="px-4 py-3 text-right">Amount</th><th className="px-4 py-3 text-right">Balance</th><th className="px-4 py-3">Status</th></tr></thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+            {credits.length === 0 ? <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400 dark:text-slate-500">No outstanding credit notes.</td></tr> :
               credits.map((c) => <tr key={c.note_no} className="odd:bg-gray-50/40"><td className="px-4 py-2.5">{c.note_no}</td><td className="px-4 py-2.5">{c.customer_name || ''}</td><td className="px-4 py-2.5">{c.customer_phone || ''}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmt(c.amount)}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmt(c.balance)}</td><td className="px-4 py-2.5">{c.status}</td></tr>)}
           </tbody>
         </table>
@@ -354,12 +354,12 @@ function Purchases({ p, ss, sup }) {
         <SummaryTile label="Purchases" value={rows.length} valueType="number" icon={PackageSearch} />
         <SummaryTile label="Suppliers" value={(ss || []).length} valueType="number" icon={Users} />
       </div>
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-x-auto">
         <div className="flex justify-end p-3"><button onClick={() => exportToExcelWithTotals(rows, 'Purchases Report', cols, {})} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium"><FileSpreadsheet size={16} />Excel</button></div>
-        <table className="w-full text-sm text-left text-gray-600">
-          <thead className="bg-gray-50 text-xs uppercase text-gray-400"><tr>{cols.map((c) => <th key={c.key} className="px-4 py-3">{c.label}</th>)}</tr></thead>
-          <tbody className="divide-y divide-gray-100">
-            {rows.length === 0 ? <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">No purchases in the selected date range.</td></tr> :
+        <table className="w-full text-sm text-left text-gray-600 dark:text-slate-400">
+          <thead className="bg-gray-50 dark:bg-slate-950 text-xs uppercase text-gray-400 dark:text-slate-500"><tr>{cols.map((c) => <th key={c.key} className="px-4 py-3">{c.label}</th>)}</tr></thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+            {rows.length === 0 ? <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400 dark:text-slate-500">No purchases in the selected date range.</td></tr> :
               rows.map((x, i) => <tr key={x.date + i} className="odd:bg-gray-50/40"><td className="px-4 py-2.5">{x.date}</td><td className="px-4 py-2.5">{x.item_name}</td><td className="px-4 py-2.5">{x.sku}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmtN(x.quantity)}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmt(x.unit_cost)}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmt(x.total_cost)}</td><td className="px-4 py-2.5">{x.supplier}</td></tr>)}
           </tbody>
         </table>
@@ -373,11 +373,11 @@ function SupplierSpend({ ss }) {
   const cols = [{ key: 'supplier', label: 'Supplier' }, { key: 'quantity', label: 'Qty', type: 'number', align: 'right' }, { key: 'total_spend', label: 'Total Spend', type: 'money', align: 'right' }];
   if (!(ss || []).length) return <p className="text-gray-400">No supplier spend in the selected range.</p>;
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-x-auto">
       <div className="flex justify-end p-3"><button onClick={() => exportToExcelWithTotals(ss, 'Supplier Spend', cols, { total_spend: ss.reduce((s, x) => s + Number(x.total_spend || 0), 0) })} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium"><FileSpreadsheet size={16} />Excel</button></div>
-      <table className="w-full text-sm text-left text-gray-600">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-400"><tr><th className="px-4 py-3">Supplier</th><th className="px-4 py-3 text-right">Qty</th><th className="px-4 py-3 text-right">Total Spend</th></tr></thead>
-        <tbody className="divide-y divide-gray-100">
+      <table className="w-full text-sm text-left text-gray-600 dark:text-slate-400">
+        <thead className="bg-gray-50 dark:bg-slate-950 text-xs uppercase text-gray-400 dark:text-slate-500"><tr><th className="px-4 py-3">Supplier</th><th className="px-4 py-3 text-right">Qty</th><th className="px-4 py-3 text-right">Total Spend</th></tr></thead>
+        <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
           {ss.map((r) => <tr key={r.supplier} className="odd:bg-gray-50/40"><td className="px-4 py-2.5">{r.supplier}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmtN(r.quantity)}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmt(r.total_spend)}</td></tr>)}
         </tbody>
       </table>
@@ -399,23 +399,23 @@ function Performance({ best, worst, dead = {} }) {
         <SummaryTile label="Worst Sellers" value={worst.length} valueType="number" icon={TrendingDown} />
         <SummaryTile label="Dead Stock Items" value={dead.items?.length || 0} valueType="number" icon={PackageSearch} />
       </div>
-      <h2 className="text-lg font-bold text-gray-900">Dead Stock (no sale in threshold days)</h2>
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto mb-4">
-        <table className="w-full text-sm text-left text-gray-600">
-          <thead className="bg-gray-50 text-xs uppercase text-gray-400"><tr><th className="px-4 py-3">Category</th><th className="px-4 py-3">Item</th><th className="px-4 py-3">Code</th><th className="px-4 py-3 text-right">Qty</th><th className="px-4 py-3 text-right">Days In Stock</th><th className="px-4 py-3 text-right">Days No Sale</th><th className="px-4 py-3 text-right">Capital Locked</th></tr></thead>
-          <tbody className="divide-y divide-gray-100">
-            {(dead.items || []).length === 0 ? <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">No dead stock items found.</td></tr> :
+      <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">Dead Stock (no sale in threshold days)</h2>
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-x-auto mb-4">
+        <table className="w-full text-sm text-left text-gray-600 dark:text-slate-400">
+          <thead className="bg-gray-50 dark:bg-slate-950 text-xs uppercase text-gray-400 dark:text-slate-500"><tr><th className="px-4 py-3">Category</th><th className="px-4 py-3">Item</th><th className="px-4 py-3">Code</th><th className="px-4 py-3 text-right">Qty</th><th className="px-4 py-3 text-right">Days In Stock</th><th className="px-4 py-3 text-right">Days No Sale</th><th className="px-4 py-3 text-right">Capital Locked</th></tr></thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+            {(dead.items || []).length === 0 ? <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400 dark:text-slate-500">No dead stock items found.</td></tr> :
               (dead.items || []).map((d, i) => <tr key={d.item_name + d.code + i} className="odd:bg-gray-50/40"><td className="px-4 py-2.5">{d.category}</td><td className="px-4 py-2.5">{d.item_name}</td><td className="px-4 py-2.5">{d.code}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmtN(d.quantity)}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmtN(d.days_in_stock)}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmtN(d.days_without_sale)}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmt(d.capital_locked)}</td></tr>)}
           </tbody>
         </table>
       </div>
-      <h2 className="text-lg font-bold text-gray-900">Best &amp; Worst Sellers</h2>
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-x-auto">
+      <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">Best &amp; Worst Sellers</h2>
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-x-auto">
         <div className="flex justify-end p-3"><button onClick={() => exportToExcelWithTotals(rows, 'Product Performance', cols, {})} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium"><FileSpreadsheet size={16} />Excel</button></div>
-        <table className="w-full text-sm text-left text-gray-600">
-          <thead className="bg-gray-50 text-xs uppercase text-gray-400"><tr>{cols.map((c) => <th key={c.key} className="px-4 py-3">{c.label}</th>)}</tr></thead>
-          <tbody className="divide-y divide-gray-100">
-            {rows.length === 0 ? <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">No product sales in the selected date range.</td></tr> :
+        <table className="w-full text-sm text-left text-gray-600 dark:text-slate-400">
+          <thead className="bg-gray-50 dark:bg-slate-950 text-xs uppercase text-gray-400 dark:text-slate-500"><tr>{cols.map((c) => <th key={c.key} className="px-4 py-3">{c.label}</th>)}</tr></thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+            {rows.length === 0 ? <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400 dark:text-slate-500">No product sales in the selected date range.</td></tr> :
               rows.map((row, i) => <tr key={row.sale_id || i} className="odd:bg-gray-50/40"><td className="px-4 py-2.5">{row.item_name}</td><td className="px-4 py-2.5">{row.category}</td><td className="px-4 py-2.5 tabular-nums">{fmtN(row.quantity_sold)}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmt(row.revenue)}</td><td className="px-4 py-2.5 tabular-nums text-right">{fmtN(row.days_without_sale || 0)}</td></tr>)}
           </tbody>
         </table>

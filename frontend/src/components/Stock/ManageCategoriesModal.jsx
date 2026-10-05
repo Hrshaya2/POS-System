@@ -128,22 +128,22 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col">
-        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
-          <h3 className="text-lg font-bold text-gray-900">Manage Categories</h3>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors"><X size={18} /></button>
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 dark:border-slate-800">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Manage Categories</h3>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>
         </div>
 
         <div className="p-6 overflow-y-auto space-y-4">
           {/* Add - allowed for every role */}
-          <form onSubmit={handleCreate} className="bg-blue-50/60 border border-blue-100 rounded-xl p-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Add new category</label>
+          <form onSubmit={handleCreate} className="bg-blue-50/60 border border-blue-100 dark:border-blue-500/20 rounded-xl p-4">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">Add new category</label>
             <div className="flex space-x-2">
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="e.g. Phone Cases"
-                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                className="flex-1 px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
               />
               <button
                 type="submit"
@@ -154,7 +154,7 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
               </button>
             </div>
             <div className="mt-2 flex items-center justify-between gap-2">
-              <label className="flex items-center space-x-2 text-xs text-gray-600 cursor-pointer">
+              <label className="flex items-center space-x-2 text-xs text-gray-600 dark:text-slate-400 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={form.is_phone_category}
@@ -167,19 +167,19 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder="Optional description"
-                className="w-48 px-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                className="w-48 px-3 py-1.5 text-xs border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
               />
             </div>
-            {error && <p className="text-xs text-rose-600 mt-2">{error}</p>}
+            {error && <p className="text-xs text-rose-600 dark:text-rose-400 mt-2">{error}</p>}
           </form>
 
           {/* One-click import of product-group labels already used by items */}
           {legacyLabels.length > 0 && (
-            <div className="bg-teal-50/70 border border-teal-100 rounded-xl p-4">
-              <label className="block text-sm font-semibold text-gray-700">
+            <div className="bg-teal-50/70 border border-teal-100 dark:border-teal-500/20 rounded-xl p-4">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300">
                 Import existing product groups
               </label>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                 {legacyLabels.length} group(s) your items already use but that have no managed
                 category yet — e.g. {legacyLabels.slice(0, 3).join(', ')}
                 {legacyLabels.length > 3 ? '…' : ''}. Importing makes them editable/renamable here.
@@ -192,13 +192,13 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
                 <Plus size={15} className="mr-1.5" />
                 {backfilling ? 'Importing…' : `Create all ${legacyLabels.length} categories`}
               </button>
-              {backfillMsg && <p className="text-xs font-semibold text-teal-700 mt-2">{backfillMsg}</p>}
+              {backfillMsg && <p className="text-xs font-semibold text-teal-700 dark:text-teal-300 mt-2">{backfillMsg}</p>}
             </div>
           )}
 
           {isAdmin && categories.length > 0 && (
-            <div className="flex items-center justify-between gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5">
-              <label className="flex items-center space-x-2 text-xs font-semibold text-gray-700 cursor-pointer select-none">
+            <div className="flex items-center justify-between gap-2 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5">
+              <label className="flex items-center space-x-2 text-xs font-semibold text-gray-700 dark:text-slate-300 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={allSelected}
@@ -210,12 +210,12 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
 
               {selected.length > 0 && (
                 <div className="flex items-center space-x-1.5">
-                  <span className="text-[11px] font-semibold text-gray-500">
+                  <span className="text-[11px] font-semibold text-gray-500 dark:text-slate-400">
                     {selected.length} selected
                   </span>
                   {confirmBulkDelete ? (
                     <>
-                      <span className="text-[11px] font-semibold text-rose-600 flex items-center">
+                      <span className="text-[11px] font-semibold text-rose-600 dark:text-rose-400 flex items-center">
                         <AlertTriangle size={12} className="mr-1" />Delete {selected.length}?
                       </span>
                       <button
@@ -228,7 +228,7 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
                       <button
                         onClick={() => setConfirmBulkDelete(false)}
                         disabled={bulkBusy}
-                        className="px-2.5 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-xs font-semibold"
+                        className="px-2.5 py-1.5 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 rounded-lg text-xs font-semibold"
                       >
                         Cancel
                       </button>
@@ -263,8 +263,8 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
           />
 
           {!isAdmin && (
-            <p className="text-[11px] text-gray-400 flex items-start space-x-1.5 bg-amber-50 border border-amber-100 rounded-lg p-2.5">
-              <ToggleLeft size={14} className="shrink-0 mt-0.5 text-amber-500" />
+            <p className="text-[11px] text-gray-400 dark:text-slate-500 flex items-start space-x-1.5 bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20 rounded-lg p-2.5">
+              <ToggleLeft size={14} className="shrink-0 mt-0.5 text-amber-500 dark:text-amber-400" />
               <span>You can create categories, but once created they cannot be edited or deleted from your account — only an admin or shop owner can manage them.</span>
             </p>
           )}
@@ -282,23 +282,23 @@ function CategoryList({
   return (
     <div className="space-y-2">
       {categories.length === 0 && (
-        <p className="text-sm text-gray-400 text-center py-4">No categories yet.</p>
+        <p className="text-sm text-gray-400 dark:text-slate-500 text-center py-4">No categories yet.</p>
       )}
       {categories.map((cat) => {
         const isPending = cat.syncStatus === 'pending';
         if (editingId === cat.id) {
           return (
-            <div key={cat.id} className="border border-blue-200 bg-blue-50/40 rounded-xl p-3">
+            <div key={cat.id} className="border border-blue-200 dark:border-blue-500/30 bg-blue-50/40 rounded-xl p-3">
               <div className="flex space-x-2">
                 <input
                   value={editFields.name}
                   onChange={(e) => setEditFields({ ...editFields, name: e.target.value })}
-                  className="flex-1 px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring focus:border-blue-300"
+                  className="flex-1 px-3 py-1.5 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring focus:border-blue-300"
                 />
                 <button onClick={saveEdit} className="p-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700" title="Save"><Check size={16} /></button>
-                <button onClick={() => setEditingId(null)} className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200" title="Cancel"><X size={16} /></button>
+                <button onClick={() => setEditingId(null)} className="p-2 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 rounded-lg hover:bg-gray-200" title="Cancel"><X size={16} /></button>
               </div>
-              <label className="flex items-center space-x-2 text-xs text-gray-600 mt-2 cursor-pointer">
+              <label className="flex items-center space-x-2 text-xs text-gray-600 dark:text-slate-400 mt-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={!!editFields.is_phone_category}
@@ -311,7 +311,7 @@ function CategoryList({
         }
 
         return (
-          <div key={cat.id} className="flex items-center justify-between bg-white border border-gray-100 rounded-xl px-4 py-2.5 shadow-sm">
+          <div key={cat.id} className="flex items-center justify-between bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-800 rounded-xl px-4 py-2.5 shadow-sm">
             <div className="flex items-center space-x-2.5 min-w-0">
               {isAdmin && (
                 <input
@@ -323,8 +323,8 @@ function CategoryList({
                 />
               )}
               <div className="min-w-0">
-                <div className="font-semibold text-gray-900 text-sm truncate">{cat.name}</div>
-                <div className="text-[11px] text-gray-400 truncate">
+                <div className="font-semibold text-gray-900 dark:text-slate-100 text-sm truncate">{cat.name}</div>
+                <div className="text-[11px] text-gray-400 dark:text-slate-500 truncate">
                   {cat.is_phone_category ? 'Phone category' : 'Accessory / part'}
                   {isPending && ' · pending sync'}
                 </div>
@@ -335,19 +335,19 @@ function CategoryList({
                 <>
                   {confirmDeleteId === cat.id ? (
                     <div className="flex items-center space-x-1.5">
-                      <span className="text-[11px] font-semibold text-rose-600 flex items-center"><AlertTriangle size={12} className="mr-1" />Sure?</span>
+                      <span className="text-[11px] font-semibold text-rose-600 dark:text-rose-400 flex items-center"><AlertTriangle size={12} className="mr-1" />Sure?</span>
                       <button onClick={() => onDelete(cat)} className="px-2.5 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-bold hover:bg-rose-700">Delete</button>
-                      <button onClick={() => setConfirmDeleteId(null)} className="px-2.5 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-xs">No</button>
+                      <button onClick={() => setConfirmDeleteId(null)} className="px-2.5 py-1.5 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 rounded-lg text-xs">No</button>
                     </div>
                   ) : (
                     <>
-                      <button onClick={() => startEdit(cat)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit category"><Pencil size={15} /></button>
-                      <button onClick={() => setConfirmDeleteId(cat.id)} className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors" title="Delete category"><Trash2 size={15} /></button>
+                      <button onClick={() => startEdit(cat)} className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 hover:dark:bg-blue-500/10 rounded-lg transition-colors" title="Edit category"><Pencil size={15} /></button>
+                      <button onClick={() => setConfirmDeleteId(cat.id)} className="p-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 hover:dark:bg-rose-500/10 rounded-lg transition-colors" title="Delete category"><Trash2 size={15} /></button>
                     </>
                   )}
                 </>
               ) : (
-                <span className="flex items-center text-[11px] text-gray-400" title="Only admins and shop owners can edit or delete categories">
+                <span className="flex items-center text-[11px] text-gray-400 dark:text-slate-500" title="Only admins and shop owners can edit or delete categories">
                   <Lock size={12} className="mr-1" /> Read-only
                 </span>
               )}

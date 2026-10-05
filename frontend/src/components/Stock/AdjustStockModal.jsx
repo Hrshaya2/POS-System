@@ -42,13 +42,13 @@ export default function AdjustStockModal({ item, onClose, onConfirm }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
-        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 dark:border-slate-800">
           <div>
-            <h3 className="text-lg font-bold text-gray-900">Adjust Stock</h3>
-            <p className="text-xs text-gray-500 truncate">{item?.name} · <span className="font-mono">{item?.sku}</span></p>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Adjust Stock</h3>
+            <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{item?.name} · <span className="font-mono">{item?.sku}</span></p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors"><X size={18} /></button>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>
         </div>
 
         <div className="p-6 space-y-5">
@@ -63,12 +63,12 @@ export default function AdjustStockModal({ item, onClose, onConfirm }) {
           <ReasonPicker reason={reason} setReason={setReason} showHint={!reason} />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Note (optional)</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Note (optional)</label>
             <input
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="e.g. invoice #, shelf reference…"
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
             />
           </div>
 
@@ -84,8 +84,8 @@ export default function AdjustStockModal({ item, onClose, onConfirm }) {
           )}
         </div>
 
-        <div className="px-6 py-4 border-t border-gray-100 flex justify-end space-x-3 bg-gray-50 rounded-b-2xl">
-          <button onClick={onClose} className="px-5 py-2.5 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors">
+        <div className="px-6 py-4 border-t border-gray-100 dark:border-slate-800 flex justify-end space-x-3 bg-gray-50 dark:bg-slate-950 rounded-b-2xl">
+          <button onClick={onClose} className="px-5 py-2.5 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors">
             Cancel
           </button>
           <button
@@ -106,7 +106,7 @@ function AmountDirectionRow({ direction, setDirection, amount, setAmount, hasErr
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-end">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Direction</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Direction</label>
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
@@ -132,9 +132,9 @@ function AmountDirectionRow({ direction, setDirection, amount, setAmount, hasErr
           </button>
         </div>
       </div>
-      <ArrowRight size={16} className="text-gray-300 mb-4" />
+      <ArrowRight size={16} className="text-gray-300 dark:text-slate-600 mb-4" />
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Amount *</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Amount *</label>
         <input
           type="number"
           autoFocus
@@ -154,7 +154,7 @@ function AmountDirectionRow({ direction, setDirection, amount, setAmount, hasErr
 function ReasonPicker({ reason, setReason, showHint }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1.5">Reason *</label>
+      <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1.5">Reason *</label>
       <div className="grid grid-cols-2 gap-2">
         {ADJUSTMENT_REASONS.map((r) => (
           <button
@@ -171,7 +171,7 @@ function ReasonPicker({ reason, setReason, showHint }) {
           </button>
         ))}
       </div>
-      {showHint && <p className="text-xs text-rose-600 mt-1">Pick a reason for this adjustment</p>}
+      {showHint && <p className="text-xs text-rose-600 dark:text-rose-400 mt-1">Pick a reason for this adjustment</p>}
     </div>
   );
 }
@@ -179,7 +179,7 @@ function ReasonPicker({ reason, setReason, showHint }) {
 function PreviewBox({ currentQty, delta, newQty, goesNegative }) {
   return (
     <div className={`rounded-xl p-4 border-2 transition-colors ${goesNegative ? 'bg-rose-50 border-rose-200' : 'bg-gray-50 border-gray-200'}`}>
-      <p className="text-xs font-bold uppercase tracking-wide text-gray-400 mb-2">Current → New</p>
+      <p className="text-xs font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500 mb-2">Current → New</p>
       <div className="flex items-center justify-center space-x-4 text-2xl font-black">
         <span className="text-gray-700">{currentQty}</span>
         <span className={`font-black ${delta > 0 ? 'text-emerald-600' : delta < 0 ? 'text-rose-500' : 'text-gray-300'}`}>
@@ -195,14 +195,14 @@ function PreviewBox({ currentQty, delta, newQty, goesNegative }) {
 function NegativeOverride({ checked, onChange, hint }) {
   return (
     <div>
-      <label className="flex items-start space-x-2.5 cursor-pointer bg-rose-50 border border-rose-200 rounded-xl p-3">
+      <label className="flex items-start space-x-2.5 cursor-pointer bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 rounded-xl p-3">
         <input type="checkbox" checked={checked} onChange={onChange} className="mt-0.5" />
-        <span className="text-xs text-rose-700">
+        <span className="text-xs text-rose-700 dark:text-rose-300">
           <span className="font-bold flex items-center"><AlertTriangle size={12} className="mr-1" />Override negative stock</span>
           I understand this takes the recorded quantity below zero (e.g. pending delivery paperwork).
         </span>
       </label>
-      {hint && <p className="text-xs text-rose-600 mt-1.5">{hint}</p>}
+      {hint && <p className="text-xs text-rose-600 dark:text-rose-400 mt-1.5">{hint}</p>}
     </div>
   );
 }

@@ -31,12 +31,12 @@ const Toggle = ({ checked, onChange, label }) => (
 
 const Field = ({ label, children }) => (
   <div>
-    <label className="block text-sm font-semibold text-gray-700 mb-1.5">{label}</label>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1.5">{label}</label>
     {children}
   </div>
 );
 
-const inputClass = "w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500";
+const inputClass = "w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-4 py-2.5 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500";
 
 const SETTINGS_API = '/api';
 const authHeaders = () => ({ 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` });
@@ -144,13 +144,13 @@ export default function SettingsPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 flex items-center">
             <Settings size={26} className="mr-2.5 text-gray-600" /> Settings
           </h1>
           <p className="text-sm text-gray-500 mt-1">Customize how your receipts print — logo, messages and contact details.</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={handlePrintPreview} className="flex items-center px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50">
+          <button onClick={handlePrintPreview} className="flex items-center px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50">
             <Printer size={17} className="mr-1.5" /> Print Preview
           </button>
           <button onClick={handleSave} className="flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md">
@@ -164,12 +164,12 @@ export default function SettingsPage() {
         {/* ---- Left: editor (logo, shop/header, footer) ---- */}
         <div className="space-y-5">
           {/* Logo */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center mb-4">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center mb-4">
               <ImageIcon size={18} className="mr-2 text-blue-600" /> Logo
             </h3>
             <div className="flex items-center gap-4">
-              <div className="w-24 h-24 rounded-xl border border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden">
+              <div className="w-24 h-24 rounded-xl border border-dashed border-gray-300 bg-gray-50 dark:bg-slate-950 flex items-center justify-center overflow-hidden">
                 {settings.logo ? (
                   <img src={settings.logo} alt="Logo" className="max-w-full max-h-full object-contain" />
                 ) : (
@@ -388,7 +388,7 @@ export default function SettingsPage() {
               </button>
             </label>
             <label className="block md:col-span-2">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">
                 Admin approval PIN {pinExists ? '(one is set)' : ''}
               </span>
               <input type="password" inputMode="numeric" className={inputClass}

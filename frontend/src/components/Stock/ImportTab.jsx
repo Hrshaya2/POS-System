@@ -125,17 +125,17 @@ export default function ImportTab({ items, user, imports = [], onDataChanged }) 
 
   return (
     <div className="space-y-5">
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-lg font-bold text-gray-900 flex items-center">
-          <Upload size={20} className="mr-2 text-teal-600" /> Import from Excel / CSV
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
+          <Upload size={20} className="mr-2 text-teal-600 dark:text-teal-400" /> Import from Excel / CSV
         </h3>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
           Match by SKU: existing items get their quantity <strong>added</strong> by default (or overwritten — your choice below); unknown SKUs become new items.
           Max <strong>{IMPORT_ROW_CAP}</strong> rows per import.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 mt-4">
-          <button onClick={() => downloadCsv('stock-import-template.csv', TEMPLATE_SAMPLE_ROWS, TEMPLATE_HEADERS)} className="flex items-center justify-center px-5 py-3 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+          <button onClick={() => downloadCsv('stock-import-template.csv', TEMPLATE_SAMPLE_ROWS, TEMPLATE_HEADERS)} className="flex items-center justify-center px-5 py-3 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors">
             <FileDown size={16} className="mr-2" /> Download Template
           </button>
           <button onClick={() => fileRef.current?.click()} className="flex items-center justify-center px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold shadow-md transition-colors">
@@ -145,13 +145,13 @@ export default function ImportTab({ items, user, imports = [], onDataChanged }) 
         </div>
 
         {capExceeded && (
-          <p className="mt-3 text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2 flex items-center">
+          <p className="mt-3 text-sm text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 rounded-lg px-3 py-2 flex items-center">
             <AlertTriangle size={15} className="mr-2 shrink-0" />
             This file has {rows.length} rows — the cap is {IMPORT_ROW_CAP}. Please split it into smaller files.
           </p>
         )}
         {error && (
-          <p className="mt-3 text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">{error}</p>
+          <p className="mt-3 text-sm text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 rounded-lg px-3 py-2">{error}</p>
         )}
       </div>
 
@@ -160,11 +160,11 @@ export default function ImportTab({ items, user, imports = [], onDataChanged }) 
       )}
 
       {result && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 flex items-start space-x-3">
-          <CheckCircle2 size={22} className="text-emerald-600 mt-0.5 shrink-0" />
+        <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 rounded-2xl p-5 flex items-start space-x-3">
+          <CheckCircle2 size={22} className="text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
           <div>
-            <p className="font-bold text-emerald-800">Import complete — {result.filename}</p>
-            <p className="text-sm text-emerald-700 mt-0.5">
+            <p className="font-bold text-emerald-800 dark:text-emerald-200">Import complete — {result.filename}</p>
+            <p className="text-sm text-emerald-700 dark:text-emerald-300 mt-0.5">
               {result.created} new item(s) · {result.updated} updated · {result.movementsLogged} stock movement(s) logged referencing this file.
               {result.errorCount > 0 && ` ${result.errorCount} error row(s) were excluded.`}
             </p>
@@ -211,23 +211,23 @@ function PreviewPanel({ validRows, errorRows, filename, newCount, updateCount, o
   const errorCount = errorRows.length;
   const reasons = Array.from(new Set(errorRows.map((r) => r.errorText)));
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
       {/* Header with summary + options */}
-      <div className="p-6 border-b border-gray-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h3 className="text-lg font-bold text-gray-900">Preview: {filename}</h3>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Preview: {filename}</h3>
           <div className="flex flex-wrap items-center gap-2 mt-2 text-xs font-semibold">
-            <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">{newCount} new</span>
-            <span className="px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-200">{updateCount} updates</span>
+            <span className="px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30">{newCount} new</span>
+            <span className="px-2.5 py-1 rounded-full bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-500/30">{updateCount} updates</span>
           </div>
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          <label className="flex items-center space-x-2 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 cursor-pointer" title="When off, imported quantity is ADDED to current stock">
+          <label className="flex items-center space-x-2 text-sm text-gray-700 dark:text-slate-300 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2 cursor-pointer" title="When off, imported quantity is ADDED to current stock">
             <input type="checkbox" checked={overwrite} onChange={(e) => setOverwrite(e.target.checked)} />
             <span>Overwrite quantity instead of adding</span>
           </label>
-          <button onClick={onClear} className="px-4 py-2.5 border border-gray-200 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">
+          <button onClick={onClear} className="px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors">
             Cancel
           </button>
           <button
@@ -243,7 +243,7 @@ function PreviewPanel({ validRows, errorRows, filename, newCount, updateCount, o
       {/* Row table */}
       <div className="overflow-x-auto max-h-[50vh] overflow-y-auto">
         <table className="w-full text-sm text-left">
-          <thead className="text-xs text-gray-400 uppercase bg-gray-50/80 sticky top-0">
+          <thead className="text-xs text-gray-400 dark:text-slate-500 uppercase bg-gray-50/80 dark:bg-slate-950/80 sticky top-0">
             <tr>
               <th className="px-6 py-3 font-medium">#</th>
               <th className="px-6 py-3 font-medium">SKU</th>
@@ -252,12 +252,12 @@ function PreviewPanel({ validRows, errorRows, filename, newCount, updateCount, o
               <th className="px-6 py-3 font-medium text-center">Qty</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
             {validRows.length === 0 ? (
-              <tr><td colSpan="5" className="px-6 py-10 text-center text-sm text-gray-400">No importable rows in this file.</td></tr>
+              <tr><td colSpan="5" className="px-6 py-10 text-center text-sm text-gray-400 dark:text-slate-500">No importable rows in this file.</td></tr>
             ) : validRows.slice(0, 300).map((r) => (
               <tr key={r.index}>
-                <td className="px-6 py-2.5 text-gray-400">{r.index + 1}</td>
+                <td className="px-6 py-2.5 text-gray-400 dark:text-slate-500">{r.index + 1}</td>
                 <td className="px-6 py-2.5 font-mono text-xs">{r.sku || '—'}</td>
                 <td className="px-6 py-2.5">{r.name || '—'}</td>
                 <td className="px-6 py-2.5">{r.category || '—'}</td>
@@ -269,33 +269,33 @@ function PreviewPanel({ validRows, errorRows, filename, newCount, updateCount, o
               </tr>
             ))}
             {validRows.length > 300 && (
-              <tr><td colSpan="5" className="px-6 py-3 text-center text-xs text-gray-400">Showing first 300 of {validRows.length} rows…</td></tr>
+              <tr><td colSpan="5" className="px-6 py-3 text-center text-xs text-gray-400 dark:text-slate-500">Showing first 300 of {validRows.length} rows…</td></tr>
             )}
           </tbody>
         </table>
       </div>
 
       {errorCount > 0 && (
-        <div className="border-t border-gray-100">
-          <button onClick={() => setShowSkipped((s) => !s)} className="w-full px-6 py-2.5 text-left text-xs font-semibold text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2">
-            <AlertTriangle size={13} className={showSkipped ? 'text-amber-500 shrink-0' : 'text-gray-400 shrink-0'} />
+        <div className="border-t border-gray-100 dark:border-slate-800">
+          <button onClick={() => setShowSkipped((s) => !s)} className="w-full px-6 py-2.5 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 hover:text-gray-700 hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors flex items-center gap-2">
+            <AlertTriangle size={13} className={showSkipped ? 'text-amber-500 dark:text-amber-400 shrink-0' : 'text-gray-400 dark:text-slate-500 shrink-0'} />
             <span className="truncate">
               {errorCount} row{errorCount === 1 ? '' : 's'} will be skipped
               {reasons.length > 0 && ` — ${reasons.slice(0, 2).join('; ')}${reasons.length > 2 ? '…' : ''}`}
             </span>
-            <span className="ml-auto pl-2 text-gray-400 shrink-0">{showSkipped ? 'Hide' : 'Show'}</span>
+            <span className="ml-auto pl-2 text-gray-400 dark:text-slate-500 shrink-0">{showSkipped ? 'Hide' : 'Show'}</span>
           </button>
           {showSkipped && (
-            <div className="max-h-56 overflow-y-auto border-t border-gray-50 bg-rose-50/40">
+            <div className="max-h-56 overflow-y-auto border-t border-gray-50 dark:border-slate-800 bg-rose-50/40">
               {errorRows.slice(0, 200).map((r) => (
-                <div key={r.index} className="px-6 py-1.5 text-xs text-rose-700 flex gap-3 items-baseline">
-                  <span className="text-gray-400 w-8 shrink-0 text-right">{r.index + 1}</span>
+                <div key={r.index} className="px-6 py-1.5 text-xs text-rose-700 dark:text-rose-300 flex gap-3 items-baseline">
+                  <span className="text-gray-400 dark:text-slate-500 w-8 shrink-0 text-right">{r.index + 1}</span>
                   <span className="font-mono w-28 shrink-0 truncate">{r.sku || '—'}</span>
                   <span className="truncate">{r.errorText}</span>
                 </div>
               ))}
               {errorRows.length > 200 && (
-                <p className="px-6 py-1.5 text-[11px] text-gray-400">…and {errorRows.length - 200} more</p>
+                <p className="px-6 py-1.5 text-[11px] text-gray-400 dark:text-slate-500">…and {errorRows.length - 200} more</p>
               )}
             </div>
           )}
@@ -333,12 +333,12 @@ function ColumnMapper({ headers, mapping, setMapping, rawRows }) {
   const matched = FIELD_LABELS.filter((f) => mapping?.[f.key]).length;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-      <h3 className="text-lg font-bold text-gray-900 flex items-center">
-        <SlidersHorizontal size={20} className="mr-2 text-amber-600" /> Map Columns
-        <span className="ml-3 text-xs font-semibold text-gray-400">from your file's headers to our fields</span>
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
+      <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
+        <SlidersHorizontal size={20} className="mr-2 text-amber-600 dark:text-amber-400" /> Map Columns
+        <span className="ml-3 text-xs font-semibold text-gray-400 dark:text-slate-500">from your file's headers to our fields</span>
       </h3>
-      <p className="text-sm text-gray-500 mt-1">
+      <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
         We auto-matched <strong>{matched} of {FIELD_LABELS.length}</strong> columns. Adjust any that look wrong —
         the preview below updates instantly. Extra columns (totals, UOM, tax…) can simply be left unmapped.
       </p>
@@ -462,21 +462,21 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
 
   const pill = (r) =>
     r.syncStatus === 'pending'
-      ? <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200 whitespace-nowrap">Waiting to sync...</span>
+      ? <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-500/30 whitespace-nowrap">Waiting to sync...</span>
       : r.syncStatus === 'failed'
-        ? <span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 border border-rose-200 whitespace-nowrap cursor-help" title={r.syncError || 'Rejected by server'}>Sync failed</span>
-        : <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 whitespace-nowrap">Saved to database</span>;
+        ? <span className="px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/30 whitespace-nowrap cursor-help" title={r.syncError || 'Rejected by server'}>Sync failed</span>
+        : <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/30 whitespace-nowrap">Saved to database</span>;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
       <div className="p-6 pb-4">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div>
-            <h3 className="text-lg font-bold text-gray-900 flex items-center flex-wrap gap-x-3">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center flex-wrap gap-x-3">
               <Clock size={20} className="text-blue-600" /> Uploaded Files
-              <span className="text-xs font-semibold text-gray-400">{rows.length} on record · click a file for details</span>
+              <span className="text-xs font-semibold text-gray-400 dark:text-slate-500">{rows.length} on record · click a file for details</span>
             </h3>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
               Every file ever imported into stock - who uploaded it, when, and exactly what it changed.
             </p>
           </div>
@@ -486,7 +486,7 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
               <button
                 onClick={toggleAll}
                 disabled={busy}
-                className="px-3 py-2 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors disabled:opacity-50"
               >
                 {allSelected ? 'Deselect all' : 'Select all'}
               </button>
@@ -512,7 +512,7 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
                     <button
                       onClick={() => setConfirmAll(false)}
                       disabled={busy}
-                      className="px-3 py-2 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                      className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors disabled:opacity-50"
                     >
                       Cancel
                     </button>
@@ -524,24 +524,24 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
         </div>
 
         {confirmAll && (
-          <p className="mt-3 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2 flex items-center">
+          <p className="mt-3 text-xs text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 rounded-lg px-3 py-2 flex items-center">
             <AlertTriangle size={14} className="mr-2 shrink-0" />
             This removes {selectedRows.length} file record(s) from the list. The items and stock they added are NOT affected.
           </p>
         )}
         {error && (
-          <p className="mt-3 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">{error}</p>
+          <p className="mt-3 text-xs text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 rounded-lg px-3 py-2">{error}</p>
         )}
       </div>
 
-      <ul className="divide-y divide-gray-50 max-h-[430px] overflow-y-auto border-t border-gray-50">
+      <ul className="divide-y divide-gray-50 dark:divide-slate-800 max-h-[430px] overflow-y-auto border-t border-gray-50 dark:border-slate-800">
         {rows.map((r) => {
           const isOpen = openId === r.id;
           const errs = r.errors?.length || 0;
           const skipped = (r.skipped || 0) + errs;
           return (
             <li key={r.id}>
-              <div className="flex items-stretch hover:bg-gray-50/70 transition-colors">
+              <div className="flex items-stretch hover:bg-gray-50/70 hover:dark:bg-slate-950/70 transition-colors">
               <div className="px-6 py-3.5 flex items-center gap-3 text-left flex-1 min-w-0">
                 {isAdmin && removableIds.has(String(r.id)) ? (
                   <input
@@ -550,12 +550,12 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
                     onChange={() => toggleOne(r.id)}
                     onClick={(e) => e.stopPropagation()}
                     aria-label={`Select ${r.filename}`}
-                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 shrink-0 cursor-pointer"
+                    className="w-4 h-4 rounded border-gray-300 dark:border-slate-700 text-blue-600 dark:text-blue-400 focus:ring-blue-500 shrink-0 cursor-pointer"
                   />
                 ) : isAdmin ? (
                   <span
                     title="This file has not finished syncing yet"
-                    className="w-4 h-4 rounded border border-dashed border-gray-300 shrink-0"
+                    className="w-4 h-4 rounded border border-dashed border-gray-300 dark:border-slate-700 shrink-0"
                   />
                 ) : null}
 
@@ -565,17 +565,17 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
                 >
                 <FileText size={18} className={`shrink-0 ${isOpen ? 'text-blue-500' : 'text-gray-300'}`} />
                 <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-semibold text-gray-900 truncate">{r.filename}</span>
-                  <span className="block text-xs text-gray-400 mt-0.5 truncate">
+                  <span className="block text-sm font-semibold text-gray-900 dark:text-slate-100 truncate">{r.filename}</span>
+                  <span className="block text-xs text-gray-400 dark:text-slate-500 mt-0.5 truncate">
                     {fmtDate(r.created_at)} · by {r.imported_by_name || 'unknown'}
                   </span>
                 </span>
                 <span className="hidden md:flex items-center gap-1.5 text-xs font-bold shrink-0">
-                  <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">{r.row_count || 0} rows</span>
-                  <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">+{r.created || 0} new</span>
-                  <span className="px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">{r.updated || 0} updated</span>
+                  <span className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 border border-gray-200 dark:border-slate-700">{r.row_count || 0} rows</span>
+                  <span className="px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30">+{r.created || 0} new</span>
+                  <span className="px-2 py-0.5 rounded-full bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-500/30">{r.updated || 0} updated</span>
                   {skipped > 0 && (
-                    <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">{skipped} skipped</span>
+                    <span className="px-2 py-0.5 rounded-full bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/30">{skipped} skipped</span>
                   )}
                 </span>
                 {pill(r)}
@@ -590,7 +590,7 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
                     title={removableIds.has(String(r.id))
                       ? 'Remove this file record'
                       : 'This file has not finished syncing yet'}
-                    className="p-2 rounded-lg text-gray-300 hover:text-rose-600 hover:bg-rose-50 transition-colors disabled:opacity-40 disabled:hover:text-gray-300"
+                    className="p-2 rounded-lg text-gray-300 dark:text-slate-600 hover:text-rose-600 hover:dark:text-rose-400 hover:bg-rose-50 hover:dark:bg-rose-500/10 transition-colors disabled:opacity-40 disabled:hover:text-gray-300"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -599,7 +599,7 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
               </div>
 
               {isOpen && (
-                <div className="px-6 pb-4 pt-2 bg-gray-50/40 border-b border-gray-100 text-sm">
+                <div className="px-6 pb-4 pt-2 bg-gray-50/40 dark:bg-slate-950/40 border-b border-gray-100 dark:border-slate-800 text-sm">
                   <div className="flex flex-wrap gap-x-6 gap-y-1 font-bold">
                     <span className="text-gray-900">{r.row_count || 0} total rows</span>
                     <span className="text-sky-700">+{r.created || 0} new items</span>
@@ -609,11 +609,11 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
 
                   {errs > 0 && (
                     <div className="mt-3">
-                      <p className="text-[11px] font-bold text-rose-700 uppercase tracking-wide mb-1.5">Skipped rows ({errs})</p>
+                      <p className="text-[11px] font-bold text-rose-700 dark:text-rose-300 uppercase tracking-wide mb-1.5">Skipped rows ({errs})</p>
                       <ul className="space-y-1 max-h-40 overflow-y-auto">
                         {r.errors.map((e, i) => (
-                          <li key={i} className="text-xs text-gray-600">
-                            <span className="font-mono font-bold text-gray-800">{e.sku || '(no SKU)'}</span> - {e.error}
+                          <li key={i} className="text-xs text-gray-600 dark:text-slate-400">
+                            <span className="font-mono font-bold text-gray-800 dark:text-slate-200">{e.sku || '(no SKU)'}</span> - {e.error}
                           </li>
                         ))}
                       </ul>
@@ -621,14 +621,14 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
                   )}
 
                   {errs === 0 && r.syncStatus === 'failed' && (
-                    <p className="mt-3 text-xs text-rose-700">
+                    <p className="mt-3 text-xs text-rose-700 dark:text-rose-300">
                       Could not be saved to the database: {r.syncError || 'unknown error'}.
                       The data stays safely on this device and will retry automatically when online.
                     </p>
                   )}
 
                   {errs === 0 && r.syncStatus !== 'failed' && (
-                    <p className="mt-3 text-xs text-gray-400">No skipped rows - every line in the file was applied.</p>
+                    <p className="mt-3 text-xs text-gray-400 dark:text-slate-500">No skipped rows - every line in the file was applied.</p>
                   )}
                 </div>
               )}

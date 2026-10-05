@@ -12,6 +12,7 @@ import {
   Receipt, Wrench, Coins, History, ClipboardList, FileSpreadsheet,
   Tags, Settings, BadgeDollarSign, ExternalLink, Info, HardDrive, Trash2, X, CheckCircle2
 } from 'lucide-react';
+import { useTheme } from '../hooks/useTheme.jsx';
 
 const BYTES_PER_MB = 1024 * 1024;
 const BYTES_PER_KB = 1024;
@@ -57,14 +58,14 @@ const DATE_FILTER_UNSUPPORTED = ['taxrates'];
 const CLEAR_DAY_OPTIONS = [30, 90, 180, 365];
 
 const ICON_COLORS = [
-  'bg-blue-50 text-blue-600',
-  'bg-indigo-50 text-indigo-600',
-  'bg-emerald-50 text-emerald-600',
-  'bg-amber-50 text-amber-600',
-  'bg-rose-50 text-rose-600',
+  'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400',
+  'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400',
+  'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+  'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400',
+  'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400',
   'bg-violet-50 text-violet-600',
-  'bg-cyan-50 text-cyan-600',
-  'bg-orange-50 text-orange-600'
+  'bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400',
+  'bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400'
 ];
 
 const prettifyCollectionName = (name) =>
@@ -82,12 +83,15 @@ const formatBytes = (bytes) => {
 
 const formatCount = (n) => Number(n || 0).toLocaleString('en-LK');
 
-// Gauge palette: green under 70%, orange 70–90%, red above 90% of the 512MB tier.
-const usageTone = (percent) => (percent > 90
-  ? { color: '#e11d48', text: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-200', chip: 'bg-rose-100 text-rose-700' }
+// Gauge palette: green under 70%, orange 70-90%, red above 90% of the 512MB tier.
+// `track` is the unused remainder of the donut. It MUST follow the theme or the
+// ring reads as a bright white blob against the dark card, so it comes from
+// useTheme() rather than a hardcoded #e5e7eb.
+const usageTone = (percent, track) => (percent > 90
+  ? { color: '#e11d48', track, text: 'text-rose-600', bg: 'bg-rose-50 dark:bg-rose-500/10', border: 'border-rose-200 dark:border-rose-500/30', chip: 'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300' }
   : percent >= 70
-    ? { color: '#f59e0b', text: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200', chip: 'bg-amber-100 text-amber-700' }
-    : { color: '#10b981', text: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', chip: 'bg-emerald-100 text-emerald-700' });
+    ? { color: '#f59e0b', track, text: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-500/10', border: 'border-amber-200 dark:border-amber-500/30', chip: 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300' }
+    : { color: '#10b981', track, text: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-500/10', border: 'border-emerald-200 dark:border-emerald-500/30', chip: 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300' });
 
 const SectionCard = ({ section, totalBytes, index, onClear }) => {
   const meta = SECTION_META[section.name]
@@ -96,23 +100,23 @@ const SectionCard = ({ section, totalBytes, index, onClear }) => {
   const sharePct = totalBytes > 0 ? Math.max(1, Math.round((section.size / totalBytes) * 100)) : 0;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-5 hover:shadow-md transition-shadow">
       <div className="flex items-center gap-4">
         <div className={`p-3 rounded-xl ${ICON_COLORS[index % ICON_COLORS.length]} shrink-0`}>
           <Icon size={22} />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="font-bold text-gray-900 truncate">{meta.label}</h4>
-          <p className="text-sm text-gray-500">
+          <h4 className="font-bold text-gray-900 dark:text-slate-100 truncate">{meta.label}</h4>
+          <p className="text-sm text-gray-500 dark:text-slate-400">
             {formatCount(section.count)} record{section.count === 1 ? '' : 's'} · {formatBytes(section.size)}
-            <span className="ml-2 text-xs text-gray-400">({sharePct}% of data)</span>
+            <span className="ml-2 text-xs text-gray-400 dark:text-slate-500">({sharePct}% of data)</span>
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {meta.viewPath && (
             <Link
               to={meta.viewPath}
-              className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+              className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
             >
               View <ExternalLink size={13} />
             </Link>
@@ -121,13 +125,13 @@ const SectionCard = ({ section, totalBytes, index, onClear }) => {
             onClick={() => onClear(section)}
             disabled={section.count === 0}
             title={section.count === 0 ? 'Nothing to clear' : `Clear records from ${meta.label}`}
-            className="flex items-center gap-1.5 text-sm font-semibold text-rose-600 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 text-sm font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-800 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Trash2 size={13} /> Clear
           </button>
         </div>
       </div>
-      <div className="mt-3 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+      <div className="mt-3 h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
         <div
           className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500"
           style={{ width: `${sharePct}%` }}
@@ -170,15 +174,15 @@ function ClearStorageModal({ section, onClose, onConfirm }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
-        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 dark:border-slate-800">
           <div className="min-w-0">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
               <Trash2 size={18} className="text-rose-600" /> Clear Data
             </h3>
-            <p className="text-xs text-gray-500 truncate">{meta.label}</p>
+            <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{meta.label}</p>
           </div>
-          <button onClick={onClose} disabled={submitting} className="p-2 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-40">
+          <button onClick={onClose} disabled={submitting} className="p-2 hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors disabled:opacity-40">
             <X size={18} />
           </button>
         </div>
@@ -199,17 +203,17 @@ function ClearStorageModal({ section, onClose, onConfirm }) {
           {supportsDateFilter ? (
             <ClearModePicker mode={mode} setMode={setMode} days={days} setDays={setDays} />
           ) : (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-slate-400">
               This section can only be cleared entirely (date-based cleanup is not available for it).
             </p>
           )}
         </div>
 
-        <div className="px-6 py-4 border-t border-gray-100 flex justify-end space-x-3 bg-gray-50 rounded-b-2xl">
+        <div className="px-6 py-4 border-t border-gray-100 dark:border-slate-800 flex justify-end space-x-3 bg-gray-50 dark:bg-slate-950 rounded-b-2xl">
           <button
             onClick={onClose}
             disabled={submitting}
-            className="px-5 py-2.5 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-40"
+            className="px-5 py-2.5 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors disabled:opacity-40"
           >
             Cancel
           </button>
@@ -233,7 +237,7 @@ function ClearModePicker({ mode, setMode, days, setDays }) {
   }`;
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">What to delete</label>
+      <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">What to delete</label>
       <div className="grid grid-cols-2 gap-2">
         <button type="button" onClick={() => setMode('all')} className={optionClass(mode === 'all')}>
           All records
@@ -244,17 +248,17 @@ function ClearModePicker({ mode, setMode, days, setDays }) {
       </div>
       {mode === 'olderThan' && (
         <div className="mt-3">
-          <label className="block text-xs font-semibold text-gray-500 mb-1">Age threshold</label>
+          <label className="block text-xs font-semibold text-gray-500 dark:text-slate-400 mb-1">Age threshold</label>
           <select
             value={days}
             onChange={(e) => setDays(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring focus:border-rose-300 bg-white"
+            className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring focus:border-rose-300 bg-white dark:bg-slate-800"
           >
             {CLEAR_DAY_OPTIONS.map((d) => (
               <option key={d} value={d}>Older than {d} days</option>
             ))}
           </select>
-          <p className="text-xs text-gray-400 mt-1.5">
+          <p className="text-xs text-gray-400 dark:text-slate-500 mt-1.5">
             Recent records are kept — only records created before the cutoff are removed.
           </p>
         </div>
@@ -264,6 +268,7 @@ function ClearModePicker({ mode, setMode, days, setDays }) {
 }
 
 export default function ManageStoragePage() {
+  const { isDark } = useTheme();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -348,7 +353,7 @@ export default function ManageStoragePage() {
   const limitMB = limitBytes / BYTES_PER_MB;
   const usedMB = usedBytes / BYTES_PER_MB;
   const percent = limitBytes > 0 ? Math.min(100, (usedBytes / limitBytes) * 100) : 0;
-  const tone = usageTone(percent);
+  const tone = usageTone(percent, isDark ? '#1e293b' : '#e5e7eb');
   const remainingMB = Math.max(0, limitMB - usedMB);
 
   const gaugeData = [
@@ -377,7 +382,7 @@ export default function ManageStoragePage() {
       {/* Header */}
       <div className="flex flex-wrap justify-between items-end gap-4 mb-2">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
             <HardDrive className="text-blue-600" size={24} /> Manage Storage
           </h1>
           <p className="text-gray-500 mt-1">
@@ -387,7 +392,7 @@ export default function ManageStoragePage() {
         <button
           onClick={() => load(true)}
           disabled={refreshing}
-          className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-colors disabled:opacity-60"
+          className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 hover:bg-gray-50 px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-colors disabled:opacity-60"
         >
           <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
           {refreshing ? 'Refreshing...' : 'Refresh'}
@@ -430,7 +435,7 @@ export default function ManageStoragePage() {
                   cornerRadius={6}
                 >
                   <Cell fill={tone.color} />
-                  <Cell fill="#e5e7eb" />
+                  <Cell fill={tone.track} />
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
@@ -497,13 +502,13 @@ export default function ManageStoragePage() {
       {/* Data breakdown (Users + Inventory/Stock product data excluded server-side) */}
       <div>
         <div className="flex flex-wrap justify-between items-center gap-2 mb-4">
-          <h3 className="text-lg font-bold text-gray-900">Data Breakdown — largest first</h3>
-          <p className="text-xs text-gray-400">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Data Breakdown — largest first</h3>
+          <p className="text-xs text-gray-400 dark:text-slate-500">
             Excludes user accounts and inventory/stock product data · sizes from MongoDB $collStats
           </p>
         </div>
         {collections.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center text-gray-400">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-8 text-center text-gray-400 dark:text-slate-500">
             No collections to show.
           </div>
         ) : (
@@ -516,11 +521,11 @@ export default function ManageStoragePage() {
       </div>
 
       {/* Static guidance */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-        <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2 mb-4">
           <Lightbulb size={20} className="text-amber-500" /> Tips to Keep Storage Healthy
         </h3>
-        <ul className="space-y-3 text-sm text-gray-600">
+        <ul className="space-y-3 text-sm text-gray-600 dark:text-slate-400">
           <li className="flex gap-3">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 shrink-0" />
             <span>Stock Movement Logs and snapshot data grow continuously — use the Clear button on those sections above to remove records older than 90 days.</span>

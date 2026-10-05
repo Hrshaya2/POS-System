@@ -24,7 +24,7 @@ export default function SyncStatusIndicator({ compact = false }) {
       <div className={`flex items-center space-x-2 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl px-3 py-1.5 text-sm font-bold ${compact ? '' : 'shadow-sm'}`}>
         <CloudOff size={16} />
         <span>Offline mode</span>
-        {totalPending > 0 && <span className="text-xs font-semibold bg-rose-100 rounded-full px-2 py-0.5">{totalPending} pending</span>}
+        {totalPending > 0 && <span className="text-xs font-semibold bg-rose-100 dark:bg-rose-500/20 rounded-full px-2 py-0.5">{totalPending} pending</span>}
       </div>
     );
   }

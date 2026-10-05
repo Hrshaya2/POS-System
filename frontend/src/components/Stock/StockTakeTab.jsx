@@ -50,9 +50,9 @@ function StartCard({ categories, itemCount, onStart }) {
   const canStart = scopeType === 'all' || !!scopeCategory;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-      <h3 className="text-lg font-bold text-gray-900 flex items-center">
-        <ClipboardCheck size={20} className="mr-2 text-purple-500" /> Start Stock Take
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
+      <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
+        <ClipboardCheck size={20} className="mr-2 text-purple-500 dark:text-purple-400" /> Start Stock Take
       </h3>
       <p className="text-sm text-gray-500 mt-1 mb-4">
         Generates a counting checklist with system quantities hidden — count what's actually on the shelf. Choose one category or everything.
@@ -60,16 +60,16 @@ function StartCard({ categories, itemCount, onStart }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-3 items-end">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Count</label>
-          <select value={scopeType} onChange={(e) => setScopeType(e.target.value)} className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-300">
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Count</label>
+          <select value={scopeType} onChange={(e) => setScopeType(e.target.value)} className="px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-blue-300">
             <option value="all">All Items ({itemCount})</option>
             <option value="category">One category…</option>
           </select>
         </div>
         {scopeType === 'category' && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-            <select value={scopeCategory} onChange={(e) => setScopeCategory(e.target.value)} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-300">
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Category</label>
+            <select value={scopeCategory} onChange={(e) => setScopeCategory(e.target.value)} className="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-blue-300">
               <option value="">Select category…</option>
               {categories.map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}
             </select>
@@ -89,11 +89,11 @@ function StartCard({ categories, itemCount, onStart }) {
 
 function HistoryList({ takes }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="p-6 pb-3"><h3 className="text-lg font-bold text-gray-900">Stock Take History</h3></div>
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
+      <div className="p-6 pb-3"><h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Stock Take History</h3></div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
-          <thead className="text-xs text-gray-400 uppercase bg-gray-50/60">
+          <thead className="text-xs text-gray-400 dark:text-slate-500 uppercase bg-gray-50/60 dark:bg-slate-950/60">
             <tr>
               <th className="px-6 py-3 font-medium">Started</th>
               <th className="px-6 py-3 font-medium">Scope</th>
@@ -103,9 +103,9 @@ function HistoryList({ takes }) {
               <th className="px-6 py-3 font-medium">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
             {takes.length === 0 ? (
-              <tr><td colSpan="6" className="px-6 py-8 text-center text-gray-400">No stock takes recorded yet.</td></tr>
+              <tr><td colSpan="6" className="px-6 py-8 text-center text-gray-400 dark:text-slate-500">No stock takes recorded yet.</td></tr>
             ) : takes.slice(0, 20).map((t) => (
               <tr key={t.id} className="hover:bg-gray-50/70">
                 <td className="px-6 py-3 whitespace-nowrap">{fmtDateTime(t.started_at)}</td>
@@ -119,8 +119,8 @@ function HistoryList({ takes }) {
                 </td>
                 <td className="px-6 py-3">
                   {t.status === 'completed'
-                    ? <span className="inline-flex items-center text-xs font-semibold text-emerald-700"><CheckCircle2 size={14} className="mr-1" />Completed{t.completed_by_name ? ` · ${t.completed_by_name}` : ''}</span>
-                    : <span className="inline-flex items-center text-xs font-semibold text-amber-600"><AlertTriangle size={14} className="mr-1" />In progress</span>}
+                    ? <span className="inline-flex items-center text-xs font-semibold text-emerald-700 dark:text-emerald-300"><CheckCircle2 size={14} className="mr-1" />Completed{t.completed_by_name ? ` · ${t.completed_by_name}` : ''}</span>
+                    : <span className="inline-flex items-center text-xs font-semibold text-amber-600 dark:text-amber-400"><AlertTriangle size={14} className="mr-1" />In progress</span>}
                 </td>
               </tr>
             ))}
@@ -138,20 +138,20 @@ function CountRow({ line, value, onChange, onBump }) {
 
   let statusChip = null;
   if (counted) {
-    if (diff === 0) statusChip = <span className="font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">MATCH</span>;
-    else if (diff > 0) statusChip = <span className="font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">+{diff}</span>;
-    else statusChip = <span className="font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">{diff}</span>;
+    if (diff === 0) statusChip = <span className="font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">MATCH</span>;
+    else if (diff > 0) statusChip = <span className="font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">+{diff}</span>;
+    else statusChip = <span className="font-bold px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300">{diff}</span>;
   }
 
   return (
     <div className={`flex items-center justify-between gap-4 px-5 py-4 ${counted ? 'bg-blue-50/30' : 'bg-white'}`}>
       <div className="min-w-0 flex-1">
-        <p className="font-semibold text-gray-900 truncate">{line.name}</p>
-        <p className="text-[11px] font-mono text-gray-400 truncate">{line.sku}{statusChip && <> · {statusChip}</>}</p>
+        <p className="font-semibold text-gray-900 dark:text-slate-100 truncate">{line.name}</p>
+        <p className="text-[11px] font-mono text-gray-400 dark:text-slate-500 truncate">{line.sku}{statusChip && <> · {statusChip}</>}</p>
       </div>
       <div className="flex items-center space-x-2 shrink-0">
         {/* Big steppers for fast tapping while walking the shelf */}
-        <button onClick={() => onBump(-1)} className="w-12 h-12 rounded-2xl bg-gray-100 active:bg-gray-200 text-gray-600 text-2xl font-black flex items-center justify-center transition-transform active:scale-95" aria-label="decrement">−</button>
+        <button onClick={() => onBump(-1)} className="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-slate-800 active:bg-gray-200 text-gray-600 dark:text-slate-400 text-2xl font-black flex items-center justify-center transition-transform active:scale-95" aria-label="decrement">−</button>
         <input
           type="number"
           inputMode="numeric"
@@ -159,9 +159,9 @@ function CountRow({ line, value, onChange, onBump }) {
           value={value ?? ''}
           onChange={(e) => onChange(e.target.value)}
           placeholder="—"
-          className="w-20 h-14 text-center text-2xl font-black border-2 rounded-2xl focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 placeholder:text-gray-300"
+          className="w-20 h-14 text-center text-2xl font-black border-2 rounded-2xl focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 focus:dark:ring-purple-500/20 placeholder:text-gray-300 placeholder:dark:text-slate-600"
         />
-        <button onClick={() => onBump(1)} className="w-12 h-12 rounded-2xl bg-purple-100 active:bg-purple-200 text-purple-700 text-2xl font-black flex items-center justify-center transition-transform active:scale-95" aria-label="increment">+</button>
+        <button onClick={() => onBump(1)} className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-500/20 active:bg-purple-200 text-purple-700 dark:text-purple-300 text-2xl font-black flex items-center justify-center transition-transform active:scale-95" aria-label="increment">+</button>
       </div>
     </div>
   );
@@ -172,10 +172,10 @@ function VarianceSummary({ counts, lines, isAdmin, applying, applyResult, onBack
   if (applyResult) {
     const v = applyResult.totalVariance;
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
-        <CheckCircle2 size={48} className="mx-auto text-emerald-500 mb-3" />
-        <h3 className="text-xl font-bold text-gray-900">Stock take applied</h3>
-        <p className="text-sm text-gray-500 mt-1">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-8 text-center">
+        <CheckCircle2 size={48} className="mx-auto text-emerald-500 dark:text-emerald-400 mb-3" />
+        <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100">Stock take applied</h3>
+        <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
           {applyResult.correctedItems} item(s) corrected · total variance{' '}
           <span className={`font-bold ${v === 0 ? 'text-gray-600' : v > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
             {v > 0 ? `+${v}` : v}
@@ -197,23 +197,23 @@ function VarianceSummary({ counts, lines, isAdmin, applying, applyResult, onBack
   const totalVariance = reviewed.reduce((sum, l) => sum + (Number(l.counted) - l.system_qty), 0);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
+      <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-bold text-gray-900">Variance Summary</h3>
-          <p className="text-sm text-gray-500">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Variance Summary</h3>
+          <p className="text-sm text-gray-500 dark:text-slate-400">
             {reviewed.length} counted · {variances.length} with differences · total variance{' '}
             <span className={`font-bold ${totalVariance === 0 ? 'text-gray-600' : totalVariance > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
               {totalVariance > 0 ? `+${totalVariance}` : totalVariance}
             </span>
           </p>
         </div>
-        <button onClick={onBack} className="px-4 py-2 border border-gray-200 rounded-xl text-sm font-semibold hover:bg-gray-50">← Keep counting</button>
+        <button onClick={onBack} className="px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold hover:bg-gray-50 hover:dark:bg-slate-950">← Keep counting</button>
       </div>
 
       <div className="overflow-x-auto max-h-[50vh] overflow-y-auto">
         <table className="w-full text-sm text-left">
-          <thead className="text-xs text-gray-400 uppercase bg-gray-50/80 sticky top-0">
+          <thead className="text-xs text-gray-400 dark:text-slate-500 uppercase bg-gray-50/80 dark:bg-slate-950/80 sticky top-0">
             <tr>
               <th className="px-6 py-3 font-medium">Item</th>
               <th className="px-6 py-3 font-medium text-center">System</th>
@@ -222,22 +222,22 @@ function VarianceSummary({ counts, lines, isAdmin, applying, applyResult, onBack
               <th className="px-6 py-3 font-medium">Action on apply</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
             {reviewed.map((l) => {
               const diff = Number(l.counted) - l.system_qty;
-              const color = diff === 0 ? '' : diff > 0 ? 'text-emerald-700 bg-emerald-50/60' : 'text-rose-700 bg-rose-50/60';
+              const color = diff === 0 ? '' : diff > 0 ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-50/60' : 'text-rose-700 dark:text-rose-300 bg-rose-50/60';
               return (
                 <tr key={l.accessory_id} className={color}>
                   <td className="px-6 py-3">
-                    <span className="font-semibold text-gray-900">{l.name}</span>
-                    <span className="block text-[11px] font-mono text-gray-400">{l.sku}</span>
+                    <span className="font-semibold text-gray-900 dark:text-slate-100">{l.name}</span>
+                    <span className="block text-[11px] font-mono text-gray-400 dark:text-slate-500">{l.sku}</span>
                   </td>
                   <td className="px-6 py-3 text-center">{l.system_qty}</td>
                   <td className="px-6 py-3 text-center font-bold">{l.counted}</td>
                   <td className={`px-6 py-3 text-center font-black ${diff === 0 ? 'text-gray-400' : diff > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                     {diff > 0 ? `+${diff}` : diff}
                   </td>
-                  <td className="px-6 py-3 text-xs text-gray-500">
+                  <td className="px-6 py-3 text-xs text-gray-500 dark:text-slate-400">
                     {diff === 0 ? 'No change' : `Set quantity to ${l.counted} + log STOCK_TAKE movement`}
                   </td>
                 </tr>
@@ -247,9 +247,9 @@ function VarianceSummary({ counts, lines, isAdmin, applying, applyResult, onBack
         </table>
       </div>
 
-      <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex flex-col sm:flex-row justify-between items-center gap-3">
+      <div className="px-6 py-4 border-t border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-950 flex flex-col sm:flex-row justify-between items-center gap-3">
         {!isAdmin && (
-          <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 w-full sm:w-auto flex-1">
+          <p className="text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20 rounded-lg px-3 py-2 w-full sm:w-auto flex-1">
             Applying corrections requires an admin or shop owner account.
           </p>
         )}
@@ -341,7 +341,7 @@ function CountingView({ take, user, isAdmin, onExit, onDataChanged }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-purple-100 overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-sm border border-purple-100 dark:border-purple-500/20 overflow-hidden">
       {/* Sticky progress header */}
       <div className="bg-purple-600 text-white px-6 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
@@ -368,7 +368,7 @@ function CountingView({ take, user, isAdmin, onExit, onDataChanged }) {
       </div>
 
       {/* Checklist */}
-      <div className="divide-y divide-gray-100 max-h-[58vh] overflow-y-auto">
+      <div className="divide-y divide-gray-100 dark:divide-slate-800 max-h-[58vh] overflow-y-auto">
         {lines.map((line) => (
           <CountRow
             key={line.accessory_id}
@@ -381,7 +381,7 @@ function CountingView({ take, user, isAdmin, onExit, onDataChanged }) {
       </div>
 
       {/* Finish */}
-      <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end">
+      <div className="px-6 py-4 border-t border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-950 flex justify-end">
         <button
           onClick={() => setShowVariance(true)}
           disabled={countedIds.length === 0}

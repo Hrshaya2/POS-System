@@ -34,24 +34,24 @@ export default function ItemDetailModal({ item, isAdmin, onClose, onAdjust, onEd
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col">
-        <div className="flex justify-between items-start px-6 py-4 border-b border-gray-100">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col">
+        <div className="flex justify-between items-start px-6 py-4 border-b border-gray-100 dark:border-slate-800">
           <div>
-            <h3 className="text-lg font-bold text-gray-900 flex items-center">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
               {item.color_tag && <span className="inline-block w-3 h-3 rounded-full mr-2" style={colorStyle(item.color_tag)} />}
               {item.name}
-              {isService && <span className="ml-2 text-[10px] font-bold uppercase bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">Service</span>}
+              {isService && <span className="ml-2 text-[10px] font-bold uppercase bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 px-1.5 py-0.5 rounded">Service</span>}
             </h3>
-            <p className="text-xs text-gray-500 font-mono">{item.sku}{item.barcodes?.length ? ` · +${item.barcodes.length} barcode(s)` : ''}</p>
+            <p className="text-xs text-gray-500 dark:text-slate-400 font-mono">{item.sku}{item.barcodes?.length ? ` · +${item.barcodes.length} barcode(s)` : ''}</p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors"><X size={18} /></button>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>
         </div>
 
         <div className="p-6 overflow-y-auto space-y-5">
           <InfoGrid item={item} isAdmin={isAdmin} isService={isService} />
 
           {(item.imei || item.condition_grade || item.battery_health || item.warranty_months) && (
-            <div className="bg-indigo-50/50 border border-indigo-100 rounded-xl p-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="bg-indigo-50/50 border border-indigo-100 dark:border-indigo-500/20 rounded-xl p-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
               {item.imei && <InfoTile small label="IMEI" value={item.imei} />}
               {item.condition_grade && <InfoTile small label="Condition" value={item.condition_grade} />}
               {!!item.battery_health && <InfoTile small label="Battery" value={`${item.battery_health}%`} />}
@@ -62,16 +62,16 @@ export default function ItemDetailModal({ item, isAdmin, onClose, onAdjust, onEd
           {/* Actions */}
           <div className="flex flex-wrap gap-2">
             {!isService && (
-              <button onClick={() => onAdjust(item)} className="flex items-center space-x-1.5 px-4 py-2 bg-orange-50 border border-orange-200 text-orange-700 rounded-xl text-sm font-semibold hover:bg-orange-100 transition-colors">
+              <button onClick={() => onAdjust(item)} className="flex items-center space-x-1.5 px-4 py-2 bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/30 text-orange-700 dark:text-orange-300 rounded-xl text-sm font-semibold hover:bg-orange-100 transition-colors">
                 <Wrench size={15} /> Adjust Stock
               </button>
             )}
             {isAdmin && (
-              <button onClick={() => onEdit(item)} className="flex items-center space-x-1.5 px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl text-sm font-semibold hover:bg-blue-100 transition-colors">
+              <button onClick={() => onEdit(item)} className="flex items-center space-x-1.5 px-4 py-2 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 text-blue-700 dark:text-blue-300 rounded-xl text-sm font-semibold hover:bg-blue-100 transition-colors">
                 <Pencil size={15} /> Edit Details
               </button>
             )}
-            <button onClick={() => onPrintLabel(item)} className="flex items-center space-x-1.5 px-4 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-xl text-sm font-semibold hover:bg-indigo-100 transition-colors">
+            <button onClick={() => onPrintLabel(item)} className="flex items-center space-x-1.5 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300 rounded-xl text-sm font-semibold hover:bg-indigo-100 transition-colors">
               <BarcodeIcon size={15} /> Print Label
             </button>
           </div>
@@ -87,8 +87,8 @@ export default function ItemDetailModal({ item, isAdmin, onClose, onAdjust, onEd
 
 function InfoTile({ label, value, strong = false, small = false }) {
   return (
-    <div className="bg-gray-50 rounded-xl px-3 py-2 min-w-0">
-      <p className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">{label}</p>
+    <div className="bg-gray-50 dark:bg-slate-950 rounded-xl px-3 py-2 min-w-0">
+      <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-slate-500 font-semibold">{label}</p>
       <p className={`${small ? 'text-xs' : 'text-sm'} ${strong ? 'font-bold text-gray-900' : 'text-gray-700'} truncate`}>{value}</p>
     </div>
   );
@@ -117,11 +117,11 @@ function HistoryList({ movements, loading, typeFilter, setTypeFilter }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
-        <h4 className="font-bold text-gray-900 text-sm">Stock History</h4>
+        <h4 className="font-bold text-gray-900 dark:text-slate-100 text-sm">Stock History</h4>
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
-          className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:border-blue-300"
+          className="text-xs border border-gray-200 dark:border-slate-700 rounded-lg px-2 py-1.5 focus:outline-none focus:border-blue-300"
         >
           <option value="">All types</option>
           <option value="STOCK_IN">Stock In</option>
@@ -133,24 +133,24 @@ function HistoryList({ movements, loading, typeFilter, setTypeFilter }) {
         </select>
       </div>
 
-      <div className="border border-gray-100 rounded-xl divide-y divide-gray-50 max-h-72 overflow-y-auto">
+      <div className="border border-gray-100 dark:border-slate-800 rounded-xl divide-y divide-gray-50 dark:divide-slate-800 max-h-72 overflow-y-auto">
         {loading ? (
-          <p className="text-sm text-gray-400 p-4">Loading history…</p>
+          <p className="text-sm text-gray-400 dark:text-slate-500 p-4">Loading history…</p>
         ) : movements.length === 0 ? (
-          <p className="text-sm text-gray-400 p-4">No movements recorded yet for this item.</p>
+          <p className="text-sm text-gray-400 dark:text-slate-500 p-4">No movements recorded yet for this item.</p>
         ) : movements.map((m) => (
-          <div key={m.local_key || m.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50/60">
+          <div key={m.local_key || m.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50/60 hover:dark:bg-slate-950/60">
             <div className="min-w-0">
               <MovementBadge type={m.type} />
-              <p className="text-xs text-gray-500 mt-1 truncate">
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1 truncate">
                 {m.note || m.reason}
                 {m.reference ? ` · ${m.reference}` : ''}
               </p>
             </div>
             <div className="text-right shrink-0 ml-3">
               {formatQtyChange(m)}
-              <p className="text-[10px] text-gray-400">{fmtDate(m.created_at)}</p>
-              <p className="text-[10px] text-gray-500">{m.user_name}</p>
+              <p className="text-[10px] text-gray-400 dark:text-slate-500">{fmtDate(m.created_at)}</p>
+              <p className="text-[10px] text-gray-500 dark:text-slate-400">{m.user_name}</p>
             </div>
           </div>
         ))}
