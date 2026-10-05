@@ -94,7 +94,7 @@ export default function CategoryGrid({ categories, items, onOpenCategory, onMana
                 <div className="font-bold text-gray-900 dark:text-slate-100 group-hover:text-blue-600 group-hover:dark:text-blue-400 transition-colors truncate">{name}</div>
                 <div className="flex items-center space-x-3 mt-1.5 text-xs text-gray-500 dark:text-slate-400">
                   <span>{stat.count} items</span>
-                  <span className="text-gray-300">|</span>
+                  <span className="text-gray-300 dark:text-slate-600">|</span>
                   <span>{stat.qty.toLocaleString()} in stock</span>
                 </div>
               </button>

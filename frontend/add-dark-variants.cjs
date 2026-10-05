@@ -144,17 +144,63 @@ const transformString = (cls) => {
     return out.join('');
 };
 
-// A className string literal: "..." or '...' or `...` (no ${} inside).
-const STRING = /(['"`])((?:(?!\1)[^\\]|\\.)*)\1/g;
+// Apply the transform to one quoted string body. Returns null when nothing applies.
+// `singleToken` allows the single-token case, which is only safe inside a
+// template literal's ternary (e.g. ${x ? 'bg-white' : 'bg-gray-50'}) where the
+// token IS the whole class list.
+const transformBody = (body, singleToken = false) => {
+    if (!body.trim()) return null;
+    if (!/\b(?:bg|text|border|ring|divide|fill|stroke|from|via|to)-/.test(body)) return null;
+    if (!/\s/.test(body)) {
+        if (!singleToken) return null;
+        const twin = mapToken(body.trim());
+        return twin ? `${body.trim()} ${twin}` : null;
+    }
+    const next = transformString(body);
+    return next === body ? null : next;
+};
 
-const transformFile = (text) =>
-    text.replace(STRING, (full, quote, body) => {
-        if (!/[\s]/.test(body)) return full;              // single token, nothing to pair
-        if (!/\b(?:bg|text|border|ring|divide|fill|stroke|from|via|to)-/.test(body)) return full;
-        if (body.includes('${')) return full;            // template with interpolation
-        const next = transformString(body);
-        return next === body ? full : `${quote}${next}${quote}`;
+// A quoted string: '...' or "...". Interpolations are not valid here, so a
+// simple pattern is safe.
+const QUOTED = /(['"])((?:(?!\1)[^\\\n]|\\.)*)\1/g;
+
+// Template literals are handled SEPARATELY from the quoted strings above.
+// Scanning all three quote styles with one combined pattern does not work: a
+// template literal such as `... ${x ? 'bg-white' : 'bg-gray-50'} ...` would be
+// consumed whole by the backtick match, and the quoted strings inside it would
+// never be visited. Running the backtick pass first and simply SKIPPING any
+// template that contains `${` leaves those inner strings for the quote passes,
+// which then handle them on their own.
+const TEMPLATE = /`([^`]*)`/g;
+
+const transformFile = (text) => {
+    // 1) Quoted strings nested inside a template literal's ${...} ternary. These
+    //    are frequently a SINGLE token (e.g. ${x ? 'bg-white' : 'bg-gray-50'}),
+    //    which is the single most-missed case in this codebase. A backtick-aware
+    //    scan is used so that ordinary strings elsewhere in the file - which may
+    //    legitimately hold a lone value such as `const price = "bg-white"` - are
+    //    left completely alone.
+    text = text.replace(/`([^`]*)`/g, (full, body) => {
+        if (!body.includes('${')) {
+            // Plain template: the body IS the className, so allow single tokens.
+            const next = transformBody(body, true);
+            return next === null ? full : `\`${next}\``;
+        }
+        // Interpolated template: theme the quoted strings inside ${...}.
+        const inner = body.replace(/(['"])((?:(?!\1)[^\\\n]|\\.)*)\1/g, (s, quote, inner_body) => {
+            const next = transformBody(inner_body, true);
+            return next === null ? s : `${quote}${next}${quote}`;
+        });
+        return inner === body ? full : `\`${inner}\``;
     });
+    // 2) Ordinary quoted strings with a multi-token class list (normal
+    //    className="..." attributes).
+    text = text.replace(QUOTED, (full, quote, body) => {
+        const next = transformBody(body, false);
+        return next === null ? full : `${quote}${next}${quote}`;
+    });
+    return text;
+};
 
 const walk = (dir, out = []) => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

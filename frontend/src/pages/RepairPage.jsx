@@ -506,7 +506,7 @@ export default function RepairPage() {
                 {filteredJobs.length === 0 ? (
                   <tr><td colSpan="6" className="px-4 py-8 text-center text-gray-400 dark:text-slate-500">No matching repair jobs.</td></tr>
                 ) : filteredJobs.map((job) => (
-                  <tr key={job.id} onClick={() => setSelectedJobId(job.id)} className={`cursor-pointer border-b border-gray-100 hover:bg-gray-50 ${selectedJob && selectedJob.id === job.id ? 'bg-blue-50' : ''}`}>
+                  <tr key={job.id} onClick={() => setSelectedJobId(job.id)} className={`cursor-pointer border-b border-gray-100 hover:bg-gray-50 ${selectedJob && selectedJob.id === job.id ? 'bg-blue-50 dark:bg-blue-500/10' : ''}`}>
                     <td className="px-4 py-3 font-semibold text-gray-900 dark:text-slate-100">{job.customer_name}<div className="text-xs text-gray-400 dark:text-slate-500">{job.phone_number}</div></td>
                     <td className="px-4 py-3">{job.device_model}</td>
                     <td className="px-4 py-3">{job.imei || 'N/A'}</td>
@@ -540,7 +540,7 @@ export default function RepairPage() {
                     key={status}
                     onClick={() => advanceStatus(selectedJob.id, status)}
                     disabled={idx < REPAIR_STATUSES.indexOf(selectedJob.repair_status) || idx !== REPAIR_STATUSES.indexOf(selectedJob.repair_status) + 1}
-                    className={`rounded-full px-3 py-2 text-xs font-semibold ${selectedJob.repair_status === status ? 'bg-indigo-600 text-white' : idx < REPAIR_STATUSES.indexOf(selectedJob.repair_status) ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'} disabled:opacity-40`}
+                    className={`rounded-full px-3 py-2 text-xs font-semibold ${selectedJob.repair_status === status ? 'bg-indigo-600 text-white' : idx < REPAIR_STATUSES.indexOf(selectedJob.repair_status) ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300' : 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400'} disabled:opacity-40`}
                   >
                     {status}
                   </button>

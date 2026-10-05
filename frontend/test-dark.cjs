@@ -2,6 +2,14 @@
 const assert = require('assert');
 const { transformString, transformFile, mapToken } = require('./add-dark-variants.cjs');
 
+// Print the actual result for the interpolated-template case so failures are
+// readable (inline quoting mangles template literals in the shell).
+const SRC = '<div className={`rounded p-2 ${x ? "bg-white" : "bg-gray-50"}`} />';
+console.log('interpolated template result:');
+console.log('  in :', SRC);
+console.log('  out:', transformFile(SRC));
+console.log('');
+
 let pass = 0;
 const t = (name, fn) => {
   try { fn(); pass++; }
@@ -86,9 +94,21 @@ t('hex colours and JS are untouched', () => {
   const src = `const c = '#f8fafc';\nconst n = 40;`;
   assert.strictEqual(transformFile(src), src);
 });
-t('template literals with interpolation are skipped', () => {
-  const src = '<div className={`bg-white ${x}`} />';
-  assert.strictEqual(transformFile(src), src);
+t('template literals with interpolation are handled inner-string by inner-string', () => {
+  // The nested quoted strings inside ${...} MUST still be themed.
+  const src = '<div className={`rounded p-2 ${x ? "bg-white" : "bg-gray-50"}`} />';
+  const out = transformFile(src);
+  assert.ok(out.includes('dark:bg-slate-800'), out);
+  assert.ok(out.includes('dark:bg-slate-950'), out);
+});
+t('plain template literal without interpolation is transformed', () => {
+  const out = transformFile('<div className={`bg-white p-4`} />');
+  assert.ok(out.includes('dark:bg-slate-800'), out);
+});
+t('no interpolation markers are broken', () => {
+  const src = '<div className={`a ${b} c ${d ? "x" : "y"}`} />';
+  const out = transformFile(src);
+  assert.strictEqual((out.match(/\$\{/g) || []).length, 2, out);
 });
 
 console.log(`\n${pass} assertions passed`);

@@ -74,7 +74,7 @@ export default function CashSessionHistoryPage() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${s.status === 'open' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600'}`}>
+                                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${s.status === 'open' ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300' : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400'}`}>
                                             {s.status}
                                         </span>
                                     </td>
@@ -93,7 +93,7 @@ export default function CashSessionHistoryPage() {
                                             <td className="px-6 py-4 text-gray-600 dark:text-slate-400 border-l border-gray-50 dark:border-slate-800 bg-gray-50/30 dark:bg-slate-950/30">{formatMoney(s.expected_cash)}</td>
                                             <td className="px-6 py-4 font-semibold text-gray-900 dark:text-slate-100 bg-gray-50/30 dark:bg-slate-950/30">{formatMoney(s.actual_cash)}</td>
                                             <td className="px-6 py-4 bg-gray-50/30 dark:bg-slate-950/30">
-                                                <span className={`font-bold inline-flex items-center gap-1.5 px-2 py-1 rounded-lg ${s.variance < 0 ? 'bg-rose-50 text-rose-600' : s.variance > 0 ? 'bg-emerald-50 text-emerald-600' : 'text-gray-500'}`}>
+                                                <span className={`font-bold inline-flex items-center gap-1.5 px-2 py-1 rounded-lg ${s.variance < 0 ? 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400' : s.variance > 0 ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'text-gray-500 dark:text-slate-400'}`}>
                                                     {s.variance < 0 ? 'SHORT' : s.variance > 0 ? 'OVER' : 'BALANCED'}
                                                     {s.variance !== 0 && ` (${formatMoney(Math.abs(s.variance))})`}
                                                 </span>

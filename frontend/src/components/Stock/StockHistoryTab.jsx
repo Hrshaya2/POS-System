@@ -86,7 +86,7 @@ function LedgerTable({ rows, loading, items, onOpenItem }) {
               <tr key={m.local_key || m.id} className="hover:bg-gray-50/70 hover:dark:bg-slate-950/70 transition-colors">
                 <td className="px-6 py-3"><MovementBadge type={m.type} /></td>
                 <td className="px-6 py-3">
-                  <button onClick={() => onOpenItem(item || m)} disabled={!item} className={`text-left ${item ? 'font-semibold text-gray-900 hover:text-blue-600' : 'text-gray-700'}`}>
+                  <button onClick={() => onOpenItem(item || m)} disabled={!item} className={`text-left ${item ? 'font-semibold text-gray-900 dark:text-slate-100 hover:text-blue-600 hover:dark:text-blue-400' : 'text-gray-700 dark:text-slate-300'}`}>
                     {m.item_name}
                   </button>
                   <div className="text-[11px] font-mono text-gray-400 dark:text-slate-500">{m.sku}</div>
@@ -94,7 +94,7 @@ function LedgerTable({ rows, loading, items, onOpenItem }) {
                 <td className="px-6 py-3 text-center">{formatQtyChange(m)}</td>
                 <td className="px-6 py-3 text-center font-semibold text-gray-700 dark:text-slate-300">{m.resulting_quantity}</td>
                 <td className="px-6 py-3 max-w-[220px]">
-                  <span className="text-gray-600">{m.reason}</span>
+                  <span className="text-gray-600 dark:text-slate-400">{m.reason}</span>
                   {m.note && <span className="block text-xs text-gray-400 dark:text-slate-500 truncate">{m.note}</span>}
                   {m.reference && <span className="block text-[10px] font-mono text-gray-400 dark:text-slate-500 truncate">{m.reference}</span>}
                 </td>

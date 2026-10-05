@@ -558,14 +558,14 @@ function PageShell(props) {
               onClick={onManageCategories}
               className={MENU_ITEM}
             >
-              <Layers size={15} className="text-gray-500" /> Manage categories
+              <Layers size={15} className="text-gray-500 dark:text-slate-400" /> Manage categories
             </button>
             <button
               type="button"
               onClick={onRefresh}
               className={MENU_ITEM}
             >
-              <RefreshCw size={15} className="text-gray-500" /> Refresh from database
+              <RefreshCw size={15} className="text-gray-500 dark:text-slate-400" /> Refresh from database
             </button>
             <button
               type="button"
@@ -573,7 +573,7 @@ function PageShell(props) {
               title="Clear stock data saved on this device and reload from the database"
               className={MENU_ITEM}
             >
-              <Trash2 size={15} className="text-gray-500" /> Reset local cache
+              <Trash2 size={15} className="text-gray-500 dark:text-slate-400 " /> Reset local cache
             </button>
             {isAdmin && onDeleteAllStock && (
               <>
@@ -601,13 +601,13 @@ function PageShell(props) {
               key={tab.id}
               onClick={() => setPageTab(tab.id)}
               className={`flex items-center space-x-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                isActive ? 'bg-blue-600 text-white shadow' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+                isActive ? 'bg-blue-600 text-white shadow' : 'text-gray-500 dark:text-slate-500 hover:text-gray-900 hover:bg-gray-50 '
               }`}
             >
               <Icon size={15} />
               <span>{tab.label}</span>
               {tab.id === 'alerts' && lowStockCount > 0 && (
-                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${isActive ? 'bg-white text-rose-600' : 'bg-rose-100 text-rose-700'}`}>
+                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${isActive ? 'bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400' : 'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300'}`}>
                   {lowStockCount}
                 </span>
               )}
@@ -801,7 +801,7 @@ function ItemsSection(props) {
       {/* Search — global at grid level, local inside a category */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" />
           <input
             ref={searchInputRef}
             value={searchTerm}
@@ -822,16 +822,16 @@ function ItemsSection(props) {
         /* ---- Grid level: category cards + global search results ---- */
         <>
           {searchTerm.trim() && (
-            <div className="bg-white rounded-2xl border border-gray-100 dark:border-slate-800 overflow-hidden shadow-sm">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 overflow-hidden shadow-sm">
               {filteredItems.length === 0 && matchingCategories.length === 0 ? (
                 /* No matches: the filter produced nothing, so say so explicitly.
                    Without this the results panel vanished and the untouched
                    CategoryGrid below looked like the search had done nothing. */
                 <div className="px-5 py-8 text-center">
-                  <p className="text-sm font-semibold text-gray-700">
+                  <p className="text-sm font-semibold text-gray-700 dark:text-slate-300">
                     No items or categories match “{searchTerm.trim()}”
                   </p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">
                     Searched category names, item names, SKUs and manufacturer barcodes.
                   </p>
                 </div>
@@ -841,8 +841,8 @@ function ItemsSection(props) {
                     /* Matching CATEGORIES first - typing a category name is a
                        legitimate search that previously returned nothing at all
                        unless an item also happened to match. */
-                    <div className="px-5 py-3 border-b border-gray-50 bg-gray-50/50">
-                      <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
+                    <div className="px-5 py-3 border-b border-gray-50 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50">
+                      <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-2">
                         {matchingCategories.length} categor{matchingCategories.length === 1 ? 'y' : 'ies'}
                       </p>
                       <div className="flex flex-wrap gap-2">
@@ -862,7 +862,7 @@ function ItemsSection(props) {
                   )}
                   {filteredItems.length > 0 && (
                     <>
-                  <p className="px-5 py-2.5 text-xs font-semibold text-gray-500 dark:text-slate-400 border-b border-gray-50">
+                  <p className="px-5 py-2.5 text-xs font-semibold text-gray-500 dark:text-slate-400 border-b border-gray-50 dark:border-slate-800">
                     {filteredItems.length} result{filteredItems.length === 1 ? '' : 's'} in {searchGroups.length} categor{searchGroups.length === 1 ? 'y' : 'ies'}
                   </p>
 
@@ -875,27 +875,27 @@ function ItemsSection(props) {
                       type="button"
                       onClick={() => { setActiveCategory(group.name); setSearchTerm(''); }}
                       title={`Open the ${group.name} category`}
-                      className="w-full flex items-center justify-between gap-3 px-5 py-2 bg-gray-50/80 hover:bg-blue-50/70 transition-colors text-left"
+                      className="w-full flex items-center justify-between gap-3 px-5 py-2 bg-gray-50/80 dark:bg-slate-950/80 hover:bg-blue-50/70 transition-colors text-left"
                     >
                       <span className="flex items-center gap-2 min-w-0">
-                        <span className="text-xs font-bold text-gray-700 uppercase tracking-wide truncate">
+                        <span className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wide truncate">
                           {group.name}
                         </span>
-                        <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white text-gray-500 border border-gray-200">
+                        <span className="shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white dark:bg-slate-800 text-gray-500 dark:text-slate-400 border border-gray-200 dark:border-slate-700">
                           {group.items.length}
                         </span>
                       </span>
-                      <span className="shrink-0 text-[11px] text-blue-600 font-medium">View all</span>
+                      <span className="shrink-0 text-[11px] text-blue-600 dark:text-blue-400 font-medium">View all</span>
                     </button>
 
-                    <div className="divide-y divide-gray-50">
+                    <div className="divide-y divide-gray-50 dark:divide-slate-800">
                       {group.items.slice(0, SEARCH_GROUP_LIMIT).map((item) => (
                         <button key={item.id} onClick={() => onView(item)} className="w-full flex items-center justify-between gap-3 px-5 py-2.5 hover:bg-blue-50/40 text-left transition-colors">
                           <div className="min-w-0">
-                            <span className="text-sm font-semibold text-gray-900">{item.name}</span>
-                            <span className="ml-2 text-[11px] font-mono text-gray-400">{item.sku}</span>
+                            <span className="text-sm font-semibold text-gray-900 dark:text-slate-100">{item.name}</span>
+                            <span className="ml-2 text-[11px] font-mono text-gray-400 dark:text-slate-500">{item.sku}</span>
                           </div>
-                          <span className={`shrink-0 text-sm font-bold ${Number(item.quantity) <= Number(item.low_stock_threshold ?? 5) ? 'text-rose-600' : 'text-gray-600'}`}>
+                          <span className={`shrink-0 text-sm font-bold ${Number(item.quantity) <= Number(item.low_stock_threshold ?? 5) ? 'text-rose-600 dark:text-rose-400' : 'text-gray-600 dark:text-slate-400'}`}>
                             {item.quantity}
                           </span>
                         </button>
@@ -969,14 +969,14 @@ function CategoryTable(props) {
   } = props;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
       {/* Breadcrumb + toolbar */}
-      <div className="px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
+      <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <div className="flex items-center text-sm text-gray-400">
-            <button onClick={onBack} className="hover:text-blue-600 font-medium">Categories</button>
+          <div className="flex items-center text-sm text-gray-400 dark:text-slate-500">
+            <button onClick={onBack} className="hover:text-blue-600 hover:dark:text-blue-400 font-medium">Categories</button>
             <span className="mx-1.5">/</span>
-            <span className="font-bold text-gray-900">{categoryName}</span>
+            <span className="font-bold text-gray-900 dark:text-slate-100">{categoryName}</span>
           </div>
           <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
             {items.length} item(s) · {Number(stat?.qty || 0).toLocaleString()} units in stock
@@ -1010,7 +1010,7 @@ function ItemRows({ items, isAdmin, selectedIds, toggleSelect, onView, onEdit, o
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
-        <thead className="text-xs text-gray-400 dark:text-slate-500 uppercase bg-gray-50/70">
+        <thead className="text-xs text-gray-400 dark:text-slate-500 uppercase bg-gray-50/70 dark:bg-slate-950/70">
           <tr>
             <th className="pl-6 pr-2 py-3 w-10"></th>
             <th className="px-3 py-3 text-left font-medium">SKU</th>
@@ -1022,12 +1022,12 @@ function ItemRows({ items, isAdmin, selectedIds, toggleSelect, onView, onEdit, o
             <th className="px-6 py-3 text-right font-medium">Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-50">
+        <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
           {items.length === 0 ? (
             /* A failed search and a genuinely empty category are different states
                and must not share one message - claiming "no items here yet"
                after a search wrongly implies the category is empty. */
-            <tr><td colSpan={isAdmin ? 8 : 7} className="px-6 py-10 text-center text-gray-400">
+            <tr><td colSpan={isAdmin ? 8 : 7} className="px-6 py-10 text-center text-gray-400 dark:text-slate-500">
               {searchTerm.trim()
                 ? <>No items in this category match “{searchTerm.trim()}”.</>
                 : 'No items here yet — use "Add Item here".'}
@@ -1055,22 +1055,22 @@ function ItemRow({ item, isAdmin, isSelected, toggleSelect, onView, onEdit, onDe
   const low = !item.is_service && qty <= Number(item.low_stock_threshold ?? 5);
 
   return (
-    <tr className={`transition-colors ${isSelected ? 'bg-indigo-50/50' : 'hover:bg-gray-50/70'}`}>
+    <tr className={`transition-colors ${isSelected ? 'bg-indigo-50/50' : 'hover:bg-gray-50/70 hover:dark:bg-slate-950/70'}`}>
       <td className="pl-6 pr-2 py-3">
         {!item.is_service && (
           <button onClick={() => toggleSelect(item.id)} title="Select for batch label printing">
-            {isSelected ? <CheckSquare size={17} className="text-indigo-600" /> : <Square size={17} className="text-gray-300 hover:text-gray-500" />}
+            {isSelected ? <CheckSquare size={17} className="text-indigo-600" /> : <Square size={17} className="text-gray-300 dark:text-slate-600 hover:text-gray-500" />}
           </button>
         )}
       </td>
-      <td className="px-3 py-3 font-mono text-xs text-gray-900 whitespace-nowrap">{item.sku}</td>
+      <td className="px-3 py-3 font-mono text-xs text-gray-900 dark:text-slate-100 whitespace-nowrap">{item.sku}</td>
       <td className="px-3 py-3 max-w-[260px]">
-        <button onClick={() => onView(item)} className="font-semibold text-gray-900 hover:text-blue-600 text-left truncate block max-w-full">
+        <button onClick={() => onView(item)} className="font-semibold text-gray-900 dark:text-slate-100 hover:text-blue-600 hover:dark:text-blue-400 text-left truncate block max-w-full">
           {item.name}
         </button>
-        {item.is_service && <span className="ml-0 text-[9px] font-bold uppercase bg-amber-100 text-amber-700 px-1 py-0.5 rounded">Service</span>}
+        {item.is_service && <span className="ml-0 text-[9px] font-bold uppercase bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 px-1 py-0.5 rounded">Service</span>}
       </td>
-      <td className={`px-3 py-3 text-center font-bold ${low ? 'text-rose-600' : 'text-gray-800'}`}>
+      <td className={`px-3 py-3 text-center font-bold ${low ? 'text-rose-600 dark:text-rose-400' : 'text-gray-800 dark:text-slate-200'}`}>
         {item.is_service ? '—' : qty}
       </td>
       {isAdmin && <td className="px-3 py-3 text-right text-gray-500 dark:text-slate-400">{fmt(item.cost_price)}</td>}

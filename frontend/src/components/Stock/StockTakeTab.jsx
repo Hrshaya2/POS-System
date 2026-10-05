@@ -50,11 +50,11 @@ function StartCard({ categories, itemCount, onStart }) {
   const canStart = scopeType === 'all' || !!scopeCategory;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
       <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
         <ClipboardCheck size={20} className="mr-2 text-purple-500 dark:text-purple-400" /> Start Stock Take
       </h3>
-      <p className="text-sm text-gray-500 mt-1 mb-4">
+      <p className="text-sm text-gray-500 dark:text-slate-400 mt-1 mb-4">
         Generates a counting checklist with system quantities hidden — count what's actually on the shelf. Choose one category or everything.
       </p>
 
@@ -107,13 +107,13 @@ function HistoryList({ takes }) {
             {takes.length === 0 ? (
               <tr><td colSpan="6" className="px-6 py-8 text-center text-gray-400 dark:text-slate-500">No stock takes recorded yet.</td></tr>
             ) : takes.slice(0, 20).map((t) => (
-              <tr key={t.id} className="hover:bg-gray-50/70">
+              <tr key={t.id} className="hover:bg-gray-50/70 hover:dark:bg-slate-950/70 dark:hover:bg-slate-700/70">
                 <td className="px-6 py-3 whitespace-nowrap">{fmtDateTime(t.started_at)}</td>
                 <td className="px-6 py-3">{t.scope_type === 'category' ? t.scope_category : 'All items'}</td>
                 <td className="px-6 py-3">{t.started_by_name}</td>
                 <td className="px-6 py-3 text-center">{t.items_counted}/{(t.lines || []).length}</td>
                 <td className={`px-6 py-3 text-center font-semibold ${
-                  Number(t.total_variance) === 0 ? 'text-gray-500' : Number(t.total_variance) > 0 ? 'text-emerald-600' : 'text-rose-600'
+                  Number(t.total_variance) === 0 ? 'text-gray-500 dark:text-slate-400' : Number(t.total_variance) > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
                 }`}>
                   {Number(t.total_variance) > 0 ? `+${t.total_variance}` : t.total_variance}
                 </td>
@@ -144,7 +144,7 @@ function CountRow({ line, value, onChange, onBump }) {
   }
 
   return (
-    <div className={`flex items-center justify-between gap-4 px-5 py-4 ${counted ? 'bg-blue-50/30' : 'bg-white'}`}>
+    <div className={`flex items-center justify-between gap-4 px-5 py-4 ${counted ? 'bg-blue-50/30 dark:bg-blue-500/10' : 'bg-white dark:bg-slate-800'}`}>
       <div className="min-w-0 flex-1">
         <p className="font-semibold text-gray-900 dark:text-slate-100 truncate">{line.name}</p>
         <p className="text-[11px] font-mono text-gray-400 dark:text-slate-500 truncate">{line.sku}{statusChip && <> · {statusChip}</>}</p>
@@ -177,7 +177,7 @@ function VarianceSummary({ counts, lines, isAdmin, applying, applyResult, onBack
         <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100">Stock take applied</h3>
         <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
           {applyResult.correctedItems} item(s) corrected · total variance{' '}
-          <span className={`font-bold ${v === 0 ? 'text-gray-600' : v > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+          <span className={`font-bold ${v === 0 ? 'text-gray-600 dark:text-slate-400' : v > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
             {v > 0 ? `+${v}` : v}
           </span>
           . Every correction was written to Stock History.
@@ -203,7 +203,7 @@ function VarianceSummary({ counts, lines, isAdmin, applying, applyResult, onBack
           <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Variance Summary</h3>
           <p className="text-sm text-gray-500 dark:text-slate-400">
             {reviewed.length} counted · {variances.length} with differences · total variance{' '}
-            <span className={`font-bold ${totalVariance === 0 ? 'text-gray-600' : totalVariance > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+            <span className={`font-bold ${totalVariance === 0 ? 'text-gray-600 dark:text-slate-400' : totalVariance > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
               {totalVariance > 0 ? `+${totalVariance}` : totalVariance}
             </span>
           </p>
@@ -234,7 +234,7 @@ function VarianceSummary({ counts, lines, isAdmin, applying, applyResult, onBack
                   </td>
                   <td className="px-6 py-3 text-center">{l.system_qty}</td>
                   <td className="px-6 py-3 text-center font-bold">{l.counted}</td>
-                  <td className={`px-6 py-3 text-center font-black ${diff === 0 ? 'text-gray-400' : diff > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                  <td className={`px-6 py-3 text-center font-black ${diff === 0 ? 'text-gray-400 dark:text-slate-500' : diff > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
                     {diff > 0 ? `+${diff}` : diff}
                   </td>
                   <td className="px-6 py-3 text-xs text-gray-500 dark:text-slate-400">
@@ -341,7 +341,7 @@ function CountingView({ take, user, isAdmin, onExit, onDataChanged }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-purple-100 dark:border-purple-500/20 overflow-hidden">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-purple-100 dark:border-purple-500/20 overflow-hidden">
       {/* Sticky progress header */}
       <div className="bg-purple-600 text-white px-6 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">

@@ -113,8 +113,8 @@ function AmountDirectionRow({ direction, setDirection, amount, setAmount, hasErr
             onClick={() => setDirection('in')}
             className={`py-3 rounded-xl border-2 font-bold flex flex-col items-center transition-colors ${
               direction === 'in'
-                ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
-                : 'border-gray-200 text-gray-400 hover:border-gray-300'
+                ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
+                : 'border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500 hover:border-gray-300'
             }`}
           >
             <Plus size={20} /> Stock In
@@ -124,8 +124,8 @@ function AmountDirectionRow({ direction, setDirection, amount, setAmount, hasErr
             onClick={() => setDirection('out')}
             className={`py-3 rounded-xl border-2 font-bold flex flex-col items-center transition-colors ${
               direction === 'out'
-                ? 'border-orange-500 bg-orange-50 text-orange-700'
-                : 'border-gray-200 text-gray-400 hover:border-gray-300'
+                ? 'border-orange-500 bg-orange-50 dark:bg-orange-500/10 text-orange-700 dark:text-orange-300'
+                : 'border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500 hover:border-gray-300'
             }`}
           >
             <Minus size={20} /> Stock Out
@@ -143,7 +143,7 @@ function AmountDirectionRow({ direction, setDirection, amount, setAmount, hasErr
           onChange={(e) => setAmount(e.target.value)}
           placeholder="0"
           className={`w-full px-3 py-3 text-lg font-bold border rounded-xl focus:outline-none focus:ring focus:border-blue-300 ${
-            hasError ? 'border-rose-300 bg-rose-50/40' : 'border-gray-200'
+            hasError ? 'border-rose-300 dark:border-rose-500/40 bg-rose-50/40 dark:bg-rose-500/10' : 'border-gray-200 dark:border-slate-700'
           }`}
         />
       </div>
@@ -163,8 +163,8 @@ function ReasonPicker({ reason, setReason, showHint }) {
             onClick={() => setReason(r)}
             className={`px-3 py-2.5 rounded-lg border text-sm font-medium transition-colors text-left ${
               reason === r
-                ? 'border-blue-500 bg-blue-50 text-blue-700'
-                : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300'
+                : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950'
             }`}
           >
             {r}
@@ -178,15 +178,15 @@ function ReasonPicker({ reason, setReason, showHint }) {
 
 function PreviewBox({ currentQty, delta, newQty, goesNegative }) {
   return (
-    <div className={`rounded-xl p-4 border-2 transition-colors ${goesNegative ? 'bg-rose-50 border-rose-200' : 'bg-gray-50 border-gray-200'}`}>
+    <div className={`rounded-xl p-4 border-2 transition-colors ${goesNegative ? 'bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30' : 'bg-gray-50 dark:bg-slate-950 border-gray-200 dark:border-slate-700'}`}>
       <p className="text-xs font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500 mb-2">Current → New</p>
       <div className="flex items-center justify-center space-x-4 text-2xl font-black">
-        <span className="text-gray-700">{currentQty}</span>
-        <span className={`font-black ${delta > 0 ? 'text-emerald-600' : delta < 0 ? 'text-rose-500' : 'text-gray-300'}`}>
+        <span className="text-gray-700 dark:text-slate-300">{currentQty}</span>
+        <span className={`font-black ${delta > 0 ? 'text-emerald-600 dark:text-emerald-400' : delta < 0 ? 'text-rose-500 dark:text-rose-400' : 'text-gray-300 dark:text-slate-600'}`}>
           {delta > 0 ? `+${delta}` : delta}
         </span>
-        <ArrowRight size={20} className="text-gray-400" />
-        <span className={goesNegative ? 'text-rose-600' : 'text-gray-900'}>{newQty}</span>
+        <ArrowRight size={20} className="text-gray-400 dark:text-slate-500" />
+        <span className={goesNegative ? 'text-rose-600' : 'text-gray-900 dark:text-slate-100'}>{newQty}</span>
       </div>
     </div>
   );

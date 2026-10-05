@@ -168,8 +168,8 @@ function ModalShell({ item, activeTab, setActiveTab, isValid, submitting, canEdi
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-colors whitespace-nowrap ${
                 activeTab === tab.id
-                  ? 'text-blue-700 bg-blue-50 border-x border-t border-blue-200 -mb-px'
-                  : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50'
+                  ? 'text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-500/10 border-x border-t border-blue-200 dark:border-blue-500/30 -mb-px'
+                  : 'text-gray-500 dark:text-slate-400 hover:text-gray-800 hover:bg-gray-50 hover:dark:bg-slate-950'
               }`}
             >
               {tab.label}
@@ -203,7 +203,7 @@ function ModalShell({ item, activeTab, setActiveTab, isValid, submitting, canEdi
 }
 
 const inputClass = (hasError) =>
-  `w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${hasError ? 'border-rose-300 bg-rose-50/40' : 'border-gray-200'}`;
+  `w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${hasError ? 'border-rose-300 bg-rose-50/40' : 'border-gray-200 dark:border-slate-700'}`;
 const ErrText = ({ msg }) => (msg ? <p className="text-xs text-rose-600 dark:text-rose-400 mt-1">{msg}</p> : null);
 const Label = ({ children }) => <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">{children}</label>;
 
@@ -392,7 +392,7 @@ function ImageColorTab({ form, setField, COLOR_PRESETS }) {
               title={preset.tag}
               className={`w-10 h-10 rounded-xl ${preset.class} transition-all ${
                 form.color_tag === preset.tag
-                  ? 'ring-4 ring-offset-2 ring-gray-300 scale-105'
+                  ? 'ring-4 ring-offset-2 ring-gray-300 dark:ring-slate-600 scale-105'
                   : 'opacity-70 hover:opacity-100'
               }`}
             />
@@ -440,7 +440,7 @@ function PhoneFields({ form, setField, visible }) {
 function Toggle({ checked, onChange, label }) {
   return (
     <label className="flex items-center justify-between sm:justify-start sm:space-x-3 cursor-pointer select-none">
-      <span className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors ${checked ? 'bg-blue-600' : 'bg-gray-300'}`}>
+      <span className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors ${checked ? 'bg-blue-600' : 'bg-gray-300 dark:bg-slate-700'}`}>
         <input type="checkbox" checked={!!checked} onChange={onChange} className="sr-only" />
         <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform mt-0.5 ${checked ? 'translate-x-5 ml-0.5' : 'translate-x-0.5'}`} />
       </span>
@@ -496,10 +496,10 @@ function PriceTaxTab({ form, setField, handleCostChange, handleMarkupChange, han
       </div>
 
       <div className="bg-blue-50/60 border border-blue-100 dark:border-blue-500/20 rounded-xl p-4 grid grid-cols-2 gap-3 text-sm">
-        <div className="flex items-center justify-between"><span className="text-gray-500">Cost</span><span className="font-semibold">Rs. {cost.toLocaleString()}</span></div>
-        <div className="flex items-center justify-between"><span className="text-gray-500">Markup</span><span className="font-semibold">{Number(form.markup_percent) || 0}%</span></div>
-        <div className="flex items-center justify-between"><span className="text-gray-500">Tax ({Number(form.tax_rate) || 0}%)</span><span className="font-semibold">Rs. {Math.round(taxAmount * 100) / 100}</span></div>
-        <div className="flex items-center justify-between"><span className="text-gray-500">Margin / unit</span><span className={`font-semibold ${price - cost >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>Rs. {(price - cost).toLocaleString()}</span></div>
+        <div className="flex items-center justify-between"><span className="text-gray-500 dark:text-slate-400">Cost</span><span className="font-semibold">Rs. {cost.toLocaleString()}</span></div>
+        <div className="flex items-center justify-between"><span className="text-gray-500 dark:text-slate-400">Markup</span><span className="font-semibold">{Number(form.markup_percent) || 0}%</span></div>
+        <div className="flex items-center justify-between"><span className="text-gray-500 dark:text-slate-400">Tax ({Number(form.tax_rate) || 0}%)</span><span className="font-semibold">Rs. {Math.round(taxAmount * 100) / 100}</span></div>
+        <div className="flex items-center justify-between"><span className="text-gray-500 dark:text-slate-400">Margin / unit</span><span className={`font-semibold ${price - cost >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>Rs. {(price - cost).toLocaleString()}</span></div>
       </div>
 
       <div className="space-y-3 pt-1">

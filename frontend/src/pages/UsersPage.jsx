@@ -312,7 +312,7 @@ export default function UsersPage() {
                                                     onClick={() => openEditModal(u)}
                                                     disabled={!canModify(u)}
                                                     className={`p-2 rounded-lg transition-all cursor-pointer ${canModify(u)
-                                                        ? 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'
+                                                        ? 'text-gray-400 dark:text-slate-500 hover:text-blue-600 hover:dark:text-blue-400 hover:bg-blue-50 hover:dark:bg-blue-500/10'
                                                         : 'text-gray-200 cursor-not-allowed'
                                                         }`}
                                                     title={canModify(u) ? 'Edit user' : u.role === 'admin' ? 'Cannot edit admin' : 'Cannot edit'}
@@ -323,7 +323,7 @@ export default function UsersPage() {
                                                     onClick={() => handleDelete(u)}
                                                     disabled={!canDelete(u)}
                                                     className={`p-2 rounded-lg transition-all cursor-pointer ${canDelete(u)
-                                                        ? 'text-gray-400 hover:text-rose-600 hover:bg-rose-50'
+                                                        ? 'text-gray-400 dark:text-slate-500 hover:text-rose-600 hover:dark:text-rose-400 hover:bg-rose-50 hover:dark:bg-rose-500/10'
                                                         : 'text-gray-200 cursor-not-allowed'
                                                         }`}
                                                     title={canDelete(u) ? 'Delete user' : u.role === 'admin' ? 'Cannot delete admin' : 'Cannot delete user'}

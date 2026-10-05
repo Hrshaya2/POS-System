@@ -44,7 +44,7 @@ export default function ReportFilterBar({ filters, setFilters, extras = [] }) {
                             <button key={p.value}
                                 onClick={() => setPreset(p.value)}
                                 className={`px-3 py-1.5 rounded-lg text-xs font-medium ${filters.preset === p.value
-                                    ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}>
+                                    ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 text-gray-700 dark:text-slate-300'}`}>
                                 {p.label}
                             </button>
                         ))}
@@ -98,7 +98,7 @@ export const SummaryTile = ({ label, value, valueType = 'money', icon: Icon, mut
         <div className="flex items-center gap-2 text-gray-500 dark:text-slate-400 text-xs font-semibold mb-1">
             {Icon ? <Icon size={14} /> : null}{label}
         </div>
-        <div className={`text-2xl font-bold ${muted ? 'text-gray-400' : 'text-gray-800'}`}>
+        <div className={`text-2xl font-bold ${muted ? 'text-gray-400 dark:text-slate-500' : 'text-gray-800 dark:text-slate-200'}`}>
             {valueType === 'money' ? formatMoney(value) : formatNumber(value)}
         </div>
     </div>

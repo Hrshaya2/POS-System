@@ -21,7 +21,7 @@ const Toggle = ({ checked, onChange, label }) => (
   <button
     type="button"
     onClick={() => onChange(!checked)}
-    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${checked ? 'bg-blue-600' : 'bg-gray-300'}`}
+    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${checked ? 'bg-blue-600' : 'bg-gray-300 dark:bg-slate-700'}`}
     aria-pressed={checked}
   >
     <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-5' : 'translate-x-0.5'}`} />
@@ -145,12 +145,12 @@ export default function SettingsPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 flex items-center">
-            <Settings size={26} className="mr-2.5 text-gray-600" /> Settings
+            <Settings size={26} className="mr-2.5 text-gray-600 dark:text-slate-400" /> Settings
           </h1>
-          <p className="text-sm text-gray-500 mt-1">Customize how your receipts print — logo, messages and contact details.</p>
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Customize how your receipts print — logo, messages and contact details.</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={handlePrintPreview} className="flex items-center px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50">
+          <button onClick={handlePrintPreview} className="flex items-center px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50">
             <Printer size={17} className="mr-1.5" /> Print Preview
           </button>
           <button onClick={handleSave} className="flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md">
@@ -164,24 +164,24 @@ export default function SettingsPage() {
         {/* ---- Left: editor (logo, shop/header, footer) ---- */}
         <div className="space-y-5">
           {/* Logo */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
             <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center mb-4">
-              <ImageIcon size={18} className="mr-2 text-blue-600" /> Logo
+              <ImageIcon size={18} className="mr-2 text-blue-600 dark:text-blue-400" /> Logo
             </h3>
             <div className="flex items-center gap-4">
-              <div className="w-24 h-24 rounded-xl border border-dashed border-gray-300 bg-gray-50 dark:bg-slate-950 flex items-center justify-center overflow-hidden">
+              <div className="w-24 h-24 rounded-xl border border-dashed border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 flex items-center justify-center overflow-hidden">
                 {settings.logo ? (
                   <img src={settings.logo} alt="Logo" className="max-w-full max-h-full object-contain" />
                 ) : (
-                  <span className="text-xs text-gray-400 text-center px-2">No logo</span>
+                  <span className="text-xs text-gray-400 dark:text-slate-500 text-center px-2">No logo</span>
                 )}
               </div>
               <div className="flex flex-col gap-2">
-                <button onClick={() => fileRef.current?.click()} className="flex items-center justify-center px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                <button onClick={() => fileRef.current?.click()} className="flex items-center justify-center px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50">
                   <Upload size={16} className="mr-1.5" /> Upload Logo
                 </button>
                 {settings.logo && (
-                  <button onClick={() => update({ logo: '', showLogo: false })} className="flex items-center justify-center px-4 py-2 bg-rose-50 border border-rose-200 rounded-xl text-sm font-semibold text-rose-700 hover:bg-rose-100">
+                  <button onClick={() => update({ logo: '', showLogo: false })} className="flex items-center justify-center px-4 py-2 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 rounded-xl text-sm font-semibold text-rose-700 dark:text-rose-300 hover:bg-rose-100">
                     <Trash2 size={16} className="mr-1.5" /> Remove
                   </button>
                 )}
@@ -189,24 +189,24 @@ export default function SettingsPage() {
               </div>
             </div>
             <div className="mt-4 flex items-center justify-between">
-              <span className="text-sm text-gray-600">Show logo on receipt</span>
+              <span className="text-sm text-gray-600 dark:text-slate-400">Show logo on receipt</span>
               <Toggle checked={settings.showLogo} onChange={(v) => update({ showLogo: v })} label="Show logo" />
             </div>
           </div>
 
           {/* Receipt size */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center mb-1">
-              <Printer size={18} className="mr-2 text-blue-600" /> Receipt Size
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6 space-y-4">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center mb-1">
+              <Printer size={18} className="mr-2 text-blue-600 dark:text-blue-400" /> Receipt Size
             </h3>
-            <p className="text-sm text-gray-500">Set the paper/roll width of your receipt printer.</p>
+            <p className="text-sm text-gray-500 dark:text-slate-400">Set the paper/roll width of your receipt printer.</p>
             <div className="flex flex-wrap gap-2">
               {[58, 80].map((mm) => (
                 <button
                   key={mm}
                   type="button"
                   onClick={() => update({ widthMm: mm })}
-                  className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-colors ${settings.widthMm === mm ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'}`}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-colors ${settings.widthMm === mm ? 'bg-blue-600 text-white border-blue-600' : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50'}`}
                 >
                   {mm} mm
                 </button>
@@ -222,19 +222,19 @@ export default function SettingsPage() {
                   onChange={(e) => update({ widthMm: Math.max(40, Number(e.target.value) || 58) })}
                   className={inputClass}
                 />
-                <span className="text-xs text-gray-400 flex items-center">= {mmToPx(settings.widthMm)} px</span>
+                <span className="text-xs text-gray-400 dark:text-slate-500 flex items-center">= {mmToPx(settings.widthMm)} px</span>
               </div>
             </Field>
           </div>
 
           {/* Receipt barcode (bottom of receipt) */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center mb-1">
-              <BarcodeIcon size={18} className="mr-2 text-blue-600" /> Receipt Barcode
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6 space-y-4">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center mb-1">
+              <BarcodeIcon size={18} className="mr-2 text-blue-600 dark:text-blue-400" /> Receipt Barcode
             </h3>
-            <p className="text-sm text-gray-500">Print a scannable barcode at the bottom of every receipt. By default it encodes the receipt number.</p>
+            <p className="text-sm text-gray-500 dark:text-slate-400">Print a scannable barcode at the bottom of every receipt. By default it encodes the receipt number.</p>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Show barcode on receipt</span>
+              <span className="text-sm text-gray-600 dark:text-slate-400">Show barcode on receipt</span>
               <Toggle checked={settings.showBarcode} onChange={(v) => update({ showBarcode: v })} label="Show barcode" />
             </div>
             <Field label="Barcode value (optional)">
@@ -245,18 +245,18 @@ export default function SettingsPage() {
           </div>
 
           {/* Font size */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center mb-1">
-              <Type size={18} className="mr-2 text-blue-600" /> Receipt Font Size
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6 space-y-4">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center mb-1">
+              <Type size={18} className="mr-2 text-blue-600 dark:text-blue-400" /> Receipt Font Size
             </h3>
-            <p className="text-sm text-gray-500">Base text size for the whole receipt (all text scales together).</p>
+            <p className="text-sm text-gray-500 dark:text-slate-400">Base text size for the whole receipt (all text scales together).</p>
             <div className="flex flex-wrap gap-2">
               {[10, 12, 14, 16].map((px) => (
                 <button
                   key={px}
                   type="button"
                   onClick={() => update({ fontSize: px })}
-                  className={`px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${settings.fontSize === px ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'}`}
+                  className={`px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${settings.fontSize === px ? 'bg-blue-600 text-white border-blue-600' : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50'}`}
                 >
                   {px}px
                 </button>
@@ -275,19 +275,19 @@ export default function SettingsPage() {
           </div>
 
           {/* Shop name + header message */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center mb-1">
-              <Type size={18} className="mr-2 text-blue-600" /> Shop & Header
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6 space-y-4">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center mb-1">
+              <Type size={18} className="mr-2 text-blue-600 dark:text-blue-400" /> Shop & Header
             </h3>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Show shop name</span>
+              <span className="text-sm text-gray-600 dark:text-slate-400">Show shop name</span>
               <Toggle checked={settings.showShopName} onChange={(v) => update({ showShopName: v })} label="Show shop name" />
             </div>
             <Field label="Shop name">
               <input className={inputClass} value={settings.shopName} onChange={(e) => update({ shopName: e.target.value })} placeholder="e.g. Loyal Mobile" />
             </Field>
             <div className="flex items-center justify-between pt-2">
-              <span className="text-sm text-gray-600">Show header message</span>
+              <span className="text-sm text-gray-600 dark:text-slate-400">Show header message</span>
               <Toggle checked={settings.showHeaderMessage} onChange={(v) => update({ showHeaderMessage: v })} label="Show header message" />
             </div>
             <Field label="Header message (below store name)">
@@ -296,12 +296,12 @@ export default function SettingsPage() {
           </div>
 
           {/* Footer message */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center mb-1">
-              <Type size={18} className="mr-2 text-blue-600" /> Footer Message
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6 space-y-4">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center mb-1">
+              <Type size={18} className="mr-2 text-blue-600 dark:text-blue-400" /> Footer Message
             </h3>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Show footer message</span>
+              <span className="text-sm text-gray-600 dark:text-slate-400">Show footer message</span>
               <Toggle checked={settings.showFooterMessage} onChange={(v) => update({ showFooterMessage: v })} label="Show footer message" />
             </div>
             <Field label="Footer message (bottom of receipt)">
@@ -312,48 +312,48 @@ export default function SettingsPage() {
 
         {/* ---- Right: contact details + live preview ---- */}
         <div className="space-y-5">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
-            <h3 className="text-lg font-bold text-gray-900 flex items-center mb-1">
-              <Phone size={18} className="mr-2 text-blue-600" /> Contact Details
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6 space-y-4">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center mb-1">
+              <Phone size={18} className="mr-2 text-blue-600 dark:text-blue-400" /> Contact Details
             </h3>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Show contact details</span>
+              <span className="text-sm text-gray-600 dark:text-slate-400">Show contact details</span>
               <Toggle checked={settings.showContact} onChange={(v) => update({ showContact: v })} label="Show contact details" />
             </div>
             <Field label="Phone">
               <div className="relative">
-                <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" />
                 <input className={`${inputClass} pl-9`} value={settings.phone} onChange={(e) => update({ phone: e.target.value })} placeholder="e.g. 077 123 4567" />
               </div>
             </Field>
             <Field label="Address">
               <div className="relative">
-                <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" />
                 <input className={`${inputClass} pl-9`} value={settings.address} onChange={(e) => update({ address: e.target.value })} placeholder="e.g. No.12, Main St, Colombo" />
               </div>
             </Field>
             <Field label="Email">
               <div className="relative">
-                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" />
                 <input className={`${inputClass} pl-9`} value={settings.email} onChange={(e) => update({ email: e.target.value })} placeholder="e.g. sales@loyalmobile.lk" />
               </div>
             </Field>
             <Field label="Website">
               <div className="relative">
-                <Globe size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Globe size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" />
                 <input className={`${inputClass} pl-9`} value={settings.website} onChange={(e) => update({ website: e.target.value })} placeholder="e.g. www.loyalmobile.lk" />
               </div>
             </Field>
           </div>
 
           {/* Live preview */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-              <h3 className="font-bold text-gray-900 flex items-center"><Printer size={18} className="mr-2 text-blue-600" /> Live Preview</h3>
-              <span className="text-xs text-gray-400">Updates as you type</span>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
+            <div className="p-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between">
+              <h3 className="font-bold text-gray-900 dark:text-slate-100 flex items-center"><Printer size={18} className="mr-2 text-blue-600 dark:text-blue-400" /> Live Preview</h3>
+              <span className="text-xs text-gray-400 dark:text-slate-500">Updates as you type</span>
             </div>
-            <div className="p-4 bg-gray-100 flex justify-center">
-              <iframe title="Receipt preview" srcDoc={previewHtml} style={{ width: Math.min(420, mmToPx(settings.widthMm)), minHeight: 420 }} className="bg-white max-w-full min-h-[420px] rounded-md shadow-md border border-gray-200" />
+            <div className="p-4 bg-gray-100 dark:bg-slate-800 flex justify-center">
+              <iframe title="Receipt preview" srcDoc={previewHtml} style={{ width: Math.min(420, mmToPx(settings.widthMm)), minHeight: 420 }} className="bg-white dark:bg-slate-800 max-w-full min-h-[420px] rounded-md shadow-md border border-gray-200 dark:border-slate-700" />
             </div>
           </div>
         </div>
@@ -361,12 +361,12 @@ export default function SettingsPage() {
 
       {/* ---- Admin only: Refunds & Approvals policy ---- */}
       {isAdmin && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h3 className="text-lg font-bold text-gray-900">Refunds &amp; Approvals</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Refunds &amp; Approvals</h3>
             <span className="text-xs font-semibold text-violet-600 bg-violet-50 border border-violet-100 rounded-full px-3 py-1">Admin only</span>
           </div>
-          <p className="text-sm text-gray-500 max-w-3xl">
+          <p className="text-sm text-gray-500 dark:text-slate-400 max-w-3xl">
             Cashiers can refund directly while they stay within these limits. A refund above the amount limit,
             outside the day window, or returned to a different payment method is held in the approval queue until
             an admin / shop owner completes it with the approval PIN.
@@ -381,9 +381,9 @@ export default function SettingsPage() {
                 value={policy.maxDays} onChange={(e) => setPolicy({ ...policy, maxDays: e.target.value })} />
             </Field>
             <label className="block">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Same payment method required</span>
+              <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Same payment method required</span>
               <button type="button" onClick={() => setPolicy({ ...policy, sameMethodRequired: !policy.sameMethodRequired })}
-                className={`mt-1.5 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors ${policy.sameMethodRequired ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-gray-200 bg-gray-50 text-gray-500'}`}>
+                className={`mt-1.5 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors ${policy.sameMethodRequired ? 'border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' : 'border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 text-gray-500 dark:text-slate-400'}`}>
                 {policy.sameMethodRequired ? 'Yes — different method needs approval' : 'No — any method allowed'}
               </button>
             </label>
@@ -394,13 +394,13 @@ export default function SettingsPage() {
               <input type="password" inputMode="numeric" className={inputClass}
                 placeholder={pinExists ? 'Type a new PIN to replace it…' : 'Optional — required to approve out-of-limit refunds'}
                 value={adminPin} onChange={(e) => setAdminPin(e.target.value)} />
-              <span className="mt-1 block text-[11px] text-gray-400">
+              <span className="mt-1 block text-[11px] text-gray-400 dark:text-slate-500">
                 Shop owners bypass the PIN. Cashier-initiated refunds over the limit appear under Reports → Refunds for approval.
               </span>
             </label>
           </div>
           {policyStatus.msg && (
-            <div className={`rounded-xl px-4 py-2.5 text-sm border ${policyStatus.kind === 'ok' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}`}>
+            <div className={`rounded-xl px-4 py-2.5 text-sm border ${policyStatus.kind === 'ok' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30' : 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/30'}`}>
               {policyStatus.msg}
             </div>
           )}

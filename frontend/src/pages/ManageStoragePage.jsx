@@ -188,7 +188,7 @@ function ClearStorageModal({ section, onClose, onConfirm }) {
         </div>
 
         <div className="p-6 space-y-5">
-          <div className={`rounded-xl border px-4 py-3 text-sm ${meta.warn ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-rose-200 bg-rose-50 text-rose-700'}`}>
+          <div className={`rounded-xl border px-4 py-3 text-sm ${meta.warn ? 'border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-200' : 'border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300'}`}>
             <p className="font-semibold flex items-center gap-2 mb-1">
               <AlertTriangle size={15} className="shrink-0" />
               This permanently deletes records from {meta.label}.
@@ -233,7 +233,7 @@ function ClearStorageModal({ section, onClose, onConfirm }) {
 // "All records" vs "Older than N days" selection with the age threshold picker.
 function ClearModePicker({ mode, setMode, days, setDays }) {
   const optionClass = (active) => `py-2.5 px-3 rounded-xl border-2 font-semibold text-sm text-left transition-colors ${
-    active ? 'border-rose-500 bg-rose-50 text-rose-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+    active ? 'border-rose-500 bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300' : 'border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:border-gray-300'
   }`;
   return (
     <div>
@@ -326,7 +326,7 @@ export default function ManageStoragePage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-[60vh] text-gray-500">
+      <div className="flex items-center justify-center h-[60vh] text-gray-500 dark:text-slate-400">
         <RefreshCw size={20} className="animate-spin mr-3" /> Loading storage stats...
       </div>
     );
@@ -334,10 +334,10 @@ export default function ManageStoragePage() {
 
   if (error || !data) {
     return (
-      <div className="max-w-lg mx-auto mt-12 bg-white rounded-2xl border border-rose-200 shadow-sm p-8 text-center">
-        <AlertTriangle size={40} className="mx-auto text-rose-400 mb-4" />
-        <h2 className="text-xl font-bold text-gray-900 mb-2">Storage stats unavailable</h2>
-        <p className="text-gray-500 mb-6">{error || 'No data returned.'}</p>
+      <div className="max-w-lg mx-auto mt-12 bg-white dark:bg-slate-800 rounded-2xl border border-rose-200 dark:border-rose-500/30 shadow-sm p-8 text-center">
+        <AlertTriangle size={40} className="mx-auto text-rose-400 dark:text-rose-400 mb-4" />
+        <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-2">Storage stats unavailable</h2>
+        <p className="text-gray-500 dark:text-slate-400 mb-6">{error || 'No data returned.'}</p>
         <button
           onClick={() => load(false)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium transition-colors"
@@ -385,14 +385,14 @@ export default function ManageStoragePage() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
             <HardDrive className="text-blue-600" size={24} /> Manage Storage
           </h1>
-          <p className="text-gray-500 mt-1">
-            MongoDB Atlas usage vs the 512MB free-tier limit · database <span className="font-mono text-gray-700">{db.name}</span>
+          <p className="text-gray-500 dark:text-slate-400 mt-1">
+            MongoDB Atlas usage vs the 512MB free-tier limit · database <span className="font-mono text-gray-700 dark:text-slate-300">{db.name}</span>
           </p>
         </div>
         <button
           onClick={() => load(true)}
           disabled={refreshing}
-          className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 hover:bg-gray-50 px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-colors disabled:opacity-60"
+          className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-50 px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-colors disabled:opacity-60"
         >
           <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
           {refreshing ? 'Refreshing...' : 'Refresh'}
@@ -402,15 +402,15 @@ export default function ManageStoragePage() {
       {/* Outcome banner after a successful section clear */}
       {clearResult && (
         <div
-          className="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl px-5 py-4 flex items-center gap-3"
+          className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-200 rounded-2xl px-5 py-4 flex items-center gap-3"
           role="status"
           data-testid="storage-clear-result"
         >
-          <CheckCircle2 size={20} className="shrink-0 text-emerald-600" />
+          <CheckCircle2 size={20} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
           <p className="text-sm font-semibold flex-1">{clearResult.message}</p>
           <button
             onClick={() => setClearResult(null)}
-            className="text-emerald-700 hover:text-emerald-900 p-1 rounded-lg hover:bg-emerald-100 transition-colors"
+            className="text-emerald-700 dark:text-emerald-300 hover:text-emerald-900 p-1 rounded-lg hover:bg-emerald-100 hover:dark:bg-emerald-500/20 transition-colors"
             title="Dismiss"
           >
             <X size={16} />
@@ -419,7 +419,7 @@ export default function ManageStoragePage() {
       )}
 
       {/* Gauge + live numbers */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
           <div className="relative h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -441,7 +441,7 @@ export default function ManageStoragePage() {
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <span className={`text-5xl font-extrabold ${tone.text}`}>{Math.round(percent)}%</span>
-              <span className="text-sm text-gray-600 font-semibold mt-1 text-center px-10">
+              <span className="text-sm text-gray-600 dark:text-slate-400 font-semibold mt-1 text-center px-10">
                 {usedMB.toFixed(1)} MB / {limitMB} MB used
               </span>
               <span className={`text-xs font-bold px-2.5 py-1 rounded-full mt-2 ${tone.chip}`}>
@@ -453,8 +453,8 @@ export default function ManageStoragePage() {
           <div className="grid grid-cols-2 gap-4">
             {miniStats.map((s) => (
               <div key={s.label} className={`rounded-xl border ${tone.border} ${tone.bg} p-4`}>
-                <p className="text-xs font-semibold text-gray-500 mb-1">{s.label}</p>
-                <p className="text-2xl font-bold text-gray-900">{s.value}</p>
+                <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 mb-1">{s.label}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">{s.value}</p>
               </div>
             ))}
           </div>
@@ -462,8 +462,8 @@ export default function ManageStoragePage() {
       </div>
 
       {/* 30-day trend */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-        <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2 mb-4">
           <TrendingUp size={20} className="text-blue-600" /> Storage Usage — Last 30 Days
         </h3>
         {trendData.length >= 2 ? (
@@ -488,8 +488,8 @@ export default function ManageStoragePage() {
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className="flex items-center gap-3 text-gray-500 bg-gray-50 border border-gray-100 rounded-xl px-4 py-6">
-            <Info size={18} className="shrink-0 text-gray-400" />
+          <div className="flex items-center gap-3 text-gray-500 dark:text-slate-400 bg-gray-50 dark:bg-slate-950 border border-gray-100 dark:border-slate-800 rounded-xl px-4 py-6">
+            <Info size={18} className="shrink-0 text-gray-400 dark:text-slate-500" />
             <p className="text-sm">
               {trendData.length === 1
                 ? `First snapshot captured on ${trendData[0].date}. The trend line appears once a few days of daily snapshots have collected.`

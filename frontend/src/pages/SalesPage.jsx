@@ -603,13 +603,13 @@ export default function SalesPage() {
             <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 flex items-center">Sales / Billing</h1>
-                    <p className="text-gray-500 mt-1">Scan products, build the cart, and complete checkout against the local store first.</p>
+                    <p className="text-gray-500 dark:text-slate-400 mt-1">Scan products, build the cart, and complete checkout against the local store first.</p>
                 </div>
-                <div className="flex gap-2 bg-white dark:bg-slate-800 p-1 rounded-2xl shadow-sm border border-gray-100">
-                    <button onClick={() => setActiveTab('billing')} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${activeTab === 'billing' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 hover:text-gray-800'}`}>
+                <div className="flex gap-2 bg-white dark:bg-slate-800 p-1 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800">
+                    <button onClick={() => setActiveTab('billing')} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${activeTab === 'billing' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 dark:text-slate-400 hover:text-gray-800'}`}>
                         Billing
                     </button>
-                    <button onClick={() => setActiveTab('history')} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 ${activeTab === 'history' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 hover:text-gray-800'}`}>
+                    <button onClick={() => setActiveTab('history')} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 ${activeTab === 'history' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 dark:text-slate-400 hover:text-gray-800'}`}>
                         <History size={16} />
                         History
                     </button>
@@ -618,10 +618,10 @@ export default function SalesPage() {
 
             {offlineMode && (
                 <div className="flex items-start gap-3 rounded-2xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 p-4 text-sm">
-                    <WifiOff size={18} className="text-amber-600 mt-0.5 shrink-0" />
+                    <WifiOff size={18} className="text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
                     <div>
-                        <p className="font-bold text-amber-800">Offline billing is active.</p>
-                        <p className="text-amber-700 mt-1">
+                        <p className="font-bold text-amber-800 dark:text-amber-200">Offline billing is active.</p>
+                        <p className="text-amber-700 dark:text-amber-300 mt-1">
                             Sales are saved to this browser's local database first and will sync to the cloud automatically when the internet returns.
                         </p>
                     </div>
@@ -764,7 +764,7 @@ export default function SalesPage() {
                                     className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-4 py-3 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="0.00"
                                 />
-                                <div className={`text-xs ${approvalRequired ? 'text-amber-700' : 'text-gray-500'}`}>
+                                <div className={`text-xs ${approvalRequired ? 'text-amber-700 dark:text-amber-300' : 'text-gray-500 dark:text-slate-400'}`}>
                                     Discount approval limit: {config.discountApprovalLimitPercent}%
                                     {approvalRequired ? ' - admin approval flag will be recorded.' : ''}
                                 </div>
@@ -772,14 +772,14 @@ export default function SalesPage() {
 
                             {/* Live profit/loss vs item cost — checkout screen only, never printed */}
                             {cart.length > 0 && (
-                                <div className={`rounded-2xl border px-4 py-3 mb-5 ${expectedProfit >= 0 ? 'border-emerald-200 bg-emerald-50' : 'border-rose-200 bg-rose-50'}`}>
+                                <div className={`rounded-2xl border px-4 py-3 mb-5 ${expectedProfit >= 0 ? 'border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10' : 'border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10'}`}>
                                     <div className="flex items-center justify-between text-sm">
                                         <span className="text-gray-600 dark:text-slate-400 font-medium">Total cost (what we paid)</span>
                                         <span className="font-semibold text-gray-800 dark:text-slate-200">{formatMoney(totalCost)}</span>
                                     </div>
                                     <div className="flex items-center justify-between text-sm mt-1.5">
                                         <span className="text-gray-600 dark:text-slate-400 font-medium">Profit vs cost</span>
-                                        <strong className={`font-bold ${expectedProfit >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+                                        <strong className={`font-bold ${expectedProfit >= 0 ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}`}>
                                             {expectedProfit > 0 ? 'Profit' : expectedProfit < 0 ? 'Loss' : 'Break even'}
                                             &nbsp;{formatMoney(Math.abs(expectedProfit))}
                                             {totalCost > 0 && (
@@ -804,7 +804,7 @@ export default function SalesPage() {
                                         <button
                                             key={value}
                                             onClick={() => setPaymentMethod(value)}
-                                            className={`rounded-2xl border px-3 py-3 text-left transition-all ${paymentMethod === value ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'}`}
+                                            className={`rounded-2xl border px-3 py-3 text-left transition-all ${paymentMethod === value ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300' : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-400 hover:border-gray-300'}`}
                                         >
                                             <Icon size={16} />
                                             <div className="mt-2 text-sm font-semibold">{label}</div>
@@ -827,7 +827,7 @@ export default function SalesPage() {
                                     />
                                     <div className="flex items-center justify-between text-sm">
                                         <span className="text-gray-600">Change due</span>
-                                        <strong className={`${cashChange > 0 ? 'text-emerald-700' : 'text-gray-800'}`}>
+                                        <strong className={`${cashChange > 0 ? 'text-emerald-700 dark:text-emerald-300' : 'text-gray-800 dark:text-slate-200'}`}>
                                             {formatMoney(cashChange)}
                                         </strong>
                                     </div>
@@ -844,7 +844,7 @@ export default function SalesPage() {
                                     <input type="number" min="0" step="0.01" placeholder="Cash" value={paymentSplit.cash} onChange={(e) => setPaymentSplit((current) => ({ ...current, cash: e.target.value }))} className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3" />
                                     <input type="number" min="0" step="0.01" placeholder="Card" value={paymentSplit.card} onChange={(e) => setPaymentSplit((current) => ({ ...current, card: e.target.value }))} className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3" />
                                     <input type="number" min="0" step="0.01" placeholder="Bank transfer" value={paymentSplit.bankTransfer} onChange={(e) => setPaymentSplit((current) => ({ ...current, bankTransfer: e.target.value }))} className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3" />
-                                    <div className={`text-xs ${Math.abs(splitTotal - total) > 0.01 ? 'text-rose-600' : 'text-emerald-700'}`}>
+                                    <div className={`text-xs ${Math.abs(splitTotal - total) > 0.01 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-700 dark:text-emerald-300'}`}>
                                         Split total: {formatMoney(splitTotal)} · Expected: {formatMoney(total)}
                                     </div>
                                 </div>
@@ -892,7 +892,7 @@ export default function SalesPage() {
                                             <div className="font-bold text-gray-900 dark:text-slate-100">{receipt.receipt_no}</div>
                                             <div className="text-sm text-gray-500 dark:text-slate-400">{receipt.cashier_name} · {new Date(receipt.created_at).toLocaleString()}</div>
                                         </div>
-                                        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${receipt.pending_sync ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                                        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${receipt.pending_sync ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300' : 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'}`}>
                                             {receipt.pending_sync ? 'Pending sync' : 'Synced'}
                                         </span>
                                     </div>
@@ -997,7 +997,7 @@ export default function SalesPage() {
                                             <td className="px-6 py-4 whitespace-nowrap">{sale.payment_method.replace('_', ' ')}</td>
                                             <td className="px-6 py-4 font-semibold text-gray-900 dark:text-slate-100 whitespace-nowrap">{formatMoney(sale.total)}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${sale.pending_sync || sale.syncStatus === 'pending' ? 'bg-amber-100 text-amber-700' : sale.syncStatus === 'failed' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                                                <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${sale.pending_sync || sale.syncStatus === 'pending' ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300' : sale.syncStatus === 'failed' ? 'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300' : 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'}`}>
                                                     {sale.pending_sync || sale.syncStatus === 'pending' ? 'Pending sync' : sale.syncStatus === 'failed' ? 'Sync failed' : 'Synced'}
                                                 </span>
                                                 {sale.refunded ? (

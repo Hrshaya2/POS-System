@@ -81,7 +81,7 @@ const SidebarItem = ({ icon: Icon, label, path }) => {
       to={path}
       className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
         ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
-        : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+        : 'text-gray-400 dark:text-slate-500 hover:bg-gray-800 hover:dark:bg-slate-900 hover:text-white'
         }`}
     >
       <Icon size={20} className={isActive ? "text-white" : "text-gray-400"} />
@@ -558,7 +558,7 @@ const Dashboard = () => {
                   <tr key={item.id} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 transition-colors">
                     <td className="px-6 py-4 font-medium text-gray-900 dark:text-slate-100">{item.name}</td>
                     <td className="px-6 py-4">
-                      <span className={`font-medium ${item.days > 90 ? 'text-rose-600' : 'text-orange-500'}`}>
+                      <span className={`font-medium ${item.days > 90 ? 'text-rose-600 dark:text-rose-400' : 'text-orange-500 dark:text-orange-400'}`}>
                         {item.days} days
                       </span>
                     </td>
@@ -616,7 +616,7 @@ const Dashboard = () => {
                     <td className="px-6 py-4">
                       <span className="bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 px-2.5 py-1 rounded-md text-xs font-medium">{m.user_name || '—'}</span>
                     </td>
-                    <td className={`px-6 py-4 font-bold ${Number(m.quantity_change) > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                    <td className={`px-6 py-4 font-bold ${Number(m.quantity_change) > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
                       {Number(m.quantity_change) > 0 ? '+' : ''}{m.quantity_change}
                     </td>
                     <td className="px-6 py-4">{m.reason || '—'}</td>

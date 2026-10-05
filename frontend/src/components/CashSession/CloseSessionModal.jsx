@@ -72,7 +72,7 @@ export default function CloseSessionModal({ onClose }) {
                             <div className="flex justify-between"><span className="text-gray-600 dark:text-slate-400 print:text-black">Total Cash Sales:</span> <span>Rs. {result.summary?.totalCashSales?.toLocaleString()}</span></div>
                             <div className="flex border-t pt-2 mt-2 justify-between font-bold text-gray-900 dark:text-slate-100 print:text-black"><span className="text-gray-700 dark:text-slate-300 print:text-black">Expected Cash (Drawer):</span> <span>Rs. {result.expected_cash?.toLocaleString()}</span></div>
                             <div className="flex justify-between text-blue-700 dark:text-blue-300 font-bold"><span className="print:text-black">Actual Cash Counted:</span> <span className="print:text-black">Rs. {result.actual_cash?.toLocaleString()}</span></div>
-                            <div className={`flex justify-between font-bold ${result.variance < 0 ? 'text-red-600' : result.variance > 0 ? 'text-green-600' : 'text-gray-600'} print:text-black`}>
+                            <div className={`flex justify-between font-bold ${result.variance < 0 ? 'text-red-600 dark:text-red-400' : result.variance > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-slate-400'} print:text-black`}>
                                 <span className="print:text-black">Variance:</span>
                                 <span className="print:text-black">{result.variance < 0 ? 'Short' : result.variance > 0 ? 'Over' : 'Balanced'} (Rs. {Math.abs(result.variance || 0).toLocaleString()})</span>
                             </div>

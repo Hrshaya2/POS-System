@@ -89,7 +89,7 @@ function InfoTile({ label, value, strong = false, small = false }) {
   return (
     <div className="bg-gray-50 dark:bg-slate-950 rounded-xl px-3 py-2 min-w-0">
       <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-slate-500 font-semibold">{label}</p>
-      <p className={`${small ? 'text-xs' : 'text-sm'} ${strong ? 'font-bold text-gray-900' : 'text-gray-700'} truncate`}>{value}</p>
+      <p className={`${small ? 'text-xs' : 'text-sm'} ${strong ? 'font-bold text-gray-900 dark:text-slate-100' : 'text-gray-700 dark:text-slate-300'} truncate`}>{value}</p>
     </div>
   );
 }

@@ -349,22 +349,22 @@ function ColumnMapper({ headers, mapping, setMapping, rawRows }) {
           const sample = selected ? sampleFor(selected) : null;
           const unmapped = !selected;
           return (
-            <div key={f.key} className={`rounded-xl border p-3 transition-colors ${unmapped ? 'border-amber-300 bg-amber-50/60' : 'border-gray-200 bg-white'}`}>
-              <label className="block text-xs font-bold text-gray-700">
+            <div key={f.key} className={`rounded-xl border p-3 transition-colors ${unmapped ? 'border-amber-300 dark:border-amber-500/40 bg-amber-50/60 dark:bg-amber-500/10' : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800'}`}>
+              <label className="block text-xs font-bold text-gray-700 dark:text-slate-300">
                 {f.label}
                 {f.required && <span className="text-rose-500"> *</span>}
               </label>
               <select
                 value={selected}
                 onChange={(e) => setMapping({ ...mapping, [f.key]: e.target.value })}
-                className={`mt-1.5 w-full px-2.5 py-2 border rounded-lg text-sm bg-white focus:outline-none focus:border-blue-300 ${unmapped ? 'border-amber-300' : 'border-gray-200'}`}
+                className={`mt-1.5 w-full px-2.5 py-2 border rounded-lg text-sm bg-white dark:bg-slate-900 focus:outline-none focus:border-blue-300 dark:focus:border-blue-500 ${unmapped ? 'border-amber-300 dark:border-amber-500/40' : 'border-gray-200 dark:border-slate-700'}`}
               >
                 <option value="">— not imported —</option>
                 {headers.map((h) => (
                   <option key={h} value={h} disabled={!!usedBy[h] && usedBy[h] !== f.key}>{h}</option>
                 ))}
               </select>
-              <p className="text-[11px] text-gray-400 mt-1 truncate" title={sample ?? f.hint}>
+              <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-1 truncate" title={sample ?? f.hint}>
                 {sample !== null ? `e.g. ${sample}` : f.hint}
               </p>
             </div>
@@ -373,12 +373,12 @@ function ColumnMapper({ headers, mapping, setMapping, rawRows }) {
       </div>
 
       {!mapping?.sku && (
-        <p className="mt-3 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">
+        <p className="mt-3 text-xs text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 rounded-lg px-3 py-2">
           No SKU column mapped — every row needs a code to match against existing items.
         </p>
       )}
       {!mapping?.sell_price && (
-        <p className="mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+        <p className="mt-3 text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-lg px-3 py-2">
           No sell price column mapped — new items can't be created without one. Existing items still import fine
           (their stock updates), or add a "Sell Price" column to the file and re-import.
         </p>
@@ -563,7 +563,7 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
                   onClick={() => setOpenId(isOpen ? null : r.id)}
                   className="flex items-center gap-3 text-left flex-1 min-w-0"
                 >
-                <FileText size={18} className={`shrink-0 ${isOpen ? 'text-blue-500' : 'text-gray-300'}`} />
+                <FileText size={18} className={`shrink-0 ${isOpen ? 'text-blue-500 dark:text-blue-400' : 'text-gray-300 dark:text-slate-600'}`} />
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-semibold text-gray-900 dark:text-slate-100 truncate">{r.filename}</span>
                   <span className="block text-xs text-gray-400 dark:text-slate-500 mt-0.5 truncate">
@@ -590,7 +590,7 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
                     title={removableIds.has(String(r.id))
                       ? 'Remove this file record'
                       : 'This file has not finished syncing yet'}
-                    className="p-2 rounded-lg text-gray-300 dark:text-slate-600 hover:text-rose-600 hover:dark:text-rose-400 hover:bg-rose-50 hover:dark:bg-rose-500/10 transition-colors disabled:opacity-40 disabled:hover:text-gray-300"
+                    className="p-2 rounded-lg text-gray-300 dark:text-slate-600 hover:text-rose-600 hover:dark:text-rose-400 hover:bg-rose-50 hover:dark:bg-rose-500/10 transition-colors disabled:opacity-40 disabled:hover:text-gray-300 dark:disabled:hover:text-slate-600"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -601,10 +601,10 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
               {isOpen && (
                 <div className="px-6 pb-4 pt-2 bg-gray-50/40 dark:bg-slate-950/40 border-b border-gray-100 dark:border-slate-800 text-sm">
                   <div className="flex flex-wrap gap-x-6 gap-y-1 font-bold">
-                    <span className="text-gray-900">{r.row_count || 0} total rows</span>
+                    <span className="text-gray-900 dark:text-slate-100">{r.row_count || 0} total rows</span>
                     <span className="text-sky-700">+{r.created || 0} new items</span>
                     <span className="text-teal-700">{r.updated || 0} updated</span>
-                    <span className={skipped > 0 ? 'text-rose-600' : 'text-gray-900'}>{skipped} skipped</span>
+                    <span className={skipped > 0 ? 'text-rose-600' : 'text-gray-900 dark:text-slate-100'}>{skipped} skipped</span>
                   </div>
 
                   {errs > 0 && (
