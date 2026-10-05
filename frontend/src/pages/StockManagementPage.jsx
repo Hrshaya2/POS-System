@@ -450,7 +450,7 @@ function ActionMenu({ label, icon: Icon, children }) {
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 text-gray-700 dark:text-slate-300 text-sm font-semibold shadow-sm transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300 text-sm font-semibold shadow-sm transition-colors"
       >
         {Icon && <Icon size={16} />}
         <span>{label}</span>
@@ -472,7 +472,11 @@ function ActionMenu({ label, icon: Icon, children }) {
   );
 }
 
-const MENU_ITEM = 'w-full text-left px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 hover:text-gray-900 transition-colors flex items-center gap-2.5 disabled:opacity-40 disabled:hover:bg-transparent';
+// NOTE: the hover variants are written as `dark:hover:` (NOT `hover:dark:`).
+// Tailwind stacks variants outermost-first, so `hover:dark:bg-slate-950` is not a
+// valid utility and is dropped by the compiler - which silently left this menu's
+// hover state unchanged in dark mode.
+const MENU_ITEM = 'w-full text-left px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white transition-colors flex items-center gap-2.5 disabled:opacity-40 disabled:hover:bg-transparent';
 
 function PageShell(props) {
   const {
@@ -581,7 +585,7 @@ function PageShell(props) {
                 <button
                   type="button"
                   onClick={onDeleteAllStock}
-                  className={`${MENU_ITEM} text-rose-600 hover:bg-rose-50 hover:text-rose-700`}
+                  className={`${MENU_ITEM} text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:text-rose-700 dark:hover:text-rose-300`}
                 >
                   <Trash2 size={15} /> Delete all items &amp; categories
                 </button>
@@ -601,7 +605,7 @@ function PageShell(props) {
               key={tab.id}
               onClick={() => setPageTab(tab.id)}
               className={`flex items-center space-x-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                isActive ? 'bg-blue-600 text-white shadow' : 'text-gray-500 dark:text-slate-500 hover:text-gray-900 hover:bg-gray-50 '
+                isActive ? 'bg-blue-600 text-white shadow' : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-700 '
               }`}
             >
               <Icon size={15} />

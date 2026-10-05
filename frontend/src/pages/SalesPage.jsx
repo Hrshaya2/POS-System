@@ -647,7 +647,7 @@ export default function SalesPage() {
                                     value={productSearch}
                                     onChange={(e) => setProductSearch(e.target.value)}
                                     onKeyDown={handleProductSearchKeyDown}
-                                    className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Scan IMEI, type SKU, or search product name"
                                 />
                             </div>
@@ -761,7 +761,7 @@ export default function SalesPage() {
                                     step="0.01"
                                     value={discountAmount}
                                     onChange={(e) => setDiscountAmount(e.target.value)}
-                                    className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-4 py-3 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="0.00"
                                 />
                                 <div className={`text-xs ${approvalRequired ? 'text-amber-700 dark:text-amber-300' : 'text-gray-500 dark:text-slate-400'}`}>
@@ -856,11 +856,10 @@ export default function SalesPage() {
                                     value={approvalNote}
                                     onChange={(e) => setApprovalNote(e.target.value)}
                                     rows="3"
-                                    className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-4 py-3 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Optional note for large discounts or supervisor review"
                                 />
                             </div>
-
                             {checkoutError && (
                                 <div className="mb-4 rounded-2xl border border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
                                     {checkoutError}
@@ -953,10 +952,10 @@ export default function SalesPage() {
                         <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-3">
                             <div className="lg:col-span-2 relative">
                                 <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" />
-                                <input value={historySearch} onChange={(e) => setHistorySearch(e.target.value)} className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 pl-11 pr-4 py-3 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search receipt, item, cashier, payment method" />
+                                <input value={historySearch} onChange={(e) => setHistorySearch(e.target.value)} className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 pl-11 pr-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search receipt, item, cashier, payment method" />
                             </div>
                             {isAdmin && (
-                                <select value={historyCashierFilter} onChange={(e) => setHistoryCashierFilter(e.target.value)} className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-4 py-3 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <select value={historyCashierFilter} onChange={(e) => setHistoryCashierFilter(e.target.value)} className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     <option value="all">All cashiers</option>
                                     {uniqueCashiers.map((cashier) => <option key={cashier.id} value={cashier.id}>{cashier.name}</option>)}
                                 </select>
