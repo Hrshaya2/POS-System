@@ -220,7 +220,8 @@ function DetailsTab({ form, setField, isPhoneCategory, categories, errors, handl
           <ErrText msg={errors.name} />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        {/* Fields stack to one column below sm so labels stay readable. */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <Label>Code / SKU *</Label>
             <div className="flex space-x-2">
@@ -413,7 +414,7 @@ function PhoneFields({ form, setField, visible }) {
   return (
     <div className="border border-indigo-100 dark:border-indigo-500/20 bg-indigo-50/50 rounded-xl p-4 space-y-3">
       <p className="text-xs font-bold text-indigo-700 dark:text-indigo-300 uppercase tracking-wide">Phone details (IMEI-tracked)</p>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <Label>IMEI</Label>
           <input value={form.imei || ''} onChange={(e) => setField('imei', e.target.value)} className={`${inputClass(false)} font-mono`} />
@@ -468,7 +469,7 @@ function PriceTaxTab({ form, setField, handleCostChange, handleMarkupChange, han
 
   return (
     <div className="space-y-4 max-w-xl">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
           <Label>Tax rate (%)</Label>
           <input type="number" min="0" step="0.01" value={form.tax_rate ?? 0} onChange={(e) => setField('tax_rate', e.target.value)} className={inputClass(false)} />
@@ -546,7 +547,7 @@ function DetailsExtraRows({ barcodeInput, setBarcodeInput, existing, onAddBarcod
 
 function CategoryQtyFields({ form, setField, categories, errors }) {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
         <Label>Category *</Label>
         <select value={form.category} onChange={(e) => setField('category', e.target.value)} className={inputClass(errors.category)}>

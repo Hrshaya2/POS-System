@@ -1748,3 +1748,792 @@ Node.js v24.19.0
 [2m12:04:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
 [2m12:04:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
 [2m12:05:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:43:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:43:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:43:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:43:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:43:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:43:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:45:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:45:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:45:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:45:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:45:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:45:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:46:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:46:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:46:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:47:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:47:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:47:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:47:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:47:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:47:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:48:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:48:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:48:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:48:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:48:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:49:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:49:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:49:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:49:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:49:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:49:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:51:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:51:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:51:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:51:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:51:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:51:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:51:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m12:51:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:51:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:52:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:38:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:39:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/StockManagementPage.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/components/Stock/ProductFormModal.jsx, /src/components/Stock/BatchPrintModal.jsx, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:41:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:42:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/hooks/useTheme.js[22m
+[2m07:42:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m07:43:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:43:49[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+[2m07:43:49[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+[2m07:43:49[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+[2m07:44:30[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:44:36[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+[2m07:44:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:44:51[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+[2m07:45:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:45:21[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+[2m07:45:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:45:37[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+[2m07:47:15[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:49:02[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:49:04[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:49:05[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:49:50[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:49:52[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:49:53[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:52:29[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:52:32[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:53:10[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:53:18[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportTable.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:54:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m07:54:42[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+[2m07:54:43[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:54:49[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:55:01[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected JSX expression
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/hooks/useTheme.js:55:12 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m55 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m<[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m{[0m[38;5;249mv[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249mu[0m[38;5;249me[0m[38;5;249m}[0m[38;5;249m>[0m[38;5;249m{[0m[38;5;249mc[0m[38;5;249mh[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249md[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m}[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mT[0m[38;5;249mh[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249m.[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m[38;5;249m;[0m
+ [38;5;240m   │[0m            ┬  
+ [38;5;240m   │[0m            ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: JSX syntax is disabled and should be enabled via the parser options
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/hooks/useTheme.js[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:56:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/components/ThemeToggle.jsx, /src/index.css[22m
+[2m07:56:57[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /src/hooks/useTheme.js (resolved id: D:/Nangi/POS/frontend/src/hooks/useTheme.js) in D:/Nangi/POS/frontend/src/App.jsx. Does the file exist?
+[2m07:56:57[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Failed to load url /src/hooks/useTheme.js (resolved id: D:/Nangi/POS/frontend/src/hooks/useTheme.js) in D:/Nangi/POS/frontend/src/App.jsx. Does the file exist?
+[2m07:57:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m07:59:33[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m08:00:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m08:01:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m08:02:17[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m08:03:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m08:05:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m08:08:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m08:08:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m08:09:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m08:09:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:10:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:10:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:10:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:10:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:11:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m08:12:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m08:12:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m08:15:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m08:15:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m08:16:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m08:19:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m08:20:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m08:21:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m08:21:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m08:22:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ErrorBoundary.jsx, /src/index.css[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/SingleDeviceWarning.jsx[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BatchPrintModal.jsx[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ManageCategoriesModal.jsx[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/MovementBadge.jsx[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/SyncStatusIndicator.jsx, /src/index.css[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Login.jsx, /src/index.css[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m08:23:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m08:24:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:24:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:24:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:24:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:24:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:24:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m08:27:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:27:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:28:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:28:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:28:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ThemeToggle.jsx, /src/index.css[22m
+[2m08:28:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:28:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:29:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:29:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:30:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m08:30:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:31:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:31:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:31:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:31:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m08:34:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:34:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:34:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:37:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:37:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:37:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:38:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:38:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:41:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m08:46:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m08:47:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m08:48:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m08:49:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m08:49:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m08:50:33[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m08:53:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m08:54:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:55:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:55:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:55:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m08:56:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m08:57:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m08:58:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m08:58:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m08:58:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m08:58:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m08:59:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:00:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m09:01:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m09:01:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m09:02:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m09:03:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m09:03:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m09:04:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m09:05:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m09:06:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/CloseSessionModal.jsx, /src/index.css[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/CashSessionHistoryPage.jsx, /src/index.css[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Reports/ReportFilterBar.jsx[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AlertsPanel.jsx[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ItemDetailModal.jsx[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SettingsPage.jsx, /src/index.css[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:06:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m09:07:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:07:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:07:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:07:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:10:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m09:10:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/BarcodePreview.jsx[22m
+[2m09:10:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/CategoryGrid.jsx[22m
+[2m09:10:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m09:10:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m09:10:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:10:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockHistoryTab.jsx[22m
+[2m09:10:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m09:11:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m09:11:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ImportTab.jsx[22m
+[2m09:12:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:12:17[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:12:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:12:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:12:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:13:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m09:16:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:16:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:17:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:17:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:19:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:19:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:20:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:21:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:21:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:22:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:22:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:22:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:22:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:23:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:23:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:26:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:26:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:28:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:28:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:29:30[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:29:30[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:34:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m09:34:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/ThemeToggle.jsx, /src/index.css[22m
+[2m09:35:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:36:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:36:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:37:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m09:38:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m09:38:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m09:39:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m09:40:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m09:40:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m09:40:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m09:41:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m09:42:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m09:42:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:42:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:42:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:42:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:42:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m09:52:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:52:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:52:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:53:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:53:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:53:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:54:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:54:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:54:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:56:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:56:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:56:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m09:56:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ReportsPage.jsx, /src/index.css[22m
+[2m10:09:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m10:09:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m10:10:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m10:10:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m10:11:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m10:11:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m10:12:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m
+[2m10:13:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m10:13:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m10:13:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m10:13:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m10:13:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m10:13:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/StockTakeTab.jsx[22m
+[2m12:56:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/ManageStoragePage.jsx, /src/index.css[22m
+[2m12:02:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:03:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:03:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:05:17[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:05:17[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:07:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:07:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:08:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 3 errors:
+
+[31m[PARSE_ERROR] [0mExpected corresponding JSX closing tag for 'div'.
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/App.jsx:188:9 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m146 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m<[0mdiv[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m"[0m[38;5;249mp[0m[38;5;249m-[0m[38;5;249m6[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249ml[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249m [0m[38;5;249mi[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249ms[0m[38;5;249m-[0m[38;5;249mc[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mj[0m[38;5;249mu[0m[38;5;249ms[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mf[0m[38;5;249my[0m[38;5;249m-[0m[38;5;249mb[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mw[0m[38;5;249me[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mg[0m[38;5;249ma[0m[38;5;249mp[0m[38;5;249m-[0m[38;5;249m3[0m[38;5;249m"[0m[38;5;249m>[0m
+ [38;5;240m    │[0m          ─┬─  
+ [38;5;240m    │[0m           ╰─── Opened here
+ [38;5;240m    │[0m 
+ [38;5;246m188 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m<[0m[38;5;249m/[0maside[38;5;249m>[0m
+ [38;5;240m    │[0m         ──┬──  
+ [38;5;240m    │[0m           ╰──── Expected `</div>`
+[38;5;246m─────╯[0m
+
+[31m[PARSE_ERROR] [0mExpected corresponding JSX closing tag for 'aside'.
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/App.jsx:235:7 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m142 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m<[0maside
+ [38;5;240m    │[0m        ──┬──  
+ [38;5;240m    │[0m          ╰──── Opened here
+ [38;5;240m    │[0m 
+ [38;5;246m235 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m<[0m[38;5;249m/[0mdiv[38;5;249m>[0m
+ [38;5;240m    │[0m       ─┬─  
+ [38;5;240m    │[0m        ╰─── Expected `</aside>`
+[38;5;246m─────╯[0m
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/App.jsx:237:1 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m237 │[0m [38;5;249m}[0m[38;5;249m;[0m
+ [38;5;240m    │[0m │ 
+ [38;5;240m    │[0m ╰─ 
+[38;5;246m─────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/App.jsx[39m
+[2m12:08:04[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 3 errors:
+
+[31m[PARSE_ERROR] [0mExpected corresponding JSX closing tag for 'div'.
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/App.jsx:188:9 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m146 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m<[0mdiv[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m"[0m[38;5;249mp[0m[38;5;249m-[0m[38;5;249m6[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249ml[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249m [0m[38;5;249mi[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249ms[0m[38;5;249m-[0m[38;5;249mc[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m [0m[38;5;249mj[0m[38;5;249mu[0m[38;5;249ms[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mf[0m[38;5;249my[0m[38;5;249m-[0m[38;5;249mb[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mw[0m[38;5;249me[0m[38;5;249me[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mg[0m[38;5;249ma[0m[38;5;249mp[0m[38;5;249m-[0m[38;5;249m3[0m[38;5;249m"[0m[38;5;249m>[0m
+ [38;5;240m    │[0m          ─┬─  
+ [38;5;240m    │[0m           ╰─── Opened here
+ [38;5;240m    │[0m 
+ [38;5;246m188 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m<[0m[38;5;249m/[0maside[38;5;249m>[0m
+ [38;5;240m    │[0m         ──┬──  
+ [38;5;240m    │[0m           ╰──── Expected `</div>`
+[38;5;246m─────╯[0m
+
+[31m[PARSE_ERROR] [0mExpected corresponding JSX closing tag for 'aside'.
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/App.jsx:235:7 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m142 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m<[0maside
+ [38;5;240m    │[0m        ──┬──  
+ [38;5;240m    │[0m          ╰──── Opened here
+ [38;5;240m    │[0m 
+ [38;5;246m235 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m<[0m[38;5;249m/[0mdiv[38;5;249m>[0m
+ [38;5;240m    │[0m       ─┬─  
+ [38;5;240m    │[0m        ╰─── Expected `</aside>`
+[38;5;246m─────╯[0m
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/App.jsx:237:1 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m237 │[0m [38;5;249m}[0m[38;5;249m;[0m
+ [38;5;240m    │[0m │ 
+ [38;5;240m    │[0m ╰─ 
+[38;5;246m─────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/App.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m12:08:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:10:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mb.txt[22m
+[2m12:10:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:11:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:12:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:19:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:20:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:20:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:21:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:21:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:25:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m12:25:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:25:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:26:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m12:26:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m12:26:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:26:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:26:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/ProductFormModal.jsx[22m
+[2m12:26:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/Stock/ProductFormModal.jsx[22m Could not Fast Refresh ("emptyItemForm" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m12:26:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx[22m
+[2m12:28:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m12:28:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m12:28:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Stock/AdjustStockModal.jsx[22m
+[2m12:28:30[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m12:28:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/CashSession/OpenSessionModal.jsx, /src/index.css[22m
+[2m12:30:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/UsersPage.jsx, /src/index.css[22m

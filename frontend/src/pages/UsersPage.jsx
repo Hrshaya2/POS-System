@@ -341,7 +341,7 @@ export default function UsersPage() {
             {/* Add User Modal */}
             {showAddModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 w-full max-w-md mx-4 overflow-hidden">
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 w-full max-w-md mx-4 max-h-[92vh] overflow-y-auto">
                         <div className="flex justify-between items-center p-6 border-b border-gray-100 dark:border-slate-800">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
                                 <UserPlus className="mr-2 text-blue-500 dark:text-blue-400" size={20} /> Add New User
@@ -426,7 +426,7 @@ export default function UsersPage() {
             {/* Edit User Modal */}
             {showEditModal && editUser && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 w-full max-w-md mx-4 overflow-hidden">
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 w-full max-w-md mx-4 max-h-[92vh] overflow-y-auto">
                         <div className="flex justify-between items-center p-6 border-b border-gray-100 dark:border-slate-800">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
                                 <Edit2 className="mr-2 text-blue-500 dark:text-blue-400" size={20} /> Edit User

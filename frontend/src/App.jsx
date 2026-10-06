@@ -16,7 +16,9 @@ import {
   Boxes,
   Trash2,
   Settings,
-  Database
+  Database,
+  Menu,
+  X
 } from 'lucide-react';
 import {
   AreaChart,
@@ -103,18 +105,70 @@ const Layout = ({ children }) => {
   const { isOpen } = useSession();
   const [showCloseModal, setShowCloseModal] = React.useState(false);
   const [showOpenModal, setShowOpenModal] = React.useState(false);
+  // Mobile drawer state. The sidebar is a fixed panel on desktop (>=lg) and an
+  // overlay drawer below that breakpoint. `useLocation` is imported at the top
+  // of this module, so we can read the current path directly and close the
+  // drawer on navigation without threading a callback through SidebarItem.
+  const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
+  // Close the drawer whenever the route changes, so tapping a nav item
+  // navigates and dismisses the menu in one action.
+  React.useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
+
+  // Lock body scroll while the drawer is open so the page behind it cannot
+  // scroll on touch devices.
+  React.useEffect(() => {
+    document.body.style.overflow = sidebarOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [sidebarOpen]);
+
+  // Escape closes the drawer (keyboard parity with the backdrop / close button).
+  React.useEffect(() => {
+    if (!sidebarOpen) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') setSidebarOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [sidebarOpen]);
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-slate-950 dark:bg-[#0b1220] text-gray-900 dark:text-slate-100 font-sans overflow-hidden">
+      {/* Mobile drawer backdrop. Only rendered below the lg breakpoint while open. */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 dark:bg-slate-950 h-full flex flex-col shadow-2xl z-10 border-r border-gray-800 dark:border-slate-800">
-        <div className="p-6 flex items-center space-x-3">
+      {/* Desktop (>=lg): static w-64 panel as before. Mobile: fixed overlay drawer
+          that slides in from the left and sits above the backdrop. */}
+      <aside
+        className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-gray-900 dark:bg-slate-950 h-full flex flex-col shadow-2xl border-r border-gray-800 dark:border-slate-800 transition-transform duration-200 ease-out
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
+      >
+        <div className="p-6 flex items-center justify-between gap-3">
+          <div className="flex items-center space-x-3">
           <div className="p-0">
             <img src="/logo.png" alt="Loyal Mobile" className="w-14 12 object-cover rounded-full border-3 order-white shadow-md" />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
             LOYAL <span className="text-blue-300">MOBILE</span>
           </h1>
+        </div>
+          {/* Close button — drawer only, visible below lg. */}
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close menu"
+            className="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+          >
+            <X size={20} />
+          </button>
         </div>
 
         <nav className="flex-1 px-4 space-y-2 mt-4 overflow-y-auto">
@@ -148,9 +202,20 @@ const Layout = ({ children }) => {
         <OfflineBanner />
 
         {/* Top Header */}
-        <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200 dark:border-slate-800 px-8 py-4 flex justify-between items-center shadow-sm">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-slate-100">Branch: Main Store (Colombo)</h2>
-          <div className="flex items-center space-x-4">
+        <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200 dark:border-slate-800 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex justify-between items-center gap-3 shadow-sm">
+          {/* Hamburger — opens the sidebar drawer. Desktop (>=lg) keeps the
+              always-visible sidebar, so this is hidden there. */}
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open menu"
+            className="lg:hidden shrink-0 -ml-1 p-2 rounded-xl text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-100 transition-colors"
+          >
+            <Menu size={22} />
+          </button>
+
+          <h2 className="text-base sm:text-xl font-semibold text-gray-800 dark:text-slate-100 truncate min-w-0">Branch: Main Store (Colombo)</h2>
+          <div className="flex items-center gap-2 sm:gap-4 flex-wrap justify-end min-w-0">
             <SyncStatusIndicator />
             {isOpen ? (
               <button
@@ -172,7 +237,8 @@ const Layout = ({ children }) => {
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md uppercase">
               {user?.name?.charAt(0) || 'U'}
             </div>
-            <div>
+            {/* Role/name text is hidden below sm — the avatar + menu remain. */}
+            <div className="hidden sm:block">
               <p className="text-sm font-semibold text-gray-700 dark:text-slate-300">{user?.name || 'User'}</p>
               <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">{user?.role || 'Guest'}</p>
             </div>
@@ -180,7 +246,7 @@ const Layout = ({ children }) => {
         </header>
 
         {/* Page Content */}
-        <div className="p-8">
+        <div className="p-4 sm:p-6 lg:p-8">
           {children}
         </div>
       </main>

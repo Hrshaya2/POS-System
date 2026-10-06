@@ -42,7 +42,9 @@ export default function AdjustStockModal({ item, onClose, onConfirm }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md">
+      {/* max-h + overflow-y-auto: keeps the whole modal inside a short mobile
+          viewport; the body scrolls instead of spilling off-screen. */}
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md max-h-[92vh] overflow-y-auto">
         <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 dark:border-slate-800">
           <div>
             <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Adjust Stock</h3>

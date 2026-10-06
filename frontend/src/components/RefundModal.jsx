@@ -206,7 +206,9 @@ export default function RefundModal({ sale, onClose, onApplied }) {
                 )}
               </div>
 
-              <div className="border border-gray-200 dark:border-slate-700 rounded-xl overflow-hidden">
+              {/* overflow-x-auto: the item table scrolls sideways on narrow
+                  screens instead of being clipped by overflow-hidden. */}
+              <div className="border border-gray-200 dark:border-slate-700 rounded-xl overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-600 dark:text-slate-400">
                   <thead className="bg-gray-50 dark:bg-slate-950 text-xs uppercase text-gray-400 dark:text-slate-500">
                     <tr>

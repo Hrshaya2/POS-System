@@ -27,7 +27,7 @@ export default function OpenSessionModal({ onClose }) {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4 bg-gray-900/60 dark:bg-slate-950/60 backdrop-blur-sm">
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100 dark:border-slate-800">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[92vh] overflow-y-auto border border-gray-100 dark:border-slate-800">
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white text-center relative overflow-hidden flex flex-col items-center">
                     {onClose && (
                         <button onClick={onClose} className="absolute top-4 right-4 text-white/70 hover:text-white z-20 font-bold text-xl drop-shadow-md">
