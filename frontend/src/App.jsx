@@ -257,8 +257,10 @@ const Layout = ({ children }) => {
   );
 };
 
+// Shadow alone is invisible on dark cards, so StatCard's dark hover lifts the
+// border instead — same weight, readable feedback in both themes.
 const StatCard = ({ title, value, subtitle, icon: Icon, colorClass, bgClass }) => (
-  <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-800 hover:shadow-md transition-shadow">
+  <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-800 hover:shadow-md hover:border-gray-200 dark:hover:border-slate-700 transition-all">
     <div className="flex justify-between items-start">
       <div>
         <p className="text-sm font-medium text-gray-500 dark:text-slate-400 mb-1">{title}</p>
@@ -575,7 +577,7 @@ const Dashboard = () => {
             <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
               <Clock className="mr-2 text-blue-500 dark:text-blue-400" size={20} /> Recent Sales
             </h3>
-            <button className="text-sm text-blue-600 dark:text-blue-400 font-medium hover:text-blue-700">View All</button>
+            <button className="text-sm text-blue-600 dark:text-blue-400 font-medium hover:text-blue-700 dark:hover:text-blue-300">View All</button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left text-gray-500 dark:text-slate-400">
@@ -592,7 +594,7 @@ const Dashboard = () => {
                 {recentSales.length === 0 ? (
                   <tr><td colSpan="5" className="px-6 py-6 text-center text-gray-400 dark:text-slate-500">No sales recorded yet today.</td></tr>
                 ) : recentSales.map((sale) => (
-                  <tr key={sale.id} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 transition-colors">
+                  <tr key={sale.id} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 dark:hover:bg-slate-700/60 transition-colors">
                     <td className="px-6 py-4 font-medium text-gray-900 dark:text-slate-100 whitespace-nowrap">{sale.id}</td>
                     <td className="px-6 py-4">{sale.item}</td>
                     <td className="px-6 py-4 font-semibold text-gray-900 dark:text-slate-100">{sale.amount}</td>
@@ -629,7 +631,7 @@ const Dashboard = () => {
                 {deadStockList.length === 0 ? (
                   <tr><td colSpan="4" className="px-6 py-4 text-center text-gray-500 dark:text-slate-400">No dead stock found!</td></tr>
                 ) : deadStockList.map((item) => (
-                  <tr key={item.id} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 transition-colors">
+                  <tr key={item.id} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 dark:hover:bg-slate-700/60 transition-colors">
                     <td className="px-6 py-4 font-medium text-gray-900 dark:text-slate-100">{item.name}</td>
                     <td className="px-6 py-4">
                       <span className={`font-medium ${item.days > 90 ? 'text-rose-600 dark:text-rose-400' : 'text-orange-500 dark:text-orange-400'}`}>
@@ -639,7 +641,7 @@ const Dashboard = () => {
                     <td className="px-6 py-4">{item.qty}</td>
                     <td className="px-6 py-4">
                       {(user?.role === 'admin' || user?.role === 'shop_owner') ? (
-                        <button className="text-blue-600 dark:text-blue-400 hover:text-blue-800 text-xs font-medium bg-blue-50 dark:bg-blue-500/10 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors">
+                        <button className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-xs font-medium bg-blue-50 dark:bg-blue-500/10 px-3 py-1.5 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors">
                           View
                         </button>
                       ) : (
@@ -682,7 +684,7 @@ const Dashboard = () => {
                 {adjustments.length === 0 ? (
                   <tr><td colSpan="7" className="px-6 py-6 text-center text-gray-400 dark:text-slate-500">No stock adjustments recorded yet.</td></tr>
                 ) : adjustments.map((m) => (
-                  <tr key={m.id || m.localKey} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 transition-colors">
+                  <tr key={m.id || m.localKey} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 dark:hover:bg-slate-700/60 transition-colors">
                     <td className="px-6 py-4 font-medium text-gray-900 dark:text-slate-100">
                       {m.item_name}
                       <span className="block text-[11px] text-gray-400 dark:text-slate-500 font-mono">{m.sku}</span>
@@ -697,7 +699,7 @@ const Dashboard = () => {
                     <td className="px-6 py-4 max-w-[180px] truncate" title={m.note}>{m.note || '—'}</td>
                     <td className="px-6 py-4 text-gray-400 dark:text-slate-500 whitespace-nowrap">{new Date(m.created_at).toLocaleString()}</td>
                     <td className="px-6 py-4">
-                      <button onClick={() => handleDeleteAdjustment(m)} className="flex items-center text-rose-600 dark:text-rose-400 hover:text-rose-800 text-xs font-medium bg-rose-50 dark:bg-rose-500/10 px-3 py-1.5 rounded-lg hover:bg-rose-100 transition-colors">
+                      <button onClick={() => handleDeleteAdjustment(m)} className="flex items-center text-rose-600 dark:text-rose-400 hover:text-rose-800 dark:hover:text-rose-300 text-xs font-medium bg-rose-50 dark:bg-rose-500/10 px-3 py-1.5 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-colors">
                         <Trash2 size={13} className="mr-1" /> Delete
                       </button>
                     </td>
