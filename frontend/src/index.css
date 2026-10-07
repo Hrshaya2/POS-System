@@ -34,12 +34,20 @@ body {
 }
 
 /* Smooth theme transition, but never on first paint and never for users who
-   ask for reduced motion - otherwise the whole app visibly animates on load. */
-.dark,
-html.theme-transition * {
+   ask for reduced motion - otherwise the whole app visibly animates on load.
+   `.dark` keeps the ambient 180ms feel for everyday dark-mode hovers; the
+   explicit `theme-transition` window (the fallback theme swap in browsers
+   without the View Transitions API) gets a longer, smoother curve so the fade
+   reads as a deliberate transition. */
+.dark {
   transition-property: background-color, border-color, color, fill, stroke;
   transition-duration: 180ms;
   transition-timing-function: ease-out;
+}
+html.theme-transition * {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 240ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -49,6 +57,73 @@ html.theme-transition * {
     transition-duration: 0ms !important;
     animation-duration: 0ms !important;
   }
+}
+
+/* ---- Theme wipe (View Transitions API) -----------------------------------
+   Night falls from the top edge when switching to dark; day rises from the
+   bottom edge when switching to light. Only used when
+   document.startViewTransition exists AND the user has not asked for reduced
+   motion (see the guards in src/hooks/useTheme.jsx). */
+
+/* Kill the default cross-fade: the incoming snapshot's clip-path is the
+   whole animation, and the outgoing snapshot must stay fully opaque so the
+   region not yet covered by the wipe still shows the old theme. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) { z-index: 0; }
+::view-transition-new(root) { z-index: 1; }
+
+/* The `.dark` rule above would ease every colour over 180ms AFTER the class
+   flip inside the transition callback — the captured "new" snapshot would
+   then still look like the old theme. Forcing durations to 0 while the wipe
+   runs makes the swap instant behind the sweeping edge (the wipe itself IS
+   the animation). */
+html.vt-wipe-down,
+html.vt-wipe-down *,
+html.vt-wipe-up,
+html.vt-wipe-up * {
+  transition-duration: 0ms !important;
+}
+
+html.vt-wipe-down::view-transition-new(root) {
+  animation: vt-wipe-down 560ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+html.vt-wipe-up::view-transition-new(root) {
+  animation: vt-wipe-up 560ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+/* Down = night falling from the top edge. */
+@keyframes vt-wipe-down {
+  from { clip-path: inset(0 0 100% 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+/* Up = day rising from the bottom edge. */
+@keyframes vt-wipe-up {
+  from { clip-path: inset(100% 0 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+/* ---- Theme toggle icon pop ---------------------------------------------- */
+/* Replayed on every toggle by remounting the icon (key={isDark} in
+   ThemeToggle.jsx), so the button reacts in both the wipe and fade paths. */
+@keyframes theme-icon-pop {
+  from { opacity: 0; transform: rotate(-120deg) scale(0.6); }
+  to   { opacity: 1; transform: rotate(0) scale(1); }
+}
+.theme-icon-pop {
+  display: inline-flex;
+  animation: theme-icon-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Honour the OS setting on both paths: no wipe, no icon spin — the theme
+     simply swaps (0ms via the rule above for the fallback path). */
+  .theme-icon-pop { animation: none; }
+  html.vt-wipe-down::view-transition-new(root),
+  html.vt-wipe-up::view-transition-new(root) { animation: none; }
 }
 
 /* ---- Loading logo ------------------------------------------------------- */
