@@ -107,8 +107,10 @@ const Layout = ({ children }) => {
   const [showCloseModal, setShowCloseModal] = React.useState(false);
   const [showOpenModal, setShowOpenModal] = React.useState(false);
   // Global Refresh button (top bar, every page): flush any queued offline
-  // changes, then reload the app so the current page re-fetches fresh data.
+  // changes, then remount the current page so it re-fetches its data — a soft
+  // refresh of the system that never reloads the browser tab.
   const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshKey, setRefreshKey] = React.useState(0);
 
   // Mobile drawer state. The sidebar is a fixed panel on desktop (>=lg) and an
   // overlay drawer below that breakpoint. `useLocation` is imported at the top
@@ -138,9 +140,11 @@ const Layout = ({ children }) => {
     return () => window.removeEventListener('keydown', onKey);
   }, [sidebarOpen]);
 
-  // Refresh everything: best-effort sync of pending offline changes (bounded
-  // so a slow network can't hang the button), then a full reload so whatever
-  // page is open re-pulls its data from the server.
+  // Refresh the system's data in place: best-effort sync of pending offline
+  // changes (bounded so a slow network can't hang the button), then bump the
+  // page subtree's key. A key change remounts the current page, so its mount
+  // effects re-run and re-pull fresh data from the server — no tab reload,
+  // no losing the app shell (sidebar, session, sync queue keep running).
   const handleRefresh = async () => {
     if (refreshing) return;
     setRefreshing(true);
@@ -150,7 +154,8 @@ const Layout = ({ children }) => {
         new Promise((resolve) => setTimeout(resolve, 3000)),
       ]);
     } finally {
-      window.location.reload();
+      setRefreshKey((k) => k + 1);
+      setRefreshing(false);
     }
   };
 
@@ -278,8 +283,11 @@ const Layout = ({ children }) => {
         </header>
 
         {/* Page Content */}
+        {/* Keyed on refreshKey: the top-bar Refresh button bumps it, which
+            remounts the current page and re-runs its data loads without
+            reloading the browser tab. */}
         <div className="p-4 sm:p-6 lg:p-8">
-          {children}
+          <React.Fragment key={refreshKey}>{children}</React.Fragment>
         </div>
       </main>
 
