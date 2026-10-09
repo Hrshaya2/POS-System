@@ -103,8 +103,13 @@ const SidebarItem = ({ icon: Icon, label, path }) => {
 const Layout = ({ children }) => {
   const { user, logout } = useAuth();
   const { isOpen } = useSession();
+  const { syncNow } = useSync();
   const [showCloseModal, setShowCloseModal] = React.useState(false);
   const [showOpenModal, setShowOpenModal] = React.useState(false);
+  // Global Refresh button (top bar, every page): flush any queued offline
+  // changes, then reload the app so the current page re-fetches fresh data.
+  const [refreshing, setRefreshing] = React.useState(false);
+
   // Mobile drawer state. The sidebar is a fixed panel on desktop (>=lg) and an
   // overlay drawer below that breakpoint. `useLocation` is imported at the top
   // of this module, so we can read the current path directly and close the
@@ -132,6 +137,22 @@ const Layout = ({ children }) => {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [sidebarOpen]);
+
+  // Refresh everything: best-effort sync of pending offline changes (bounded
+  // so a slow network can't hang the button), then a full reload so whatever
+  // page is open re-pulls its data from the server.
+  const handleRefresh = async () => {
+    if (refreshing) return;
+    setRefreshing(true);
+    try {
+      await Promise.race([
+        Promise.resolve(syncNow()),
+        new Promise((resolve) => setTimeout(resolve, 3000)),
+      ]);
+    } finally {
+      window.location.reload();
+    }
+  };
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-slate-950 dark:bg-[#0b1220] text-gray-900 dark:text-slate-100 font-sans overflow-hidden">
@@ -216,6 +237,17 @@ const Layout = ({ children }) => {
 
           <h2 className="text-base sm:text-xl font-semibold text-gray-800 dark:text-slate-100 truncate min-w-0">Branch: Main Store (Colombo)</h2>
           <div className="flex items-center gap-2 sm:gap-4 flex-wrap justify-end min-w-0">
+            {/* Global refresh — icon-only, visible on every page. */}
+            <button
+              type="button"
+              onClick={handleRefresh}
+              disabled={refreshing}
+              title="Refresh"
+              aria-label="Refresh"
+              className="shrink-0 p-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 hover:text-gray-900 dark:hover:text-slate-100 transition-colors disabled:opacity-60 shadow-sm"
+            >
+              <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
+            </button>
             <SyncStatusIndicator />
             {isOpen ? (
               <button
@@ -366,29 +398,30 @@ const Dashboard = () => {
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 
-  React.useEffect(() => {
-    const fetchDashboard = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`/api/dashboard?tzOffset=${new Date().getTimezoneOffset()}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (res.ok) {
-          setData(await res.json());
-        }
-      } catch (err) {
-        console.error("Failed to fetch dashboard", err);
-      } finally {
-        setLoading(false);
+  // Extracted from the effect below so the fetch logic lives in one place.
+  const fetchDashboard = React.useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`/api/dashboard?tzOffset=${new Date().getTimezoneOffset()}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setData(await res.json());
       }
-    };
+    } catch (err) {
+      console.error("Failed to fetch dashboard", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
+  React.useEffect(() => {
     fetchDashboard();
 
     // Poll every 15 seconds so Today's Sales and the chart stay fresh
     const interval = setInterval(fetchDashboard, 15000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchDashboard]);
 
   // Refresh when a background sync completes (pending count drops to 0)
   const prevPendingRef = React.useRef(syncStatus?.pendingCounts?.total);

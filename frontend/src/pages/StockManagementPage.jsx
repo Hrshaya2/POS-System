@@ -7,7 +7,7 @@ import {
   Boxes, Search, Plus, Pencil, Trash2, Wrench,
   Barcode as BarcodeIcon, CheckSquare, Square, Printer,
   History, ClipboardCheck, Upload, TrendingDown, LayoutGrid,
-  FileSpreadsheet, FileText, AlertTriangle, RefreshCw,
+  FileSpreadsheet, FileText, AlertTriangle,
   ChevronDown, MoreHorizontal, Layers
 } from 'lucide-react';
 import { exportToExcelWithTotals, exportToPdf } from '../utils/reportExport';
@@ -174,17 +174,6 @@ export default function StockManagementPage() {
   const reload = useCallback(async () => {
     applyData(await refreshStockData());
   }, [applyData]);
-
-  // "Refresh" re-pulls from the server. On a failed fetch it would silently
-  // re-serve the stale cache, so make that outcome visible instead of letting
-  // the phantom rows quietly come back.
-  const handleRefresh = useCallback(async () => {
-    try {
-      await reload();
-    } catch (err) {
-      alert('Could not reach the server, so the saved data on this device is still being shown. Check that the backend is running, then try again.');
-    }
-  }, [reload]);
 
   // Clears this device's stock cache + queued writes, then reloads from the
   // server. Guarded because it discards anything not yet uploaded.
@@ -394,7 +383,6 @@ export default function StockManagementPage() {
       updateLabelSizeField={updateLabelSizeField}
       onManageCategories={() => setShowManageCategories(true)}
       onAddItem={() => setProductFormState({ item: null })}
-      onRefresh={handleRefresh}
       onResetLocal={handleResetLocal}
       onDeleteAllStock={handleDeleteAllStock}
       categories={categories} items={items} takes={takes} user={user}
@@ -489,7 +477,7 @@ function PageShell(props) {
     selectedIds, toggleSelect, setDetailItem,
     setProductFormState, setAdjustItem, setBatchPrintOpen,
     reload, onJumpToItem, onDeleteItem, onPrintLabel, onExportLowStockPdf,
-    onRefresh, onResetLocal, onDeleteAllStock
+    onResetLocal, onDeleteAllStock
   } = props;
 
   return (
@@ -563,13 +551,6 @@ function PageShell(props) {
               className={MENU_ITEM}
             >
               <Layers size={15} className="text-gray-500 dark:text-slate-400" /> Manage categories
-            </button>
-            <button
-              type="button"
-              onClick={onRefresh}
-              className={MENU_ITEM}
-            >
-              <RefreshCw size={15} className="text-gray-500 dark:text-slate-400" /> Refresh from database
             </button>
             <button
               type="button"

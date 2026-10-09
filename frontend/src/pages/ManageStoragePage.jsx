@@ -8,7 +8,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip
 } from 'recharts';
 import {
-  Database, RefreshCw, AlertTriangle, Lightbulb, TrendingUp,
+  Database, AlertTriangle, Lightbulb, TrendingUp,
   Receipt, Wrench, Coins, History, ClipboardList, FileSpreadsheet,
   Tags, Settings, BadgeDollarSign, ExternalLink, Info, HardDrive, Trash2, X, CheckCircle2
 } from 'lucide-react';
@@ -272,12 +272,10 @@ export default function ManageStoragePage() {
   const { isDark } = useTheme();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
 
-  const load = useCallback(async (isRefresh = false) => {
-    if (isRefresh) setRefreshing(true);
-    else setLoading(true);
+  const load = useCallback(async () => {
+    setLoading(true);
     setError('');
     try {
       const token = localStorage.getItem('token');
@@ -296,12 +294,11 @@ export default function ManageStoragePage() {
       setError(err.message || 'Failed to load storage stats');
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, []);
 
-  // Real dbStats are fetched fresh on every page load; the button re-fetches.
-  useEffect(() => { load(false); }, [load]);
+  // Real dbStats are fetched fresh on every page load.
+  useEffect(() => { load(); }, [load]);
 
   // Per-section clearing: which section's confirmation modal is open, plus the
   // outcome banner shown after a successful clear.
@@ -390,14 +387,6 @@ export default function ManageStoragePage() {
             MongoDB Atlas usage vs the 512MB free-tier limit · database <span className="font-mono text-gray-700 dark:text-slate-300">{db.name}</span>
           </p>
         </div>
-        <button
-          onClick={() => load(true)}
-          disabled={refreshing}
-          className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-50 px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-colors disabled:opacity-60"
-        >
-          <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
-          {refreshing ? 'Refreshing...' : 'Refresh'}
-        </button>
       </div>
 
       {/* Outcome banner after a successful section clear */}

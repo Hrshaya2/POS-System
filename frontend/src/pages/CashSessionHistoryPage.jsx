@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { RefreshCw, Coins, CalendarDays, User } from 'lucide-react';
+import { Coins, CalendarDays, User } from 'lucide-react';
 
 const API_BASE = '/api';
 
@@ -37,9 +37,6 @@ export default function CashSessionHistoryPage() {
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Cash Sessions History</h1>
                     <p className="text-gray-500 dark:text-slate-400 mt-1">Audit log of all daily opening and closing balances and cash variances.</p>
                 </div>
-                <button onClick={loadSessions} className="inline-flex items-center gap-2 rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-2 text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 bg-white shadow-sm">
-                    <RefreshCw size={16} /> Refresh
-                </button>
             </div>
 
             <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">

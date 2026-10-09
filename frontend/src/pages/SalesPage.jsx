@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useSession } from '../context/SessionContext';
 import { useSync } from '../context/SyncContext';
-import { BadgeCheck, Banknote, Barcode, CreditCard, History, PackageSearch, Printer, Search, ShieldAlert, ShoppingCart, Smartphone, RefreshCw, Trash2, Warehouse, WifiOff, CloudUpload } from 'lucide-react';
+import { BadgeCheck, Banknote, Barcode, CreditCard, History, PackageSearch, Printer, Search, ShieldAlert, ShoppingCart, Smartphone, Trash2, Warehouse, WifiOff, CloudUpload } from 'lucide-react';
 import { addPendingSale, generateLocalReceiptNo } from '../db/database';
 import { refreshInventoryCache } from '../services/syncService';
 import { getCachedInventory } from '../db/database';
@@ -938,9 +938,6 @@ export default function SalesPage() {
                                 <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2"><History size={20} className="text-blue-600" /> Sales History</h2>
                                 <p className="text-sm text-gray-500 dark:text-slate-400">Search receipts, items, and cashiers. Pending badges clear when the background sync marks a sale as synced.</p>
                             </div>
-                            <button onClick={loadSales} className="inline-flex items-center gap-2 rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-2 text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950">
-                                <RefreshCw size={16} /> Refresh
-                            </button>
                         </div>
 
                         {salesError && (
