@@ -66,7 +66,7 @@ export default function ProductFormModal({
   item,            // null => create mode
   categories,
   presetCategory,  // pre-fill when opened inside a category
-  existingSkus,    // for unique-SKU validation + barcode generation
+  existingSkus = [], // for unique-SKU validation + barcode generation
   canEdit,         // false => read-only (cashier viewing existing item)
   onSave,
   onClose
@@ -109,6 +109,22 @@ export default function ProductFormModal({
     setForm((prev) => ({ ...prev, barcodes: prev.barcodes.includes(code) ? prev.barcodes : [...prev.barcodes, code] }));
   };
 
+  // SKU wand: checks every SKU already stored in the database (printed labels
+  // included) and continues after the highest LM-number, instead of always
+  // restarting from the same base number.
+  const handleGenerateSku = () => {
+    setField('sku', generateInternalSku([...(existingSkus || []), ...form.barcodes]));
+  };
+
+  // Adding a custom product code in the barcode section also fills a blank
+  // SKU field with that code, so the customer doesn't type it twice. A SKU
+  // they already typed or generated is never overwritten.
+  const handleAddBarcode = (code) => setForm((prev) => ({
+    ...prev,
+    barcodes: prev.barcodes.includes(code) ? prev.barcodes : [...prev.barcodes, code],
+    sku: String(prev.sku || '').trim() ? prev.sku : code
+  }));
+
   const errors = validateItemForm(form, existingSkus, item?.sku);
   const isValid = Object.keys(errors).length === 0;
 
@@ -130,7 +146,7 @@ export default function ProductFormModal({
     form, setField,
     isPhoneCategory, categories, errors,
     handleCostChange, handleMarkupChange, handlePriceChange,
-    handleGenerateBarcode,
+    handleGenerateBarcode, handleGenerateSku, handleAddBarcode,
     COLOR_PRESETS
   };
 
@@ -207,7 +223,7 @@ const inputClass = (hasError) =>
 const ErrText = ({ msg }) => (msg ? <p className="text-xs text-rose-600 dark:text-rose-400 mt-1">{msg}</p> : null);
 const Label = ({ children }) => <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">{children}</label>;
 
-function DetailsTab({ form, setField, isPhoneCategory, categories, errors, handleGenerateBarcode }) {
+function DetailsTab({ form, setField, isPhoneCategory, categories, errors, handleGenerateBarcode, handleGenerateSku, handleAddBarcode }) {
   const [barcodeInput, setBarcodeInput] = React.useState('');
   const primaryBarcode = form.barcodes[0] || '';
 
@@ -228,8 +244,8 @@ function DetailsTab({ form, setField, isPhoneCategory, categories, errors, handl
               <input value={form.sku} onChange={(e) => setField('sku', e.target.value)} placeholder="LM-000123" className={`${inputClass(errors.sku)} font-mono`} />
               <button
                 type="button"
-                onClick={() => setField('sku', generateInternalSku(form.barcodes))}
-                title="Generate internal SKU"
+                onClick={handleGenerateSku}
+                title="Generate next free SKU from the database"
                 className="px-3 py-2 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 rounded-lg hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors whitespace-nowrap"
               >
                 <Wand2 size={16} />
@@ -265,7 +281,7 @@ function DetailsTab({ form, setField, isPhoneCategory, categories, errors, handl
             barcodeInput={barcodeInput}
             setBarcodeInput={setBarcodeInput}
             existing={form.barcodes}
-            onAddBarcode={(code) => setField('barcodes', [...form.barcodes, code])}
+            onAddBarcode={handleAddBarcode}
             onGenerate={handleGenerateBarcode}
           />
           <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-1">Generate creates a unique internal LM-code for items without a manufacturer barcode.</p>

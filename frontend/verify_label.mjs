@@ -6,6 +6,8 @@ const dom = new JSDOM('<!doctype html><html><body></body></html>');
 global.window = dom.window;
 global.document = dom.window.document;
 global.XMLSerializer = dom.window.XMLSerializer;
+// barcode.js alerts on empty input; Node has no alert (browser-only API).
+global.alert = () => {};
 
 const mod = await import('./src/utils/barcode.js');
 const {

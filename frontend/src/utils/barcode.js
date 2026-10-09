@@ -49,8 +49,23 @@ const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 // Source units for the generated SVG. The printer rescales this vector artwork
 // to the real millimetre size, so these only need to be large enough to keep
 // bar edges crisp - they are NOT the printed size.
-const BAR_SOURCE_HEIGHT = 100;
+//
+// Source height doubles as the lever for printed BAR SPACING (module width):
+// the final bar height is fixed by the label geometry, so a smaller source
+// height makes the uniform scale factor larger, which widens every module at
+// the same bar height. 80 puts a typical LM/UPC code at ~0.25mm per module -
+// at the X-dimension scanners lock onto most reliably. Going much lower
+// would starve long codes of bar height instead.
+const BAR_SOURCE_HEIGHT = 80;
 const BAR_SOURCE_MODULE_WIDTH = 2;
+// ISO/IEC 15417 (CODE128): the symbol must be surrounded on the READING axis
+// by a QUIET ZONE of blank space of at least 10 modules (10X) - before the
+// start pattern and after the stop pattern. Readers use that gap to find and
+// lock onto the bars before decoding - it is exactly the "space around the
+// barcode" that makes a scanner identify a label quickly. Quiet zones are a
+// horizontal requirement for linear codes; padding top/bottom would only
+// shrink the printed bars for no scanning benefit.
+const QUIET_ZONE_MODULES = 10;
 // Used only if JsBarcode reports no usable size for a code, so a render that
 // actually succeeded is never thrown away over missing dimension attributes.
 const BAR_SOURCE_FALLBACK_WIDTH = 200;
@@ -95,6 +110,52 @@ const readSvgSize = (svg) => {
     return { width: attrW, height: attrH };
 };
 
+// Shift the bars inward and grow the canvas by `quiet` user units on the left
+// and right — the reading axis. JsBarcode draws its bars inside a <g>, so one
+// transform moves them all; the background rect is widened to cover the new
+// canvas. Top/bottom stay untouched: quiet zones for linear codes are a
+// horizontal requirement, and vertical padding would only shrink the printed
+// bars. (JsBarcode's own `margin` pads all four sides and its per-side
+// options can't express 0 — `marginTop || margin` treats 0 as unset.)
+const applyQuietZone = (svg, size, quiet, background) => {
+    const totalW = size.width + quiet * 2;
+
+    let bg = null;
+    for (const child of Array.from(svg.children)) {
+        if (child.tagName.toLowerCase() === 'rect'
+            && Number(child.getAttribute('width')) === size.width) {
+            bg = child;
+            break;
+        }
+    }
+    if (bg) {
+        bg.setAttribute('width', totalW);
+    } else {
+        bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        bg.setAttribute('x', 0);
+        bg.setAttribute('y', 0);
+        bg.setAttribute('width', totalW);
+        bg.setAttribute('height', size.height);
+        bg.setAttribute('fill', background || '#ffffff');
+        svg.insertBefore(bg, svg.firstChild);
+    }
+
+    let barsGroup = svg.querySelector('g');
+    if (!barsGroup) {
+        barsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        Array.from(svg.children).forEach((child) => {
+            if (child !== bg) barsGroup.appendChild(child);
+        });
+        svg.appendChild(barsGroup);
+    }
+    barsGroup.setAttribute('transform', `translate(${quiet},0)`);
+
+    svg.setAttribute('viewBox', `0 0 ${totalW} ${size.height}`);
+    svg.setAttribute('width', String(totalW));
+    svg.setAttribute('height', String(size.height));
+    return totalW;
+};
+
 // Render a scannable CODE128 barcode and return it as an SVG markup string.
 // Returns '' when the code cannot be encoded (e.g. empty/invalid input).
 // The public shape is unchanged (BarcodePreview and the receipt printer use
@@ -104,16 +165,32 @@ const buildBarcodeElement = (code, options = {}) => {
     if (!value) return null;
     try {
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const moduleWidth = Number(options.width) > 0 ? Number(options.width) : 2;
+        const quietZone = moduleWidth * QUIET_ZONE_MODULES;
         JsBarcode(svg, value, {
             format: 'CODE128',
             displayValue: false,
+            // Bars only — the quiet zone is applied below with exact control
+            // (see applyQuietZone).
             margin: 0,
             height: options.height || 48,
-            width: options.width || 2,
+            width: moduleWidth,
             background: options.background || '#ffffff',
             lineColor: options.lineColor || '#000000'
         });
+
+        // --- Quiet zone (ISO/IEC 15417) ------------------------------------
+        // This used to ship the bars with NO blank space at all, which is why
+        // readers took a moment to lock on. Global generators always leave 10
+        // modules (10X) of white before the start pattern and after the stop
+        // pattern: readers use that gap to find and delimit the symbol before
+        // decoding. It scales with the bars, so every render size — preview,
+        // receipt and the mm-sized label — keeps exactly 10X at that size.
         const size = readSvgSize(svg);
+        if (size.width > 0 && size.height > 0 && quietZone > 0) {
+            const totalW = applyQuietZone(svg, size, quietZone, options.background);
+            return { el: svg, width: totalW, height: size.height };
+        }
         return { el: svg, width: size.width, height: size.height };
     } catch (err) {
         console.warn('[barcode] Unable to render barcode:', err.message);
@@ -141,18 +218,40 @@ const buildLabelBarcode = (code, m) => {
 
     // Last-resort dimensions so a successful render is never discarded: the
     // module count is unknown here, so fall back to a plausible symbol box.
-    const srcW = built.width > 0 ? built.width : BAR_SOURCE_FALLBACK_WIDTH;
-    const srcH = built.height > 0 ? built.height : BAR_SOURCE_HEIGHT;
+    let current = built;
+    let srcW = built.width > 0 ? built.width : BAR_SOURCE_FALLBACK_WIDTH;
+    let srcH = built.height > 0 ? built.height : BAR_SOURCE_HEIGHT;
 
+    // Adaptive height: when the symbol runs out of WIDTH before it runs out
+    // of sticker height (long manufacturer codes), the module width is fixed
+    // by the width fit anyway — so re-rendering with taller bars costs no
+    // width and fills the free vertical space. Short codes skip this and let
+    // the height limit cap the module width instead (keeps X from getting
+    // absurdly wide on a 3-character code).
+    if (built.width > 0) {
+        const widthScale = m.innerW / srcW;
+        if (srcH * widthScale < m.barHeight - 0.01) {
+            const tallHeight = Math.min(Math.ceil(m.barHeight / widthScale), 4000);
+            const tall = buildBarcodeElement(code, { height: tallHeight, width: BAR_SOURCE_MODULE_WIDTH });
+            if (tall && tall.width > 0 && Math.abs(tall.width - srcW) < 0.5) {
+                current = tall;
+                srcH = tall.height;
+            }
+        }
+    }
+
+    // Aspect-ratio-preserving fit into the space left on the sticker. The
+    // quiet zone is part of the SVG, so this single scale keeps it at exactly
+    // 10X on both sides at whatever final size results.
     const scale = Math.min(m.innerW / srcW, m.barHeight / srcH);
     const outW = srcW * scale;
     const outH = srcH * scale;
 
-    built.el.setAttribute('viewBox', `0 0 ${srcW} ${srcH}`);
-    built.el.setAttribute('preserveAspectRatio', 'none');
-    built.el.setAttribute('width', `${outW.toFixed(2)}mm`);
-    built.el.setAttribute('height', `${outH.toFixed(2)}mm`);
-    return new XMLSerializer().serializeToString(built.el);
+    current.el.setAttribute('viewBox', `0 0 ${srcW} ${srcH}`);
+    current.el.setAttribute('preserveAspectRatio', 'none');
+    current.el.setAttribute('width', `${outW.toFixed(2)}mm`);
+    current.el.setAttribute('height', `${outH.toFixed(2)}mm`);
+    return new XMLSerializer().serializeToString(current.el);
 };
 
 const escapeHtml = (s) => String(s ?? '')
