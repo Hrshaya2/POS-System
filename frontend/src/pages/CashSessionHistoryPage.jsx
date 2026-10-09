@@ -63,7 +63,7 @@ export default function CashSessionHistoryPage() {
                             ) : sessions.length === 0 ? (
                                 <tr><td colSpan="7" className="px-6 py-10 text-center text-gray-400 dark:text-slate-500">No sessions recorded yet.</td></tr>
                             ) : sessions.map(s => (
-                                <tr key={s.id} className="border-b border-gray-100 dark:border-slate-800 hover:bg-gray-50/60 hover:dark:bg-slate-950/60 transition-colors">
+                                <tr key={s.id} className="border-b border-gray-100 dark:border-slate-800 hover:bg-gray-50/60 dark:hover:bg-slate-700/60 hover:dark:bg-slate-950/60 transition-colors">
                                     <td className="px-6 py-4 font-semibold text-gray-900 dark:text-slate-100 whitespace-nowrap">
                                         <div className="flex items-center gap-2">
                                             <CalendarDays size={16} className="text-blue-500" />

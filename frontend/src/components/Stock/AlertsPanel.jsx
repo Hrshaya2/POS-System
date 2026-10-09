@@ -132,7 +132,7 @@ function DeadStockCard({ data, loading, deadDays, setDeadDays, onJumpToItem }) {
             ) : data.deadStock.length === 0 ? (
               <tr><td colSpan="5" className="px-6 py-8 text-center text-gray-400 dark:text-slate-500">Nothing idle for {deadDays}+ days — stock is moving.</td></tr>
             ) : data.deadStock.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50/70 hover:dark:bg-slate-950/70 transition-colors">
+              <tr key={item.id} className="hover:bg-gray-50/70 dark:hover:bg-slate-700/70 hover:dark:bg-slate-950/70 transition-colors">
                 <td className="px-6 py-3">
                   <span className="font-semibold text-gray-900 dark:text-slate-100">{item.name}</span>
                   <span className="block text-[11px] font-mono text-gray-400 dark:text-slate-500">{item.sku}</span>
@@ -149,7 +149,7 @@ function DeadStockCard({ data, loading, deadDays, setDeadDays, onJumpToItem }) {
                   </span>
                 </td>
                 <td className="px-6 py-3 text-right">
-                  <button onClick={() => onJumpToItem(item)} className="text-blue-600 dark:text-blue-400 hover:text-blue-800 text-xs font-semibold bg-blue-50 dark:bg-blue-500/10 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors">
+                  <button onClick={() => onJumpToItem(item)} className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-xs font-semibold bg-blue-50 dark:bg-blue-500/10 px-3 py-1.5 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors">
                     View
                   </button>
                 </td>

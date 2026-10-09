@@ -150,7 +150,7 @@ export default function SettingsPage() {
           <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Customize how your receipts print — logo, messages and contact details.</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={handlePrintPreview} className="flex items-center px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50">
+          <button onClick={handlePrintPreview} className="flex items-center px-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700">
             <Printer size={17} className="mr-1.5" /> Print Preview
           </button>
           <button onClick={handleSave} className="flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md">
@@ -177,11 +177,11 @@ export default function SettingsPage() {
                 )}
               </div>
               <div className="flex flex-col gap-2">
-                <button onClick={() => fileRef.current?.click()} className="flex items-center justify-center px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50">
+                <button onClick={() => fileRef.current?.click()} className="flex items-center justify-center px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700">
                   <Upload size={16} className="mr-1.5" /> Upload Logo
                 </button>
                 {settings.logo && (
-                  <button onClick={() => update({ logo: '', showLogo: false })} className="flex items-center justify-center px-4 py-2 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 rounded-xl text-sm font-semibold text-rose-700 dark:text-rose-300 hover:bg-rose-100">
+                  <button onClick={() => update({ logo: '', showLogo: false })} className="flex items-center justify-center px-4 py-2 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 rounded-xl text-sm font-semibold text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-500/20">
                     <Trash2 size={16} className="mr-1.5" /> Remove
                   </button>
                 )}
@@ -206,7 +206,7 @@ export default function SettingsPage() {
                   key={mm}
                   type="button"
                   onClick={() => update({ widthMm: mm })}
-                  className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-colors ${settings.widthMm === mm ? 'bg-blue-600 text-white border-blue-600' : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50'}`}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-colors ${settings.widthMm === mm ? 'bg-blue-600 text-white border-blue-600' : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'}`}
                 >
                   {mm} mm
                 </button>
@@ -256,7 +256,7 @@ export default function SettingsPage() {
                   key={px}
                   type="button"
                   onClick={() => update({ fontSize: px })}
-                  className={`px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${settings.fontSize === px ? 'bg-blue-600 text-white border-blue-600' : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50'}`}
+                  className={`px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${settings.fontSize === px ? 'bg-blue-600 text-white border-blue-600' : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700'}`}
                 >
                   {px}px
                 </button>

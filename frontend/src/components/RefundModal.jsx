@@ -188,7 +188,7 @@ export default function RefundModal({ sale, onClose, onApplied }) {
               {new Date(sale.created_at).toLocaleString()} · {methodLabel(sale.payment_method)} · Total {fmtMoney(sale.total)}
             </p>
           </div>
-          {flow !== 'done' && <button onClick={onClose} className="p-2 hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>}
+          {flow !== 'done' && <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>}
         </div>
 
         <div className="p-6 overflow-y-auto space-y-5">
@@ -263,14 +263,14 @@ export default function RefundModal({ sale, onClose, onApplied }) {
                 <label className="block">
                   <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Reason *</span>
                   <select value={reason} onChange={(e) => { setReason(e.target.value); if (e.target.value !== 'Other') setReasonNote(''); }}
-                    className="mt-1 w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                    className="mt-1 w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500">
                     {REASONS.map((r) => <option key={r} value={r}>{r}</option>)}
                   </select>
                 </label>
                 <label className="block">
                   <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Refund method</span>
                   <select value={refundMethod} onChange={(e) => setRefundMethod(e.target.value)}
-                    className="mt-1 w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                    className="mt-1 w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500">
                     {[originalMethod, ...['CASH', 'CARD', 'BANK_TRANSFER'].filter((m) => m !== originalMethod)].map((m) => (
                       <option key={m} value={m}>{methodLabel(m)}</option>
                     ))}
@@ -281,7 +281,7 @@ export default function RefundModal({ sale, onClose, onApplied }) {
                   <label className="block md:col-span-2">
                     <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Explain (required for “Other”) *</span>
                     <textarea rows={2} value={reasonNote} onChange={(e) => setReasonNote(e.target.value)} placeholder="Short note for the audit trail…"
-                      className="mt-1 w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-500" />
+                      className="mt-1 w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500" />
                   </label>
                 )}
               </div>
@@ -295,7 +295,7 @@ export default function RefundModal({ sale, onClose, onApplied }) {
 
               <div className="flex items-center justify-end gap-3 pt-1">
                 <button type="button" onClick={onClose} disabled={submitting}
-                  className="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950 disabled:opacity-50">Cancel</button>
+                  className="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 disabled:opacity-50">Cancel</button>
                 <button type="button" onClick={submit} disabled={submitting || calc.records.length === 0}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-sm font-bold shadow-md disabled:opacity-60">
                   <RotateCcw size={15} className={submitting ? 'animate-spin' : ''} />
@@ -331,12 +331,12 @@ export default function RefundModal({ sale, onClose, onApplied }) {
                   onChange={(e) => setApproverPin(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') approve(); }}
                   placeholder="••••"
-                  className="mt-1 w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3 py-2.5 text-lg tracking-widest focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-500" />
+                  className="mt-1 w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3 py-2.5 text-lg tracking-widest focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500" />
               </label>
 
               <div className="flex items-center justify-end gap-3 pt-1">
                 <button type="button" onClick={() => { setFlow('select'); setPendingRefund(null); }} disabled={submitting}
-                  className="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950 disabled:opacity-50">Back</button>
+                  className="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 disabled:opacity-50">Back</button>
                 <button type="button" onClick={approve} disabled={submitting || !approverPin.trim()}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold shadow-md disabled:opacity-60">
                   <ShieldAlert size={15} /> {submitting ? 'Verifying…' : 'Approve & refund'}
@@ -357,7 +357,7 @@ export default function RefundModal({ sale, onClose, onApplied }) {
                 </p>
               </div>
               <div className="flex justify-end pt-1">
-                <button type="button" onClick={onClose} className="px-5 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950">Close</button>
+                <button type="button" onClick={onClose} className="px-5 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950">Close</button>
               </div>
             </>
           )}
@@ -376,7 +376,7 @@ export default function RefundModal({ sale, onClose, onApplied }) {
               </div>
               <div className="flex items-center justify-between gap-3 pt-1">
                 <button type="button" onClick={() => printRefund(completed)}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950">
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950">
                   <Printer size={15} /> Print again
                 </button>
                 <button type="button" onClick={onClose} className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold shadow-md">Done</button>

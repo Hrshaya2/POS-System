@@ -275,7 +275,7 @@ export default function UsersPage() {
                                 <tr><td colSpan="5" className="px-6 py-8 text-center text-gray-400 dark:text-slate-500">No users found.</td></tr>
                             ) : (
                                 usersList.map((u) => (
-                                    <tr key={u.id} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 transition-colors">
+                                    <tr key={u.id} className="bg-white dark:bg-slate-800 border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/80 dark:hover:bg-slate-700/80 transition-colors">
                                         <td className="px-6 py-4 font-medium text-gray-900 dark:text-slate-100 whitespace-nowrap">
                                             <div className="flex items-center space-x-3">
                                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs uppercase ${u.role === 'admin' ? 'bg-gradient-to-r from-amber-500 to-orange-500' :
@@ -310,7 +310,7 @@ export default function UsersPage() {
                                                     onClick={() => openEditModal(u)}
                                                     disabled={!canModify(u)}
                                                     className={`p-2 rounded-lg transition-all cursor-pointer ${canModify(u)
-                                                        ? 'text-gray-400 dark:text-slate-500 hover:text-blue-600 hover:dark:text-blue-400 hover:bg-blue-50 hover:dark:bg-blue-500/10'
+                                                        ? 'text-gray-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-300 hover:dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/15 hover:dark:bg-blue-500/10'
                                                         : 'text-gray-200 cursor-not-allowed'
                                                         }`}
                                                     title={canModify(u) ? 'Edit user' : u.role === 'admin' ? 'Cannot edit admin' : 'Cannot edit'}
@@ -321,7 +321,7 @@ export default function UsersPage() {
                                                     onClick={() => handleDelete(u)}
                                                     disabled={!canDelete(u)}
                                                     className={`p-2 rounded-lg transition-all cursor-pointer ${canDelete(u)
-                                                        ? 'text-gray-400 dark:text-slate-500 hover:text-rose-600 hover:dark:text-rose-400 hover:bg-rose-50 hover:dark:bg-rose-500/10'
+                                                        ? 'text-gray-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-300 hover:dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/15 hover:dark:bg-rose-500/10'
                                                         : 'text-gray-200 cursor-not-allowed'
                                                         }`}
                                                     title={canDelete(u) ? 'Delete user' : u.role === 'admin' ? 'Cannot delete admin' : 'Cannot delete user'}
@@ -346,7 +346,7 @@ export default function UsersPage() {
                             <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
                                 <UserPlus className="mr-2 text-blue-500 dark:text-blue-400" size={20} /> Add New User
                             </h3>
-                            <button onClick={() => setShowAddModal(false)} className="text-gray-400 dark:text-slate-500 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 hover:dark:bg-slate-800 transition-colors cursor-pointer">
+                            <button onClick={() => setShowAddModal(false)} className="text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 hover:dark:bg-slate-800 transition-colors cursor-pointer">
                                 <X size={20} />
                             </button>
                         </div>
@@ -364,7 +364,7 @@ export default function UsersPage() {
                                     required
                                     value={addForm.name}
                                     onChange={(e) => setAddForm({ ...addForm, name: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white dark:focus:bg-slate-800 transition-colors"
                                     placeholder="Enter full name"
                                 />
                             </div>
@@ -375,7 +375,7 @@ export default function UsersPage() {
                                     required
                                     value={addForm.email}
                                     onChange={(e) => setAddForm({ ...addForm, email: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white dark:focus:bg-slate-800 transition-colors"
                                     placeholder="user@example.com"
                                 />
                             </div>
@@ -386,7 +386,7 @@ export default function UsersPage() {
                                     required
                                     value={addForm.password}
                                     onChange={(e) => setAddForm({ ...addForm, password: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white dark:focus:bg-slate-800 transition-colors"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -395,7 +395,7 @@ export default function UsersPage() {
                                 <select
                                     value={addForm.role}
                                     onChange={(e) => setAddForm({ ...addForm, role: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors cursor-pointer"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white dark:focus:bg-slate-800 transition-colors cursor-pointer"
                                 >
                                     {availableRoles().map(r => (
                                         <option key={r} value={r}>{r.charAt(0).toUpperCase() + r.slice(1)}</option>
@@ -406,7 +406,7 @@ export default function UsersPage() {
                                 <button
                                     type="button"
                                     onClick={() => setShowAddModal(false)}
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer"
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer"
                                 >
                                     Cancel
                                 </button>
@@ -431,7 +431,7 @@ export default function UsersPage() {
                             <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center">
                                 <Edit2 className="mr-2 text-blue-500 dark:text-blue-400" size={20} /> Edit User
                             </h3>
-                            <button onClick={() => { setShowEditModal(false); setEditUser(null); }} className="text-gray-400 dark:text-slate-500 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 hover:dark:bg-slate-800 transition-colors cursor-pointer">
+                            <button onClick={() => { setShowEditModal(false); setEditUser(null); }} className="text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 hover:dark:bg-slate-800 transition-colors cursor-pointer">
                                 <X size={20} />
                             </button>
                         </div>
@@ -449,7 +449,7 @@ export default function UsersPage() {
                                     required
                                     value={editForm.name}
                                     onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white dark:focus:bg-slate-800 transition-colors"
                                 />
                             </div>
                             <div>
@@ -459,7 +459,7 @@ export default function UsersPage() {
                                     required
                                     value={editForm.email}
                                     onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white dark:focus:bg-slate-800 transition-colors"
                                 />
                             </div>
                             <div>
@@ -468,7 +468,7 @@ export default function UsersPage() {
                                     type="password"
                                     value={editForm.password}
                                     onChange={(e) => setEditForm({ ...editForm, password: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white dark:focus:bg-slate-800 transition-colors"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -478,7 +478,7 @@ export default function UsersPage() {
                                     disabled={user?.role === 'shop_owner'}
                                     value={editForm.role}
                                     onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white transition-colors cursor-pointer disabled:opacity-50"
+                                    className="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-slate-950 focus:bg-white dark:focus:bg-slate-800 transition-colors cursor-pointer disabled:opacity-50"
                                 >
                                     {availableRoles().includes(editForm.role) && <option value={editForm.role}>{editForm.role.charAt(0).toUpperCase() + editForm.role.slice(1)}</option>}
                                     {availableRoles().map(r => (
@@ -490,7 +490,7 @@ export default function UsersPage() {
                                 <button
                                     type="button"
                                     onClick={() => { setShowEditModal(false); setEditUser(null); }}
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer"
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer"
                                 >
                                     Cancel
                                 </button>

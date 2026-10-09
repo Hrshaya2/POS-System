@@ -117,7 +117,7 @@ const SectionCard = ({ section, totalBytes, index, onClear }) => {
           {meta.viewPath && (
             <Link
               to={meta.viewPath}
-              className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+              className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
             >
               View <ExternalLink size={13} />
             </Link>
@@ -126,7 +126,7 @@ const SectionCard = ({ section, totalBytes, index, onClear }) => {
             onClick={() => onClear(section)}
             disabled={section.count === 0}
             title={section.count === 0 ? 'Nothing to clear' : `Clear records from ${meta.label}`}
-            className="flex items-center gap-1.5 text-sm font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-800 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 text-sm font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-800 dark:hover:text-rose-200 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Trash2 size={13} /> Clear
           </button>
@@ -183,7 +183,7 @@ function ClearStorageModal({ section, onClose, onConfirm }) {
             </h3>
             <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{meta.label}</p>
           </div>
-          <button onClick={onClose} disabled={submitting} className="p-2 hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors disabled:opacity-40">
+          <button onClick={onClose} disabled={submitting} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 hover:dark:bg-slate-800 rounded-lg transition-colors disabled:opacity-40">
             <X size={18} />
           </button>
         </div>
@@ -214,7 +214,7 @@ function ClearStorageModal({ section, onClose, onConfirm }) {
           <button
             onClick={onClose}
             disabled={submitting}
-            className="px-5 py-2.5 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors disabled:opacity-40"
+            className="px-5 py-2.5 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-100 dark:hover:bg-slate-700 hover:dark:bg-slate-800 rounded-lg transition-colors disabled:opacity-40"
           >
             Cancel
           </button>
@@ -234,7 +234,7 @@ function ClearStorageModal({ section, onClose, onConfirm }) {
 // "All records" vs "Older than N days" selection with the age threshold picker.
 function ClearModePicker({ mode, setMode, days, setDays }) {
   const optionClass = (active) => `py-2.5 px-3 rounded-xl border-2 font-semibold text-sm text-left transition-colors ${
-    active ? 'border-rose-500 bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300' : 'border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:border-gray-300'
+    active ? 'border-rose-500 bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300' : 'border-gray-200 dark:border-slate-700 text-gray-500 dark:text-slate-400 hover:border-gray-300 dark:hover:border-slate-500'
   }`;
   return (
     <div>
@@ -253,7 +253,7 @@ function ClearModePicker({ mode, setMode, days, setDays }) {
           <select
             value={days}
             onChange={(e) => setDays(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring focus:border-rose-300 bg-white dark:bg-slate-800"
+            className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring focus:border-rose-300 dark:focus:border-rose-500/60 bg-white dark:bg-slate-800"
           >
             {CLEAR_DAY_OPTIONS.map((d) => (
               <option key={d} value={d}>Older than {d} days</option>
@@ -400,7 +400,7 @@ export default function ManageStoragePage() {
           <p className="text-sm font-semibold flex-1">{clearResult.message}</p>
           <button
             onClick={() => setClearResult(null)}
-            className="text-emerald-700 dark:text-emerald-300 hover:text-emerald-900 p-1 rounded-lg hover:bg-emerald-100 hover:dark:bg-emerald-500/20 transition-colors"
+            className="text-emerald-700 dark:text-emerald-300 hover:text-emerald-900 dark:hover:text-emerald-200 p-1 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-500/20 hover:dark:bg-emerald-500/20 transition-colors"
             title="Dismiss"
           >
             <X size={16} />

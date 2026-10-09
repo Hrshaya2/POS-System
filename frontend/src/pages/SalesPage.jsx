@@ -606,10 +606,10 @@ export default function SalesPage() {
                     <p className="text-gray-500 dark:text-slate-400 mt-1">Scan products, build the cart, and complete checkout against the local store first.</p>
                 </div>
                 <div className="flex gap-2 bg-white dark:bg-slate-800 p-1 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800">
-                    <button onClick={() => setActiveTab('billing')} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${activeTab === 'billing' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 dark:text-slate-400 hover:text-gray-800'}`}>
+                    <button onClick={() => setActiveTab('billing')} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${activeTab === 'billing' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-300'}`}>
                         Billing
                     </button>
-                    <button onClick={() => setActiveTab('history')} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 ${activeTab === 'history' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 dark:text-slate-400 hover:text-gray-800'}`}>
+                    <button onClick={() => setActiveTab('history')} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 ${activeTab === 'history' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-300'}`}>
                         <History size={16} />
                         History
                     </button>
@@ -659,7 +659,7 @@ export default function SalesPage() {
                                         <button
                                             key={`${product.inventoryType}-${product.inventoryId}`}
                                             onClick={() => addItemToCart(product)}
-                                            className="text-left rounded-2xl border border-gray-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-800 hover:border-blue-300 hover:shadow-sm transition-all"
+                                            className="text-left rounded-2xl border border-gray-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-500/60 hover:shadow-sm transition-all"
                                         >
                                             <div className="flex items-start justify-between gap-4">
                                                 <div>
@@ -714,15 +714,15 @@ export default function SalesPage() {
                                                         <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 text-xs font-semibold">Locked to 1</span>
                                                     ) : (
                                                         <div className="flex items-center gap-2">
-                                                            <button onClick={() => updateCartQuantity(item.inventoryId, item.inventoryType, item.quantity - 1)} className="w-8 h-8 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950">-</button>
+                                                            <button onClick={() => updateCartQuantity(item.inventoryId, item.inventoryType, item.quantity - 1)} className="w-8 h-8 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950">-</button>
                                                             <span className="w-10 text-center font-semibold text-gray-900 dark:text-slate-100">{item.quantity}</span>
-                                                            <button onClick={() => updateCartQuantity(item.inventoryId, item.inventoryType, item.quantity + 1)} className="w-8 h-8 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950">+</button>
+                                                            <button onClick={() => updateCartQuantity(item.inventoryId, item.inventoryType, item.quantity + 1)} className="w-8 h-8 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950">+</button>
                                                         </div>
                                                     )}
                                                 </td>
                                                 <td className="px-6 py-4 font-semibold text-gray-900 dark:text-slate-100 text-right">{formatMoney(item.unitPrice * item.quantity)}</td>
                                                 <td className="px-6 py-4 text-right">
-                                                    <button onClick={() => removeCartItem(item.inventoryId, item.inventoryType)} className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400 hover:text-rose-800 text-xs font-semibold">
+                                                    <button onClick={() => removeCartItem(item.inventoryId, item.inventoryType)} className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400 hover:text-rose-800 dark:hover:text-rose-200 text-xs font-semibold">
                                                         <Trash2 size={14} /> Remove
                                                     </button>
                                                 </td>
@@ -804,7 +804,7 @@ export default function SalesPage() {
                                         <button
                                             key={value}
                                             onClick={() => setPaymentMethod(value)}
-                                            className={`rounded-2xl border px-3 py-3 text-left transition-all ${paymentMethod === value ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300' : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-400 hover:border-gray-300'}`}
+                                            className={`rounded-2xl border px-3 py-3 text-left transition-all ${paymentMethod === value ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300' : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-400 hover:border-gray-300 dark:hover:border-slate-500'}`}
                                         >
                                             <Icon size={16} />
                                             <div className="mt-2 text-sm font-semibold">{label}</div>
@@ -918,7 +918,7 @@ export default function SalesPage() {
                                         )}
                                         <div className="flex justify-between text-base font-bold pt-2"><span>Total</span><span>{formatMoney(receipt.total)}</span></div>
                                     </div>
-                                    <button onClick={() => handlePrintReceipt(receipt)} className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3 font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 inline-flex items-center justify-center gap-2">
+                                    <button onClick={() => handlePrintReceipt(receipt)} className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3 font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 inline-flex items-center justify-center gap-2">
                                         <Printer size={16} /> Print again
                                     </button>
                                 </div>
@@ -981,7 +981,7 @@ export default function SalesPage() {
                                     ) : sales.length === 0 ? (
                                         <tr><td colSpan="8" className="px-6 py-10 text-center text-gray-400 dark:text-slate-500">No sales found.</td></tr>
                                     ) : sales.map((sale) => (
-                                        <tr key={sale.id} className="border-b border-gray-100 dark:border-slate-800 hover:bg-gray-50/60 hover:dark:bg-slate-950/60">
+                                        <tr key={sale.id} className="border-b border-gray-100 dark:border-slate-800 hover:bg-gray-50/60 dark:hover:bg-slate-700/60 hover:dark:bg-slate-950/60">
                                             <td className="px-6 py-4 font-semibold text-gray-900 dark:text-slate-100 whitespace-nowrap">{sale.receipt_no}</td>
                                             <td className="px-6 py-4 max-w-[240px]">
                                                 <div className="font-medium text-gray-900 dark:text-slate-100 truncate">
@@ -1010,11 +1010,11 @@ export default function SalesPage() {
                                             <td className="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-slate-400">{new Date(sale.created_at).toLocaleString()}</td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2">
-                                                    <button onClick={() => handlePrintReceipt(sale)} className="inline-flex items-center gap-1 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950">
+                                                    <button onClick={() => handlePrintReceipt(sale)} className="inline-flex items-center gap-1 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950">
                                                         <Printer size={14} /> Print
                                                     </button>
                                                     {!sale.refunded && !(sale.pending_sync || sale.syncStatus === 'pending') && (
-                                                        <button onClick={() => handleRefund(sale)} className="inline-flex items-center gap-1 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2 text-xs font-semibold text-violet-700 hover:bg-violet-100">
+                                                        <button onClick={() => handleRefund(sale)} className="inline-flex items-center gap-1 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2 text-xs font-semibold text-violet-700 hover:bg-violet-100 dark:hover:bg-violet-500/20">
                                                             <Banknote size={14} /> Refund
                                                         </button>
                                                     )}

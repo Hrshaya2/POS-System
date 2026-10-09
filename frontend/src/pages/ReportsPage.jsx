@@ -102,15 +102,15 @@ function PendingRefundApprovals({ onChanged }) {
   };
 
   if (rows === null) return <div className="text-sm text-gray-400 dark:text-slate-500">Loading approvals…</div>;
-  if (err) return <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-sm text-rose-700">{err}</div>;
+  if (err) return <div className="rounded-xl border border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 px-4 py-2.5 text-sm text-rose-700 dark:text-rose-300">{err}</div>;
   if (rows.length === 0) return null;
 
   return (
-    <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-3">
-      <h3 className="font-bold text-amber-900 flex items-center gap-2 text-sm"><ShieldAlert size={16} /> Pending refund approvals ({rows.length})</h3>
+    <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-4 space-y-3">
+      <h3 className="font-bold text-amber-900 dark:text-amber-100 flex items-center gap-2 text-sm"><ShieldAlert size={16} /> Pending refund approvals ({rows.length})</h3>
       <div className="space-y-2">
         {rows.map((row) => (
-          <div key={row.id} className="bg-white dark:bg-slate-800 rounded-xl border border-amber-100 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div key={row.id} className="bg-white dark:bg-slate-800 rounded-xl border border-amber-100 dark:border-amber-500/20 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
             <div className="min-w-0">
               <div className="font-semibold text-gray-900 dark:text-slate-100 text-sm truncate">-{fmtM(row.total)} · {(row.items || []).length} item(s) · {row.reason}</div>
               <div className="text-xs text-gray-400 dark:text-slate-500 truncate">
@@ -121,7 +121,7 @@ function PendingRefundApprovals({ onChanged }) {
               <button disabled={busyId === row.id} onClick={() => act(row, 'approve')}
                 className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-xs font-bold">Approve (PIN)</button>
               <button disabled={busyId === row.id} onClick={() => act(row, 'reject')}
-                className="px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950 disabled:opacity-60">Reject</button>
+                className="px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 disabled:opacity-60">Reject</button>
             </div>
           </div>
         ))}
@@ -183,9 +183,9 @@ export default function ReportsPage() {
     <div className="flex flex-wrap items-center justify-between gap-4">
       <div><h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2"><BarChart3 size={24} /> Reports</h1>
         <p className="text-sm text-gray-500 dark:text-slate-400">Admin &amp; shop owner reporting. Filters apply across every tab.</p></div>
-      {stale && (<div className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-1.5 flex items-center gap-2"><Clock size={14} /><span>Data may be stale — {status.isSyncing ? 'syncing…' : status.lastSyncAt ? `last sync ${new Date(status.lastSyncAt).toLocaleTimeString()}` : 'not yet synced'}.</span></div>)}
+      {stale && (<div className="text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl px-3 py-1.5 flex items-center gap-2"><Clock size={14} /><span>Data may be stale — {status.isSyncing ? 'syncing…' : status.lastSyncAt ? `last sync ${new Date(status.lastSyncAt).toLocaleTimeString()}` : 'not yet synced'}.</span></div>)}
     </div>
-        <div className="flex gap-2 flex-wrap">{REPORTS.map((rep) => { const Icon = rep.icon; return (<button key={rep.id} onClick={() => setActive(rep.id)} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition ${active === rep.id ? 'bg-blue-600 text-white shadow' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'}`}><Icon size={16} /> {rep.label}</button>); })}</div>
+        <div className="flex gap-2 flex-wrap">{REPORTS.map((rep) => { const Icon = rep.icon; return (<button key={rep.id} onClick={() => setActive(rep.id)} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition ${active === rep.id ? 'bg-blue-600 text-white shadow' : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700'}`}><Icon size={16} /> {rep.label}</button>); })}</div>
 
     <ReportFilterBar filters={filters} setFilters={setFilters} extras={[
       { key: 'cashier', render: (f, set) => ['daily','profit','payments','refunds','activity'].includes(active) && (<input type="text" placeholder="Cashier id" value={f.cashierId || ''} onChange={(e) => set((p) => ({ ...p, cashierId: e.target.value }))} className="px-3 py-2 border rounded-lg text-sm w-36" />) },
@@ -195,7 +195,7 @@ export default function ReportsPage() {
     ]} />
 
     {loading && <div className="text-center py-10 text-gray-400 dark:text-slate-500">Loading report…</div>}
-    {error && <div className="text-rose-600 text-center py-6">{error}</div>}
+    {error && <div className="text-rose-600 dark:text-rose-400 text-center py-6">{error}</div>}
     {!loading && !error && (
       <>
         {active === 'daily' && (<div className="space-y-4">

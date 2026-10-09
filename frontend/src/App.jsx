@@ -64,7 +64,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   if (authLoading || sessionLoading) {
     // First paint of the app: show the brand mark rather than bare text.
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-[#0b1220] flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-slate-950 dark:bg-[#0b1220] flex items-center justify-center">
         <LogoLoader size={88} label="Starting Loyal Mobile…" />
       </div>
     );
@@ -91,7 +91,7 @@ const SidebarItem = ({ icon: Icon, label, path }) => {
       to={path}
       className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
         ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
-        : 'text-gray-400 dark:text-slate-500 hover:bg-gray-800 hover:dark:bg-slate-900 hover:text-white'
+        : 'text-gray-400 dark:text-slate-500 hover:bg-gray-800 dark:hover:bg-slate-700 hover:dark:bg-slate-900 hover:text-white'
         }`}
     >
       <Icon size={20} className={isActive ? "text-white" : "text-gray-400"} />
@@ -191,7 +191,7 @@ const Layout = ({ children }) => {
             type="button"
             onClick={() => setSidebarOpen(false)}
             aria-label="Close menu"
-            className="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+            className="lg:hidden p-2 rounded-lg text-gray-400 dark:text-slate-500 hover:text-white hover:bg-gray-800 dark:hover:bg-slate-700 hover:dark:bg-slate-900 transition-colors"
           >
             <X size={20} />
           </button>
@@ -215,7 +215,7 @@ const Layout = ({ children }) => {
         </nav>
 
         <div className="p-4 border-t border-gray-800 dark:border-slate-700">
-          <button onClick={logout} className="flex items-center space-x-3 px-4 py-3 w-full text-left text-gray-400 dark:text-slate-500 hover:bg-gray-800 hover:dark:bg-slate-900 hover:text-white rounded-xl transition-colors">
+          <button onClick={logout} className="flex items-center space-x-3 px-4 py-3 w-full text-left text-gray-400 dark:text-slate-500 hover:bg-gray-800 dark:hover:bg-slate-700 hover:dark:bg-slate-900 hover:text-white rounded-xl transition-colors">
             <LogOut size={20} />
             <span className="font-medium">Logout</span>
           </button>
@@ -235,7 +235,7 @@ const Layout = ({ children }) => {
             type="button"
             onClick={() => setSidebarOpen(true)}
             aria-label="Open menu"
-            className="lg:hidden shrink-0 -ml-1 p-2 rounded-xl text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-100 transition-colors"
+            className="lg:hidden shrink-0 -ml-1 p-2 rounded-xl text-gray-500 dark:text-slate-400 hover:bg-gray-100 hover:dark:bg-slate-800 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-100 transition-colors"
           >
             <Menu size={22} />
           </button>
@@ -249,7 +249,7 @@ const Layout = ({ children }) => {
               disabled={refreshing}
               title="Refresh"
               aria-label="Refresh"
-              className="shrink-0 p-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 hover:text-gray-900 dark:hover:text-slate-100 transition-colors disabled:opacity-60 shadow-sm"
+              className="shrink-0 p-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 hover:text-gray-900 dark:hover:text-slate-100 transition-colors disabled:opacity-60 shadow-sm"
             >
               <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
             </button>
@@ -257,14 +257,14 @@ const Layout = ({ children }) => {
             {isOpen ? (
               <button
                 onClick={() => setShowCloseModal(true)}
-                className="bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 hover:bg-rose-100 px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center space-x-2"
+                className="bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center space-x-2"
               >
                 <span>End Day</span>
               </button>
             ) : (
               <button
                 onClick={() => setShowOpenModal(true)}
-                className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center space-x-2"
+                className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center space-x-2"
               >
                 <span>Open Day</span>
               </button>

@@ -38,9 +38,9 @@ export default function StockHistoryTab({ items, onOpenItem }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 mt-4">
           <div className="relative lg:col-span-2">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" />
-            <input value={filters.search} onChange={setF('search')} placeholder="Search item, SKU, note…" className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:border-blue-300" />
+            <input value={filters.search} onChange={setF('search')} placeholder="Search item, SKU, note…" className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:border-blue-300 dark:focus:border-blue-500/60" />
           </div>
-          <select value={filters.type} onChange={setF('type')} className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:border-blue-300">
+          <select value={filters.type} onChange={setF('type')} className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-sm focus:outline-none focus:border-blue-300 dark:focus:border-blue-500/60">
             <option value="">All types</option>
             <option value="STOCK_IN">Stock In</option>
             <option value="SALE">Sale</option>
@@ -49,10 +49,10 @@ export default function StockHistoryTab({ items, onOpenItem }) {
             <option value="STOCK_TAKE">Stock Take</option>
             <option value="IMPORT">Import</option>
           </select>
-          <input type="date" value={filters.from} onChange={setF('from')} className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:border-blue-300" title="From date" />
-          <input type="date" value={filters.to} onChange={setF('to')} className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:border-blue-300" title="To date" />
+          <input type="date" value={filters.from} onChange={setF('from')} className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:border-blue-300 dark:focus:border-blue-500/60" title="From date" />
+          <input type="date" value={filters.to} onChange={setF('to')} className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:border-blue-300 dark:focus:border-blue-500/60" title="To date" />
         </div>
-        <input value={filters.user} onChange={setF('user')} placeholder="Filter by user…" className="mt-2.5 w-full sm:w-64 px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:border-blue-300" />
+        <input value={filters.user} onChange={setF('user')} placeholder="Filter by user…" className="mt-2.5 w-full sm:w-64 px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:border-blue-300 dark:focus:border-blue-500/60" />
       </div>
 
       <LedgerTable rows={rows} loading={loading} items={items} onOpenItem={onOpenItem} />
@@ -83,10 +83,10 @@ function LedgerTable({ rows, loading, items, onOpenItem }) {
           ) : rows.map((m) => {
             const item = items.find((i) => i.id === m.accessoryId);
             return (
-              <tr key={m.local_key || m.id} className="hover:bg-gray-50/70 hover:dark:bg-slate-950/70 transition-colors">
+              <tr key={m.local_key || m.id} className="hover:bg-gray-50/70 dark:hover:bg-slate-700/70 hover:dark:bg-slate-950/70 transition-colors">
                 <td className="px-6 py-3"><MovementBadge type={m.type} /></td>
                 <td className="px-6 py-3">
-                  <button onClick={() => onOpenItem(item || m)} disabled={!item} className={`text-left ${item ? 'font-semibold text-gray-900 dark:text-slate-100 hover:text-blue-600 hover:dark:text-blue-400' : 'text-gray-700 dark:text-slate-300'}`}>
+                  <button onClick={() => onOpenItem(item || m)} disabled={!item} className={`text-left ${item ? 'font-semibold text-gray-900 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-300 hover:dark:text-blue-400' : 'text-gray-700 dark:text-slate-300'}`}>
                     {m.item_name}
                   </button>
                   <div className="text-[11px] font-mono text-gray-400 dark:text-slate-500">{m.sku}</div>

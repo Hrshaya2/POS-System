@@ -98,7 +98,7 @@ export default function OpenSessionModal({ onClose }) {
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="w-full bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 text-gray-700 dark:text-slate-300 rounded-xl p-3.5 font-bold transition-all"
+                                className="w-full bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300 rounded-xl p-3.5 font-bold transition-all"
                             >
                                 Cancel
                             </button>
@@ -108,7 +108,7 @@ export default function OpenSessionModal({ onClose }) {
                             <button
                                 type="button"
                                 onClick={logout}
-                                className="text-gray-500 dark:text-slate-400 hover:text-gray-800 text-sm font-medium transition-colors w-max mx-auto border-b border-transparent hover:border-gray-800 hover:dark:border-slate-700"
+                                className="text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-300 text-sm font-medium transition-colors w-max mx-auto border-b border-transparent hover:border-gray-800 dark:hover:border-slate-500 hover:dark:border-slate-700"
                             >
                                 Log into a different account
                             </button>

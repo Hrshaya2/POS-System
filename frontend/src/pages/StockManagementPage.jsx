@@ -464,7 +464,7 @@ function ActionMenu({ label, icon: Icon, children }) {
 // Tailwind stacks variants outermost-first, so `hover:dark:bg-slate-950` is not a
 // valid utility and is dropped by the compiler - which silently left this menu's
 // hover state unchanged in dark mode.
-const MENU_ITEM = 'w-full text-left px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white transition-colors flex items-center gap-2.5 disabled:opacity-40 disabled:hover:bg-transparent';
+const MENU_ITEM = 'w-full text-left px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white transition-colors flex items-center gap-2.5 disabled:opacity-40 disabled:hover:bg-transparent';
 
 function PageShell(props) {
   const {
@@ -586,7 +586,7 @@ function PageShell(props) {
               key={tab.id}
               onClick={() => setPageTab(tab.id)}
               className={`flex items-center space-x-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                isActive ? 'bg-blue-600 text-white shadow' : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-700 '
+                isActive ? 'bg-blue-600 text-white shadow' : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 hover:dark:bg-slate-950 dark:hover:bg-slate-700 '
               }`}
             >
               <Icon size={15} />
@@ -793,10 +793,10 @@ function ItemsSection(props) {
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={handleSearchKeyDown}
             placeholder={activeCategory ? `Search within ${activeCategory}…` : 'Search items, SKUs, barcodes or categories…'}
-            className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-blue-300 shadow-sm"
+            className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-blue-300 dark:focus:border-blue-500/60 shadow-sm"
           />
           {searchTerm && (
-            <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 dark:text-slate-500 hover:text-gray-700">
+            <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300">
               ×
             </button>
           )}
@@ -836,7 +836,7 @@ function ItemsSection(props) {
                             key={c.id || c.name}
                             type="button"
                             onClick={() => { setActiveCategory(c.name); setSearchTerm(''); }}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-slate-800 border border-blue-200 dark:border-blue-500/30 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-semibold hover:bg-blue-50 hover:dark:bg-blue-500/10 transition-colors"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-slate-800 border border-blue-200 dark:border-blue-500/30 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-semibold hover:bg-blue-50 dark:hover:bg-blue-500/15 hover:dark:bg-blue-500/10 transition-colors"
                           >
                             <Layers size={12} />
                             {c.name}
@@ -860,7 +860,7 @@ function ItemsSection(props) {
                       type="button"
                       onClick={() => { setActiveCategory(group.name); setSearchTerm(''); }}
                       title={`Open the ${group.name} category`}
-                      className="w-full flex items-center justify-between gap-3 px-5 py-2 bg-gray-50/80 dark:bg-slate-950/80 hover:bg-blue-50/70 transition-colors text-left"
+                      className="w-full flex items-center justify-between gap-3 px-5 py-2 bg-gray-50/80 dark:bg-slate-950/80 hover:bg-blue-50/70 dark:hover:bg-blue-500/15 transition-colors text-left"
                     >
                       <span className="flex items-center gap-2 min-w-0">
                         <span className="text-xs font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wide truncate">
@@ -875,7 +875,7 @@ function ItemsSection(props) {
 
                     <div className="divide-y divide-gray-50 dark:divide-slate-800">
                       {group.items.slice(0, SEARCH_GROUP_LIMIT).map((item) => (
-                        <button key={item.id} onClick={() => onView(item)} className="w-full flex items-center justify-between gap-3 px-5 py-2.5 hover:bg-blue-50/40 text-left transition-colors">
+                        <button key={item.id} onClick={() => onView(item)} className="w-full flex items-center justify-between gap-3 px-5 py-2.5 hover:bg-blue-50/40 dark:hover:bg-blue-500/15 text-left transition-colors">
                           <div className="min-w-0">
                             <span className="text-sm font-semibold text-gray-900 dark:text-slate-100">{item.name}</span>
                             <span className="ml-2 text-[11px] font-mono text-gray-400 dark:text-slate-500">{item.sku}</span>
@@ -889,7 +889,7 @@ function ItemsSection(props) {
                         <button
                           type="button"
                           onClick={() => { setActiveCategory(group.name); setSearchTerm(''); }}
-                          className="w-full px-5 py-2 text-left text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-50/50 transition-colors"
+                          className="w-full px-5 py-2 text-left text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-500/15 transition-colors"
                         >
                           +{group.items.length - SEARCH_GROUP_LIMIT} more in {group.name} — click to view all
                         </button>
@@ -959,7 +959,7 @@ function CategoryTable(props) {
       <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="flex items-center text-sm text-gray-400 dark:text-slate-500">
-            <button onClick={onBack} className="hover:text-blue-600 hover:dark:text-blue-400 font-medium">Categories</button>
+            <button onClick={onBack} className="hover:text-blue-600 dark:hover:text-blue-300 hover:dark:text-blue-400 font-medium">Categories</button>
             <span className="mx-1.5">/</span>
             <span className="font-bold text-gray-900 dark:text-slate-100">{categoryName}</span>
           </div>
@@ -1040,17 +1040,17 @@ function ItemRow({ item, isAdmin, isSelected, toggleSelect, onView, onEdit, onDe
   const low = !item.is_service && qty <= Number(item.low_stock_threshold ?? 5);
 
   return (
-    <tr className={`transition-colors ${isSelected ? 'bg-indigo-50/50' : 'hover:bg-gray-50/70 hover:dark:bg-slate-950/70'}`}>
+    <tr className={`transition-colors ${isSelected ? 'bg-indigo-50/50' : 'hover:bg-gray-50/70 dark:hover:bg-slate-700/70 hover:dark:bg-slate-950/70'}`}>
       <td className="pl-6 pr-2 py-3">
         {!item.is_service && (
           <button onClick={() => toggleSelect(item.id)} title="Select for batch label printing">
-            {isSelected ? <CheckSquare size={17} className="text-indigo-600" /> : <Square size={17} className="text-gray-300 dark:text-slate-600 hover:text-gray-500" />}
+            {isSelected ? <CheckSquare size={17} className="text-indigo-600" /> : <Square size={17} className="text-gray-300 dark:text-slate-600 hover:text-gray-500 dark:hover:text-slate-300" />}
           </button>
         )}
       </td>
       <td className="px-3 py-3 font-mono text-xs text-gray-900 dark:text-slate-100 whitespace-nowrap">{item.sku}</td>
       <td className="px-3 py-3 max-w-[260px]">
-        <button onClick={() => onView(item)} className="font-semibold text-gray-900 dark:text-slate-100 hover:text-blue-600 hover:dark:text-blue-400 text-left truncate block max-w-full">
+        <button onClick={() => onView(item)} className="font-semibold text-gray-900 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-300 hover:dark:text-blue-400 text-left truncate block max-w-full">
           {item.name}
         </button>
         {item.is_service && <span className="ml-0 text-[9px] font-bold uppercase bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 px-1 py-0.5 rounded">Service</span>}
@@ -1069,18 +1069,18 @@ function ItemRow({ item, isAdmin, isSelected, toggleSelect, onView, onEdit, onDe
       </td>
       <td className="px-6 py-3">
         <div className="flex justify-end space-x-1">
-          <button onClick={() => onAdjust(item)} disabled={item.is_service} title="Adjust stock" className="p-2 text-orange-600 dark:text-orange-400 hover:bg-orange-50 hover:dark:bg-orange-500/10 rounded-lg transition-colors disabled:opacity-30">
+          <button onClick={() => onAdjust(item)} disabled={item.is_service} title="Adjust stock" className="p-2 text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-500/15 hover:dark:bg-orange-500/10 rounded-lg transition-colors disabled:opacity-30">
             <Wrench size={16} />
           </button>
-          <button onClick={() => onPrintLabel(item)} title="Print barcode label" className="p-2 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 hover:dark:bg-indigo-500/10 rounded-lg transition-colors">
+          <button onClick={() => onPrintLabel(item)} title="Print barcode label" className="p-2 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/15 hover:dark:bg-indigo-500/10 rounded-lg transition-colors">
             <BarcodeIcon size={16} />
           </button>
           {isAdmin && (
             <>
-              <button onClick={() => onEdit(item)} title="Edit details" className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 hover:dark:bg-blue-500/10 rounded-lg transition-colors">
+              <button onClick={() => onEdit(item)} title="Edit details" className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/15 hover:dark:bg-blue-500/10 rounded-lg transition-colors">
                 <Pencil size={16} />
               </button>
-              <button onClick={() => onDelete(item)} title="Delete item" className="p-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 hover:dark:bg-rose-500/10 rounded-lg transition-colors">
+              <button onClick={() => onDelete(item)} title="Delete item" className="p-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/15 hover:dark:bg-rose-500/10 rounded-lg transition-colors">
                 <Trash2 size={16} />
               </button>
             </>
@@ -1100,7 +1100,7 @@ function SelectAllButton({ items, selectedIds, toggleSelect }) {
         if (allSelected === selectedIds.has(i.id)) toggleSelect(i.id);
       })}
       disabled={selectable.length === 0}
-      className="flex items-center px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors disabled:opacity-40"
+      className="flex items-center px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 transition-colors disabled:opacity-40"
     >
       {allSelected ? <CheckSquare size={15} className="mr-1.5 text-indigo-600 dark:text-indigo-400" /> : <Square size={15} className="mr-1.5 text-gray-400 dark:text-slate-500" />}
       Select all

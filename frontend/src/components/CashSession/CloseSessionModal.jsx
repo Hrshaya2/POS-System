@@ -82,7 +82,7 @@ export default function CloseSessionModal({ onClose }) {
                             <button onClick={handlePrint} className="flex-1 bg-gray-900 dark:bg-slate-950 text-white rounded-xl p-3 flex items-center justify-center space-x-2 font-medium hover:bg-black transition-colors">
                                 <Printer size={18} /><span>Print Report</span>
                             </button>
-                            <button onClick={onClose} className="flex-1 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-xl p-3 font-medium hover:bg-gray-200 transition-colors">
+                            <button onClick={onClose} className="flex-1 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-xl p-3 font-medium hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">
                                 Close
                             </button>
                         </div>
@@ -97,7 +97,7 @@ export default function CloseSessionModal({ onClose }) {
             <div className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
                 <div className="bg-gray-50 dark:bg-slate-950 border-b p-5 flex justify-between items-center">
                     <h3 className="text-xl font-bold flex items-center text-gray-800 dark:text-slate-200"><CheckCircle2 className="mr-2 text-emerald-500 dark:text-emerald-400" /> Close Day Session</h3>
-                    <button onClick={onClose} className="text-gray-400 dark:text-slate-500 hover:text-gray-600 p-2 text-xl font-bold rounded-lg">&times;</button>
+                    <button onClick={onClose} className="text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300 p-2 text-xl font-bold rounded-lg">&times;</button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6">
@@ -149,7 +149,7 @@ export default function CloseSessionModal({ onClose }) {
                     </div>
 
                     <div className="flex space-x-3">
-                        <button type="button" onClick={onClose} className="px-5 py-3 rounded-xl border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-50 hover:dark:bg-slate-950 flex-1 transition-colors relative">Cancel</button>
+                        <button type="button" onClick={onClose} className="px-5 py-3 rounded-xl border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 flex-1 transition-colors relative">Cancel</button>
                         <button type="submit" disabled={loading} className="px-5 py-3 rounded-xl bg-emerald-600 text-white font-bold shadow-lg shadow-emerald-500/30 hover:bg-emerald-700 flex-1 transition-all disabled:opacity-75 disabled:cursor-wait">
                             {loading ? 'Closing...' : 'Confirm & Close Day'}
                         </button>

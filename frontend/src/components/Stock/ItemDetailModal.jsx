@@ -44,7 +44,7 @@ export default function ItemDetailModal({ item, isAdmin, onClose, onAdjust, onEd
             </h3>
             <p className="text-xs text-gray-500 dark:text-slate-400 font-mono">{item.sku}{item.barcodes?.length ? ` · +${item.barcodes.length} barcode(s)` : ''}</p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>
         </div>
 
         <div className="p-6 overflow-y-auto space-y-5">
@@ -62,16 +62,16 @@ export default function ItemDetailModal({ item, isAdmin, onClose, onAdjust, onEd
           {/* Actions */}
           <div className="flex flex-wrap gap-2">
             {!isService && (
-              <button onClick={() => onAdjust(item)} className="flex items-center space-x-1.5 px-4 py-2 bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/30 text-orange-700 dark:text-orange-300 rounded-xl text-sm font-semibold hover:bg-orange-100 transition-colors">
+              <button onClick={() => onAdjust(item)} className="flex items-center space-x-1.5 px-4 py-2 bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/30 text-orange-700 dark:text-orange-300 rounded-xl text-sm font-semibold hover:bg-orange-100 dark:hover:bg-orange-500/20 transition-colors">
                 <Wrench size={15} /> Adjust Stock
               </button>
             )}
             {isAdmin && (
-              <button onClick={() => onEdit(item)} className="flex items-center space-x-1.5 px-4 py-2 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 text-blue-700 dark:text-blue-300 rounded-xl text-sm font-semibold hover:bg-blue-100 transition-colors">
+              <button onClick={() => onEdit(item)} className="flex items-center space-x-1.5 px-4 py-2 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 text-blue-700 dark:text-blue-300 rounded-xl text-sm font-semibold hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors">
                 <Pencil size={15} /> Edit Details
               </button>
             )}
-            <button onClick={() => onPrintLabel(item)} className="flex items-center space-x-1.5 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300 rounded-xl text-sm font-semibold hover:bg-indigo-100 transition-colors">
+            <button onClick={() => onPrintLabel(item)} className="flex items-center space-x-1.5 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300 rounded-xl text-sm font-semibold hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors">
               <BarcodeIcon size={15} /> Print Label
             </button>
           </div>
@@ -121,7 +121,7 @@ function HistoryList({ movements, loading, typeFilter, setTypeFilter }) {
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
-          className="text-xs border border-gray-200 dark:border-slate-700 rounded-lg px-2 py-1.5 focus:outline-none focus:border-blue-300"
+          className="text-xs border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 px-2 py-1.5 focus:outline-none focus:border-blue-300 dark:focus:border-blue-500/60"
         >
           <option value="">All types</option>
           <option value="STOCK_IN">Stock In</option>
@@ -139,7 +139,7 @@ function HistoryList({ movements, loading, typeFilter, setTypeFilter }) {
         ) : movements.length === 0 ? (
           <p className="text-sm text-gray-400 dark:text-slate-500 p-4">No movements recorded yet for this item.</p>
         ) : movements.map((m) => (
-          <div key={m.local_key || m.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50/60 hover:dark:bg-slate-950/60">
+          <div key={m.local_key || m.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50/60 dark:hover:bg-slate-700/60 hover:dark:bg-slate-950/60">
             <div className="min-w-0">
               <MovementBadge type={m.type} />
               <p className="text-xs text-gray-500 dark:text-slate-400 mt-1 truncate">

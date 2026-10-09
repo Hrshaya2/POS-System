@@ -61,7 +61,7 @@ function StartCard({ categories, itemCount, onStart }) {
       <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-3 items-end">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Count</label>
-          <select value={scopeType} onChange={(e) => setScopeType(e.target.value)} className="px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-blue-300">
+          <select value={scopeType} onChange={(e) => setScopeType(e.target.value)} className="px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 focus:outline-none focus:border-blue-300 dark:focus:border-blue-500/60">
             <option value="all">All Items ({itemCount})</option>
             <option value="category">One category…</option>
           </select>
@@ -69,7 +69,7 @@ function StartCard({ categories, itemCount, onStart }) {
         {scopeType === 'category' && (
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Category</label>
-            <select value={scopeCategory} onChange={(e) => setScopeCategory(e.target.value)} className="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-blue-300">
+            <select value={scopeCategory} onChange={(e) => setScopeCategory(e.target.value)} className="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 focus:outline-none focus:border-blue-300 dark:focus:border-blue-500/60">
               <option value="">Select category…</option>
               {categories.map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}
             </select>
@@ -151,7 +151,7 @@ function CountRow({ line, value, onChange, onBump }) {
       </div>
       <div className="flex items-center space-x-2 shrink-0">
         {/* Big steppers for fast tapping while walking the shelf */}
-        <button onClick={() => onBump(-1)} className="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-slate-800 active:bg-gray-200 text-gray-600 dark:text-slate-400 text-2xl font-black flex items-center justify-center transition-transform active:scale-95" aria-label="decrement">−</button>
+        <button onClick={() => onBump(-1)} className="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-slate-800 active:bg-gray-200 dark:active:bg-slate-700 text-gray-600 dark:text-slate-400 text-2xl font-black flex items-center justify-center transition-transform active:scale-95" aria-label="decrement">−</button>
         <input
           type="number"
           inputMode="numeric"
@@ -159,9 +159,9 @@ function CountRow({ line, value, onChange, onBump }) {
           value={value ?? ''}
           onChange={(e) => onChange(e.target.value)}
           placeholder="—"
-          className="w-20 h-14 text-center text-2xl font-black border-2 rounded-2xl focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 focus:dark:ring-purple-500/20 placeholder:text-gray-300 placeholder:dark:text-slate-600"
+          className="w-20 h-14 text-center text-2xl font-black border-2 rounded-2xl focus:outline-none focus:border-purple-400 dark:focus:border-purple-500/60 focus:ring-2 focus:ring-purple-100 focus:dark:ring-purple-500/20 placeholder:text-gray-300 placeholder:dark:text-slate-600"
         />
-        <button onClick={() => onBump(1)} className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-500/20 active:bg-purple-200 text-purple-700 dark:text-purple-300 text-2xl font-black flex items-center justify-center transition-transform active:scale-95" aria-label="increment">+</button>
+        <button onClick={() => onBump(1)} className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-500/20 active:bg-purple-200 dark:active:bg-purple-500/20 text-purple-700 dark:text-purple-300 text-2xl font-black flex items-center justify-center transition-transform active:scale-95" aria-label="increment">+</button>
       </div>
     </div>
   );
@@ -208,7 +208,7 @@ function VarianceSummary({ counts, lines, isAdmin, applying, applyResult, onBack
             </span>
           </p>
         </div>
-        <button onClick={onBack} className="px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold hover:bg-gray-50 hover:dark:bg-slate-950">← Keep counting</button>
+        <button onClick={onBack} className="px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950">← Keep counting</button>
       </div>
 
       <div className="overflow-x-auto max-h-[50vh] overflow-y-auto">

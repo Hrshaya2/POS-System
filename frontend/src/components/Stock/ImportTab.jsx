@@ -135,7 +135,7 @@ export default function ImportTab({ items, user, imports = [], onDataChanged }) 
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 mt-4">
-          <button onClick={() => downloadCsv('stock-import-template.csv', TEMPLATE_SAMPLE_ROWS, TEMPLATE_HEADERS)} className="flex items-center justify-center px-5 py-3 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors">
+          <button onClick={() => downloadCsv('stock-import-template.csv', TEMPLATE_SAMPLE_ROWS, TEMPLATE_HEADERS)} className="flex items-center justify-center px-5 py-3 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 transition-colors">
             <FileDown size={16} className="mr-2" /> Download Template
           </button>
           <button onClick={() => fileRef.current?.click()} className="flex items-center justify-center px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold shadow-md transition-colors">
@@ -227,7 +227,7 @@ function PreviewPanel({ validRows, errorRows, filename, newCount, updateCount, o
             <input type="checkbox" checked={overwrite} onChange={(e) => setOverwrite(e.target.checked)} />
             <span>Overwrite quantity instead of adding</span>
           </label>
-          <button onClick={onClear} className="px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors">
+          <button onClick={onClear} className="px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 transition-colors">
             Cancel
           </button>
           <button
@@ -277,7 +277,7 @@ function PreviewPanel({ validRows, errorRows, filename, newCount, updateCount, o
 
       {errorCount > 0 && (
         <div className="border-t border-gray-100 dark:border-slate-800">
-          <button onClick={() => setShowSkipped((s) => !s)} className="w-full px-6 py-2.5 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 hover:text-gray-700 hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors flex items-center gap-2">
+          <button onClick={() => setShowSkipped((s) => !s)} className="w-full px-6 py-2.5 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 transition-colors flex items-center gap-2">
             <AlertTriangle size={13} className={showSkipped ? 'text-amber-500 dark:text-amber-400 shrink-0' : 'text-gray-400 dark:text-slate-500 shrink-0'} />
             <span className="truncate">
               {errorCount} row{errorCount === 1 ? '' : 's'} will be skipped
@@ -486,7 +486,7 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
               <button
                 onClick={toggleAll}
                 disabled={busy}
-                className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors disabled:opacity-50"
+                className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 transition-colors disabled:opacity-50"
               >
                 {allSelected ? 'Deselect all' : 'Select all'}
               </button>
@@ -512,7 +512,7 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
                     <button
                       onClick={() => setConfirmAll(false)}
                       disabled={busy}
-                      className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors disabled:opacity-50"
+                      className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 transition-colors disabled:opacity-50"
                     >
                       Cancel
                     </button>
@@ -541,7 +541,7 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
           const skipped = (r.skipped || 0) + errs;
           return (
             <li key={r.id}>
-              <div className="flex items-stretch hover:bg-gray-50/70 hover:dark:bg-slate-950/70 transition-colors">
+              <div className="flex items-stretch hover:bg-gray-50/70 dark:hover:bg-slate-700/70 hover:dark:bg-slate-950/70 transition-colors">
               <div className="px-6 py-3.5 flex items-center gap-3 text-left flex-1 min-w-0">
                 {isAdmin && removableIds.has(String(r.id)) ? (
                   <input
@@ -590,7 +590,7 @@ function RecentImportsPanel({ imports = [], isAdmin = false, onChanged }) {
                     title={removableIds.has(String(r.id))
                       ? 'Remove this file record'
                       : 'This file has not finished syncing yet'}
-                    className="p-2 rounded-lg text-gray-300 dark:text-slate-600 hover:text-rose-600 hover:dark:text-rose-400 hover:bg-rose-50 hover:dark:bg-rose-500/10 transition-colors disabled:opacity-40 disabled:hover:text-gray-300 dark:disabled:hover:text-slate-600"
+                    className="p-2 rounded-lg text-gray-300 dark:text-slate-600 hover:text-rose-600 dark:hover:text-rose-300 hover:dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/15 hover:dark:bg-rose-500/10 transition-colors disabled:opacity-40 disabled:hover:text-gray-300 dark:disabled:hover:text-slate-600"
                   >
                     <Trash2 size={16} />
                   </button>

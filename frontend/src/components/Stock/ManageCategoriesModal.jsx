@@ -131,7 +131,7 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col">
         <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 dark:border-slate-800">
           <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Manage Categories</h3>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>
         </div>
 
         <div className="p-6 overflow-y-auto space-y-4">
@@ -143,7 +143,7 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="e.g. Phone Cases"
-                className="flex-1 px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                className="flex-1 px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring focus:border-blue-300 dark:focus:border-blue-500/60"
               />
               <button
                 type="submit"
@@ -167,7 +167,7 @@ export default function ManageCategoriesModal({ categories, items = [], isAdmin,
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder="Optional description"
-                className="w-48 px-3 py-1.5 text-xs border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                className="w-48 px-3 py-1.5 text-xs border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring focus:border-blue-300 dark:focus:border-blue-500/60"
               />
             </div>
             {error && <p className="text-xs text-rose-600 dark:text-rose-400 mt-2">{error}</p>}
@@ -293,10 +293,10 @@ function CategoryList({
                 <input
                   value={editFields.name}
                   onChange={(e) => setEditFields({ ...editFields, name: e.target.value })}
-                  className="flex-1 px-3 py-1.5 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring focus:border-blue-300"
+                  className="flex-1 px-3 py-1.5 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring focus:border-blue-300 dark:focus:border-blue-500/60"
                 />
                 <button onClick={saveEdit} className="p-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700" title="Save"><Check size={16} /></button>
-                <button onClick={() => setEditingId(null)} className="p-2 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 rounded-lg hover:bg-gray-200" title="Cancel"><X size={16} /></button>
+                <button onClick={() => setEditingId(null)} className="p-2 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700" title="Cancel"><X size={16} /></button>
               </div>
               <label className="flex items-center space-x-2 text-xs text-gray-600 dark:text-slate-400 mt-2 cursor-pointer">
                 <input
@@ -341,8 +341,8 @@ function CategoryList({
                     </div>
                   ) : (
                     <>
-                      <button onClick={() => startEdit(cat)} className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 hover:dark:bg-blue-500/10 rounded-lg transition-colors" title="Edit category"><Pencil size={15} /></button>
-                      <button onClick={() => setConfirmDeleteId(cat.id)} className="p-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 hover:dark:bg-rose-500/10 rounded-lg transition-colors" title="Delete category"><Trash2 size={15} /></button>
+                      <button onClick={() => startEdit(cat)} className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/15 hover:dark:bg-blue-500/10 rounded-lg transition-colors" title="Edit category"><Pencil size={15} /></button>
+                      <button onClick={() => setConfirmDeleteId(cat.id)} className="p-2 text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/15 hover:dark:bg-rose-500/10 rounded-lg transition-colors" title="Delete category"><Trash2 size={15} /></button>
                     </>
                   )}
                 </>

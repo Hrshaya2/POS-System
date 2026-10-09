@@ -398,7 +398,7 @@ export default function RepairPage() {
                 <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Received date</label>
                 <div className="flex items-center gap-2">
                   <input ref={receivedDateRef} value={form.received_date} onChange={(e) => setForm({ ...form, received_date: e.target.value })} type="date" className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3" />
-                  <button type="button" onClick={() => openDatePicker(receivedDateRef)} className="h-11 w-11 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-400 hover:bg-gray-50 inline-flex items-center justify-center" aria-label="Open received date picker">
+                  <button type="button" onClick={() => openDatePicker(receivedDateRef)} className="h-11 w-11 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 inline-flex items-center justify-center" aria-label="Open received date picker">
                     <CalendarDays size={18} />
                   </button>
                 </div>
@@ -407,7 +407,7 @@ export default function RepairPage() {
                 <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Estimated completion date</label>
                 <div className="flex items-center gap-2">
                   <input ref={completionDateRef} value={form.estimated_completion_date} onChange={(e) => setForm({ ...form, estimated_completion_date: e.target.value })} type="date" min={todayDate} required className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3" />
-                  <button type="button" onClick={() => openDatePicker(completionDateRef)} className="h-11 w-11 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-400 hover:bg-gray-50 inline-flex items-center justify-center" aria-label="Open completion date picker">
+                  <button type="button" onClick={() => openDatePicker(completionDateRef)} className="h-11 w-11 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 inline-flex items-center justify-center" aria-label="Open completion date picker">
                     <CalendarDays size={18} />
                   </button>
                 </div>
@@ -478,7 +478,7 @@ export default function RepairPage() {
           </div>
           <div className="flex flex-col md:flex-row gap-3 w-full lg:w-auto">
             <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3 min-w-[220px]" placeholder="Search customer or IMEI" />
-            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3">
+            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3 bg-white dark:bg-slate-800">
               <option value="all">All statuses</option>
               {REPAIR_STATUSES.map((status) => (
                 <option key={status} value={status}>{status}</option>
@@ -506,7 +506,7 @@ export default function RepairPage() {
                 {filteredJobs.length === 0 ? (
                   <tr><td colSpan="6" className="px-4 py-8 text-center text-gray-400 dark:text-slate-500">No matching repair jobs.</td></tr>
                 ) : filteredJobs.map((job) => (
-                  <tr key={job.id} onClick={() => setSelectedJobId(job.id)} className={`cursor-pointer border-b border-gray-100 hover:bg-gray-50 ${selectedJob && selectedJob.id === job.id ? 'bg-blue-50 dark:bg-blue-500/10' : ''}`}>
+                  <tr key={job.id} onClick={() => setSelectedJobId(job.id)} className={`cursor-pointer border-b border-gray-100 hover:bg-gray-50 dark:hover:bg-slate-700 ${selectedJob && selectedJob.id === job.id ? 'bg-blue-50 dark:bg-blue-500/10' : ''}`}>
                     <td className="px-4 py-3 font-semibold text-gray-900 dark:text-slate-100">{job.customer_name}<div className="text-xs text-gray-400 dark:text-slate-500">{job.phone_number}</div></td>
                     <td className="px-4 py-3">{job.device_model}</td>
                     <td className="px-4 py-3">{job.imei || 'N/A'}</td>
@@ -557,7 +557,7 @@ export default function RepairPage() {
             <div>
               <h3 className="font-bold text-gray-900 dark:text-slate-100 mb-3 flex items-center gap-2"><Package size={18} className="text-amber-600" /> Spare Parts Used</h3>
               <div className="flex flex-col gap-3">
-                <select value={selectedPartId} onChange={(e) => setSelectedPartId(e.target.value)} className="rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3">
+                <select value={selectedPartId} onChange={(e) => setSelectedPartId(e.target.value)} className="rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3 bg-white dark:bg-slate-800">
                   <option value="">Select spare part</option>
                   {spareParts.map((part) => (
                     <option key={part.id} value={part.id}>{part.name} ({part.quantity} in stock)</option>

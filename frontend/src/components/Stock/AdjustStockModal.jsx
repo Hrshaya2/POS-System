@@ -50,7 +50,7 @@ export default function AdjustStockModal({ item, onClose, onConfirm }) {
             <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Adjust Stock</h3>
             <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{item?.name} · <span className="font-mono">{item?.sku}</span></p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>
         </div>
 
         <div className="p-6 space-y-5">
@@ -70,7 +70,7 @@ export default function AdjustStockModal({ item, onClose, onConfirm }) {
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="e.g. invoice #, shelf reference…"
-              className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              className="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring focus:border-blue-300 dark:focus:border-blue-500/60"
             />
           </div>
 
@@ -87,7 +87,7 @@ export default function AdjustStockModal({ item, onClose, onConfirm }) {
         </div>
 
         <div className="px-6 py-4 border-t border-gray-100 dark:border-slate-800 flex justify-end space-x-3 bg-gray-50 dark:bg-slate-950 rounded-b-2xl">
-          <button onClick={onClose} className="px-5 py-2.5 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors">
+          <button onClick={onClose} className="px-5 py-2.5 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-100 dark:hover:bg-slate-700 hover:dark:bg-slate-800 rounded-lg transition-colors">
             Cancel
           </button>
           <button
@@ -116,7 +116,7 @@ function AmountDirectionRow({ direction, setDirection, amount, setAmount, hasErr
             className={`py-3 rounded-xl border-2 font-bold flex flex-col items-center transition-colors ${
               direction === 'in'
                 ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
-                : 'border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500 hover:border-gray-300'
+                : 'border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500 hover:border-gray-300 dark:hover:border-slate-500'
             }`}
           >
             <Plus size={20} /> Stock In
@@ -127,7 +127,7 @@ function AmountDirectionRow({ direction, setDirection, amount, setAmount, hasErr
             className={`py-3 rounded-xl border-2 font-bold flex flex-col items-center transition-colors ${
               direction === 'out'
                 ? 'border-orange-500 bg-orange-50 dark:bg-orange-500/10 text-orange-700 dark:text-orange-300'
-                : 'border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500 hover:border-gray-300'
+                : 'border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500 hover:border-gray-300 dark:hover:border-slate-500'
             }`}
           >
             <Minus size={20} /> Stock Out
@@ -166,7 +166,7 @@ function ReasonPicker({ reason, setReason, showHint }) {
             className={`px-3 py-2.5 rounded-lg border text-sm font-medium transition-colors text-left ${
               reason === r
                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300'
-                : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 hover:dark:bg-slate-950'
+                : 'border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950'
             }`}
           >
             {r}

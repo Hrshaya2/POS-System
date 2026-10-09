@@ -2739,3 +2739,18 @@ Auth DB check failed: MongoServerSelectionError: getaddrinfo ENOTFOUND ac-svzn01
     }
   }
 }
+MongoNetworkError: read ECONNRESET
+    at Connection.onSocketError (D:\Nangi\POS\backend\node_modules\mongodb\lib\cmap\connection.js:124:22)
+    at TLSSocket.emit (node:events:521:24)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  errorLabelSet: Set(2) { 'RetryableWriteError', 'ResetPool' },
+  beforeHandshake: false,
+  [cause]: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20) {
+    errno: -4077,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
+}

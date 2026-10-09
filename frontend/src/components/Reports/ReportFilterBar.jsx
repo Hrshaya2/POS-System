@@ -44,7 +44,7 @@ export default function ReportFilterBar({ filters, setFilters, extras = [] }) {
                             <button key={p.value}
                                 onClick={() => setPreset(p.value)}
                                 className={`px-3 py-1.5 rounded-lg text-xs font-medium ${filters.preset === p.value
-                                    ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 text-gray-700 dark:text-slate-300'}`}>
+                                    ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300'}`}>
                                 {p.label}
                             </button>
                         ))}
@@ -85,7 +85,7 @@ export default function ReportFilterBar({ filters, setFilters, extras = [] }) {
                     </div>
                 ))}
 
-                <button onClick={() => apply({})} className="ml-auto px-4 py-2 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 rounded-lg text-sm font-medium">
+                <button onClick={() => apply({})} className="ml-auto px-4 py-2 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg text-sm font-medium">
                     Reset
                 </button>
             </div>

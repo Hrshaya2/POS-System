@@ -173,7 +173,7 @@ function ModalShell({ item, activeTab, setActiveTab, isValid, submitting, canEdi
             {item ? `Edit Item — ${item.name}` : 'Add New Item'}
             {!canEdit && <span className="ml-2 text-xs font-medium text-gray-400 dark:text-slate-500">(read-only)</span>}
           </h3>
-          <button type="button" onClick={onClose} className="p-2 hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>
+          <button type="button" onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 hover:dark:bg-slate-800 rounded-lg transition-colors"><X size={18} /></button>
         </div>
 
         <div className="px-6 pt-4 border-b border-gray-100 dark:border-slate-800 flex space-x-1 overflow-x-auto">
@@ -185,7 +185,7 @@ function ModalShell({ item, activeTab, setActiveTab, isValid, submitting, canEdi
               className={`px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-colors whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-500/10 border-x border-t border-blue-200 dark:border-blue-500/30 -mb-px'
-                  : 'text-gray-500 dark:text-slate-400 hover:text-gray-800 hover:bg-gray-50 hover:dark:bg-slate-950'
+                  : 'text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950'
               }`}
             >
               {tab.label}
@@ -199,7 +199,7 @@ function ModalShell({ item, activeTab, setActiveTab, isValid, submitting, canEdi
         <div className="px-6 py-4 border-t border-gray-100 dark:border-slate-800 flex justify-between items-center bg-gray-50 dark:bg-slate-950 rounded-b-2xl">
           <span className="text-xs text-gray-400 dark:text-slate-500 hidden sm:block">Fields marked * are required</span>
           <div className="flex space-x-3 ml-auto">
-            <button type="button" onClick={onClose} className="px-5 py-2.5 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-100 hover:dark:bg-slate-800 rounded-lg transition-colors">
+            <button type="button" onClick={onClose} className="px-5 py-2.5 text-gray-600 dark:text-slate-400 font-medium hover:bg-gray-100 dark:hover:bg-slate-700 hover:dark:bg-slate-800 rounded-lg transition-colors">
               Cancel
             </button>
             <button
@@ -219,7 +219,7 @@ function ModalShell({ item, activeTab, setActiveTab, isValid, submitting, canEdi
 }
 
 const inputClass = (hasError) =>
-  `w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${hasError ? 'border-rose-300 bg-rose-50/40' : 'border-gray-200 dark:border-slate-700'}`;
+  `w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 dark:focus:border-blue-500/60 ${hasError ? 'border-rose-300 bg-rose-50/40' : 'border-gray-200 dark:border-slate-700'}`;
 const ErrText = ({ msg }) => (msg ? <p className="text-xs text-rose-600 dark:text-rose-400 mt-1">{msg}</p> : null);
 const Label = ({ children }) => <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">{children}</label>;
 
@@ -246,7 +246,7 @@ function DetailsTab({ form, setField, isPhoneCategory, categories, errors, handl
                 type="button"
                 onClick={handleGenerateSku}
                 title="Generate next free SKU from the database"
-                className="px-3 py-2 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 rounded-lg hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors whitespace-nowrap"
+                className="px-3 py-2 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 transition-colors whitespace-nowrap"
               >
                 <Wand2 size={16} />
               </button>
@@ -255,7 +255,7 @@ function DetailsTab({ form, setField, isPhoneCategory, categories, errors, handl
           </div>
           <div>
             <Label>Unit</Label>
-            <select value={form.unit} onChange={(e) => setField('unit', e.target.value)} className={inputClass(false)}>
+            <select value={form.unit} onChange={(e) => setField('unit', e.target.value)} className={`${inputClass(false)} bg-white dark:bg-slate-800`}>
               {UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
             </select>
           </div>
@@ -382,7 +382,7 @@ function ImageColorTab({ form, setField, COLOR_PRESETS }) {
             </button>
           </div>
         ) : (
-          <label className="flex flex-col items-center justify-center w-full max-w-[220px] h-[160px] border-2 border-dashed border-gray-300 dark:border-slate-700 rounded-xl cursor-pointer hover:border-blue-300 hover:bg-blue-50/40 transition-colors">
+          <label className="flex flex-col items-center justify-center w-full max-w-[220px] h-[160px] border-2 border-dashed border-gray-300 dark:border-slate-700 rounded-xl cursor-pointer hover:border-blue-300 dark:hover:border-blue-500/60 hover:bg-blue-50/40 dark:hover:bg-blue-500/15 transition-colors">
             <Upload size={24} className="text-gray-400 dark:text-slate-500 mb-2" />
             <span className="text-xs text-gray-500 dark:text-slate-400 font-medium">Click to upload</span>
             <span className="text-[10px] text-gray-400 dark:text-slate-500">JPG / PNG / WebP</span>
@@ -437,7 +437,7 @@ function PhoneFields({ form, setField, visible }) {
         </div>
         <div>
           <Label>Condition grade</Label>
-          <select value={form.condition_grade || 'New'} onChange={(e) => setField('condition_grade', e.target.value)} className={inputClass(false)}>
+          <select value={form.condition_grade || 'New'} onChange={(e) => setField('condition_grade', e.target.value)} className={`${inputClass(false)} bg-white dark:bg-slate-800`}>
             {['New', 'Like New', 'Good', 'Fair', 'Refurbished'].map((g) => <option key={g}>{g}</option>)}
           </select>
         </div>
@@ -551,10 +551,10 @@ function DetailsExtraRows({ barcodeInput, setBarcodeInput, existing, onAddBarcod
         placeholder="Scan or type a manufacturer barcode"
         className={`${inputClass(false)} font-mono`}
       />
-      <button type="button" onClick={tryAdd} className="px-3 py-2 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 rounded-lg hover:bg-gray-50 hover:dark:bg-slate-950 transition-colors">
+      <button type="button" onClick={tryAdd} className="px-3 py-2 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 hover:dark:bg-slate-950 transition-colors">
         <Plus size={16} />
       </button>
-      <button type="button" onClick={onGenerate} className="px-3 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300 rounded-lg hover:bg-indigo-100 transition-colors text-sm font-semibold whitespace-nowrap">
+      <button type="button" onClick={onGenerate} className="px-3 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors text-sm font-semibold whitespace-nowrap">
         Generate Barcode
       </button>
     </div>

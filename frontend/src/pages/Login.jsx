@@ -80,7 +80,7 @@ export default function Login() {
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="appearance-none block w-full px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm placeholder-gray-400 dark:placeholder-slate-500 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors bg-gray-50 dark:bg-slate-950 focus:bg-white"
+                                    className="appearance-none block w-full px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm placeholder-gray-400 dark:placeholder-slate-500 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors bg-gray-50 dark:bg-slate-950 focus:bg-white dark:focus:bg-slate-800"
                                     placeholder="test@testmail.com"
                                 />
                             </div>
@@ -96,7 +96,7 @@ export default function Login() {
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="appearance-none block w-full px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm placeholder-gray-400 dark:placeholder-slate-500 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors bg-gray-50 dark:bg-slate-950 focus:bg-white"
+                                    className="appearance-none block w-full px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm placeholder-gray-400 dark:placeholder-slate-500 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors bg-gray-50 dark:bg-slate-950 focus:bg-white dark:focus:bg-slate-800"
                                     placeholder="••••••••"
                                 />
                             </div>

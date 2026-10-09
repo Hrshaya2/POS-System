@@ -41,7 +41,7 @@ export default function SyncStatusIndicator({ compact = false }) {
       <button
         onClick={syncNow}
         title="Click to sync now"
-        className={`flex items-center space-x-2 bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 rounded-xl px-3 py-1.5 text-sm font-bold transition-colors ${compact ? '' : 'shadow-sm'}`}
+        className={`flex items-center space-x-2 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-500/20 rounded-xl px-3 py-1.5 text-sm font-bold transition-colors ${compact ? '' : 'shadow-sm'}`}
       >
         <UploadCloud size={16} />
         <span>{pendingText}</span>
