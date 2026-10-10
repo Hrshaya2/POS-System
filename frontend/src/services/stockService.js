@@ -232,7 +232,7 @@ const evictStaleCachedItems = async (serverIds) => {
   const protectedIds = new Set();
   const protectedSkus = new Set();
   for (const op of pendingOps) {
-    const id = String(op.payload?.localKey || op.payload?.id || '');
+    const id = String(op.payload?.localKey || op.payload?.localId || op.payload?.id || '');
     if (id) protectedIds.add(id);
     // Import ops address rows by SKU, and create brand-new items the server has
     // never seen - those are re-created by overlayPendingImports anyway.
@@ -294,11 +294,49 @@ export const resetLocalStockCache = async () => {
 };
 
 export const applyServerInventorySnapshot = async ({ phones = null, accessories = null } = {}) => {
+  // Snapshot local creates BEFORE touching the cache: cacheInventory() clears
+  // both tables first, so any optimistic `loc-` row would be deleted and the
+  // overlays below could never bring it back. Capturing them up-front lets us
+  // re-apply (not just preserve) queued creates after the authoritative fetch.
+  const pendingCreates = await db.pendingStockOps
+    .where('syncStatus').equals('pending')
+    .and((op) => op.entityType === 'item' && op.opType === 'create')
+    .toArray();
   const prev = await getCachedInventory();
   const nextPhones = Array.isArray(phones) ? phones : (Array.isArray(prev?.phones) ? prev.phones : []);
   const nextAccessories = Array.isArray(accessories) ? accessories : (Array.isArray(prev?.accessories) ? prev.accessories : []);
   if (Array.isArray(accessories)) await evictStaleCachedItems(accessories.map((a) => a.id));
   await cacheInventory({ phones: nextPhones, accessories: nextAccessories });
+  // Re-apply queued single-item creates from their op payloads: the clear()
+  // inside cacheInventory() deleted the optimistic `loc-` rows, so the
+  // preserve-style overlays below cannot restore them from the tables alone.
+  // Skipped when the server snapshot already carries the row (synced between
+  // the snapshot above and now) or when a delete op supersedes the create.
+  if (Array.isArray(accessories) && pendingCreates.length) {
+    const deletedItemKeys = new Set(
+      (await db.pendingStockOps
+        .where('syncStatus').equals('pending')
+        .and((op) => op.entityType === 'item' && op.opType === 'delete')
+        .toArray()
+      ).map((op) => String(op.payload?.localKey || op.payload?.localId || op.payload?.id || '')).filter(Boolean)
+    );
+    const serverSkus = new Set(accessories.map((a) => String(a?.sku || '').trim().toUpperCase()).filter(Boolean));
+    for (const op of pendingCreates) {
+      const localId = String(op.payload?.localId || op.payload?.localKey || '');
+      if (!localId || deletedItemKeys.has(localId)) continue;
+      const payload = op.payload?.item;
+      if (!payload?.sku) continue;
+      if (serverSkus.has(String(payload.sku).trim().toUpperCase())) continue;
+      if (await db.inventoryAccessories.get(localId).catch(() => null)) continue;
+      await upsertCachedAccessory({
+        id: localId,
+        localKey: localId,
+        ...payload,
+        added_at: new Date().toISOString(),
+        syncStatus: 'pending'
+      });
+    }
+  }
   await applyLocalOverlaysToInventoryCache();
 };
 
@@ -469,12 +507,15 @@ export const getAlerts = async (deadDays = 30, { refresh = true } = {}) => {
 // Find and rewrite the queued create op of a still-unsynced entity, so later
 // edits fold into the original create instead of stacking update ops that
 // reference a server id that doesn't exist yet.
+// NOTE: item creates are enqueued with `payload.localId` (see saveItem) while
+// older/category creates use `payload.localKey` — match BOTH so a quick
+// edit-after-add updates the queued create instead of leaving stale data.
 const amendPendingCreate = async (entityType, localKey, patch) => {
   const ops = await db.pendingStockOps
     .where('syncStatus').equals('pending')
     .and((op) => op.entityType === entityType && op.opType === 'create')
     .toArray();
-  const op = ops.find((o) => o.payload?.localKey === localKey);
+  const op = ops.find((o) => (o.payload?.localKey || o.payload?.localId) === localKey);
   if (!op) return false;
   const payload = { ...op.payload };
   if (entityType === 'item') payload.item = { ...payload.item, ...patch };
@@ -716,12 +757,13 @@ export const saveItem = async (form, existingItem, _user) => {
     const localId = newLocalKey();
     const row = {
       id: localId,
+      localKey: localId,
       ...payload,
       added_at: new Date().toISOString(),
       syncStatus: 'pending'
     };
     await upsertCachedAccessory(row);
-    await enqueueStockOp({ entityType: 'item', opType: 'create', payload: { localId, item: payload } });
+    await enqueueStockOp({ entityType: 'item', opType: 'create', payload: { localId, localKey: localId, item: payload } });
     attemptImmediateFlush();
     return row;
   }

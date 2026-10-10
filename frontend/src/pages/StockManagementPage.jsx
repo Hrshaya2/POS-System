@@ -316,8 +316,25 @@ export default function StockManagementPage() {
     const existing = productFormState?.item || null;
     const saved = await saveItem(form, existing, user);
     setProductFormState(null);
-    await reload();
+    // Optimistic paint: show the saved row instantly instead of waiting for
+    // the server round-trip below. reload() then reconciles silently.
+    if (!existing && saved) {
+      setItems((prev) => (prev.some((i) => String(i.id) === String(saved.id)) ? prev : [saved, ...prev]));
+      setActiveCategory(saved.category || activeCategory);
+    } else if (existing && saved) {
+      setItems((prev) => prev.map((i) => (String(i.id) === String(saved.id) ? { ...i, ...saved } : i)));
+    }
     setDetailItem(saved); // show the saved item incl. its generated barcode
+    try {
+      await reload();
+      // reload() replaces the list from cache; re-assert the optimistic row in
+      // case the sync raced the refresh and the server snapshot didn't carry it.
+      if (!existing && saved) {
+        setItems((prev) => (prev.some((i) => String(i.id) === String(saved.id)) ? prev : [saved, ...prev]));
+      }
+    } catch (err) {
+      console.warn('[stock] Post-save refresh failed, keeping optimistic row:', err);
+    }
   };
 
   const handleDeleteItem = async (item) => {
