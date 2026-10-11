@@ -84,6 +84,32 @@ const formatLocalTime = (date, tzOffsetMinutes) =>
 
 const formatReceiptNo = () => `RCPT-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
 const formatRefundRef = () => `RFS-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+const formatRepairJobNo = () => `REP-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+
+// Shared repair invoice math: labor (estimated_cost) + parts - single intake
+// advance = balance due. Used by list/detail/invoice responses so the frontend
+// never computes money differently from the server.
+const buildRepairInvoice = (job, jobParts) => {
+    const parts = Array.isArray(jobParts) ? jobParts : [];
+    const partsTotal = parts.reduce((sum, part) => sum + Number(part.total_cost || 0), 0);
+    const laborCost = Number(job.estimated_cost || 0);
+    const total = laborCost + partsTotal;
+    const advance = Math.max(0, Number(job.advance_amount || 0));
+    return {
+        job_id: job._id.toString(),
+        job_no: job.job_no || null,
+        invoice_no: job.job_no || `REPAIR-${job._id.toString().slice(-4).toUpperCase()}`,
+        labor_cost: laborCost,
+        parts_cost: partsTotal,
+        total_cost: total,
+        advance_amount: advance,
+        balance_due: Math.max(0, total - advance),
+        payment_method: job.payment_method || '',
+        payment_status: job.payment_status || (advance > 0 ? 'PARTIAL' : 'UNPAID'),
+        status: job.repair_status,
+        created_at: job.created_at
+    };
+};
 
 // Record a business operation into the local SQLite mirror (backend/database.sqlite).
 // Fire-and-forget: the local DB is optional and must NEVER slow down or break
@@ -1946,12 +1972,10 @@ app.get('/api/repair-jobs', authenticateToken, async (req, res) => {
 
         const repairJobs = await Promise.all(jobs.map(async (job) => {
             const jobParts = parts.filter(p => p.repair_job_id === job.id);
-            const partsTotal = jobParts.reduce((sum, part) => sum + Number(part.total_cost || 0), 0);
-            const laborCost = Number(job.estimated_cost || 0);
-            const total = laborCost + partsTotal;
 
             return {
                 id: job._id.toString(),
+                job_no: job.job_no || null,
                 customer_name: job.customer_name,
                 phone_number: job.phone_number,
                 device_model: job.device_model,
@@ -1964,6 +1988,9 @@ app.get('/api/repair-jobs', authenticateToken, async (req, res) => {
                 repair_status: job.repair_status,
                 warranty_period_months: job.warranty_period_months,
                 warranty_end_date: job.warranty_end_date,
+                advance_amount: Number(job.advance_amount || 0),
+                payment_method: job.payment_method || '',
+                payment_status: job.payment_status || 'UNPAID',
                 created_at: job.created_at,
                 parts: jobParts.map(p => ({
                     id: p._id.toString(),
@@ -1975,15 +2002,7 @@ app.get('/api/repair-jobs', authenticateToken, async (req, res) => {
                     unit_cost: p.unit_cost,
                     total_cost: p.total_cost
                 })),
-                invoice: {
-                    job_id: job._id.toString(),
-                    invoice_no: `REPAIR-${job._id.toString().slice(-4).toUpperCase()}`,
-                    labor_cost: laborCost,
-                    parts_cost: partsTotal,
-                    total_cost: total,
-                    status: job.repair_status,
-                    created_at: job.created_at
-                }
+                invoice: buildRepairInvoice(job, jobParts)
             };
         }));
 
@@ -1995,10 +2014,21 @@ app.get('/api/repair-jobs', authenticateToken, async (req, res) => {
 });
 
 app.post('/api/repair-jobs', authenticateToken, async (req, res) => {
-    const { customer_name, phone_number, device_model, imei, reported_issue, items_left, received_date, estimated_cost, estimated_completion_date, warranty_period_months = 3 } = req.body;
+    const { customer_name, phone_number, device_model, imei, reported_issue, items_left, received_date, estimated_cost, estimated_completion_date, warranty_period_months = 3, advance_amount = 0, payment_method = '' } = req.body;
 
     if (!customer_name || !phone_number || !device_model || !reported_issue || !estimated_completion_date) {
         return res.status(400).json({ error: 'Customer name, phone number, device model, issue, and estimated completion date are required.' });
+    }
+
+    // Single optional advance taken once at intake. Must be a non-negative
+    // number; a payment method is required only when an advance is given.
+    const advance = Number(advance_amount || 0);
+    if (!Number.isFinite(advance) || advance < 0) {
+        return res.status(400).json({ error: 'Advance amount must be a non-negative number.' });
+    }
+    const method = String(payment_method || '').trim().toUpperCase();
+    if (advance > 0 && !['CASH', 'CARD', 'BANK_TRANSFER'].includes(method)) {
+        return res.status(400).json({ error: 'Payment method (Cash / Card / Bank Transfer) is required when an advance is taken.' });
     }
 
     try {
@@ -2020,23 +2050,21 @@ app.post('/api/repair-jobs', authenticateToken, async (req, res) => {
             estimated_completion_date,
             warranty_period_months: warrantyMonths,
             warranty_end_date: warrantyEnd.toISOString().slice(0, 10),
-            repair_status: 'Received'
+            repair_status: 'Received',
+            job_no: formatRepairJobNo(),
+            advance_amount: advance,
+            payment_method: advance > 0 ? method : '',
+            payment_status: advance > 0 ? 'PARTIAL' : 'UNPAID',
+            advance_received_at: advance > 0 ? new Date() : null,
+            advance_received_by: advance > 0 ? (req.user.name || '') : ''
         });
 
-        recordLocalOp('repair_jobs', 'create', job._id.toString(), { imei: job.imei, device_model: job.device_model, status: 'Received' });
+        recordLocalOp('repair_jobs', 'create', job._id.toString(), { imei: job.imei, device_model: job.device_model, status: 'Received', advance });
         res.status(201).json({
             id: job._id.toString(),
             ...job.toObject(),
             parts: [],
-            invoice: {
-                job_id: job._id.toString(),
-                invoice_no: `REPAIR-${job._id.toString().slice(-4).toUpperCase()}`,
-                labor_cost: Number(estimated_cost || 0),
-                parts_cost: 0,
-                total_cost: Number(estimated_cost || 0),
-                status: 'Received',
-                created_at: job.created_at
-            }
+            invoice: buildRepairInvoice(job, [])
         });
     } catch (err) {
         console.error(err);
@@ -2184,22 +2212,38 @@ app.get('/api/repair-jobs/:id/invoice', authenticateToken, async (req, res) => {
         if (!job) return res.status(404).json({ error: 'Repair job not found' });
 
         const jobParts = await RepairJobPart.find({ repair_job_id: job.id });
-        const partsTotal = jobParts.reduce((sum, part) => sum + Number(part.total_cost || 0), 0);
-        const laborCost = Number(job.estimated_cost || 0);
-        const total = laborCost + partsTotal;
-
-        res.json({
-            job_id: job._id.toString(),
-            invoice_no: `REPAIR-${job._id.toString().slice(-4).toUpperCase()}`,
-            labor_cost: laborCost,
-            parts_cost: partsTotal,
-            total_cost: total,
-            status: job.repair_status,
-            created_at: job.created_at
-        });
+        res.json(buildRepairInvoice(job, jobParts));
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Database error fetching invoice' });
+    }
+});
+
+// Final collection on delivery: records the remaining balance as paid.
+// The single intake advance is NOT editable here — this endpoint only marks
+// the outstanding balance collected (optionally updating the payment method
+// used for the final payment).
+app.post('/api/repair-jobs/:id/collect', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const job = await RepairJob.findById(req.params.id);
+        if (!job) return res.status(404).json({ error: 'Repair job not found' });
+
+        const jobParts = await RepairJobPart.find({ repair_job_id: job.id });
+        const invoice = buildRepairInvoice(job, jobParts);
+        const method = String(req.body.payment_method || job.payment_method || '').trim().toUpperCase();
+        if (!['CASH', 'CARD', 'BANK_TRANSFER'].includes(method)) {
+            return res.status(400).json({ error: 'Payment method (Cash / Card / Bank Transfer) is required to collect the balance.' });
+        }
+        job.payment_method = method;
+        job.payment_status = 'PAID';
+        job.updated_at = new Date();
+        await job.save();
+        recordLocalOp('repair_jobs', 'collect', job._id.toString(), { balance: invoice.balance_due, method });
+        res.json({ ...buildRepairInvoice(job, jobParts), collected: invoice.balance_due });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message || 'Database error collecting repair balance' });
     }
 });
 

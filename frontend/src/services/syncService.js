@@ -192,7 +192,9 @@ const pushRepairJob = async (job, token) => {
       received_date: job.receivedDate,
       estimated_cost: Number(job.estimatedCost || 0),
       estimated_completion_date: job.estimatedCompletionDate,
-      warranty_period_months: Number(job.warrantyPeriodMonths || 3)
+      warranty_period_months: Number(job.warrantyPeriodMonths || 3),
+      advance_amount: Number(job.advanceAmount || 0),
+      payment_method: Number(job.advanceAmount || 0) > 0 ? (job.paymentMethod || '') : ''
     })
   });
 

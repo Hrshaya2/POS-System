@@ -173,6 +173,14 @@ const repairJobSchema = new mongoose.Schema({
     repair_status: { type: String, default: 'Received' },
     warranty_period_months: { type: Number, default: 3 },
     warranty_end_date: String,
+    // Single optional advance taken once at intake. No partial top-ups:
+    // advance is fixed at creation; final bill deducts it from the total.
+    job_no: { type: String, unique: true, sparse: true },
+    advance_amount: { type: Number, default: 0 },
+    payment_method: { type: String, default: '' }, // CASH | CARD | BANK_TRANSFER
+    payment_status: { type: String, default: 'UNPAID', enum: ['UNPAID', 'PARTIAL', 'PAID'] },
+    advance_received_at: Date,
+    advance_received_by: String,
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
 }, { timestamps: true });

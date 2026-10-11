@@ -1,10 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Activity, CalendarDays, ClipboardList, Package, Search, ShieldCheck, Wrench } from 'lucide-react';
+import { Activity, CalendarDays, ClipboardList, Package, Printer, Search, ShieldCheck, Wrench } from 'lucide-react';
 import { addPendingRepairJob, addPendingRepairStatusUpdate, getCachedInventory } from '../db/database';
 import { mergeAccessoriesIntoCache } from '../services/stockService';
+import { openRepairBillPrint } from '../utils/repairReceipt';
 
 const API_BASE = '/api';
-const REPAIR_STATUSES = ['Received', 'Diagnosing', 'Awaiting Parts', 'In Repair', 'Ready for Pickup', 'Delivered'];
+// Must match backend REPAIR_STATUS_FLOW exactly ('Identifying', not
+// 'Diagnosing') — any mismatch makes indexOf return -1, which disables every
+// pipeline button and gets rejected by PUT /:id/status.
+const REPAIR_STATUSES = ['Received', 'Identifying', 'Awaiting Parts', 'In Repair', 'Ready for Pickup', 'Delivered'];
 
 const formatMoney = (value) => `Rs. ${Number(value || 0).toLocaleString('en-LK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -66,7 +70,9 @@ export default function RepairPage() {
     received_date: todayDate,
     estimated_cost: '0',
     estimated_completion_date: defaultDueDate,
-    warranty_period_months: '3'
+    warranty_period_months: '3',
+    advance_amount: '',
+    payment_method: 'CASH'
   });
 
   useEffect(() => {
@@ -165,6 +171,15 @@ export default function RepairPage() {
 
     setSaving(true);
 
+    // Single optional advance at intake. Empty = no advance. When given, a
+    // payment method is required (backend enforces the same rule).
+    const advance = form.advance_amount === '' ? 0 : Number(form.advance_amount);
+    if (!Number.isFinite(advance) || advance < 0) {
+      setError('Advance amount must be a non-negative number.');
+      setSaving(false);
+      return;
+    }
+
     try {
       // Build the local repair job record
       const localJob = {
@@ -178,6 +193,9 @@ export default function RepairPage() {
         estimatedCost: Number(form.estimated_cost || 0),
         estimatedCompletionDate: form.estimated_completion_date,
         warrantyPeriodMonths: Number(form.warranty_period_months || 3),
+        advanceAmount: advance,
+        paymentMethod: advance > 0 ? form.payment_method : '',
+        paymentStatus: advance > 0 ? 'PARTIAL' : 'UNPAID',
         repair_status: 'Received',
         created_at: new Date().toISOString()
       };
@@ -196,7 +214,9 @@ export default function RepairPage() {
         received_date: todayDate,
         estimated_cost: '0',
         estimated_completion_date: defaultDueDate,
-        warranty_period_months: '3'
+        warranty_period_months: '3',
+        advance_amount: '',
+        payment_method: 'CASH'
       });
 
       // Add the local job to the list so it shows immediately
@@ -214,6 +234,9 @@ export default function RepairPage() {
         repair_status: 'Received',
         warranty_period_months: localJob.warrantyPeriodMonths,
         warranty_end_date: null,
+        advance_amount: localJob.advanceAmount,
+        payment_method: localJob.paymentMethod,
+        payment_status: localJob.paymentStatus,
         created_at: localJob.created_at,
         parts: [],
         invoice: {
@@ -222,12 +245,18 @@ export default function RepairPage() {
           labor_cost: localJob.estimatedCost,
           parts_cost: 0,
           total_cost: localJob.estimatedCost,
+          advance_amount: localJob.advanceAmount,
+          balance_due: Math.max(0, localJob.estimatedCost - localJob.advanceAmount),
+          payment_method: localJob.paymentMethod,
+          payment_status: localJob.paymentStatus,
           status: 'Received',
           created_at: localJob.created_at
         }
       };
       setJobs((current) => [displayJob, ...current]);
       setSelectedJobId(displayJob.id);
+      // Advance receipt goes to the customer right away when an advance was taken.
+      if (localJob.advanceAmount > 0) openRepairBillPrint(displayJob, 'ADVANCE');
 
       // If online, also push to the server in the background (never block the user)
       const token = localStorage.getItem('token');
@@ -243,7 +272,9 @@ export default function RepairPage() {
               body: JSON.stringify({
                 ...form,
                 estimated_cost: Number(form.estimated_cost || 0),
-                warranty_period_months: Number(form.warranty_period_months || 3)
+                warranty_period_months: Number(form.warranty_period_months || 3),
+                advance_amount: advance,
+                payment_method: advance > 0 ? form.payment_method : ''
               })
             });
 
@@ -333,6 +364,43 @@ export default function RepairPage() {
     setSelectedJobId(jobId);
   };
 
+  const collectBalance = async (jobId) => {
+    if (String(jobId).startsWith('local-')) {
+      setError('This job is still syncing. Please wait for it to sync, then collect the balance.');
+      return;
+    }
+    const job = jobs.find((j) => String(j.id) === String(jobId));
+    const balance = Number(job?.invoice?.balance_due ?? 0);
+    const method = window.prompt(
+      `Collect balance ${formatMoney(balance)}.\nEnter payment method: CASH, CARD, or BANK_TRANSFER`,
+      job?.payment_method || 'CASH'
+    );
+    if (method === null) return;
+    const normalized = String(method).trim().toUpperCase();
+    if (!['CASH', 'CARD', 'BANK_TRANSFER'].includes(normalized)) {
+      setError('Payment method must be CASH, CARD, or BANK_TRANSFER.');
+      return;
+    }
+    setError('');
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_BASE}/repair-jobs/${jobId}/collect`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ payment_method: normalized })
+    });
+    const data = await parseApiResponse(res);
+    if (!res.ok) {
+      setError(data.error || 'Unable to collect balance');
+      return;
+    }
+    await loadData();
+    setSelectedJobId(jobId);
+    openRepairBillPrint({ ...job, payment_method: normalized, payment_status: 'PAID', invoice: data }, 'FINAL');
+  };
+
   const checkWarranty = async () => {
     const token = localStorage.getItem('token');
     let url = `${API_BASE}/repair-warranty`;
@@ -347,7 +415,9 @@ export default function RepairPage() {
     setWarrantyResult(data);
   };
 
-  const currentStatusIndex = selectedJob ? REPAIR_STATUSES.indexOf(selectedJob.repair_status) : -1;
+  // Legacy rows saved with the old 'Diagnosing' label resolve to step 0 so the
+  // pipeline (and Move button) stay clickable instead of freezing at index -1.
+  const currentStatusIndex = selectedJob ? Math.max(0, REPAIR_STATUSES.indexOf(selectedJob.repair_status)) : -1;
   const nextAvailableStatus = currentStatusIndex >= 0 && currentStatusIndex < REPAIR_STATUSES.length - 1
     ? REPAIR_STATUSES[currentStatusIndex + 1]
     : null;
@@ -433,6 +503,19 @@ export default function RepairPage() {
               <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-gray-50/70 dark:bg-slate-950/70 p-4 space-y-2">
                 <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Warranty period</label>
                 <input value={form.warranty_period_months} onChange={(e) => setForm({ ...form, warranty_period_months: e.target.value })} type="number" min="1" className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3" placeholder="3" />
+              </div>
+              <div className="rounded-2xl border border-amber-200 dark:border-amber-500/30 bg-amber-50/70 dark:bg-amber-500/10 p-4 space-y-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Advance amount (optional, one-time)</label>
+                <input value={form.advance_amount} onChange={(e) => setForm({ ...form, advance_amount: e.target.value })} type="number" min="0" step="0.01" className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3" placeholder="Leave empty if no advance" />
+                <p className="text-xs text-gray-500 dark:text-slate-400">Taken once at intake. An advance receipt prints automatically.</p>
+              </div>
+              <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-gray-50/70 dark:bg-slate-950/70 p-4 space-y-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Advance payment method</label>
+                <select value={form.payment_method} onChange={(e) => setForm({ ...form, payment_method: e.target.value })} className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3 bg-white dark:bg-slate-800">
+                  <option value="CASH">Cash</option>
+                  <option value="CARD">Card</option>
+                  <option value="BANK_TRANSFER">Bank Transfer</option>
+                </select>
               </div>
             </div>
 
@@ -526,10 +609,27 @@ export default function RepairPage() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
               <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">{selectedJob.customer_name} - {selectedJob.device_model}</h2>
-              <p className="text-sm text-gray-500 dark:text-slate-400">Phone: {selectedJob.phone_number} · IMEI: {selectedJob.imei || 'Not provided'}</p>
+              <p className="text-sm text-gray-500 dark:text-slate-400">
+                {selectedJob.job_no ? `${selectedJob.job_no} · ` : ''}Phone: {selectedJob.phone_number} · IMEI: {selectedJob.imei || 'Not provided'}
+              </p>
             </div>
-            <div className="text-sm text-gray-500 dark:text-slate-400">Due: {selectedJob.estimated_completion_date}</div>
+            <div className="flex flex-wrap items-center gap-2">
+              {Number(selectedJob.advance_amount || 0) > 0 && (
+                <button onClick={() => openRepairBillPrint(selectedJob, 'ADVANCE')} className="inline-flex items-center gap-2 rounded-2xl border border-amber-300 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-500/10 px-4 py-2.5 text-sm font-semibold text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-500/20">
+                  <Printer size={15} /> Advance Receipt
+                </button>
+              )}
+              <button onClick={() => openRepairBillPrint(selectedJob, 'FINAL')} className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 dark:bg-slate-100 px-4 py-2.5 text-sm font-semibold text-white dark:text-slate-900 hover:opacity-90">
+                <Printer size={15} /> Final Bill
+              </button>
+              {selectedJob.payment_status !== 'PAID' && (
+                <button onClick={() => collectBalance(selectedJob.id)} className="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700">
+                  Collect Balance
+                </button>
+              )}
+            </div>
           </div>
+          <div className="text-sm text-gray-500 dark:text-slate-400 mt-2">Due: {selectedJob.estimated_completion_date}</div>
 
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
@@ -539,7 +639,8 @@ export default function RepairPage() {
                   <button
                     key={status}
                     onClick={() => advanceStatus(selectedJob.id, status)}
-                    disabled={idx < REPAIR_STATUSES.indexOf(selectedJob.repair_status) || idx !== REPAIR_STATUSES.indexOf(selectedJob.repair_status) + 1}
+                    disabled={(() => { const ci = Math.max(0, REPAIR_STATUSES.indexOf(selectedJob.repair_status)); return idx !== ci + 1; })()}
+                    title={(() => { const ci = Math.max(0, REPAIR_STATUSES.indexOf(selectedJob.repair_status)); return idx === ci + 1 ? `Move to ${status}` : 'Complete previous step first'; })()}
                     className={`rounded-full px-3 py-2 text-xs font-semibold ${selectedJob.repair_status === status ? 'bg-indigo-600 text-white' : idx < REPAIR_STATUSES.indexOf(selectedJob.repair_status) ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300' : 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400'} disabled:opacity-40`}
                   >
                     {status}
@@ -547,8 +648,8 @@ export default function RepairPage() {
                 ))}
               </div>
 
-              {nextAvailableStatus && (
-                <button onClick={() => advanceStatus(selectedJob.id, nextAvailableStatus)} className="mt-4 rounded-2xl bg-blue-600 px-4 py-3 font-semibold text-white">
+            {selectedJob && !selectedJob.id.startsWith('local-') && nextAvailableStatus && (
+                <button onClick={() => advanceStatus(selectedJob.id, nextAvailableStatus)} className="mt-4 rounded-2xl bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">
                   Move to {nextAvailableStatus}
                 </button>
               )}
@@ -600,7 +701,12 @@ export default function RepairPage() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between"><span>Labor</span><span>{formatMoney(selectedJob.invoice.labor_cost)}</span></div>
                   <div className="flex justify-between"><span>Parts</span><span>{formatMoney(selectedJob.invoice.parts_cost)}</span></div>
-                  <div className="flex justify-between font-bold text-base text-gray-900 dark:text-slate-100"><span>Total</span><span>{formatMoney(selectedJob.invoice.total_cost)}</span></div>
+                  <div className="flex justify-between"><span>Total</span><span>{formatMoney(selectedJob.invoice.total_cost)}</span></div>
+                  <div className="flex justify-between text-emerald-700 dark:text-emerald-300"><span>Advance paid</span><span>- {formatMoney(selectedJob.invoice.advance_amount ?? selectedJob.advance_amount)}</span></div>
+                  <div className="flex justify-between font-bold text-base text-gray-900 dark:text-slate-100 border-t border-gray-200 dark:border-slate-700 pt-2"><span>Balance due</span><span>{formatMoney(selectedJob.invoice.balance_due ?? 0)}</span></div>
+                  <div className="flex justify-between text-xs text-gray-500 dark:text-slate-400">
+                    <span>{String(selectedJob.payment_method || '').replace('_', ' ') || 'No payment method'} · {selectedJob.payment_status || 'UNPAID'}</span>
+                  </div>
                 </div>
               ) : (
                 <div className="text-gray-400">Invoice not generated yet.</div>

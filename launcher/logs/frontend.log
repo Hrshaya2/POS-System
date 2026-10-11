@@ -2740,3 +2740,27 @@ Node.js v24.19.0
 [2m16:43:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/context/SyncContext.jsx[22m Could not Fast Refresh ("useSync" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
 [2m16:43:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/components/SyncStatusIndicator.jsx, /src/components/OfflineBanner.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx[22m
 [2m16:43:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/StockManagementPage.jsx, /src/index.css[22m
+[2m07:07:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:07:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:08:33[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:08:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:08:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:09:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:09:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:09:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:10:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:10:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:10:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/App.jsx, /src/pages/StockManagementPage.jsx, /src/pages/SalesPage.jsx, /src/pages/RepairPage.jsx, /src/components/Stock/CategoryGrid.jsx, /src/components/Stock/StockHistoryTab.jsx, /src/components/Stock/ItemDetailModal.jsx, /src/components/Stock/ImportTab.jsx, /src/components/Stock/AlertsPanel.jsx, /src/components/Stock/StockTakeTab.jsx, /src/context/SyncContext.jsx[22m
+[2m07:10:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/context/SyncContext.jsx[22m Could not Fast Refresh ("useSync" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m07:10:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/components/SyncStatusIndicator.jsx, /src/components/OfflineBanner.jsx, /src/pages/ReportsPage.jsx, /src/pages/SalesPage.jsx[22m
+[2m07:20:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:21:30[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:21:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:22:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:22:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:22:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:23:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:23:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:24:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:24:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
+[2m07:24:17[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/RepairPage.jsx, /src/index.css[22m
