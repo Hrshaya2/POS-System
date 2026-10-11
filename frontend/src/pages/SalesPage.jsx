@@ -148,28 +148,38 @@ export default function SalesPage() {
     const isAdmin = user?.role === 'admin' || user?.role === 'shop_owner';
 
     const catalog = useMemo(() => [
-        ...phones.map((phone) => ({
-            inventoryType: 'phone',
-            inventoryId: phone.id,
-            code: phone.imei,
-            displayName: `${phone.brand} ${phone.model}`,
-            price: safeNumber(phone.selling_price),
-            stock: phone.status === 'In Stock' ? 1 : 0,
-            trackedBy: 'IMEI',
-            meta: `${phone.brand} · ${phone.condition}`,
-            source: phone
-        })),
-        ...accessories.map((accessory) => ({
-            inventoryType: 'accessory',
-            inventoryId: accessory.id,
-            code: accessory.sku,
-            displayName: accessory.name,
-            price: safeNumber(accessory.sell_price),
-            stock: safeNumber(accessory.quantity),
-            trackedBy: 'QTY',
-            meta: accessory.category,
-            source: accessory
-        }))
+        ...phones.map((phone) => {
+            const allCodes = [phone.imei, ...(phone.barcodes || [])];
+            const primary = allCodes.find((c) => c && String(c).trim()) || phone.imei;
+            return {
+                inventoryType: 'phone',
+                inventoryId: phone.id,
+                code: primary,
+                displayName: `${phone.brand} ${phone.model}`,
+                price: safeNumber(phone.selling_price),
+                stock: phone.status === 'In Stock' ? 1 : 0,
+                trackedBy: 'IMEI',
+                meta: `${phone.brand} · ${phone.condition}`,
+                barcodes: allCodes,
+                source: phone
+            };
+        }),
+        ...accessories.map((accessory) => {
+            const allCodes = [accessory.sku, ...(accessory.barcodes || [])];
+            const primary = allCodes.find((c) => c && String(c).trim()) || accessory.sku;
+            return {
+                inventoryType: 'accessory',
+                inventoryId: accessory.id,
+                code: primary,
+                displayName: accessory.name,
+                price: safeNumber(accessory.sell_price),
+                stock: safeNumber(accessory.quantity),
+                trackedBy: 'QTY',
+                meta: accessory.category,
+                barcodes: allCodes,
+                source: accessory
+            };
+        })
     ], [phones, accessories]);
 
     const visibleProducts = useMemo(() => {
@@ -177,16 +187,21 @@ export default function SalesPage() {
         if (!term) return catalog.slice(0, 12);
 
         // Barcode-scan friendly ordering: an EXACT code match (manufacturer
-        // barcode or internally generated LM-XXXXXX) always sorts first, so
-        // "scan + Enter" adds precisely that item with no extra clicks.
+        // barcode, SKU, or internally generated system code) always sorts
+        // first, so "scan + Enter" adds precisely that item with no extra
+        // clicks. Searching is done against every stored barcode, so a
+        // multi-barcode product can be found by any of its codes.
         const scored = catalog
             .map((item) => {
-                const code = item.code.toLowerCase();
+                const codes = item.barcodes
+                    ? item.barcodes.concat([item.code]).map((c) => String(c).toLowerCase())
+                    : [item.code.toLowerCase()];
+                const termLower = term;
                 let score;
-                if (code === term) score = 0;
-                else if (code.startsWith(term)) score = 1;
+                if (codes.includes(termLower)) score = 0;
+                else if (codes.some((c) => c.startsWith(termLower))) score = 1;
                 else if (
-                    code.includes(term) ||
+                    codes.some((c) => c.includes(termLower)) ||
                     item.displayName.toLowerCase().includes(term) ||
                     item.meta.toLowerCase().includes(term)
                 ) score = 2;
@@ -635,7 +650,7 @@ export default function SalesPage() {
                             <div className="flex items-center justify-between gap-3 mb-4">
                                 <div>
                                     <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2"><PackageSearch size={20} className="text-blue-600" /> Search / Scan Product</h2>
-                                    <p className="text-sm text-gray-500 dark:text-slate-400">Search by name, SKU, or IMEI. Press Enter to add the top result.</p>
+                                    <p className="text-sm text-gray-500 dark:text-slate-400">Search by name, SKU, IMEI, or any barcode (SYSTEM or manufacturer). Press Enter to add the top result.</p>
                                 </div>
                                 <div className="text-xs text-gray-500 dark:text-slate-400 bg-gray-50 dark:bg-slate-950 rounded-full px-3 py-1 border border-gray-200 dark:border-slate-700">
                                     {visibleProducts.length} matches

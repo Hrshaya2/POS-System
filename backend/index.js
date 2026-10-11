@@ -604,7 +604,8 @@ app.get('/api/inventory/phones', authenticateToken, async (req, res) => {
             warranty: p.warranty,
             status: p.status,
             category: p.category,
-            added_at: p.added_at || p.created_at
+            added_at: p.added_at || p.created_at,
+            barcodes: p.barcodes || []
         })));
     } catch (err) {
         console.error(err);
