@@ -2804,3 +2804,89 @@ Node.js v24.19.0
 [2m19:07:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
 [2m19:08:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
 [2m19:08:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+===== started 21/10/2026 20:29:57.00 =====  
+
+> frontend@0.0.0 dev
+> vite
+
+[2m20:30:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m Re-optimizing dependencies because lockfile has changed
+
+  [32m[1mVITE[22m v8.2.1[39m  [2mready in [0m[1m4247[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m20:30:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [optimizer] bundling dependencies...
+[2m20:30:17[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/sessions/current[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:17[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stock/movements?type=ADJUSTMENT[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:18[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stock/movements?type=ADJUSTMENT[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:37[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:46[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:49[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:54[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:55[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:55[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:56[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:30:56[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:31:07[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m20:35:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m20:35:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m20:36:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m20:37:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m20:37:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m20:40:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m21:08:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m21:09:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m21:10:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m

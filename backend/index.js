@@ -304,6 +304,7 @@ const normalizeRefund = (refund, opts = {}) => ({
     reason: refund.reason,
     reason_note: refund.reason_note,
     refund_method: refund.refund_method,
+    resolution_type: refund.resolution_type || 'CASH_REFUND',
     original_payment_method: refund.original_payment_method,
     requires_approval: refund.requires_approval,
     approval_status: refund.approval_status,
@@ -1442,11 +1443,13 @@ app.delete('/api/sales/:id', authenticateToken, requireAdmin, async (req, res) =
 const createRefundHandler = async (req, res) => {
     try {
         await connectDB();
-        const { saleId, items, reason, reason_note, refund_method, movement_date } = req.body;
+        const { saleId, items, reason, reason_note, refund_method, movement_date, resolution_type } = req.body;
         if (!saleId) return res.status(400).json({ error: 'saleId is required' });
         if (!Array.isArray(items) || items.length === 0) return res.status(400).json({ error: 'At least one item must be selected' });
         if (!REFUND_REASONS.includes(reason || '')) return res.status(400).json({ error: 'Invalid reason' });
         if (String(reason).trim() === 'Other' && !reason_note) return res.status(400).json({ error: 'reason_note is required when reason is Other' });
+        const resolution = String(resolution_type || 'CASH_REFUND').toUpperCase();
+        if (!['CASH_REFUND', 'ITEM_EXCHANGE'].includes(resolution)) return res.status(400).json({ error: 'Invalid resolution_type' });
 
         const sale = await Sale.findById(saleId);
         if (!sale) return res.status(404).json({ error: 'Sale not found' });
@@ -1468,7 +1471,7 @@ const createRefundHandler = async (req, res) => {
             const requested = Number(sel.quantity || 0);
             if (requested <= 0) return res.status(400).json({ error: `Quantity must be greater than zero for ${original.name}` });
             if (requested > remaining) return res.status(400).json({ error: `Cannot refund more than remaining (${remaining}) for ${original.name}` });
-            const unit_price = Number(sel.unit_price != null ? sel.unit_price : original.unit_price || 0);
+            const unit_price = Number((sel.unit_price != null && Number(sel.unit_price) > 0) ? sel.unit_price : original.unit_price || 0);
             const line_total = Math.round((unit_price * requested) * 100) / 100;
             subtotal += line_total;
             normalizedItems.push({ inventory_type: sType, inventory_id: sId, name: original.name || sel.name || '', sku: original.sku || sel.sku || '', imei: original.imei || sel.imei || '', unit_price, quantity: requested, line_total });
@@ -1486,7 +1489,7 @@ const createRefundHandler = async (req, res) => {
         const refund = await Refund.create({
             sale_id: sale._id.toString(), sale_receipt_no: sale.receipt_no, refund_reference: formatRefundRef(),
             items: normalizedItems, subtotal, total, reason, reason_note: reason_note || '',
-            refund_method: refundMethod, original_payment_method: originalMethod,
+            refund_method: refundMethod, resolution_type: resolution, original_payment_method: originalMethod,
             initiated_by_id: req.user.id ? String(req.user.id) : '', initiated_by_name: (req.user.name || '').toString(),
             requires_approval: needsApproval, approval_status: needsApproval ? 'PENDING' : 'DIRECT',
             session_id: sale.session_id ? String(sale.session_id) : '',
@@ -1524,6 +1527,12 @@ const applyRefundEffects = async (refund, approver) => {
     const sale = await Sale.findById(refund.sale_id);
     if (!sale) throw ObjectNotFoundError('Sale not found');
 
+    const resolution = String(refund.resolution_type || 'CASH_REFUND').toUpperCase();
+    // Items that are scrapped (Damaged / Defective / Warranty Return) given as CASH_REFUND
+    // do NOT go back into sellable stock. ITEM_EXCHANGE always takes a fresh unit FROM stock.
+    const isScrappedCash = resolution === 'CASH_REFUND' && ['Damaged', 'Defective', 'Warranty Return'].includes(String(refund.reason || ''));
+    const isExchange = resolution === 'ITEM_EXCHANGE';
+
     for (const item of refund.items) {
         const iType = String(item.inventory_type || '');
         const iId = item.inventory_id;
@@ -1531,28 +1540,47 @@ const applyRefundEffects = async (refund, approver) => {
             const accessory = await Accessory.findById(iId);
             if (accessory && !accessory.is_service) {
                 const qty = Math.max(0, Number(item.quantity || 0));
-                accessory.quantity = Math.max(0, Number(accessory.quantity || 0) + qty);
-                await accessory.save();
-                await logStockMovement({
-                    accessory, type: 'REFUND',
-                    quantityChange: qty, resultingQuantity: Number(accessory.quantity || 0),
-                    reason: refund.reason || 'Sale refund',
-                    note: `Refund ${refund.refund_reference} of receipt ${refund.sale_receipt_no}`,
-                    reference: refund.refund_reference, user: approver, localKey: null
-                });
+                if (isExchange) {
+                    // Give the customer a new unit from stock: reduce inventory.
+                    accessory.quantity = Math.max(0, Number(accessory.quantity || 0) - qty);
+                    await accessory.save();
+                    await logStockMovement({
+                        accessory, type: 'REFUND',
+                        quantityChange: -qty, resultingQuantity: Number(accessory.quantity || 0),
+                        reason: refund.reason || 'Item exchange',
+                        note: `Item exchange ${refund.refund_reference} of receipt ${refund.sale_receipt_no} (new unit issued)`,
+                        reference: refund.refund_reference, user: approver, localKey: null
+                    });
+                } else if (!isScrappedCash) {
+                    // Cash refund of a resalable item: restore to stock.
+                    accessory.quantity = Math.max(0, Number(accessory.quantity || 0) + qty);
+                    await accessory.save();
+                    await logStockMovement({
+                        accessory, type: 'REFUND',
+                        quantityChange: qty, resultingQuantity: Number(accessory.quantity || 0),
+                        reason: refund.reason || 'Sale refund',
+                        note: `Refund ${refund.refund_reference} of receipt ${refund.sale_receipt_no}`,
+                        reference: refund.refund_reference, user: approver, localKey: null
+                    });
+                }
+                // Scrapped cash refund (Damaged/Defective/Warranty): item is not resalable,
+                // so stock is intentionally left unchanged.
             }
         } else if (iType === 'phone' && iId) {
             const phone = await Phone.findById(iId);
             if (phone) {
                 const imeiMatch = String(phone.imei || '') === String(item.imei || '');
                 if (imeiMatch) {
-                    phone.status = 'Available'; phone.warranty = 'None'; phone.warranty_end_date = null;
+                    // Only return a scrapped cash refund phone to sellable stock if it's not a scrapped cash refund.
+                    if (!isScrappedCash) {
+                        phone.status = 'Available'; phone.warranty = 'None'; phone.warranty_end_date = null;
+                    }
                     await phone.save();
                     await RepairJob.updateOne(
                         { imei: phone.imei, repair_status: { $ne: 'Completed' } },
                         { $set: { warranty_end_date: null, refund_note: `IMEI ${phone.imei} refunded via ${refund.refund_reference}` } }
                     );
-                } else if (phone.status === 'Sold') { phone.status = 'Available'; await phone.save(); }
+                } else if (phone.status === 'Sold' && !isScrappedCash) { phone.status = 'Available'; await phone.save(); }
             }
         }
     }

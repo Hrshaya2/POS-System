@@ -29,10 +29,12 @@ export default function RefundModal({ sale, onClose, onApplied }) {
 
   const [selected, setSelected] = useState({});
   const [reason, setReason] = useState(REASONS[0]);
+  const [resolutionType, setResolutionType] = useState('CASH_REFUND'); // CASH_REFUND | ITEM_EXCHANGE
   const [reasonNote, setReasonNote] = useState('');
   const [refundMethod, setRefundMethod] = useState('');
   const [policy, setPolicy] = useState({ maxAmount: null, maxDays: null, sameMethodRequired: false });
   const [alreadyRefunded, setAlreadyRefunded] = useState(() => new Map());
+  const [resolvedPrices, setResolvedPrices] = useState(new Map()); // key -> unit_price, fetched when sale items lack prices
   const [flow, setFlow] = useState('select');
   const [submitting, setSubmitting] = useState(false);
   const [approverPin, setApproverPin] = useState('');
@@ -62,17 +64,36 @@ export default function RefundModal({ sale, onClose, onApplied }) {
           if (!cancelled) setAlreadyRefunded(totals);
         }
       } catch { /* ignore */ }
+      // --- Ensure every sale line item carries the SOLD unit_price so the refund total is never zero ---
+      // If the passed sale's items are missing prices, fetch the full sale detail (sold prices).
+      try {
+        const missingPrice = (sale?.items || []).some((it) => !it.unit_price || Number(it.unit_price) <= 0);
+        if (missingPrice) {
+          const detRes = await fetch(`${API_BASE}/sales/${sale.id}`, { headers: token() });
+          if (detRes.ok) {
+            const detail = await detRes.json();
+            const detailItems = (detail.sale || detail).items || [];
+            const priceMap = new Map(detailItems.map((d) => [`${d.inventory_type}:${d.inventory_id}`, Number(d.unit_price || 0)]));
+            if (!cancelled) setResolvedPrices(priceMap);
+          }
+        } else if (!cancelled) {
+          // All items already carry sold prices; clear any stale resolved prices.
+          setResolvedPrices(new Map());
+        }
+      } catch { /* ignore */ }
     })();
     return () => { cancelled = true; };
-  }, [sale.id]);
+  }, [sale.id, sale.items]);
 
   const items = useMemo(() => (sale?.items || []).map((it) => ({
+    ...it,
     key: `${it.inventory_type}:${it.inventory_id}`,
     originalQty: Number(it.quantity || 0),
     remaining: Math.max(0, Number(it.quantity || 0) - Number(alreadyRefunded.get(`${it.inventory_type}:${it.inventory_id}`) || 0)),
-    unit_price: Number(it.unit_price || 0),
-    ...it
-  })), [sale, alreadyRefunded]);
+    // Sold price: prefer the price stored on the sale line item; if missing/0,
+    // fall back to the price resolved from the sale detail endpoint.
+    unit_price: Number((it.unit_price != null && Number(it.unit_price) > 0) ? it.unit_price : resolvedPrices.get(`${it.inventory_type}:${it.inventory_id}`) || 0),
+  })), [sale, alreadyRefunded, resolvedPrices]);
 
   const toggle = (item) => {
     if (item.remaining <= 0) return;
@@ -127,6 +148,7 @@ export default function RefundModal({ sale, onClose, onApplied }) {
         reason,
         reason_note: reasonNote.trim(),
         refund_method: refundMethod || String(sale.payment_method || 'CASH').toUpperCase(),
+        resolution_type: resolutionType,
         movement_date: new Date().toISOString().slice(0, 10)
       };
       const res = await fetch(`${API_BASE}/refunds`, { method: 'POST', headers: token(), body: JSON.stringify(body) });
@@ -276,6 +298,19 @@ export default function RefundModal({ sale, onClose, onApplied }) {
                     ))}
                   </select>
                   <span className="mt-1 block text-[11px] text-gray-400 dark:text-slate-500">Defaults to the original payment method.</span>
+                </label>
+                <label className="block">
+                  <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Refund the customer as</span>
+                  <select value={resolutionType} onChange={(e) => setResolutionType(e.target.value)}
+                    className="mt-1 w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500">
+                    <option value="CASH_REFUND">Cash refund (money back)</option>
+                    <option value="ITEM_EXCHANGE">Item exchange — issue a new unit from stock</option>
+                  </select>
+                  <span className="mt-1 block text-[11px] text-gray-400 dark:text-slate-500">
+                    {reason === 'Damaged' || reason === 'Defective' || reason === 'Warranty Return'
+                      ? 'Cash refund: the faulty item is scrapped (stock NOT restored). Exchange: a new unit is taken from stock.'
+                      : 'Cash refund: the returned item goes back into stock. Exchange: a new unit is taken from stock.'}
+                  </span>
                 </label>
                 {reason === 'Other' && (
                   <label className="block md:col-span-2">

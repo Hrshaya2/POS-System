@@ -2880,3 +2880,49 @@ MongoNetworkError: read ECONNRESET
     syscall: 'read'
   }
 }
+===== started 21/10/2026 20:29:56.99 =====  
+◇ injected env (4) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (0) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+(node:16044) [MONGOOSE] Warning: `errors` is a reserved schema pathname and may break some functionality. You are allowed to use it, but use at your own risk. To disable this warning pass `suppressReservedKeysWarning` as a schema option.
+(Use `node --trace-warnings ...` to show where the warning was created)
+MongoDB connection error: MongooseServerSelectionError: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://www.mongodb.com/docs/atlas/security-whitelist/
+    at _handleConnectionErrors (D:\Nangi\POS\backend\node_modules\mongoose\lib\connection.js:1175:11)
+    at NativeConnection.openUri (D:\Nangi\POS\backend\node_modules\mongoose\lib\connection.js:1106:11)
+    at async connectDB (D:\Nangi\POS\backend\index.js:358:18) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-svzn017-shard-00-00.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-02.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-1mo77x-shard-0',
+    maxElectionId: null,
+    maxSetVersion: null,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  cause: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-svzn017-shard-00-00.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-02.bbo6kvb.mongodb.net:27017' => [ServerDescription],
+      'ac-svzn017-shard-00-01.bbo6kvb.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-1mo77x-shard-0',
+    maxElectionId: null,
+    maxSetVersion: null,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: null
+  }
+}
