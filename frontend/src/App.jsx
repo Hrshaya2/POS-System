@@ -161,21 +161,19 @@ const Layout = ({ children }) => {
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-slate-950 dark:bg-[#0b1220] text-gray-900 dark:text-slate-100 font-sans overflow-hidden">
-      {/* Mobile drawer backdrop. Only rendered below the lg breakpoint while open. */}
+      {/* Sidebar backdrop — shown on all breakpoints while the drawer is open. */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-30 bg-black/60 transition-opacity duration-200 ease-out"
           onClick={() => setSidebarOpen(false)}
           aria-hidden="true"
         />
       )}
 
-      {/* Sidebar */}
-      {/* Desktop (>=lg): static w-64 panel as before. Mobile: fixed overlay drawer
-          that slides in from the left and sits above the backdrop. */}
+      {/* Sidebar — toggleable on all breakpoints via hamburger / close button. */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-gray-900 dark:bg-slate-950 h-full flex flex-col shadow-2xl border-r border-gray-800 dark:border-slate-800 transition-transform duration-200 ease-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-gray-900 dark:bg-slate-950 h-full flex flex-col shadow-2xl border-r border-gray-800 dark:border-slate-800 transition-transform duration-300 ease-in-out
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="p-6 flex items-center justify-between gap-3">
           <div className="flex items-center space-x-3">
@@ -186,14 +184,14 @@ const Layout = ({ children }) => {
             LOYAL <span className="text-blue-300">MOBILE</span>
           </h1>
         </div>
-          {/* Close button — drawer only, visible below lg. */}
+          {/* Close button — visible on all breakpoints. */}
           <button
             type="button"
             onClick={() => setSidebarOpen(false)}
             aria-label="Close menu"
-            className="lg:hidden p-2 rounded-lg text-gray-400 dark:text-slate-500 hover:text-white hover:bg-gray-800 dark:hover:bg-slate-700 hover:dark:bg-slate-900 transition-colors"
+            className="p-3 rounded-xl text-gray-400 dark:text-slate-500 hover:text-white hover:bg-gray-800 dark:hover:bg-slate-700 hover:dark:bg-slate-900 transition-all"
           >
-            <X size={20} />
+            <X size={22} strokeWidth={2.5} />
           </button>
         </div>
 
@@ -229,15 +227,15 @@ const Layout = ({ children }) => {
 
         {/* Top Header */}
         <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200 dark:border-slate-800 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex justify-between items-center gap-3 shadow-sm">
-          {/* Hamburger — opens the sidebar drawer. Desktop (>=lg) keeps the
-              always-visible sidebar, so this is hidden there. */}
+          {/* Hamburger — toggles the sidebar on all breakpoints. */}
           <button
             type="button"
-            onClick={() => setSidebarOpen(true)}
-            aria-label="Open menu"
-            className="lg:hidden shrink-0 -ml-1 p-2 rounded-xl text-gray-500 dark:text-slate-400 hover:bg-gray-100 hover:dark:bg-slate-800 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-100 transition-colors"
+            onClick={() => setSidebarOpen((prev) => !prev)}
+            aria-label={sidebarOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={sidebarOpen}
+            className="shrink-0 p-3 rounded-xl text-gray-500 dark:text-slate-400 hover:bg-gray-100 hover:dark:bg-slate-800 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-100 transition-all"
           >
-            <Menu size={22} />
+            {sidebarOpen ? <X size={24} strokeWidth={2.5} /> : <Menu size={24} strokeWidth={2.5} />}
           </button>
 
           <h2 className="text-base sm:text-xl font-semibold text-gray-800 dark:text-slate-100 truncate min-w-0">Branch: Main Store (Colombo)</h2>
