@@ -3403,3 +3403,56 @@ AggregateError [ECONNREFUSED]:
 [2m07:19:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
 [2m07:19:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
 [2m07:28:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m12:34:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m12:35:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m12:35:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m12:35:34[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mAdjacent JSX elements must be wrapped in an enclosing tag.
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/pages/SalesPage.jsx:785:25 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m785 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m<[38;5;249m/[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m>[0m
+ [38;5;240m    │[0m                         ┬  
+ [38;5;240m    │[0m                         ╰── 
+ [38;5;240m    │[0m 
+ [38;5;240m    │[0m [38;5;115mHelp[0m: Did you want a JSX fragment `<>...</>`?
+[38;5;246m─────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/pages/SalesPage.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m12:37:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m12:37:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m12:38:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m12:39:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m12:40:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m12:41:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m12:41:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m12:42:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m12:42:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m12:42:54[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mExpected `,` or `)` but found `{`
+      [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/pages/SalesPage.jsx:1024:29 [38;5;246m][0m
+      [38;5;246m│[0m
+ [38;5;246m 646 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m{[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249me[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m [0m[38;5;249m=[0m[38;5;249m=[0m[38;5;249m=[0m[38;5;249m [0m[38;5;249m'[0m[38;5;249mb[0m[38;5;249mi[0m[38;5;249ml[0m[38;5;249ml[0m[38;5;249mi[0m[38;5;249mn[0m[38;5;249mg[0m[38;5;249m'[0m[38;5;249m [0m[38;5;249m?[0m[38;5;249m [0m(
+ [38;5;240m     │[0m                                        ┬  
+ [38;5;240m     │[0m                                        ╰── Opened here
+ [38;5;240m     │[0m 
+ [38;5;246m1024 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m{[38;5;249mr[0m[38;5;249me[0m[38;5;249mc[0m[38;5;249me[0m[38;5;249mi[0m[38;5;249mp[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249m?[0m[38;5;249m [0m[38;5;249m([0m
+ [38;5;240m     │[0m                             ┬  
+ [38;5;240m     │[0m                             ╰── `,` or `)` expected
+[38;5;246m──────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/pages/SalesPage.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m12:45:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
