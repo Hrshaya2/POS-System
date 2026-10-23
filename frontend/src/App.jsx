@@ -226,20 +226,23 @@ const Layout = ({ children }) => {
         <OfflineBanner />
 
         {/* Top Header */}
-        <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200 dark:border-slate-800 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex justify-between items-center gap-3 shadow-sm">
+        <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200 dark:border-slate-800 px-4 py-3 sm:px-6 sm:py-4 flex items-center gap-3 shadow-sm">
           {/* Hamburger — toggles the sidebar on all breakpoints. */}
           <button
             type="button"
             onClick={() => setSidebarOpen((prev) => !prev)}
             aria-label={sidebarOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={sidebarOpen}
-            className="shrink-0 p-3 rounded-xl text-gray-500 dark:text-slate-400 hover:bg-gray-100 hover:dark:bg-slate-800 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-100 transition-all"
+            className="shrink-0 p-3 rounded-xl text-gray-500 dark:text-slate-400 hover:bg-gray-100 hover:dark:bg-slate-800 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-slate-100 transition-all border border-transparent hover:border-gray-200 dark:hover:border-slate-700"
           >
             {sidebarOpen ? <X size={24} strokeWidth={2.5} /> : <Menu size={24} strokeWidth={2.5} />}
           </button>
 
-          <h2 className="text-base sm:text-xl font-semibold text-gray-800 dark:text-slate-100 truncate min-w-0">Branch: Main Store (Colombo)</h2>
-          <div className="flex items-center gap-2 sm:gap-4 flex-wrap justify-end min-w-0">
+          <h2 className="text-base sm:text-xl font-semibold text-gray-800 dark:text-slate-100 truncate min-w-0">
+            Branch: Main Store (Colombo)
+          </h2>
+
+          <div className="ml-auto flex items-center gap-2 sm:gap-3 flex-wrap min-w-0">
             {/* Global refresh — icon-only, visible on every page. */}
             <button
               type="button"
@@ -255,27 +258,31 @@ const Layout = ({ children }) => {
             {isOpen ? (
               <button
                 onClick={() => setShowCloseModal(true)}
-                className="bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center space-x-2"
+                className="bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-500/20 px-3 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center space-x-2"
               >
                 <span>End Day</span>
               </button>
             ) : (
               <button
                 onClick={() => setShowOpenModal(true)}
-                className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center space-x-2"
+                className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 px-3 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center space-x-2"
               >
                 <span>Open Day</span>
               </button>
             )}
             {/* Light/Dark toggle sits immediately left of the admin profile. */}
             <ThemeToggle />
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md uppercase">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md uppercase">
               {user?.name?.charAt(0) || 'U'}
             </div>
             {/* Role/name text is hidden below sm — the avatar + menu remain. */}
             <div className="hidden sm:block">
-              <p className="text-sm font-semibold text-gray-700 dark:text-slate-300">{user?.name || 'User'}</p>
-              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">{user?.role || 'Guest'}</p>
+              <p className="text-sm font-semibold text-gray-700 dark:text-slate-300">
+                {user?.name || 'User'}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">
+                {user?.role || 'Guest'}
+              </p>
             </div>
           </div>
         </header>
