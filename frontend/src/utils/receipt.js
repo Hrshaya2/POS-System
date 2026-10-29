@@ -219,7 +219,21 @@ export const SAMPLE_RECEIPT = {
 // ---- Refund receipt (negative totals, offline-first) ----
 export const buildRefundReceiptHtml = (refund, settings, refundAmount = null) => {
   const s = settings || getReceiptSettings();
+  const isExchange = String(refund.resolution_type || '').toUpperCase() === 'ITEM_EXCHANGE';
+  const title = isExchange ? 'EXCHANGE RECEIPT' : 'REFUND RECEIPT';
   const itemsMarkup = (refund.items || []).map((item) => `
+      <tr>
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;">
+          <div style="font-weight:700;">${esc(item.name)}</div>
+          <div style="font-size:0.9em;color:#666;">${item.tracked_by === 'IMEI' ? `IMEI ${esc(item.imei)}` : `SKU ${esc(item.sku)}`}${item.condition ? ` · ${esc(item.condition)}` : ''}</div>
+        </td>
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:center;">${item.quantity}</td>
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(item.unit_price)}</td>
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(-Math.abs(item.line_total))}</td>
+      </tr>
+    `).join('');
+
+  const replacementMarkup = (refund.replacement_items || []).map((item) => `
       <tr>
         <td style="padding:0.7em 0;border-bottom:1px solid #eee;">
           <div style="font-weight:700;">${esc(item.name)}</div>
@@ -227,7 +241,7 @@ export const buildRefundReceiptHtml = (refund, settings, refundAmount = null) =>
         </td>
         <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:center;">${item.quantity}</td>
         <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(item.unit_price)}</td>
-        <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(-Math.abs(item.line_total))}</td>
+        <td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(Math.abs(item.line_total))}</td>
       </tr>
     `).join('');
 
@@ -238,9 +252,12 @@ export const buildRefundReceiptHtml = (refund, settings, refundAmount = null) =>
     ? `<div style="font-size:1.5em;font-weight:800;margin-bottom:2px;">${esc(s.shopName)}</div>`
     : '';
 
-  const badge = `<span class="badge" style="background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;">REFUND</span>`;
+  const badge = `<span class="badge" style="background:${isExchange ? '#ede9fe' : '#fee2e2'};color:${isExchange ? '#5b21b6' : '#b91c1c'};border:1px solid ${isExchange ? '#c4b5fd' : '#fca5a5'};">${isExchange ? 'EXCHANGE' : 'REFUND'}</span>`;
   const total = -Math.abs(Number(refund.total || 0));
   const refundMethod = (refund.refund_method || refund.original_payment_method || '').replace('_', ' ');
+  const replacementTotal = Number(refund.replacement_total || 0);
+  const netAmount = Number(refund.net_amount || 0);
+  const settlementDirection = String(refund.settlement_direction || (netAmount > 0 ? 'PAYMENT_FROM_CUSTOMER' : netAmount < 0 ? 'REFUND_TO_CUSTOMER' : 'SETTLED')).toUpperCase();
 
   const barcode = receiptBarcodeMarkup(barcodeValueOf(refund, s), s);
 
@@ -267,8 +284,10 @@ export const buildRefundReceiptHtml = (refund, settings, refundAmount = null) =>
   <body>
     <div class="sheet">
       <div style="text-align:center;margin-bottom:6px;">${headerLogo}${shopNameMarkup}</div>
+      <div style="text-align:center;font-size:1.2em;font-weight:800;margin-bottom:0.2em;">${title}</div>
       <div class="muted" style="text-align:center;">${esc(refund.refund_reference)}</div>
       <div class="muted" style="text-align:center;">Cashier: ${esc(refund.initiated_by)}</div>
+      ${refund.approved_by_name ? `<div class="muted" style="text-align:center;">Approved by: ${esc(refund.approved_by_name)}</div>` : ''}
       <div class="muted" style="text-align:center;">Reason: ${esc(refund.reason)}${refund.reason_note ? ' — ' + esc(refund.reason_note) : ''}</div>
       <div class="muted" style="text-align:center;">Refund method: ${esc(refundMethod)}</div>
       <div class="muted" style="text-align:center;">Original receipt: ${esc(refund.sale_receipt_no)}</div>
@@ -286,9 +305,25 @@ export const buildRefundReceiptHtml = (refund, settings, refundAmount = null) =>
         <tbody>${itemsMarkup}</tbody>
       </table>
       <div class="row"><span>Subtotal</span><strong>- ${formatMoney(refund.subtotal)}</strong></div>
+      ${replacementTotal > 0 ? `<div class="row"><span>Replacement items</span><strong>${formatMoney(replacementTotal)}</strong></div>` : ''}
       <div class="row"><span>Refund method</span><strong>${esc(refundMethod)}</strong></div>
       ${refundAmount != null ? `<div class="row"><span>Cash Refund Amount</span><strong>${formatMoney(refundAmount)}</strong></div>` : ''}
       <div class="row" style="font-size:1.5em;border-top:1px dashed #aaa;margin-top:0.7em;padding-top:0.7em;"><span>Total Refunded</span><strong style="color:#b91c1c;">${formatMoney(total)}</strong></div>
+      ${replacementMarkup ? `
+      <div style="margin-top:1em;font-weight:700;">Replacement items</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left;padding-top:1em;">Item</th>
+            <th style="padding-top:1em;">Qty</th>
+            <th style="padding-top:1em;text-align:right;">Price</th>
+            <th style="padding-top:1em;text-align:right;">Total</th>
+          </tr>
+        </thead>
+        <tbody>${replacementMarkup}</tbody>
+      </table>` : ''}
+      <div class="row" style="margin-top:0.8em;"><span>Settlement</span><strong>${esc(settlementDirection.replace(/_/g, ' '))}</strong></div>
+      ${netAmount !== 0 ? `<div class="row"><span>Net amount</span><strong>${formatMoney(Math.abs(netAmount))}</strong></div>` : ''}
       ${s.showFooterMessage && s.footerMessage ? `<p style="margin-top:1.3em;text-align:center;font-size:1em;color:#555;white-space:pre-wrap;">${esc(s.footerMessage)}</p>` : ''}
       ${barcode}
     </div>
@@ -311,4 +346,3 @@ export const SAMPLE_REFUND_RECEIPT = {
   subtotal: 1500,
   total: 1500
 };
-

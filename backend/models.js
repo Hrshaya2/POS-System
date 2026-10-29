@@ -251,6 +251,18 @@ const refundItemSchema = new mongoose.Schema({
     imei: String,
     unit_price: { type: Number, default: 0 },
     quantity: { type: Number, required: true },          // how many of THIS item were returned
+    line_total: { type: Number, default: 0 },
+    condition: { type: String, default: 'RESELLABLE', enum: ['RESELLABLE', 'DAMAGED'] }
+}, { _id: false });
+
+const refundReplacementItemSchema = new mongoose.Schema({
+    inventory_type: { type: String, required: true },   // 'phone' | 'accessory'
+    inventory_id: { type: String, required: true },
+    name: String,
+    sku: String,
+    imei: String,
+    unit_price: { type: Number, default: 0 },
+    quantity: { type: Number, required: true },
     line_total: { type: Number, default: 0 }
 }, { _id: false });
 
@@ -259,8 +271,15 @@ const refundSchema = new mongoose.Schema({
     sale_receipt_no: { type: String, required: true },
     refund_reference: { type: String, required: true, unique: true }, // RFS-xxxx
     items: { type: [refundItemSchema], default: [] },
+    replacement_items: { type: [refundReplacementItemSchema], default: [] },
     subtotal: { type: Number, default: 0 },            // sum of returned item totals
     total: { type: Number, required: true },           // total amount being returned to the customer
+    replacement_total: { type: Number, default: 0 },
+    net_amount: { type: Number, default: 0 },          // replacement_total - total (positive => customer pays)
+    settlement_direction: { type: String, default: 'REFUND_TO_CUSTOMER', enum: ['REFUND_TO_CUSTOMER', 'PAYMENT_FROM_CUSTOMER', 'SETTLED'] },
+    settlement_payment_method: { type: String, default: '' }, // CASH | CARD | BANK_TRANSFER
+    settlement_cash_received: { type: Number, default: 0 },
+    settlement_change_amount: { type: Number, default: 0 },
     reason: { type: String, required: true },
     reason_note: String,
     refund_method: { type: String, default: () => '' },   // auto-determined from original sale payment method

@@ -21,7 +21,7 @@ import { useSync } from '../context/SyncContext';
 import { addPendingSale, generateLocalReceiptNo, getCachedInventory } from '../db/database';
 import { refreshInventoryCache } from '../services/syncService';
 import { applyServerInventorySnapshot } from '../services/stockService';
-import { buildReceiptHtml, getReceiptSettings } from '../utils/receipt';
+import { buildReceiptHtml, buildRefundReceiptHtml, getReceiptSettings } from '../utils/receipt';
 import RefundModal from '../components/RefundModal';
 
 const API_BASE = '/api';
@@ -127,6 +127,56 @@ const printWithHiddenFrame = async (receipt, mode = 'receipt') => {
             if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
         };
 
+        const printRefundWithHiddenFrame = async (refund) => {
+            const html = buildRefundReceiptHtml(refund, getReceiptSettings());
+            await new Promise((resolve, reject) => {
+                const iframe = document.createElement('iframe');
+                iframe.style.position = 'fixed';
+                iframe.style.width = '0';
+                iframe.style.height = '0';
+                iframe.style.opacity = '0';
+                iframe.style.pointerEvents = 'none';
+                iframe.style.border = '0';
+                iframe.setAttribute('aria-hidden', 'true');
+
+                const cleanup = () => {
+                    if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+                };
+                const finish = () => {
+                    cleanup();
+                    resolve();
+                };
+
+                iframe.onload = () => {
+                    const win = iframe.contentWindow;
+                    if (!win) {
+                        cleanup();
+                        reject(new Error('Unable to initialize refund print frame.'));
+                        return;
+                    }
+                    win.onafterprint = finish;
+                    try {
+                        win.focus();
+                        setTimeout(() => {
+                            try {
+                                win.print();
+                            } catch (err) {
+                                cleanup();
+                                reject(err);
+                            }
+                            setTimeout(finish, 1600);
+                        }, 120);
+                    } catch (err) {
+                        cleanup();
+                        reject(err);
+                    }
+                };
+
+                iframe.srcdoc = html;
+                document.body.appendChild(iframe);
+            });
+        };
+
         const finalize = () => {
             cleanup();
             resolve();
@@ -207,6 +257,8 @@ export default function SalesPage() {
 
     const [historySearch, setHistorySearch] = useState('');
     const [historyCashierFilter, setHistoryCashierFilter] = useState('all');
+    const [historySelectedIndex, setHistorySelectedIndex] = useState(0);
+    const [refundMetaBySale, setRefundMetaBySale] = useState({});
     const [receipt, setReceipt] = useState(null);
 
     const [refundSale, setRefundSale] = useState(null);
@@ -486,6 +538,44 @@ export default function SalesPage() {
         if (!receipt) return;
         setSales((current) => [receipt, ...current.filter((sale) => sale.id !== receipt.id)]);
     }, [receipt]);
+
+    useEffect(() => {
+        if (activeTab !== 'history' || sales.length === 0) return;
+        let cancelled = false;
+        (async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const targets = sales.slice(0, 60);
+                const requests = targets.map((sale) =>
+                    fetch(`${API_BASE}/refunds?saleId=${encodeURIComponent(sale.id)}&limit=100`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })
+                        .then((res) => res.ok ? res.json() : { refunds: [] })
+                        .then((data) => ({ saleId: sale.id, refunds: Array.isArray(data.refunds) ? data.refunds : [] }))
+                        .catch(() => ({ saleId: sale.id, refunds: [] }))
+                );
+                const results = await Promise.all(requests);
+                if (cancelled) return;
+                const next = {};
+                results.forEach(({ saleId, refunds }) => {
+                    const applied = refunds.filter((r) => ['DIRECT', 'APPROVED'].includes(r.approval_status));
+                    const totalQty = applied.reduce((sum, r) => sum + (r.items || []).reduce((acc, it) => acc + Number(it.quantity || 0), 0), 0);
+                    const latest = applied.length > 0 ? applied[0] : null;
+                    next[saleId] = {
+                        count: applied.length,
+                        totalQty,
+                        latest
+                    };
+                });
+                setRefundMetaBySale(next);
+            } catch (err) {
+                if (!cancelled) setRefundMetaBySale({});
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, [activeTab, sales]);
 
     useEffect(() => {
         if (activeTab === 'billing' && billingStep === 'cart' && !itemModal.open && !newSaleConfirmOpen) {
@@ -1008,6 +1098,36 @@ export default function SalesPage() {
         hasCustomerAttachFeature
     ]);
 
+    useEffect(() => {
+        if (activeTab !== 'history' || refundSale) return undefined;
+        const onHistoryKey = (event) => {
+            const key = event.key;
+            if (['F2', 'F3', 'F4', 'F8', 'F10', 'Delete'].includes(key)) {
+                event.preventDefault();
+                return;
+            }
+            if (key === 'ArrowDown') {
+                event.preventDefault();
+                setHistorySelectedIndex((prev) => Math.min(prev + 1, Math.max(0, sales.length - 1)));
+                return;
+            }
+            if (key === 'ArrowUp') {
+                event.preventDefault();
+                setHistorySelectedIndex((prev) => Math.max(0, prev - 1));
+                return;
+            }
+            if (key === 'Enter') {
+                const selectedSale = sales[historySelectedIndex];
+                if (selectedSale && !selectedSale.refunded && !(selectedSale.pending_sync || selectedSale.syncStatus === 'pending')) {
+                    event.preventDefault();
+                    handleRefund(selectedSale);
+                }
+            }
+        };
+        window.addEventListener('keydown', onHistoryKey);
+        return () => window.removeEventListener('keydown', onHistoryKey);
+    }, [activeTab, refundSale, sales, historySelectedIndex]);
+
     const paymentIndex = PAYMENT_METHODS.findIndex((method) => method.value === paymentMethod);
 
     const handlePaymentKeyDown = (event) => {
@@ -1473,8 +1593,17 @@ export default function SalesPage() {
                                         <tr><td colSpan="8" className="px-6 py-10 text-center text-gray-400 dark:text-slate-500">Loading sales history...</td></tr>
                                     ) : sales.length === 0 ? (
                                         <tr><td colSpan="8" className="px-6 py-10 text-center text-gray-400 dark:text-slate-500">No sales found.</td></tr>
-                                    ) : sales.map((sale) => (
-                                        <tr key={sale.id} className="border-b border-gray-100 dark:border-slate-800 hover:bg-gray-50/60 dark:hover:bg-slate-700/60 hover:dark:bg-slate-950/60">
+                                    ) : sales.map((sale, idx) => {
+                                        const refundMeta = refundMetaBySale[sale.id] || { count: 0, totalQty: 0, latest: null };
+                                        const soldQty = (sale.items || []).reduce((sum, it) => sum + Number(it.quantity || 0), 0);
+                                        const partiallyRefunded = refundMeta.totalQty > 0 && refundMeta.totalQty < soldQty;
+                                        const fullyRefunded = sale.refunded || (soldQty > 0 && refundMeta.totalQty >= soldQty);
+                                        return (
+                                        <tr
+                                            key={sale.id}
+                                            onClick={() => setHistorySelectedIndex(idx)}
+                                            className={`border-b border-gray-100 dark:border-slate-800 hover:bg-gray-50/60 dark:hover:bg-slate-700/60 hover:dark:bg-slate-950/60 ${historySelectedIndex === idx ? 'bg-blue-50/60 dark:bg-blue-500/10' : ''}`}
+                                        >
                                             <td className="px-6 py-4 font-semibold text-gray-900 dark:text-slate-100 whitespace-nowrap">{sale.receipt_no}</td>
                                             <td className="px-6 py-4 max-w-[240px]">
                                                 <div className="font-medium text-gray-900 dark:text-slate-100 truncate">{(sale.items || []).map((item) => item.name).join(', ')}</div>
@@ -1487,9 +1616,14 @@ export default function SalesPage() {
                                                 <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${sale.pending_sync || sale.syncStatus === 'pending' ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300' : sale.syncStatus === 'failed' ? 'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300' : 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'}`}>
                                                     {sale.pending_sync || sale.syncStatus === 'pending' ? 'Pending sync' : sale.syncStatus === 'failed' ? 'Sync failed' : 'Synced'}
                                                 </span>
-                                                {sale.refunded ? (
+                                                {fullyRefunded ? (
                                                     <span className="mt-2 inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-violet-100 text-violet-700">
                                                         Refunded{sale.refunded_by_name ? ` by ${sale.refunded_by_name}` : ''}
+                                                    </span>
+                                                ) : null}
+                                                {partiallyRefunded ? (
+                                                    <span className="mt-2 inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-indigo-100 text-indigo-700">
+                                                        Partially refunded
                                                     </span>
                                                 ) : null}
                                                 {sale.approval_required ? (
@@ -1507,7 +1641,15 @@ export default function SalesPage() {
                                                     >
                                                         <Printer size={14} /> Print
                                                     </button>
-                                                    {!sale.refunded && !(sale.pending_sync || sale.syncStatus === 'pending') && (
+                                                    {refundMeta.latest && (
+                                                        <button
+                                                            onClick={() => printRefundWithHiddenFrame(refundMeta.latest)}
+                                                            className="inline-flex items-center gap-1 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2 text-xs font-semibold text-violet-700 hover:bg-violet-100 dark:hover:bg-violet-500/20"
+                                                        >
+                                                            <Printer size={14} /> Refund receipt
+                                                        </button>
+                                                    )}
+                                                    {!fullyRefunded && !(sale.pending_sync || sale.syncStatus === 'pending') && (
                                                         <button onClick={() => handleRefund(sale)} className="inline-flex items-center gap-1 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2 text-xs font-semibold text-violet-700 hover:bg-violet-100 dark:hover:bg-violet-500/20">
                                                             <Banknote size={14} /> Refund
                                                         </button>
@@ -1515,7 +1657,7 @@ export default function SalesPage() {
                                                 </div>
                                             </td>
                                         </tr>
-                                    ))}
+                                    )})}
                                 </tbody>
                             </table>
                         </div>
@@ -1626,18 +1768,20 @@ export default function SalesPage() {
                 </div>
             )}
 
-            <div className="fixed bottom-0 left-0 right-0 z-20 bg-white/95 dark:bg-slate-900/95 border-t border-gray-200 dark:border-slate-700 px-4 py-2 text-xs text-gray-600 dark:text-slate-300">
-                <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-x-4 gap-y-1">
-                    <span><strong>F3</strong> Search</span>
-                    <span><strong>F2</strong> Discount</span>
-                    <span><strong>F4</strong> Edit qty</span>
-                    {hasCustomerAttachFeature && <span><strong>F7</strong> Attach customer</span>}
-                    <span><strong>F8</strong> New sale</span>
-                    <span><strong>F10</strong> Payment</span>
-                    <span><strong>Esc</strong> Back/Cancel</span>
-                    <span><strong>Delete</strong> Remove line</span>
+            {activeTab === 'billing' && (
+                <div className="fixed bottom-0 left-0 right-0 z-20 bg-white/95 dark:bg-slate-900/95 border-t border-gray-200 dark:border-slate-700 px-4 py-2 text-xs text-gray-600 dark:text-slate-300">
+                    <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-x-4 gap-y-1">
+                        <span><strong>F3</strong> Search</span>
+                        <span><strong>F2</strong> Discount</span>
+                        <span><strong>F4</strong> Edit qty</span>
+                        {hasCustomerAttachFeature && <span><strong>F7</strong> Attach customer</span>}
+                        <span><strong>F8</strong> New sale</span>
+                        <span><strong>F10</strong> Payment</span>
+                        <span><strong>Esc</strong> Back/Cancel</span>
+                        <span><strong>Delete</strong> Remove line</span>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {refundSale && (
                 <RefundModal

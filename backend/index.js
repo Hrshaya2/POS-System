@@ -299,8 +299,15 @@ const normalizeRefund = (refund, opts = {}) => ({
     sale_id: refund.sale_id,
     sale_receipt_no: refund.sale_receipt_no,
     items: refund.items || [],
+    replacement_items: refund.replacement_items || [],
     subtotal: refund.subtotal,
     total: refund.total,
+    replacement_total: Number(refund.replacement_total || 0),
+    net_amount: Number(refund.net_amount || 0),
+    settlement_direction: refund.settlement_direction || 'REFUND_TO_CUSTOMER',
+    settlement_payment_method: refund.settlement_payment_method || '',
+    settlement_cash_received: Number(refund.settlement_cash_received || 0),
+    settlement_change_amount: Number(refund.settlement_change_amount || 0),
     reason: refund.reason,
     reason_note: refund.reason_note,
     refund_method: refund.refund_method,
@@ -1443,7 +1450,19 @@ app.delete('/api/sales/:id', authenticateToken, requireAdmin, async (req, res) =
 const createRefundHandler = async (req, res) => {
     try {
         await connectDB();
-        const { saleId, items, reason, reason_note, refund_method, movement_date, resolution_type } = req.body;
+        const {
+            saleId,
+            items,
+            reason,
+            reason_note,
+            refund_method,
+            movement_date,
+            resolution_type,
+            replacement_items = [],
+            settlement_payment_method = '',
+            settlement_cash_received = 0,
+            approver_pin = ''
+        } = req.body;
         if (!saleId) return res.status(400).json({ error: 'saleId is required' });
         if (!Array.isArray(items) || items.length === 0) return res.status(400).json({ error: 'At least one item must be selected' });
         if (!REFUND_REASONS.includes(reason || '')) return res.status(400).json({ error: 'Invalid reason' });
@@ -1462,6 +1481,9 @@ const createRefundHandler = async (req, res) => {
         // Per-item quantity validation (<= sold qty - already refunded)
         const refundedTotals = await getRefundedTotals(sale._id);
         const itemsMap = new Map((sale.items || []).map((i) => [`${i.inventory_type}:${i.inventory_id}`, i]));
+        const saleSubtotal = Number(sale.subtotal || 0);
+        const saleDiscount = Number(sale.discount_amount || 0);
+        const discountRatio = saleSubtotal > 0 ? Math.min(1, Math.max(0, saleDiscount / saleSubtotal)) : 0;
         let subtotal = 0; const normalizedItems = [];
         for (const sel of items) {
             const sType = String(sel.inventory_type || ''); const sId = String(sel.inventory_id || '');
@@ -1471,12 +1493,93 @@ const createRefundHandler = async (req, res) => {
             const requested = Number(sel.quantity || 0);
             if (requested <= 0) return res.status(400).json({ error: `Quantity must be greater than zero for ${original.name}` });
             if (requested > remaining) return res.status(400).json({ error: `Cannot refund more than remaining (${remaining}) for ${original.name}` });
-            const unit_price = Number((sel.unit_price != null && Number(sel.unit_price) > 0) ? sel.unit_price : original.unit_price || 0);
+            const soldUnit = Number(original.unit_price || 0);
+            const paidUnit = Math.max(0, Math.round((soldUnit * (1 - discountRatio)) * 100) / 100);
+            const unit_price = paidUnit;
             const line_total = Math.round((unit_price * requested) * 100) / 100;
             subtotal += line_total;
-            normalizedItems.push({ inventory_type: sType, inventory_id: sId, name: original.name || sel.name || '', sku: original.sku || sel.sku || '', imei: original.imei || sel.imei || '', unit_price, quantity: requested, line_total });
+            const condition = String(sel.condition || (['Damaged', 'Defective', 'Warranty Return'].includes(String(reason || '')) ? 'DAMAGED' : 'RESELLABLE')).toUpperCase() === 'DAMAGED'
+                ? 'DAMAGED'
+                : 'RESELLABLE';
+            normalizedItems.push({
+                inventory_type: sType,
+                inventory_id: sId,
+                name: original.name || sel.name || '',
+                sku: original.sku || sel.sku || '',
+                imei: original.imei || sel.imei || '',
+                unit_price,
+                quantity: requested,
+                line_total,
+                condition
+            });
         }
         const total = Math.round(subtotal * 100) / 100;
+
+        const normalizedReplacementItems = [];
+        let replacementTotal = 0;
+        if (resolution === 'ITEM_EXCHANGE') {
+            if (!Array.isArray(replacement_items) || replacement_items.length === 0) {
+                return res.status(400).json({ error: 'At least one replacement item is required for an exchange' });
+            }
+            for (const rep of replacement_items) {
+                const rType = String(rep.inventory_type || '').toLowerCase();
+                const rId = String(rep.inventory_id || '');
+                const qty = Math.max(1, Math.floor(Number(rep.quantity || 1)));
+                if (!['phone', 'accessory'].includes(rType) || !rId) {
+                    return res.status(400).json({ error: 'Invalid replacement item' });
+                }
+                if (rType === 'phone') {
+                    const phone = await Phone.findById(rId);
+                    if (!phone) return res.status(400).json({ error: 'Replacement phone not found' });
+                    if (phone.status !== 'In Stock') return res.status(400).json({ error: `${phone.brand} ${phone.model} is not in stock` });
+                    const unit_price = Number(rep.unit_price > 0 ? rep.unit_price : phone.selling_price || 0);
+                    const line_total = Math.round(unit_price * 100) / 100;
+                    replacementTotal += line_total;
+                    normalizedReplacementItems.push({
+                        inventory_type: 'phone',
+                        inventory_id: phone._id.toString(),
+                        name: `${phone.brand} ${phone.model}`,
+                        sku: null,
+                        imei: phone.imei,
+                        quantity: 1,
+                        unit_price,
+                        line_total
+                    });
+                } else {
+                    const accessory = await Accessory.findById(rId);
+                    if (!accessory) return res.status(400).json({ error: 'Replacement accessory not found' });
+                    if (accessory.quantity < qty) return res.status(400).json({ error: `Not enough stock for replacement item ${accessory.name}` });
+                    const unit_price = Number(rep.unit_price > 0 ? rep.unit_price : accessory.sell_price || 0);
+                    const line_total = Math.round((unit_price * qty) * 100) / 100;
+                    replacementTotal += line_total;
+                    normalizedReplacementItems.push({
+                        inventory_type: 'accessory',
+                        inventory_id: accessory._id.toString(),
+                        name: accessory.name,
+                        sku: accessory.sku,
+                        imei: null,
+                        quantity: qty,
+                        unit_price,
+                        line_total
+                    });
+                }
+            }
+        }
+        replacementTotal = Math.round(replacementTotal * 100) / 100;
+        const netAmount = Math.round((replacementTotal - total) * 100) / 100;
+        const settlementDirection = netAmount > 0 ? 'PAYMENT_FROM_CUSTOMER' : netAmount < 0 ? 'REFUND_TO_CUSTOMER' : 'SETTLED';
+        const settlementMethod = settlementDirection === 'PAYMENT_FROM_CUSTOMER'
+            ? String(settlement_payment_method || 'CASH').toUpperCase()
+            : String(refund_method || originalMethod).toUpperCase();
+        const settlementCashReceived = settlementDirection === 'PAYMENT_FROM_CUSTOMER' && settlementMethod === 'CASH'
+            ? Number(settlement_cash_received || 0)
+            : 0;
+        const settlementChangeAmount = settlementDirection === 'PAYMENT_FROM_CUSTOMER' && settlementMethod === 'CASH'
+            ? Math.max(0, settlementCashReceived - Math.max(0, netAmount))
+            : 0;
+        if (settlementDirection === 'PAYMENT_FROM_CUSTOMER' && settlementMethod === 'CASH' && settlementCashReceived < (netAmount - 0.01)) {
+            return res.status(400).json({ error: 'Cash received must cover the exchange difference.' });
+        }
 
         const policy = await getRefundPolicy();
         const isAdminOrOwner = isAdminOrShopOwner(req.user.role);
@@ -1484,14 +1587,32 @@ const createRefundHandler = async (req, res) => {
         const withinDays = daysSince <= Number(policy.maxDays || DEFAULT_REFUND_POLICY.maxDays);
         const withinAmount = total <= Number(policy.maxAmount || DEFAULT_REFUND_POLICY.maxAmount);
         const sameMethodOk = !policy.sameMethodRequired || refundMethod === originalMethod || isAdminOrOwner;
-        const needsApproval = !isAdminOrOwner && (!withinDays || !withinAmount || !sameMethodOk);
+        let needsApproval = !isAdminOrOwner && (!withinDays || !withinAmount || !sameMethodOk);
+
+        let inlineApprovedByPin = false;
+        if (needsApproval && approver_pin) {
+            const pinDoc = await StoreSetting.findOne({ key: 'admin_refund_pin' });
+            const storedPinRaw = pinDoc ? pinDoc.value : null;
+            const storedPin = String((storedPinRaw && typeof storedPinRaw === 'object') ? (storedPinRaw.value ?? '') : (storedPinRaw ?? ''));
+            if (storedPin && storedPin === String(approver_pin)) {
+                needsApproval = false;
+                inlineApprovedByPin = true;
+            }
+        }
 
         const refund = await Refund.create({
             sale_id: sale._id.toString(), sale_receipt_no: sale.receipt_no, refund_reference: formatRefundRef(),
             items: normalizedItems, subtotal, total, reason, reason_note: reason_note || '',
+            replacement_items: normalizedReplacementItems,
+            replacement_total: replacementTotal,
+            net_amount: netAmount,
+            settlement_direction: settlementDirection,
+            settlement_payment_method: settlementMethod,
+            settlement_cash_received: settlementCashReceived,
+            settlement_change_amount: settlementChangeAmount,
             refund_method: refundMethod, resolution_type: resolution, original_payment_method: originalMethod,
             initiated_by_id: req.user.id ? String(req.user.id) : '', initiated_by_name: (req.user.name || '').toString(),
-            requires_approval: needsApproval, approval_status: needsApproval ? 'PENDING' : 'DIRECT',
+            requires_approval: inlineApprovedByPin || needsApproval, approval_status: needsApproval ? 'PENDING' : (inlineApprovedByPin ? 'APPROVED' : 'DIRECT'),
             session_id: sale.session_id ? String(sale.session_id) : '',
             // Store as an ISO date (YYYY-MM-DD): the refunds report and the
             // cash-session summary string-match this field against ranges.
@@ -1528,51 +1649,35 @@ const applyRefundEffects = async (refund, approver) => {
     if (!sale) throw ObjectNotFoundError('Sale not found');
 
     const resolution = String(refund.resolution_type || 'CASH_REFUND').toUpperCase();
-    // Items that are scrapped (Damaged / Defective / Warranty Return) given as CASH_REFUND
-    // do NOT go back into sellable stock. ITEM_EXCHANGE always takes a fresh unit FROM stock.
-    const isScrappedCash = resolution === 'CASH_REFUND' && ['Damaged', 'Defective', 'Warranty Return'].includes(String(refund.reason || ''));
     const isExchange = resolution === 'ITEM_EXCHANGE';
 
     for (const item of refund.items) {
         const iType = String(item.inventory_type || '');
         const iId = item.inventory_id;
+        const itemCondition = String(item.condition || (['Damaged', 'Defective', 'Warranty Return'].includes(String(refund.reason || '')) ? 'DAMAGED' : 'RESELLABLE')).toUpperCase();
+        const shouldRestoreStock = itemCondition !== 'DAMAGED';
         if (iType === 'accessory' && iId) {
             const accessory = await Accessory.findById(iId);
             if (accessory && !accessory.is_service) {
                 const qty = Math.max(0, Number(item.quantity || 0));
-                if (isExchange) {
-                    // Give the customer a new unit from stock: reduce inventory.
-                    accessory.quantity = Math.max(0, Number(accessory.quantity || 0) - qty);
-                    await accessory.save();
-                    await logStockMovement({
-                        accessory, type: 'REFUND',
-                        quantityChange: -qty, resultingQuantity: Number(accessory.quantity || 0),
-                        reason: refund.reason || 'Item exchange',
-                        note: `Item exchange ${refund.refund_reference} of receipt ${refund.sale_receipt_no} (new unit issued)`,
-                        reference: refund.refund_reference, user: approver, localKey: null
-                    });
-                } else if (!isScrappedCash) {
-                    // Cash refund of a resalable item: restore to stock.
+                if (shouldRestoreStock) {
                     accessory.quantity = Math.max(0, Number(accessory.quantity || 0) + qty);
                     await accessory.save();
                     await logStockMovement({
                         accessory, type: 'REFUND',
                         quantityChange: qty, resultingQuantity: Number(accessory.quantity || 0),
                         reason: refund.reason || 'Sale refund',
-                        note: `Refund ${refund.refund_reference} of receipt ${refund.sale_receipt_no}`,
+                        note: `Refund return ${refund.refund_reference} of receipt ${refund.sale_receipt_no}`,
                         reference: refund.refund_reference, user: approver, localKey: null
                     });
                 }
-                // Scrapped cash refund (Damaged/Defective/Warranty): item is not resalable,
-                // so stock is intentionally left unchanged.
             }
         } else if (iType === 'phone' && iId) {
             const phone = await Phone.findById(iId);
             if (phone) {
                 const imeiMatch = String(phone.imei || '') === String(item.imei || '');
                 if (imeiMatch) {
-                    // Only return a scrapped cash refund phone to sellable stock if it's not a scrapped cash refund.
-                    if (!isScrappedCash) {
+                    if (shouldRestoreStock) {
                         phone.status = 'Available'; phone.warranty = 'None'; phone.warranty_end_date = null;
                     }
                     await phone.save();
@@ -1580,7 +1685,41 @@ const applyRefundEffects = async (refund, approver) => {
                         { imei: phone.imei, repair_status: { $ne: 'Completed' } },
                         { $set: { warranty_end_date: null, refund_note: `IMEI ${phone.imei} refunded via ${refund.refund_reference}` } }
                     );
-                } else if (phone.status === 'Sold' && !isScrappedCash) { phone.status = 'Available'; await phone.save(); }
+                } else if (phone.status === 'Sold' && shouldRestoreStock) { phone.status = 'Available'; await phone.save(); }
+            }
+        }
+    }
+
+    if (isExchange) {
+        for (const rep of (refund.replacement_items || [])) {
+            const rType = String(rep.inventory_type || '').toLowerCase();
+            const rId = String(rep.inventory_id || '');
+            const qty = Math.max(1, Math.floor(Number(rep.quantity || 1)));
+            if (rType === 'accessory') {
+                const accessory = await Accessory.findById(rId);
+                if (!accessory) throw new Error(`Replacement accessory not found: ${rId}`);
+                if (!accessory.is_service) {
+                    if (Number(accessory.quantity || 0) < qty) throw new Error(`Not enough stock for replacement ${accessory.name}`);
+                    accessory.quantity = Math.max(0, Number(accessory.quantity || 0) - qty);
+                    await accessory.save();
+                    await logStockMovement({
+                        accessory,
+                        type: 'REFUND',
+                        quantityChange: -qty,
+                        resultingQuantity: Number(accessory.quantity || 0),
+                        reason: refund.reason || 'Item exchange',
+                        note: `Exchange replacement ${refund.refund_reference} for receipt ${refund.sale_receipt_no}`,
+                        reference: refund.refund_reference,
+                        user: approver,
+                        localKey: null
+                    });
+                }
+            } else if (rType === 'phone') {
+                const phone = await Phone.findById(rId);
+                if (!phone) throw new Error(`Replacement phone not found: ${rId}`);
+                if (phone.status !== 'In Stock') throw new Error(`${phone.brand} ${phone.model} is no longer in stock for exchange`);
+                phone.status = 'Sold';
+                await phone.save();
             }
         }
     }
@@ -1597,16 +1736,33 @@ const applyRefundEffects = async (refund, approver) => {
     sale.refund_reason = sale.refund_reason || refund.reason;
     await sale.save();
 
-    // Cash session adjustment: a REFUND movement removes cash from the day's expected float.
+    // Cash session adjustment:
+    // - pure refund => cash out
+    // - exchange with net due from customer => cash in
+    // - settled/no-cash methods => no movement
+    const settlementDirection = String(refund.settlement_direction || (Number(refund.net_amount || 0) > 0 ? 'PAYMENT_FROM_CUSTOMER' : Number(refund.net_amount || 0) < 0 ? 'REFUND_TO_CUSTOMER' : 'SETTLED')).toUpperCase();
+    const settlementMethod = String(refund.settlement_payment_method || refund.refund_method || '').toUpperCase();
+    const absoluteNet = Math.abs(Number(refund.net_amount || 0));
+    const cashMovementAmount = settlementDirection === 'PAYMENT_FROM_CUSTOMER'
+        ? absoluteNet
+        : Number(refund.total || 0);
+    const cashMovementType = settlementDirection === 'PAYMENT_FROM_CUSTOMER' ? 'CASH_IN' : 'REFUND';
+
+    const shouldWriteCashMovement = settlementDirection === 'PAYMENT_FROM_CUSTOMER'
+        ? settlementMethod === 'CASH' && cashMovementAmount > 0
+        : settlementMethod === 'CASH' && cashMovementAmount > 0;
+
+    if (shouldWriteCashMovement) {
     await CashMovement.create({
         local_id: null,
         cashier_id: String(sale.cashier_id || ''),
         cashier_name: (sale.cashier_name || '') || (approver.name || '') || '',
-        movement_type: 'REFUND',
-        amount: Number(refund.total || 0),
+        movement_type: cashMovementType,
+        amount: cashMovementAmount,
         note: `Refund ${refund.refund_reference} of receipt ${sale.receipt_no} (${refund.refund_method})`,
         movement_date: refund.movement_date
     });
+    }
 
     refund.approved_by_id = approver.id ? String(approver.id) : '';
     refund.approved_by_name = (approver.name || '').toString();
