@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { X, ShieldAlert, Printer, CheckCircle2, RotateCcw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { buildRefundReceiptHtml, getReceiptSettings } from '../utils/receipt';
@@ -6,15 +6,15 @@ import { buildRefundReceiptHtml, getReceiptSettings } from '../utils/receipt';
 const API_BASE = '/api';
 const fmtMoney = (v) => `Rs. ${Number(v || 0).toLocaleString('en-LK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-const REASONS = ['Defective', 'Wrong Item', 'Customer Changed Mind', 'Damaged', 'Other'];
+const REASONS = ['Defective', 'Wrong Item', 'Customer Changed Mind', 'Damaged', 'Warranty Return', 'Other'];
 
 const methodLabel = (m) => String(m || '').replace(/_/g, ' ');
 
 const token = () => ({ 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` });
 
 // Print a refund receipt using the same offline-capable window.print() approach as sales.
-const printRefund = (refund) => {
-  const html = buildRefundReceiptHtml(refund, getReceiptSettings());
+const printRefund = (refund, refundAmount = null) => {
+  const html = buildRefundReceiptHtml(refund, getReceiptSettings(), refundAmount);
   const win = window.open('', '_blank', 'width=420,height=760');
   if (!win) return;
   win.document.write(html);
@@ -31,7 +31,7 @@ export default function RefundModal({ sale, onClose, onApplied }) {
   const [reason, setReason] = useState(REASONS[0]);
   const [resolutionType, setResolutionType] = useState('CASH_REFUND'); // CASH_REFUND | ITEM_EXCHANGE
   const [reasonNote, setReasonNote] = useState('');
-  const [refundMethod, setRefundMethod] = useState('');
+  const [refundAmount, setRefundAmount] = useState(null); // cash refund balance entered by cashier
   const [policy, setPolicy] = useState({ maxAmount: null, maxDays: null, sameMethodRequired: false });
   const [alreadyRefunded, setAlreadyRefunded] = useState(() => new Map());
   const [resolvedPrices, setResolvedPrices] = useState(new Map()); // key -> unit_price, fetched when sale items lack prices
@@ -67,13 +67,13 @@ export default function RefundModal({ sale, onClose, onApplied }) {
       // --- Ensure every sale line item carries the SOLD unit_price so the refund total is never zero ---
       // If the passed sale's items are missing prices, fetch the full sale detail (sold prices).
       try {
-        const missingPrice = (sale?.items || []).some((it) => !it.unit_price || Number(it.unit_price) <= 0);
+        const missingPrice = (sale?.items || []).some((it) => !(it.net_paid_unit_price || it.unit_price) || Number(it.net_paid_unit_price || it.unit_price) <= 0);
         if (missingPrice) {
           const detRes = await fetch(`${API_BASE}/sales/${sale.id}`, { headers: token() });
           if (detRes.ok) {
             const detail = await detRes.json();
             const detailItems = (detail.sale || detail).items || [];
-            const priceMap = new Map(detailItems.map((d) => [`${d.inventory_type}:${d.inventory_id}`, Number(d.unit_price || 0)]));
+            const priceMap = new Map(detailItems.map((d) => [`${d.inventory_type}:${d.inventory_id}`, Number(d.net_paid_unit_price || d.unit_price || 0)]));
             if (!cancelled) setResolvedPrices(priceMap);
           }
         } else if (!cancelled) {
@@ -92,7 +92,7 @@ export default function RefundModal({ sale, onClose, onApplied }) {
     remaining: Math.max(0, Number(it.quantity || 0) - Number(alreadyRefunded.get(`${it.inventory_type}:${it.inventory_id}`) || 0)),
     // Sold price: prefer the price stored on the sale line item; if missing/0,
     // fall back to the price resolved from the sale detail endpoint.
-    unit_price: Number((it.unit_price != null && Number(it.unit_price) > 0) ? it.unit_price : resolvedPrices.get(`${it.inventory_type}:${it.inventory_id}`) || 0),
+    unit_price: Number((it.net_paid_unit_price != null && Number(it.net_paid_unit_price) > 0) ? it.net_paid_unit_price : (it.unit_price != null && Number(it.unit_price) > 0) ? it.unit_price : resolvedPrices.get(`${it.inventory_type}:${it.inventory_id}`) || 0),
   })), [sale, alreadyRefunded, resolvedPrices]);
 
   const toggle = (item) => {
@@ -123,17 +123,27 @@ export default function RefundModal({ sale, onClose, onApplied }) {
 
   // Client-side mirror of the server-side refund policy so cashiers see the
   // limits up-front. The final decision always comes from the server.
-  const originalMethod = String(sale.payment_method || '').toUpperCase();
   const withinAmount = policy?.maxAmount == null ? true : calc.subtotal <= Number(policy.maxAmount);
   const daysOld = Math.floor((Date.now() - new Date(sale.created_at || Date.now()).getTime()) / 86400000);
   const withinDays = policy?.maxDays == null ? true : daysOld <= Number(policy.maxDays);
-  const sameMethodOk = !policy?.sameMethodRequired || (refundMethod || originalMethod) === originalMethod;
+  const sameMethodOk = true; // Always allow - refund method auto-determined from original sale
   const needsApproval = !isAdmin && (!withinAmount || !withinDays || !sameMethodOk);
 
   const submit = async () => {
     setError('');
     if (calc.records.length === 0) { setError('Select at least one item to refund.'); return; }
     if (reason === 'Other' && !reasonNote.trim()) { setError('Please add a short note explaining the reason.'); return; }
+
+    // Cash refund: ask the cashier for the refund amount before applying it to the bill.
+    if (resolutionType === 'CASH_REFUND') {
+      const defaultAmount = calc.subtotal;
+      const input = window.prompt(`Enter the cash refund amount to apply to the bill (Rs.):`, defaultAmount.toFixed(2));
+      if (input === null) return; // user cancelled the popup
+      const amt = Number(input);
+      if (!Number.isFinite(amt) || amt <= 0) { setError('Enter a valid refund amount.'); return; }
+      setRefundAmount(amt); // store the refund balance to print on the bill
+    }
+
     setSubmitting(true);
     setNotice('');
     try {
@@ -147,7 +157,6 @@ export default function RefundModal({ sale, onClose, onApplied }) {
         })),
         reason,
         reason_note: reasonNote.trim(),
-        refund_method: refundMethod || String(sale.payment_method || 'CASH').toUpperCase(),
         resolution_type: resolutionType,
         movement_date: new Date().toISOString().slice(0, 10)
       };
@@ -164,7 +173,7 @@ export default function RefundModal({ sale, onClose, onApplied }) {
           setFlow('sent');
         }
       } else {
-        finish(data.refund);
+        finish(data.refund, refundAmount);
       }
     } catch (e) {
       setError(e.message);
@@ -183,7 +192,7 @@ export default function RefundModal({ sale, onClose, onApplied }) {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || 'Approval failed');
-      finish(data.refund);
+      finish(data.refund, refundAmount);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -191,10 +200,10 @@ export default function RefundModal({ sale, onClose, onApplied }) {
     }
   };
 
-  const finish = (refund) => {
+  const finish = (refund, refundAmount = null) => {
     setCompleted(refund);
     setFlow('done');
-    printRefund(refund);       // print the refund receipt immediately
+    printRefund(refund, refundAmount);  // print the refund receipt immediately (with refund balance)
     onApplied && onApplied(refund);
   };
 
@@ -289,16 +298,7 @@ export default function RefundModal({ sale, onClose, onApplied }) {
                     {REASONS.map((r) => <option key={r} value={r}>{r}</option>)}
                   </select>
                 </label>
-                <label className="block">
-                  <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Refund method</span>
-                  <select value={refundMethod} onChange={(e) => setRefundMethod(e.target.value)}
-                    className="mt-1 w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500">
-                    {[originalMethod, ...['CASH', 'CARD', 'BANK_TRANSFER'].filter((m) => m !== originalMethod)].map((m) => (
-                      <option key={m} value={m}>{methodLabel(m)}</option>
-                    ))}
-                  </select>
-                  <span className="mt-1 block text-[11px] text-gray-400 dark:text-slate-500">Defaults to the original payment method.</span>
-                </label>
+
                 <label className="block">
                   <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Refund the customer as</span>
                   <select value={resolutionType} onChange={(e) => setResolutionType(e.target.value)}
@@ -355,7 +355,7 @@ export default function RefundModal({ sale, onClose, onApplied }) {
                   </div>
                 ))}
                 <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-slate-950 text-sm font-bold text-gray-900 dark:text-slate-100">
-                  <span>Refund total ({methodLabel(pendingRefund.refund_method)})</span>
+                  <span>Refund total</span>
                   <span className="tabular-nums text-violet-700">-{fmtMoney(pendingRefund.total)}</span>
                 </div>
               </div>

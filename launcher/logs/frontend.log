@@ -3456,3 +3456,720 @@ AggregateError [ECONNREFUSED]:
       at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
       at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
 [2m12:45:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m14:17:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m14:18:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m14:19:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m14:19:28[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mEmpty parenthesized expression
+      [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/pages/SalesPage.jsx:1032:17 [38;5;246m][0m
+      [38;5;246m│[0m
+ [38;5;246m1032 │[0m ╭─▶ [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m [0m[38;5;249m:[0m[38;5;249m [0m(
+ [38;5;240m     ┆[0m ┆   
+ [38;5;246m1034 │[0m ├─▶             )[38;5;249m [0m[38;5;249m:[0m[38;5;249m [0m[38;5;249m([0m
+ [38;5;240m     │[0m │                        
+ [38;5;240m     │[0m ╰──────────────────────── 
+[38;5;246m──────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/pages/SalesPage.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m14:22:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m14:22:00[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mEmpty parenthesized expression
+      [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/pages/SalesPage.jsx:1032:17 [38;5;246m][0m
+      [38;5;246m│[0m
+ [38;5;246m1032 │[0m ╭─▶ [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m [0m[38;5;249m:[0m[38;5;249m [0m(
+ [38;5;240m     ┆[0m ┆   
+ [38;5;246m1034 │[0m ├─▶             )[38;5;249m [0m[38;5;249m:[0m[38;5;249m [0m[38;5;249m([0m
+ [38;5;240m     │[0m │                        
+ [38;5;240m     │[0m ╰──────────────────────── 
+[38;5;246m──────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/pages/SalesPage.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m14:27:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m14:30:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/SalesPage.jsx[22m
+[2m14:30:23[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mInvalid Unicode escape sequence
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:4:75 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m4 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m{[0m[38;5;249mp[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249md[0m[38;5;249mu[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249ms[0m[38;5;249m=[0m[38;5;249m[[0m[38;5;249m][0m[38;5;249m}[0m[38;5;249m)[0m[38;5;249m{[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249m<[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m\[0m"[38;5;249mp[0m[38;5;249m-[0m[38;5;249m4[0m[38;5;249m\[0m[38;5;249m"[0m[38;5;249m>[0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249m [0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249m [0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m [0m[38;5;249m([0m[38;5;249mm[0m[38;5;249mi[0m[38;5;249mn[0m[38;5;249mi[0m[38;5;249mm[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249m)[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m>[0m[38;5;249m;[0m[38;5;249m}[0m
+ [38;5;240m  │[0m                                                                           ┬  
+ [38;5;240m  │[0m                                                                           ╰── 
+[38;5;246m───╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+[2m14:30:23[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mInvalid Unicode escape sequence
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:4:75 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m4 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m{[0m[38;5;249mp[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249md[0m[38;5;249mu[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249ms[0m[38;5;249m=[0m[38;5;249m[[0m[38;5;249m][0m[38;5;249m}[0m[38;5;249m)[0m[38;5;249m{[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249m<[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m\[0m"[38;5;249mp[0m[38;5;249m-[0m[38;5;249m4[0m[38;5;249m\[0m[38;5;249m"[0m[38;5;249m>[0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249m [0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249m [0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m [0m[38;5;249m([0m[38;5;249mm[0m[38;5;249mi[0m[38;5;249mn[0m[38;5;249mi[0m[38;5;249mm[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249m)[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m>[0m[38;5;249m;[0m[38;5;249m}[0m
+ [38;5;240m  │[0m                                                                           ┬  
+ [38;5;240m  │[0m                                                                           ╰── 
+[38;5;246m───╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m14:30:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/SalesPage.jsx[22m
+[2m14:30:44[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mInvalid Unicode escape sequence
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:4:75 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m4 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m{[0m[38;5;249mp[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249md[0m[38;5;249mu[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249ms[0m[38;5;249m=[0m[38;5;249m[[0m[38;5;249m][0m[38;5;249m}[0m[38;5;249m)[0m[38;5;249m{[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249m<[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m\[0m"[38;5;249mp[0m[38;5;249m-[0m[38;5;249m4[0m[38;5;249m\[0m[38;5;249m"[0m[38;5;249m>[0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249m [0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249m [0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m [0m[38;5;249m([0m[38;5;249mm[0m[38;5;249mi[0m[38;5;249mn[0m[38;5;249mi[0m[38;5;249mm[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249m)[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m>[0m[38;5;249m;[0m[38;5;249m}[0m
+ [38;5;240m  │[0m                                                                           ┬  
+ [38;5;240m  │[0m                                                                           ╰── 
+[38;5;246m───╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+[2m14:30:45[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mInvalid Unicode escape sequence
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:4:75 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m4 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m{[0m[38;5;249mp[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249md[0m[38;5;249mu[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249ms[0m[38;5;249m=[0m[38;5;249m[[0m[38;5;249m][0m[38;5;249m}[0m[38;5;249m)[0m[38;5;249m{[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249m<[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m\[0m"[38;5;249mp[0m[38;5;249m-[0m[38;5;249m4[0m[38;5;249m\[0m[38;5;249m"[0m[38;5;249m>[0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249m [0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249m [0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m [0m[38;5;249m([0m[38;5;249mm[0m[38;5;249mi[0m[38;5;249mn[0m[38;5;249mi[0m[38;5;249mm[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249m)[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m>[0m[38;5;249m;[0m[38;5;249m}[0m
+ [38;5;240m  │[0m                                                                           ┬  
+ [38;5;240m  │[0m                                                                           ╰── 
+[38;5;246m───╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m14:31:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/SalesPage.jsx[22m
+[2m14:31:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mInvalid Unicode escape sequence
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:4:75 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m4 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m{[0m[38;5;249mp[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249md[0m[38;5;249mu[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249ms[0m[38;5;249m=[0m[38;5;249m[[0m[38;5;249m][0m[38;5;249m}[0m[38;5;249m)[0m[38;5;249m{[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249m<[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m\[0m"[38;5;249mp[0m[38;5;249m-[0m[38;5;249m4[0m[38;5;249m\[0m[38;5;249m"[0m[38;5;249m>[0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249m [0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249m [0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m [0m[38;5;249m([0m[38;5;249mm[0m[38;5;249mi[0m[38;5;249mn[0m[38;5;249mi[0m[38;5;249mm[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249m)[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m>[0m[38;5;249m;[0m[38;5;249m}[0m
+ [38;5;240m  │[0m                                                                           ┬  
+ [38;5;240m  │[0m                                                                           ╰── 
+[38;5;246m───╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+[2m14:31:05[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mInvalid Unicode escape sequence
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:4:75 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m4 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m{[0m[38;5;249mp[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249md[0m[38;5;249mu[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249ms[0m[38;5;249m=[0m[38;5;249m[[0m[38;5;249m][0m[38;5;249m}[0m[38;5;249m)[0m[38;5;249m{[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249m<[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m\[0m"[38;5;249mp[0m[38;5;249m-[0m[38;5;249m4[0m[38;5;249m\[0m[38;5;249m"[0m[38;5;249m>[0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249m [0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249m [0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m [0m[38;5;249m([0m[38;5;249mm[0m[38;5;249mi[0m[38;5;249mn[0m[38;5;249mi[0m[38;5;249mm[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249m)[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m>[0m[38;5;249m;[0m[38;5;249m}[0m
+ [38;5;240m  │[0m                                                                           ┬  
+ [38;5;240m  │[0m                                                                           ╰── 
+[38;5;246m───╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m14:31:40[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mInvalid Unicode escape sequence
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:4:75 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m4 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m{[0m[38;5;249mp[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249md[0m[38;5;249mu[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249ms[0m[38;5;249m=[0m[38;5;249m[[0m[38;5;249m][0m[38;5;249m}[0m[38;5;249m)[0m[38;5;249m{[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249m<[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m\[0m"[38;5;249mp[0m[38;5;249m-[0m[38;5;249m4[0m[38;5;249m\[0m[38;5;249m"[0m[38;5;249m>[0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249m [0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249m [0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m [0m[38;5;249m([0m[38;5;249mm[0m[38;5;249mi[0m[38;5;249mn[0m[38;5;249mi[0m[38;5;249mm[0m[38;5;249ma[0m[38;5;249ml[0m[38;5;249m)[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m>[0m[38;5;249m;[0m[38;5;249m}[0m
+ [38;5;240m  │[0m                                                                           ┬  
+ [38;5;240m  │[0m                                                                           ╰── 
+[38;5;246m───╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m14:32:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/SalesPage.jsx[22m
+[2m14:32:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/SalesPage.jsx[22m
+[2m14:32:32[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:1:39 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m1 │[0m [38;5;249mi[0m[38;5;249mm[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mR[0m[38;5;249me[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249m,[0m[38;5;249m{[0m[38;5;249mu[0m[38;5;249ms[0m[38;5;249me[0m[38;5;249mS[0m[38;5;249mt[0m[38;5;249ma[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249m,[0m[38;5;249mu[0m[38;5;249ms[0m[38;5;249me[0m[38;5;249mM[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249mo[0m[38;5;249m}[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mm[0m[38;5;249m [0m[38;5;249m [0mreact[38;5;249m;[0m
+ [38;5;240m  │[0m                                       ──┬──  
+ [38;5;240m  │[0m                                         ╰──── 
+[38;5;246m───╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+[2m14:32:33[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:1:39 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m1 │[0m [38;5;249mi[0m[38;5;249mm[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mR[0m[38;5;249me[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249m,[0m[38;5;249m{[0m[38;5;249mu[0m[38;5;249ms[0m[38;5;249me[0m[38;5;249mS[0m[38;5;249mt[0m[38;5;249ma[0m[38;5;249mt[0m[38;5;249me[0m[38;5;249m,[0m[38;5;249mu[0m[38;5;249ms[0m[38;5;249me[0m[38;5;249mM[0m[38;5;249me[0m[38;5;249mm[0m[38;5;249mo[0m[38;5;249m}[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mm[0m[38;5;249m [0m[38;5;249m [0mreact[38;5;249m;[0m
+ [38;5;240m  │[0m                                       ──┬──  
+ [38;5;240m  │[0m                                         ╰──── 
+[38;5;246m───╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m14:32:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/SalesPage.jsx[22m
+[2m14:32:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/SalesPage.jsx[22m
+[2m14:32:53[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:2:62 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m2 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m)[0m[38;5;249m{[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249m<[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m [0mp[38;5;249m-[0m[38;5;249m4[0m[38;5;249m>[0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249m [0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249m [0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m>[0m[38;5;249m;[0m[38;5;249m}[0m
+ [38;5;240m  │[0m                                                              ┬  
+ [38;5;240m  │[0m                                                              ╰── 
+[38;5;246m───╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+[2m14:32:54[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:2:62 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m2 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m)[0m[38;5;249m{[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249m<[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m [0mp[38;5;249m-[0m[38;5;249m4[0m[38;5;249m>[0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249m [0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249m [0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m>[0m[38;5;249m;[0m[38;5;249m}[0m
+ [38;5;240m  │[0m                                                              ┬  
+ [38;5;240m  │[0m                                                              ╰── 
+[38;5;246m───╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+[2m14:32:55[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:2:62 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m2 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m)[0m[38;5;249m{[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249m<[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m [0mp[38;5;249m-[0m[38;5;249m4[0m[38;5;249m>[0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249m [0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249m [0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m>[0m[38;5;249m;[0m[38;5;249m}[0m
+ [38;5;240m  │[0m                                                              ┬  
+ [38;5;240m  │[0m                                                              ╰── 
+[38;5;246m───╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m14:33:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/SalesPage.jsx[22m
+[2m14:33:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/SalesPage.jsx[22m
+[2m18:06:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m18:06:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m18:06:34[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mExpected `}` but found `EOF`
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:81:91 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m15 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m{[0m[38;5;249m [0m[38;5;249mp[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249md[0m[38;5;249mu[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249ms[0m[38;5;249m [0m[38;5;249m=[0m[38;5;249m [0m[38;5;249m[[0m[38;5;249m][0m[38;5;249m [0m[38;5;249m}[0m[38;5;249m)[0m[38;5;249m [0m{
+ [38;5;240m   │[0m                                                        ┬  
+ [38;5;240m   │[0m                                                        ╰── Opened here
+ [38;5;240m   │[0m 
+ [38;5;246m81 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m)[0m[38;5;249m{[0m[38;5;249mr[0m[38;5;249me[0m[38;5;249mt[0m[38;5;249mu[0m[38;5;249mr[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249m<[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m [0m[38;5;249mc[0m[38;5;249ml[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249ms[0m[38;5;249mN[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249me[0m[38;5;249m=[0m[38;5;249m'[0m[38;5;249mp[0m[38;5;249m-[0m[38;5;249m4[0m[38;5;249m'[0m[38;5;249m>[0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249m [0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249m [0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249md[0m[38;5;249mi[0m[38;5;249mv[0m[38;5;249m>[0m[38;5;249m;[0m[38;5;249m}[0m
+ [38;5;240m   │[0m                                                                                           │ 
+ [38;5;240m   │[0m                                                                                           ╰─ `}` expected
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m18:07:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m18:07:04[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mExpected `}` but found `EOF`
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/CashBackTab.jsx:79:3 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m15 │[0m [38;5;249me[0m[38;5;249mx[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249ma[0m[38;5;249mu[0m[38;5;249ml[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mu[0m[38;5;249mn[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249mi[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249m [0m[38;5;249mC[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mh[0m[38;5;249mB[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249mk[0m[38;5;249mT[0m[38;5;249ma[0m[38;5;249mb[0m[38;5;249m([0m[38;5;249m{[0m[38;5;249m [0m[38;5;249mp[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249md[0m[38;5;249mu[0m[38;5;249mc[0m[38;5;249mt[0m[38;5;249ms[0m[38;5;249m [0m[38;5;249m=[0m[38;5;249m [0m[38;5;249m[[0m[38;5;249m][0m[38;5;249m [0m[38;5;249m}[0m[38;5;249m)[0m[38;5;249m [0m{
+ [38;5;240m   │[0m                                                        ┬  
+ [38;5;240m   │[0m                                                        ╰── Opened here
+ [38;5;240m   │[0m 
+ [38;5;246m79 │[0m 
+ [38;5;240m   │[0m   │ 
+ [38;5;240m   │[0m   ╰─ `}` expected
+[38;5;246m────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/CashBackTab.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m18:14:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m18:28:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m18:30:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m18:30:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m18:31:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m18:32:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m18:34:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m18:35:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m18:50:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:09:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:14:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:16:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:18:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:19:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:21:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:27:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:29:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:29:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:31:07[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:33:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:33:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:34:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:36:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:36:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:37:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:37:30[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:38:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:38:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:39:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:43:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:43:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:46:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:56:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m19:56:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m20:00:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m20:09:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m20:10:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m17:22:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m17:55:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m10:20:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m10:20:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/CashBackTab.jsx[22m
+[2m15:21:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m15:21:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m15:21:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m15:21:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m15:22:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m15:22:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m15:22:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m19:44:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m19:45:17[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m19:45:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m19:52:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m19:52:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:21:30[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/RefundModal.jsx:291:23 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m291 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m)[0m[38;5;249m}[0m
+ [38;5;240m    │[0m                       │ 
+ [38;5;240m    │[0m                       ╰─ 
+[38;5;246m─────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/RefundModal.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+[2m07:21:30[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/RefundModal.jsx:291:23 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m291 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m)[0m[38;5;249m}[0m
+ [38;5;240m    │[0m                       │ 
+ [38;5;240m    │[0m                       ╰─ 
+[38;5;246m─────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/RefundModal.jsx[39m
+[2m07:29:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:29:22[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/RefundModal.jsx:291:23 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m291 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m)[0m[38;5;249m}[0m
+ [38;5;240m    │[0m                       │ 
+ [38;5;240m    │[0m                       ╰─ 
+[38;5;246m─────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/RefundModal.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:29:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:29:29[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/RefundModal.jsx:291:23 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m291 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m)[0m[38;5;249m}[0m
+ [38;5;240m    │[0m                       │ 
+ [38;5;240m    │[0m                       ╰─ 
+[38;5;246m─────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/RefundModal.jsx[39m
+[2m07:29:30[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/RefundModal.jsx:291:23 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m291 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m)[0m[38;5;249m}[0m
+ [38;5;240m    │[0m                       │ 
+ [38;5;240m    │[0m                       ╰─ 
+[38;5;246m─────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/RefundModal.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:29:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:29:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:29:36[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/RefundModal.jsx:293:23 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m293 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m)[0m[38;5;249m}[0m
+ [38;5;240m    │[0m                       │ 
+ [38;5;240m    │[0m                       ╰─ 
+[38;5;246m─────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/RefundModal.jsx[39m
+[2m07:29:36[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/RefundModal.jsx:293:23 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m293 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m)[0m[38;5;249m}[0m
+ [38;5;240m    │[0m                       │ 
+ [38;5;240m    │[0m                       ╰─ 
+[38;5;246m─────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/RefundModal.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:29:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:29:41[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/RefundModal.jsx:297:23 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m297 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m)[0m[38;5;249m}[0m
+ [38;5;240m    │[0m                       │ 
+ [38;5;240m    │[0m                       ╰─ 
+[38;5;246m─────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/RefundModal.jsx[39m
+[2m07:29:42[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/RefundModal.jsx:297:23 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m297 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m)[0m[38;5;249m}[0m
+ [38;5;240m    │[0m                       │ 
+ [38;5;240m    │[0m                       ╰─ 
+[38;5;246m─────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/RefundModal.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:29:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:29:48[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/RefundModal.jsx:298:23 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m298 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m)[0m[38;5;249m}[0m
+ [38;5;240m    │[0m                       │ 
+ [38;5;240m    │[0m                       ╰─ 
+[38;5;246m─────╯[0m
+
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/RefundModal.jsx[39m
+[2m07:29:49[22m [31m[1m[vite][22m[39m [31mInternal server error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mUnexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/components/RefundModal.jsx:298:23 [38;5;246m][0m
+     [38;5;246m│[0m
+ [38;5;246m298 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m)[0m[38;5;249m)[0m[38;5;249m}[0m
+ [38;5;240m    │[0m                       │ 
+ [38;5;240m    │[0m                       ╰─ 
+[38;5;246m─────╯[0m
+[39m
+  Plugin: [35mvite:oxc[39m
+  File: [36mD:/Nangi/POS/frontend/src/components/RefundModal.jsx[39m
+      at transformWithOxc (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4097:19)
+      at TransformPluginContext.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:4168:26)
+      at EnvironmentPluginContainer.transform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:30851:51)
+      at async loadAndTransform (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:20619:26)
+      at async viteTransformMiddleware (file:///D:/Nangi/POS/frontend/node_modules/vite/dist/node/chunks/node.js:25142:20)
+[2m07:29:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:29:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:29:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/sessions/current[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:29:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:29:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:29:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:29:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stock/movements?type=ADJUSTMENT[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:29:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:29:59[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/stock/movements?type=ADJUSTMENT[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:30:15[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:30:30[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:30:30[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:30:30[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:30:45[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:31:00[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:31:00[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:31:00[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:31:15[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:31:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m07:31:30[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:31:30[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:31:30[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:32:00[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:32:00[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:32:30[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:32:30[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:32:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:33:00[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:33:00[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:33:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:33:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:33:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:34:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:34:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:34:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:35:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:35:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:35:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:36:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:36:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:36:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:37:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:37:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:37:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:38:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:38:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:38:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:39:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:39:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:39:40[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:40:23[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/dashboard?tzOffset=-330[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:40:23[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/phones[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:40:23[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/inventory/accessories[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:40:36[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:40:39[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1339:18)
+    at afterConnectMultiple (node:net:1942:7)
+[2m07:48:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:48:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:49:02[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:49:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m07:49:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m08:35:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m08:35:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m08:35:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m08:35:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m08:36:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m08:36:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/RefundModal.jsx[22m
+[2m08:36:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/ReportsPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/pages/RepairPage.jsx, /src/pages/SalesPage.jsx[22m
+[2m08:36:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/ReportsPage.jsx, /src/pages/SettingsPage.jsx, /src/components/RefundModal.jsx, /src/pages/RepairPage.jsx, /src/pages/SalesPage.jsx[22m
+[2m14:04:19[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m
+[2m14:07:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/SalesPage.jsx, /src/index.css[22m

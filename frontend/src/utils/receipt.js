@@ -217,7 +217,7 @@ export const SAMPLE_RECEIPT = {
 };
 
 // ---- Refund receipt (negative totals, offline-first) ----
-export const buildRefundReceiptHtml = (refund, settings) => {
+export const buildRefundReceiptHtml = (refund, settings, refundAmount = null) => {
   const s = settings || getReceiptSettings();
   const itemsMarkup = (refund.items || []).map((item) => `
       <tr>
@@ -287,6 +287,7 @@ export const buildRefundReceiptHtml = (refund, settings) => {
       </table>
       <div class="row"><span>Subtotal</span><strong>- ${formatMoney(refund.subtotal)}</strong></div>
       <div class="row"><span>Refund method</span><strong>${esc(refundMethod)}</strong></div>
+      ${refundAmount != null ? `<div class="row"><span>Cash Refund Amount</span><strong>${formatMoney(refundAmount)}</strong></div>` : ''}
       <div class="row" style="font-size:1.5em;border-top:1px dashed #aaa;margin-top:0.7em;padding-top:0.7em;"><span>Total Refunded</span><strong style="color:#b91c1c;">${formatMoney(total)}</strong></div>
       ${s.showFooterMessage && s.footerMessage ? `<p style="margin-top:1.3em;text-align:center;font-size:1em;color:#555;white-space:pre-wrap;">${esc(s.footerMessage)}</p>` : ''}
       ${barcode}

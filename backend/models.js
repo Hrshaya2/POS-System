@@ -263,7 +263,7 @@ const refundSchema = new mongoose.Schema({
     total: { type: Number, required: true },           // total amount being returned to the customer
     reason: { type: String, required: true },
     reason_note: String,
-    refund_method: { type: String, required: true },   // CASH | CARD | BANK_TRANSFER | SPLIT
+    refund_method: { type: String, default: () => '' },   // auto-determined from original sale payment method
     resolution_type: { type: String, default: 'CASH_REFUND', enum: ['CASH_REFUND', 'ITEM_EXCHANGE'] }, // how the customer is made whole
     original_payment_method: String,
     initiated_by_id: String,
