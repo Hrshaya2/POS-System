@@ -1206,9 +1206,21 @@ export default function SalesPage() {
     const paymentIndex = PAYMENT_METHODS.findIndex((method) => method.value === paymentMethod);
 
     const handlePaymentKeyDown = (event) => {
-        const typingInInput = event.target instanceof HTMLInputElement
-            || event.target instanceof HTMLTextAreaElement
-            || event.target?.tagName === 'SELECT';
+        const target = event.target;
+        const typingInInput = target instanceof HTMLInputElement
+            || target instanceof HTMLTextAreaElement
+            || target?.tagName === 'SELECT';
+
+        // FIX: Enter must be handled BEFORE the "typing in an input" early return below.
+        // Previously Enter inside the Cash received / Split inputs hit that return and did nothing.
+        if (event.key === 'Enter') {
+            // Let the Back / Confirm buttons do their own native click on Enter.
+            if (target?.closest?.('[data-enter-native]')) return;
+            event.preventDefault();
+            if (event.repeat) return;
+            handleConfirmPayment();
+            return;
+        }
 
         // Down/Right = next method, Up/Left = previous method.
         // While typing in an input, Left/Right must keep moving the text cursor, so only Up/Down cycle there.
@@ -1239,11 +1251,6 @@ export default function SalesPage() {
         if (['1', '2', '3', '4'].includes(event.key)) {
             event.preventDefault();
             setPaymentMethod(PAYMENT_METHODS[Number(event.key) - 1].value);
-            return;
-        }
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            handleConfirmPayment();
         }
     };
 
@@ -1444,18 +1451,6 @@ export default function SalesPage() {
                                     </div>
 
                                     <div className="space-y-2 mb-6">
-                                        <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Discount amount</label>
-                                        <input
-                                            ref={discountInputRef}
-                                            type="text"
-                                            inputMode="decimal"
-                                            min="0"
-                                            step="0.01"
-                                            value={discountAmount}
-                                            onChange={(e) => setDiscountAmount(e.target.value)}
-                                            className="w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3.5 py-2.5 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                                            placeholder="0.00"
-                                        />
                                         <div className={`text-xs ${approvalRequired ? 'text-amber-700 dark:text-amber-300' : 'text-gray-500 dark:text-slate-400'}`}>
                                             Discount approval limit: {config.discountApprovalLimitPercent}%
                                             {approvalRequired ? ' - admin approval flag will be recorded.' : ''}
@@ -1610,10 +1605,11 @@ export default function SalesPage() {
                             )}
 
                             <div className="mt-6 flex justify-end gap-3">
-                                <button onClick={() => setBillingStep('cart')} className="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <button data-enter-native onClick={() => setBillingStep('cart')} className="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     Back (Esc)
                                 </button>
                                 <button
+                                    data-enter-native
                                     onClick={handleConfirmPayment}
                                     disabled={checkoutLoading}
                                     className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-blue-500"
