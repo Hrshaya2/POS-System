@@ -1441,22 +1441,16 @@ export default function SalesPage() {
                                             <strong className="text-gray-900 dark:text-slate-100">{formatMoney(subtotal)}</strong>
                                         </div>
                                         <div className="flex items-center justify-between text-sm">
-                                            <span className="text-gray-500 dark:text-slate-400">Discount</span>
-                                            <strong className="text-gray-500 dark:text-slate-400">-{formatMoney(discountValue)}</strong>
+                                            <span className="text-gray-500 dark:text-slate-400">
+                                                Discount ({effectiveDiscountPercent.toFixed(1)}%)
+                                            </span>
+                                            <strong className="text-rose-600 dark:text-rose-400">-{formatMoney(effectiveDiscount)}</strong>
                                         </div>
                                         <div className="flex items-center justify-between text-lg pt-3 border-t border-gray-100 dark:border-slate-800">
                                             <span className="font-semibold text-gray-900 dark:text-slate-100">Total</span>
                                             <strong className="text-blue-600 dark:text-blue-400">{formatMoney(total)}</strong>
                                         </div>
                                     </div>
-
-                                    <div className="space-y-2 mb-6">
-                                        <div className={`text-xs ${approvalRequired ? 'text-amber-700 dark:text-amber-300' : 'text-gray-500 dark:text-slate-400'}`}>
-                                            Discount approval limit: {config.discountApprovalLimitPercent}%
-                                            {approvalRequired ? ' - admin approval flag will be recorded.' : ''}
-                                        </div>
-                                    </div>
-
                                     {isAdmin && (
                                         <div className={`rounded-xl border px-3.5 py-3 mb-6 ${expectedProfit >= 0 ? 'border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10' : 'border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10'}`}>
                                             <div className="flex items-center justify-between text-xs sm:text-sm">
