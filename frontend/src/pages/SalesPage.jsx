@@ -108,108 +108,67 @@ const buildLocalReceipt = ({ user, session, cart, paymentMethod, cashReceived, d
     };
 };
 
+// Prints an HTML document through a hidden iframe (no new window/tab).
+const printHtmlInHiddenFrame = (html) => new Promise((resolve, reject) => {
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.opacity = '0';
+    iframe.style.pointerEvents = 'none';
+    iframe.style.border = '0';
+    iframe.setAttribute('aria-hidden', 'true');
+
+    const cleanup = () => {
+        if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+    };
+
+    const finalize = () => {
+        cleanup();
+        resolve();
+    };
+
+    iframe.onload = () => {
+        const win = iframe.contentWindow;
+        if (!win) {
+            cleanup();
+            reject(new Error('Print frame failed to initialize.'));
+            return;
+        }
+        win.onafterprint = finalize;
+        try {
+            win.focus();
+            setTimeout(() => {
+                try {
+                    win.print();
+                } catch (err) {
+                    cleanup();
+                    reject(err);
+                    return;
+                }
+                setTimeout(finalize, 1800);
+            }, 120);
+        } catch (err) {
+            cleanup();
+            reject(err);
+        }
+    };
+
+    iframe.srcdoc = html;
+    document.body.appendChild(iframe);
+});
+
 const printWithHiddenFrame = async (receipt, mode = 'receipt') => {
     const baseHtml = buildReceiptHtml(receipt, getReceiptSettings());
     const title = mode === 'invoice' ? 'Invoice' : 'Receipt';
     const html = baseHtml.replace(/<title>.*<\/title>/, `<title>${title} - ${receipt.receipt_no}</title>`);
+    await printHtmlInHiddenFrame(html);
+};
 
-    await new Promise((resolve, reject) => {
-        const iframe = document.createElement('iframe');
-        iframe.style.position = 'fixed';
-        iframe.style.width = '0';
-        iframe.style.height = '0';
-        iframe.style.opacity = '0';
-        iframe.style.pointerEvents = 'none';
-        iframe.style.border = '0';
-        iframe.setAttribute('aria-hidden', 'true');
-
-        const cleanup = () => {
-            if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-        };
-
-        const printRefundWithHiddenFrame = async (refund) => {
-            const html = buildRefundReceiptHtml(refund, getReceiptSettings());
-            await new Promise((resolve, reject) => {
-                const iframe = document.createElement('iframe');
-                iframe.style.position = 'fixed';
-                iframe.style.width = '0';
-                iframe.style.height = '0';
-                iframe.style.opacity = '0';
-                iframe.style.pointerEvents = 'none';
-                iframe.style.border = '0';
-                iframe.setAttribute('aria-hidden', 'true');
-
-                const cleanup = () => {
-                    if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-                };
-                const finish = () => {
-                    cleanup();
-                    resolve();
-                };
-
-                iframe.onload = () => {
-                    const win = iframe.contentWindow;
-                    if (!win) {
-                        cleanup();
-                        reject(new Error('Unable to initialize refund print frame.'));
-                        return;
-                    }
-                    win.onafterprint = finish;
-                    try {
-                        win.focus();
-                        setTimeout(() => {
-                            try {
-                                win.print();
-                            } catch (err) {
-                                cleanup();
-                                reject(err);
-                            }
-                            setTimeout(finish, 1600);
-                        }, 120);
-                    } catch (err) {
-                        cleanup();
-                        reject(err);
-                    }
-                };
-
-                iframe.srcdoc = html;
-                document.body.appendChild(iframe);
-            });
-        };
-
-        const finalize = () => {
-            cleanup();
-            resolve();
-        };
-
-        iframe.onload = () => {
-            const win = iframe.contentWindow;
-            if (!win) {
-                cleanup();
-                reject(new Error('Print frame failed to initialize.'));
-                return;
-            }
-            win.onafterprint = finalize;
-            try {
-                win.focus();
-                setTimeout(() => {
-                    try {
-                        win.print();
-                    } catch (err) {
-                        cleanup();
-                        reject(err);
-                    }
-                    setTimeout(finalize, 1800);
-                }, 120);
-            } catch (err) {
-                cleanup();
-                reject(err);
-            }
-        };
-
-        iframe.srcdoc = html;
-        document.body.appendChild(iframe);
-    });
+// Module-level so the Sales History "Refund receipt" button can reach it.
+const printRefundWithHiddenFrame = async (refund) => {
+    const html = buildRefundReceiptHtml(refund, getReceiptSettings());
+    await printHtmlInHiddenFrame(html);
 };
 
 export default function SalesPage() {
@@ -897,13 +856,21 @@ export default function SalesPage() {
         }
     };
 
+    // Ref guard: a held Enter key can fire several keydown events before React state updates.
+    const confirmingRef = useRef(false);
+
     const handleConfirmPayment = async () => {
-        if (checkoutLoading || completedReceipt) return;
-        const savedReceipt = await persistSale();
-        if (!savedReceipt) return;
-        setCompletedReceipt(savedReceipt);
-        setReceiptOptionIndex(0);
-        setBillingStep('receipt-options');
+        if (confirmingRef.current || checkoutLoading || completedReceipt) return;
+        confirmingRef.current = true;
+        try {
+            const savedReceipt = await persistSale();
+            if (!savedReceipt) return;
+            setCompletedReceipt(savedReceipt);
+            setReceiptOptionIndex(0);
+            setBillingStep('receipt-options');
+        } finally {
+            confirmingRef.current = false;
+        }
     };
 
     const executeReceiptOption = async (optionKey) => {
@@ -947,6 +914,7 @@ export default function SalesPage() {
         if (event.key === 'ArrowDown') {
             event.preventDefault();
             if (!productSearch.trim() && cart.length > 0) {
+                searchInputRef.current?.blur(); // otherwise the search input keeps swallowing the cart keys
                 setFocusArea('cart');
                 setSelectedCartIndex(0);
                 return;
@@ -1024,53 +992,183 @@ export default function SalesPage() {
     }, [activeTab]);
 
     globalKeyHandlerRef.current = (event) => {
-            const key = event.key;
-            const lower = String(key || '').toLowerCase();
-            const targetTag = event.target?.tagName;
-            const isInputLike = targetTag === 'INPUT' || targetTag === 'TEXTAREA' || targetTag === 'SELECT' || event.target?.isContentEditable;
-            const modalOpen = itemModal.open || newSaleConfirmOpen;
+        // A more specific handler (modal inputs, payment row, search box ...) already handled this key.
+        if (event.defaultPrevented) return;
+        // Leave browser/OS combos alone (Ctrl+F3, Cmd+..., ...).
+        if (event.ctrlKey || event.metaKey) return;
 
-            // Leave browser/OS combos (Ctrl+F3, Alt+F4, ...) alone.
-            if (event.ctrlKey || event.metaKey) return;
+        const key = event.key;
+        const target = event.target;
+        const tag = target?.tagName;
+        const typing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target?.isContentEditable;
+        const focusIsOnPage = target === document.body || target === document.documentElement;
+        const isFKey = ['F2', 'F3', 'F4', 'F7', 'F8', 'F10'].includes(key);
 
-            // Plain character/digit keys and +- must never act when typing in any input.
-            if (isInputLike) {
-                // Escape and Delete keep native behaviour; F-keys are ignored while an input has focus.
-                if (key === 'Escape' || (key === 'Delete' && !isInputLike)) {
-                    event.preventDefault();
-                }
-                return;
-            }
-
-            // Alt+1-4 / page numbers select a method while NOT in a modal (handled here).
-            if (event.altKey && ['1', '2', '3', '4'].includes(key)) {
-                event.preventDefault();
-                const method = PAYMENT_METHODS[Number(key) - 1].value;
-                setPaymentMethod(method);
-                return;
-            }
-
-            // F-keys are always ours; Delete/Escape must keep native behaviour inside inputs
-            // (Escape is still handled later, but Delete must edit text).
-            if (['F2', 'F3', 'F4', 'F7', 'F8', 'F10'].includes(key)) {
+        // 1) "Start a new sale?" dialog: Enter clears, Esc cancels
+        if (newSaleConfirmOpen) {
+            if (isFKey) event.preventDefault();
+            if (key === 'Enter') {
                 event.preventDefault();
                 if (event.repeat) return;
-            }
-            if (key === 'Escape' || (key === 'Delete' && !isInputLike)) {
+                setNewSaleConfirmOpen(false);
+                clearSale();
+            } else if (key === 'Escape') {
                 event.preventDefault();
+                setNewSaleConfirmOpen(false);
+                focusSearch();
             }
+            return;
+        }
 
-            // While a modal is open, only Escape is handled here (modals own the rest).
-            if (modalOpen && key !== 'Escape') return;
+        // 2) Add/Edit item popup (its inputs handle Enter/Esc themselves; this covers lost focus)
+        if (itemModal.open) {
+            if (isFKey) event.preventDefault();
+            if (key === 'Escape') {
+                event.preventDefault();
+                closeItemModal();
+            } else if (key === 'Enter' && focusIsOnPage && !event.repeat) {
+                event.preventDefault();
+                applyItemModal();
+            }
+            return;
+        }
 
+        // 3) Payment step
+        if (billingStep === 'payment') {
+            if (isFKey) {
+                event.preventDefault();
+                return;
+            }
+            if (key === 'Escape') {
+                event.preventDefault();
+                setCheckoutError('');
+                setBillingStep('cart');
+                setFocusArea('search');
+                return;
+            }
+            // Focus can fall back to <body> (e.g. after Alt+2 hides the cash input): keep the keys alive.
+            if (focusIsOnPage && !(event.repeat && key === 'Enter')) handlePaymentKeyDown(event);
+            return;
+        }
+
+        // 4) Receipt options step (Esc = "No receipt")
+        if (billingStep === 'receipt-options') {
+            if (isFKey) {
+                event.preventDefault();
+                return;
+            }
+            if (event.repeat) return;
+            if (key === 'Escape') {
+                event.preventDefault();
+                executeReceiptOption('NO_RECEIPT');
+                return;
+            }
+            if (focusIsOnPage) handleReceiptOptionKeyDown(event);
+            return;
+        }
+
+        // 5) Cart step
+        if (event.altKey) return;
+
+        // Function keys work everywhere on this step, even while typing in the search box.
+        if (isFKey) {
+            event.preventDefault(); // stops the browser's own F-key action (F3 = find, ...)
+            if (event.repeat) return;
+
+            if (key === 'F10') {
+                openPaymentStep();
+                return;
+            }
             if (key === 'F3') {
-                // Never leave the payment / receipt steps with F3 (would orphan a saved sale).
-                if (billingStep !== 'cart') return;
                 setFocusArea('search');
                 focusSearch();
                 return;
             }
-        };
+            if (key === 'F2') {
+                setFocusArea('discount');
+                discountInputRef.current?.focus();
+                discountInputRef.current?.select();
+                return;
+            }
+            if (key === 'F4') {
+                if (!selectedCartLine) return;
+                setFocusArea('cart');
+                document.activeElement?.blur?.();
+                openItemModal(selectedCartLine, 'edit', selectedCartLine.trackedBy !== 'IMEI');
+                return;
+            }
+            if (key === 'F8') {
+                if (cart.length === 0) {
+                    clearSale();
+                    return;
+                }
+                document.activeElement?.blur?.();
+                setNewSaleConfirmOpen(true);
+                return;
+            }
+            return; // F7 (attach customer) is not available yet
+        }
+
+        if (key === 'Escape') {
+            // Esc inside the discount box (or any input except search) goes back to search.
+            if (typing && target !== searchInputRef.current) {
+                event.preventDefault();
+                target.blur();
+                setFocusArea('search');
+                focusSearch();
+                return;
+            }
+            if (focusArea === 'cart') {
+                event.preventDefault();
+                setFocusArea('search');
+                focusSearch();
+            }
+            return;
+        }
+
+        // Cart navigation: only when focus is in the cart (search box is blurred) and nothing is being typed.
+        if (focusArea === 'cart' && !typing && cart.length > 0) {
+            if (key === 'ArrowDown') {
+                event.preventDefault();
+                setSelectedCartIndex((prev) => Math.min(prev + 1, cart.length - 1));
+                return;
+            }
+            if (key === 'ArrowUp') {
+                event.preventDefault();
+                if (selectedCartIndex === 0) {
+                    setFocusArea('search');
+                    focusSearch();
+                } else {
+                    setSelectedCartIndex((prev) => Math.max(0, prev - 1));
+                }
+                return;
+            }
+            if (key === 'Enter') {
+                event.preventDefault();
+                if (!event.repeat && selectedCartLine) openItemModal(selectedCartLine, 'edit', false);
+                return;
+            }
+            if (key === 'Delete') {
+                event.preventDefault();
+                if (!selectedCartLine) return;
+                removeCartItem(selectedCartLine);
+                if (cart.length <= 1) {
+                    setFocusArea('search');
+                    focusSearch();
+                }
+                return;
+            }
+            if ((key === '+' || key === '=') && selectedCartLine) {
+                event.preventDefault();
+                updateCartQuantity(selectedCartLine, selectedCartLine.quantity + 1);
+                return;
+            }
+            if ((key === '-' || key === '_') && selectedCartLine) {
+                event.preventDefault();
+                updateCartQuantity(selectedCartLine, selectedCartLine.quantity - 1);
+            }
+        }
+    };
 
     useEffect(() => {
         if (activeTab !== 'history' || refundSale) return undefined;
@@ -1108,27 +1206,33 @@ export default function SalesPage() {
     const paymentIndex = PAYMENT_METHODS.findIndex((method) => method.value === paymentMethod);
 
     const handlePaymentKeyDown = (event) => {
-        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        const typingInInput = event.target instanceof HTMLInputElement
+            || event.target instanceof HTMLTextAreaElement
+            || event.target?.tagName === 'SELECT';
+
+        // Down/Right = next method, Up/Left = previous method.
+        // While typing in an input, Left/Right must keep moving the text cursor, so only Up/Down cycle there.
+        if (event.key === 'ArrowDown' || (!typingInInput && event.key === 'ArrowRight')) {
             event.preventDefault();
             const next = (paymentIndex + 1) % PAYMENT_METHODS.length;
             setPaymentMethod(PAYMENT_METHODS[next].value);
             return;
         }
-        if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        if (event.key === 'ArrowUp' || (!typingInInput && event.key === 'ArrowLeft')) {
             event.preventDefault();
             const next = (paymentIndex - 1 + PAYMENT_METHODS.length) % PAYMENT_METHODS.length;
             setPaymentMethod(PAYMENT_METHODS[next].value);
             return;
         }
         // Alt+1-4 selects a payment method directly (use code so numpad and main row both work).
-        if (event.altKey && ['1', '2', '3', '4'].includes(event.code)) {
+        if (event.altKey && ['1', '2', '3', '4'].includes(event.code.at(-1))) {
             event.preventDefault();
             const method = PAYMENT_METHODS[Number(event.code.at(-1)) - 1].value;
             setPaymentMethod(method);
             return;
         }
         // 1-4 (main row or numpad) select a method directly from the method row (not an input).
-        if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target?.tagName === 'SELECT') {
+        if (typingInInput) {
             // While typing in the Cash received input, digits must type normally (no method switch).
             return;
         }
@@ -1144,6 +1248,7 @@ export default function SalesPage() {
     };
 
     const handleReceiptOptionKeyDown = (event) => {
+        if (event.repeat) return;
         if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
             event.preventDefault();
             setReceiptOptionIndex((prev) => (prev + 1) % RECEIPT_OPTIONS.length);
@@ -1522,7 +1627,7 @@ export default function SalesPage() {
                     {billingStep === 'receipt-options' && (
                         <div onKeyDown={handleReceiptOptionKeyDown} className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">Receipt Options</h2>
-                            <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Use arrow keys and Enter. Default is Print receipt.</p>
+                            <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">Use arrow keys and Enter. Default is Print receipt. Esc = No receipt.</p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                                 {RECEIPT_OPTIONS.map((option, index) => (
                                     <button
@@ -1535,6 +1640,11 @@ export default function SalesPage() {
                                     </button>
                                 ))}
                             </div>
+                            {checkoutError && (
+                                <div className="mt-4 rounded-xl border border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 px-3 py-2 text-xs text-rose-700 dark:text-rose-300">
+                                    {checkoutError}
+                                </div>
+                            )}
                             {completedReceipt && (
                                 <div className="mt-6 rounded-2xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-4 py-3 text-sm">
                                     <div className="text-gray-600 dark:text-slate-400">Saved sale</div>
@@ -1782,6 +1892,18 @@ export default function SalesPage() {
                         <span><strong>F10</strong> Payment</span>
                         <span><strong>Esc</strong> Back/Cancel</span>
                         <span><strong>Delete</strong> Remove line</span>
+                        {billingStep === 'payment' && (
+                            <span className="text-xs text-blue-600 dark:text-blue-400">
+                                <kbd className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800">Alt</kbd>
+                                <kbd className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800">1</kbd>-<kbd className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800">4</kbd>
+                                method
+                            </span>
+                        )}
+                        {billingStep === 'payment' && (
+                            <span className="text-xs text-blue-600 dark:text-blue-400">
+                                <kbd className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800">↑</kbd>/<kbd className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800">↓</kbd> change method, Enter confirm
+                            </span>
+                        )}
                     </div>
                 </div>
             )}
