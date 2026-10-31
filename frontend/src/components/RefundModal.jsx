@@ -613,7 +613,8 @@ export default function RefundModal({ sale, onClose, onApplied }) {
                           <td className="px-4 py-2.5 text-right font-semibold text-gray-900 dark:text-slate-100">{fmtMoney(it.paidUnitPrice)}</td>
                           <td className="px-4 py-2.5 text-center">
                             <input
-                              type="number"
+                              type="text"
+                              inputMode="numeric"
                               min="1"
                               max={it.remaining}
                               value={sel ? sel.quantity : ''}

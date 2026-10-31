@@ -898,6 +898,7 @@ export default function SalesPage() {
     };
 
     const handleConfirmPayment = async () => {
+        if (checkoutLoading || completedReceipt) return;
         const savedReceipt = await persistSale();
         if (!savedReceipt) return;
         setCompletedReceipt(savedReceipt);
@@ -908,18 +909,19 @@ export default function SalesPage() {
     const executeReceiptOption = async (optionKey) => {
         if (!completedReceipt) return;
         try {
-            if (optionKey === 'PRINT_RECEIPT') {
+            // "Save as PDF" uses the browser print dialog's PDF destination.
+            if (optionKey === 'PRINT_RECEIPT' || optionKey === 'SAVE_PDF') {
                 await printWithHiddenFrame(completedReceipt, 'receipt');
             } else if (optionKey === 'PRINT_INVOICE') {
                 await printWithHiddenFrame(completedReceipt, 'invoice');
-            } else if (optionKey === 'SAVE_PDF') {
-                await printWithHiddenFrame(completedReceipt, 'receipt');
             }
         } catch (err) {
+            // Sale is already saved: tell the cashier and let them retry or choose "No receipt".
             console.warn('Printing failed, sale is already saved:', err);
-        } finally {
-            clearSale();
+            setCheckoutError('Printing failed. The sale is saved - try again or choose "No receipt".');
+            return;
         }
+        clearSale();
     };
 
     const openPaymentStep = () => {
@@ -933,6 +935,15 @@ export default function SalesPage() {
     };
 
     const handleSearchKeyDown = (event) => {
+        if (event.key === 'Escape') {
+            if (productSearch) {
+                event.preventDefault();
+                event.stopPropagation();
+                setProductSearch('');
+                setSelectedProductIndex(0);
+            }
+            return;
+        }
         if (event.key === 'ArrowDown') {
             event.preventDefault();
             if (!productSearch.trim() && cart.length > 0) {
@@ -954,15 +965,32 @@ export default function SalesPage() {
         }
         if (event.key === 'Enter') {
             event.preventDefault();
+            if (event.repeat || inventoryLoading) return;
+            const now = Date.now();
+            if (now - lastSearchEnterRef.current < 300) return;
+            lastSearchEnterRef.current = now;
             const exact = exactCodeMatch(productSearch);
             if (exact) {
                 handleSelectProduct(exact);
                 return;
             }
-            const selected = visibleProducts[selectedProductIndex] || visibleProducts[0];
+            const index = Math.min(selectedProductIndex, visibleProducts.length - 1);
+            const selected = visibleProducts[index];
             if (selected) handleSelectProduct(selected);
         }
     };
+
+    const lastSearchEnterRef = useRef(0);
+    const productListRef = useRef(null);
+
+    // Keep the highlighted result visible and the index inside the list.
+    useEffect(() => {
+        if (selectedProductIndex > 0 && selectedProductIndex >= visibleProducts.length) {
+            setSelectedProductIndex(Math.max(0, visibleProducts.length - 1));
+            return;
+        }
+        productListRef.current?.querySelector('[data-selected="true"]')?.scrollIntoView({ block: 'nearest' });
+    }, [selectedProductIndex, visibleProducts]);
 
     const selectedCartLine = cart[selectedCartIndex] || null;
 
@@ -984,125 +1012,74 @@ export default function SalesPage() {
         setRefundSale(sale);
     };
 
+    // Always points at the newest handler so the single window listener never
+    // runs with stale cart/step state.
+    const globalKeyHandlerRef = useRef(null);
+
     useEffect(() => {
         if (activeTab !== 'billing') return undefined;
-        const onGlobalKey = (event) => {
+        const listener = (event) => globalKeyHandlerRef.current?.(event);
+        window.addEventListener('keydown', listener);
+        return () => window.removeEventListener('keydown', listener);
+    }, [activeTab]);
+
+    globalKeyHandlerRef.current = (event) => {
             const key = event.key;
             const lower = String(key || '').toLowerCase();
             const targetTag = event.target?.tagName;
-            const isInputLike = targetTag === 'INPUT' || targetTag === 'TEXTAREA' || targetTag === 'SELECT';
+            const isInputLike = targetTag === 'INPUT' || targetTag === 'TEXTAREA' || targetTag === 'SELECT' || event.target?.isContentEditable;
+            const modalOpen = itemModal.open || newSaleConfirmOpen;
 
-            if (['F2', 'F3', 'F4', 'F7', 'F8', 'F10', 'Delete', 'Escape'].includes(key)) {
+            // Leave browser/OS combos (Ctrl+F3, Alt+F4, ...) alone.
+            if (event.ctrlKey || event.metaKey) return;
+
+            // Plain character/digit keys and +- must never act when typing in any input.
+            if (isInputLike) {
+                // Escape and Delete keep native behaviour; F-keys are ignored while an input has focus.
+                if (key === 'Escape' || (key === 'Delete' && !isInputLike)) {
+                    event.preventDefault();
+                }
+                return;
+            }
+
+            // Alt+1-4 / page numbers select a method while NOT in a modal (handled here).
+            if (event.altKey && ['1', '2', '3', '4'].includes(key)) {
+                event.preventDefault();
+                const method = PAYMENT_METHODS[Number(key) - 1].value;
+                setPaymentMethod(method);
+                return;
+            }
+
+            // F-keys are always ours; Delete/Escape must keep native behaviour inside inputs
+            // (Escape is still handled later, but Delete must edit text).
+            if (['F2', 'F3', 'F4', 'F7', 'F8', 'F10'].includes(key)) {
+                event.preventDefault();
+                if (event.repeat) return;
+            }
+            if (key === 'Escape' || (key === 'Delete' && !isInputLike)) {
                 event.preventDefault();
             }
 
+            // While a modal is open, only Escape is handled here (modals own the rest).
+            if (modalOpen && key !== 'Escape') return;
+
             if (key === 'F3') {
-                setBillingStep('cart');
+                // Never leave the payment / receipt steps with F3 (would orphan a saved sale).
+                if (billingStep !== 'cart') return;
                 setFocusArea('search');
                 focusSearch();
                 return;
             }
-            if (key === 'F2') {
-                if (billingStep === 'cart') {
-                    discountInputRef.current?.focus();
-                    discountInputRef.current?.select();
-                }
-                return;
-            }
-            if (key === 'F4') {
-                if (billingStep === 'cart' && selectedCartLine) openItemModal(selectedCartLine, 'edit', true);
-                return;
-            }
-            if (key === 'F7') {
-                return;
-            }
-            if (key === 'F8') {
-                if (billingStep === 'cart') setNewSaleConfirmOpen(true);
-                return;
-            }
-            if (key === 'F10') {
-                if (billingStep === 'cart') openPaymentStep();
-                return;
-            }
-            if (key === 'Escape') {
-                if (itemModal.open) {
-                    closeItemModal();
-                    return;
-                }
-                if (newSaleConfirmOpen) {
-                    setNewSaleConfirmOpen(false);
-                    focusSearch();
-                    return;
-                }
-                if (billingStep === 'payment') {
-                    setBillingStep('cart');
-                    focusSearch();
-                    return;
-                }
-                if (billingStep === 'receipt-options') {
-                    executeReceiptOption('NO_RECEIPT');
-                }
-                return;
-            }
-            if (billingStep !== 'cart' || itemModal.open || newSaleConfirmOpen || isInputLike) return;
-
-            if (focusArea === 'cart') {
-                if (key === 'ArrowDown') {
-                    event.preventDefault();
-                    setSelectedCartIndex((prev) => Math.min(prev + 1, cart.length - 1));
-                    return;
-                }
-                if (key === 'ArrowUp') {
-                    event.preventDefault();
-                    if (selectedCartIndex === 0) {
-                        setFocusArea('search');
-                        focusSearch();
-                    } else {
-                        setSelectedCartIndex((prev) => Math.max(0, prev - 1));
-                    }
-                    return;
-                }
-                if (key === 'Enter' && selectedCartLine) {
-                    event.preventDefault();
-                    openItemModal(selectedCartLine, 'edit');
-                    return;
-                }
-                if (key === 'Delete' && selectedCartLine) {
-                    event.preventDefault();
-                    removeCartItem(selectedCartLine);
-                    return;
-                }
-                if ((key === '+' || key === '=') && selectedCartLine && selectedCartLine.trackedBy !== 'IMEI') {
-                    event.preventDefault();
-                    updateCartQuantity(selectedCartLine, selectedCartLine.quantity + 1);
-                    return;
-                }
-                if ((key === '-' || lower === 'subtract') && selectedCartLine && selectedCartLine.trackedBy !== 'IMEI') {
-                    event.preventDefault();
-                    updateCartQuantity(selectedCartLine, selectedCartLine.quantity - 1);
-                }
-            }
         };
-
-        window.addEventListener('keydown', onGlobalKey);
-        return () => window.removeEventListener('keydown', onGlobalKey);
-    }, [
-        activeTab,
-        billingStep,
-        focusArea,
-        cart,
-        selectedCartLine,
-        selectedCartIndex,
-        itemModal.open,
-        newSaleConfirmOpen,
-        hasCustomerAttachFeature
-    ]);
 
     useEffect(() => {
         if (activeTab !== 'history' || refundSale) return undefined;
         const onHistoryKey = (event) => {
             const key = event.key;
-            if (['F2', 'F3', 'F4', 'F8', 'F10', 'Delete'].includes(key)) {
+            const tag = event.target?.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || event.target?.isContentEditable) return;
+            if (event.ctrlKey || event.altKey || event.metaKey) return;
+            if (['F2', 'F3', 'F4', 'F8', 'F10'].includes(key)) {
                 event.preventDefault();
                 return;
             }
@@ -1141,6 +1118,18 @@ export default function SalesPage() {
             event.preventDefault();
             const next = (paymentIndex - 1 + PAYMENT_METHODS.length) % PAYMENT_METHODS.length;
             setPaymentMethod(PAYMENT_METHODS[next].value);
+            return;
+        }
+        // Alt+1-4 selects a payment method directly (use code so numpad and main row both work).
+        if (event.altKey && ['1', '2', '3', '4'].includes(event.code)) {
+            event.preventDefault();
+            const method = PAYMENT_METHODS[Number(event.code.at(-1)) - 1].value;
+            setPaymentMethod(method);
+            return;
+        }
+        // 1-4 (main row or numpad) select a method directly from the method row (not an input).
+        if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target?.tagName === 'SELECT') {
+            // While typing in the Cash received input, digits must type normally (no method switch).
             return;
         }
         if (['1', '2', '3', '4'].includes(event.key)) {
@@ -1224,14 +1213,19 @@ export default function SalesPage() {
                             />
                         </div>
                         {productSearch.trim() !== '' && visibleProducts.length > 0 && (
-                            <div className="mt-3 max-h-[24rem] overflow-y-auto border border-gray-100 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-800 shadow-lg">
+                            <div ref={productListRef} role="listbox" className="mt-3 max-h-[24rem] overflow-y-auto border border-gray-100 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-800 shadow-lg">
                                 {(inventoryLoading ? Array.from({ length: 4 }) : visibleProducts).map((product, index) => (
                                     inventoryLoading ? (
                                         <div key={`skeleton-${index}`} className="h-12 px-4 py-2 bg-gray-100 dark:bg-slate-800 animate-pulse" />
                                     ) : (
                                         <button
                                             key={`${product.inventoryType}-${product.inventoryId}`}
+                                            onMouseDown={(e) => e.preventDefault()}
                                             onClick={() => handleSelectProduct(product)}
+                                            role="option"
+                                            aria-selected={selectedProductIndex === index}
+                                            data-selected={selectedProductIndex === index ? 'true' : 'false'}
+                                            tabIndex={-1}
                                             className={`w-full flex items-center justify-between gap-3 px-4 py-3 text-left border-b border-gray-50 dark:border-slate-800/50 last:border-b-0 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${selectedProductIndex === index ? 'bg-blue-50 dark:bg-blue-500/10' : 'hover:bg-blue-50 dark:hover:bg-blue-500/5'}`}
                                         >
                                             <div className="flex items-center gap-3 min-w-0">
@@ -1348,7 +1342,8 @@ export default function SalesPage() {
                                         <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Discount amount</label>
                                         <input
                                             ref={discountInputRef}
-                                            type="number"
+                                            type="text"
+                                            inputMode="decimal"
                                             min="0"
                                             step="0.01"
                                             value={discountAmount}
@@ -1428,7 +1423,7 @@ export default function SalesPage() {
                                         onClick={() => setPaymentMethod(value)}
                                         className={`rounded-2xl border px-4 py-4 text-left transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${paymentMethod === value ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300' : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-400 hover:border-gray-300 dark:hover:border-slate-500'}`}
                                     >
-                                        <div className="text-xs opacity-70 mb-1">{index + 1}</div>
+                                        <div className="text-xs opacity-70 mb-1">Alt+{index + 1}</div>
                                         <div className="flex items-center gap-2">
                                             <Icon size={16} />
                                             <span className="font-semibold">{label}</span>
@@ -1443,7 +1438,8 @@ export default function SalesPage() {
                                         <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Cash received</label>
                                         <input
                                             ref={cashInputRef}
-                                            type="number"
+                                            type="text"
+                                            inputMode="decimal"
                                             min="0"
                                             step="0.01"
                                             value={cashReceived}
@@ -1460,7 +1456,8 @@ export default function SalesPage() {
                                     <div className="space-y-2">
                                         <input
                                             ref={(el) => { splitInputRefs.current[0] = el; }}
-                                            type="number"
+                                            type="text"
+                                            inputMode="decimal"
                                             min="0"
                                             step="0.01"
                                             placeholder="Cash"
@@ -1470,7 +1467,8 @@ export default function SalesPage() {
                                         />
                                         <input
                                             ref={(el) => { splitInputRefs.current[1] = el; }}
-                                            type="number"
+                                            type="text"
+                                            inputMode="decimal"
                                             min="0"
                                             step="0.01"
                                             placeholder="Card"
@@ -1480,7 +1478,8 @@ export default function SalesPage() {
                                         />
                                         <input
                                             ref={(el) => { splitInputRefs.current[2] = el; }}
-                                            type="number"
+                                            type="text"
+                                            inputMode="decimal"
                                             min="0"
                                             step="0.01"
                                             placeholder="Bank Transfer"
@@ -1685,6 +1684,8 @@ export default function SalesPage() {
                             <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300">Price</label>
                             <input
                                 ref={itemPriceInputRef}
+                                type="text"
+                                inputMode="decimal"
                                 value={itemModal.price}
                                 readOnly={itemModal.item?.allowPriceOverride === false}
                                 onChange={(e) => setItemModal((current) => ({ ...current, price: e.target.value }))}
@@ -1704,6 +1705,8 @@ export default function SalesPage() {
                             <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300">Quantity</label>
                             <input
                                 ref={itemQtyInputRef}
+                                type="text"
+                                inputMode="numeric"
                                 value={itemModal.quantity}
                                 readOnly={itemModal.item?.trackedBy === 'IMEI'}
                                 onChange={(e) => setItemModal((current) => ({ ...current, quantity: e.target.value }))}
