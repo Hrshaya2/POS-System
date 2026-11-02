@@ -71,6 +71,7 @@ export default function SettingsPage() {
   const [pinExists, setPinExists] = useState(false);
   const [rpBusy, setRpBusy] = useState(false);
   const [policyStatus, setPolicyStatus] = useState({ kind: '', msg: '' });
+  const [payLaterLimit, setPayLaterLimit] = useState(0);
 
   React.useEffect(() => {
     if (!isAdmin) return undefined;
@@ -86,6 +87,13 @@ export default function SettingsPage() {
           const v2 = await res2.json();
           const raw = (v2 && typeof v2 === 'object') ? v2.value : v2;
           setPinExists(raw != null && String(raw).trim() !== '');
+        }
+      } catch (err) { /* ignore */ }
+      try {
+        const res3 = await fetch(`${SETTINGS_API}/store-settings/pay_later_limit`, { headers: authHeaders() });
+        if (res3.ok) {
+          const value = await res3.json();
+          setPayLaterLimit(Number(value?.amount ?? value?.value ?? value ?? 0));
         }
       } catch (err) { /* ignore */ }
     })();
@@ -111,6 +119,8 @@ export default function SettingsPage() {
         setAdminPin('');
         setPinExists(true);
       }
+      const limitRes = await fetch(`${SETTINGS_API}/store-settings/pay_later_limit`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ amount: Math.max(0, Number(payLaterLimit) || 0) }) });
+      if (!limitRes.ok) throw new Error('Refund policy saved but Pay Later limit could not be saved.');
       setPolicyStatus({ kind: 'ok', msg: 'Refund policy saved. New refunds follow these limits immediately.' });
     } catch (e) {
       setPolicyStatus({ kind: 'err', msg: e.message || 'Save failed' });
@@ -372,6 +382,9 @@ export default function SettingsPage() {
             an admin / shop owner completes it with the approval PIN.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Field label="Cashier Pay Later limit without admin PIN (Rs.)">
+              <input type="number" min="0" step="100" className={inputClass} value={payLaterLimit} onChange={(e) => setPayLaterLimit(e.target.value)} />
+            </Field>
             <Field label="Cashier limit without approval (Rs.)">
               <input type="number" min="0" step="100" className={inputClass}
                 value={policy.maxAmount} onChange={(e) => setPolicy({ ...policy, maxAmount: e.target.value })} />

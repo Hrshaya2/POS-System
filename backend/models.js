@@ -145,6 +145,17 @@ const saleSchema = new mongoose.Schema({
     approval_status: { type: String, default: 'NOT_REQUIRED' },
     approval_note: String,
     session_id: String,
+    customer_id: String,
+    customer_name: String,
+    customer_phone: String,
+    customer_id_number: String,
+    customer_address: String,
+    customer_note: String,
+    request_id: String,
+    credit_note_id: String,
+    amount_paid: { type: Number, default: 0 },
+    balance_due: { type: Number, default: 0 },
+    due_date: String,
     refunded: { type: Boolean, default: false },
     refunded_at: Date,
     refund_reason: String,
@@ -320,12 +331,58 @@ const paymentLineSchema = new mongoose.Schema({
 
 const creditNoteSchema = new mongoose.Schema({
     note_no: { type: String, required: true, unique: true },
+    sale_id: String,
+    sale_receipt_no: String,
     customer_name: String,
     customer_phone: String,
+    customer_id: String,
+    customer_id_number: String,
+    customer_address: String,
+    customer_note: String,
     amount: { type: Number, required: true },
+    amount_paid: { type: Number, default: 0 },
     balance: { type: Number, required: true },
+    due_date: String,
+    items: { type: [mongoose.Schema.Types.Mixed], default: [] },
+    payments: { type: [mongoose.Schema.Types.Mixed], default: [] },
+    history: { type: [mongoose.Schema.Types.Mixed], default: [] },
     status: { type: String, default: 'OPEN', enum: ['OPEN', 'PAID', 'CANCELLED'] },
     created_at: { type: Date, default: Date.now }
+}, { timestamps: true });
+
+const customerSchema = new mongoose.Schema({
+    phone: { type: String, required: true, unique: true, index: true },
+    name: String,
+    id_number: String,
+    address: String,
+    note: String,
+    created_at: { type: Date, default: Date.now },
+    updated_at: { type: Date, default: Date.now }
+}, { timestamps: true });
+
+const requestSchema = new mongoose.Schema({
+    request_no: { type: String, required: true, unique: true },
+    customer_id: String,
+    customer_name: String,
+    customer_phone: { type: String, required: true },
+    customer_id_number: String,
+    customer_address: String,
+    customer_note: String,
+    items: { type: [mongoose.Schema.Types.Mixed], default: [] },
+    total: { type: Number, default: 0 },
+    advance_amount: { type: Number, default: 0 },
+    advance_method: String,
+    balance: { type: Number, default: 0 },
+    expected_ready_date: String,
+    status: { type: String, default: 'Requested', enum: ['Requested', 'Ordered', 'Ready', 'Completed', 'Cancelled'] },
+    cancellation_reason: String,
+    cancellation_mode: String,
+    sale_id: String,
+    history: { type: [mongoose.Schema.Types.Mixed], default: [] },
+    created_by_id: String,
+    created_by_name: String,
+    created_at: { type: Date, default: Date.now },
+    updated_at: { type: Date, default: Date.now }
 }, { timestamps: true });
 
 // --- STORAGE SNAPSHOTS (daily MongoDB usage readings for the Manage Storage page) ---
@@ -355,5 +412,7 @@ module.exports = {
     Refund: mongoose.model('Refund', refundSchema),
     StoreSetting: mongoose.model('StoreSetting', storeSettingSchema),
     CreditNote: mongoose.model('CreditNote', creditNoteSchema),
+    Customer: mongoose.model('Customer', customerSchema),
+    Request: mongoose.model('SalesRequest', requestSchema),
     StorageSnapshot: mongoose.model('StorageSnapshot', storageSnapshotSchema)
 };

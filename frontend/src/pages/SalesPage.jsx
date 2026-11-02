@@ -13,7 +13,10 @@ import {
     Smartphone,
     Trash2,
     Warehouse,
-    WifiOff
+    WifiOff,
+    Phone,
+    Bell,
+    ClipboardList
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSession } from '../context/SessionContext';
@@ -74,13 +77,19 @@ const buildLocalReceipt = ({ user, session, cart, paymentMethod, cashReceived, d
         sku: item.trackedBy === 'IMEI' ? null : item.code,
         name: item.name,
         quantity: item.quantity,
-        unit_price: item.unitPrice,
-        line_total: item.unitPrice * item.quantity,
+        // List price, exactly like the saved sale shown in Sales History (the server stores list prices
+        // and puts every price reduction into the discount line).
+        unit_price: item.listPrice ?? item.unitPrice,
+        line_total: (item.listPrice ?? item.unitPrice) * item.quantity,
         tracked_by: item.trackedBy
     }));
 
-    const subtotal = items.reduce((sum, item) => sum + item.line_total, 0);
-    const total = Math.max(0, subtotal - discountValue);
+    // What the customer really pays: sold (possibly overridden) prices minus the manual discount box.
+    const listSubtotal = items.reduce((sum, item) => sum + item.line_total, 0);
+    const soldSubtotal = cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+    const total = Math.max(0, soldSubtotal - discountValue);
+    // Effective discount = price reductions in the Add item popup + the manual discount box.
+    const totalDiscount = Math.max(0, listSubtotal - total);
     const cashTendered = paymentMethod === 'CASH' ? safeNumber(cashReceived) : 0;
     const changeAmount = paymentMethod === 'CASH' ? Math.max(0, cashTendered - total) : 0;
     const now = new Date().toISOString();
@@ -91,9 +100,9 @@ const buildLocalReceipt = ({ user, session, cart, paymentMethod, cashReceived, d
         cashier_name: user?.name,
         cashier_role: user?.role,
         items,
-        subtotal,
-        discount_amount: discountValue,
-        discount_percent: subtotal > 0 ? (discountValue / subtotal) * 100 : 0,
+        subtotal: listSubtotal,
+        discount_amount: totalDiscount,
+        discount_percent: listSubtotal > 0 ? (totalDiscount / listSubtotal) * 100 : 0,
         total,
         payment_method: paymentMethod,
         payment_details: paymentDetails,
@@ -171,6 +180,271 @@ const printRefundWithHiddenFrame = async (refund) => {
     await printHtmlInHiddenFrame(html);
 };
 
+function PayLaterModal({ cart, total, session, user, config, onClose, onCompleted }) {
+    const [customer, setCustomer] = useState({ phone: '', name: '', idNumber: '', address: '', note: '' });
+    const [advance, setAdvance] = useState('0');
+    const [method, setMethod] = useState('CASH');
+    const [dueDate, setDueDate] = useState('');
+    const [pin, setPin] = useState('');
+    const [error, setError] = useState('');
+    const [busy, setBusy] = useState(false);
+    const balance = Math.max(0, total - safeNumber(advance));
+    const setQuickDate = (days) => {
+        const date = new Date();
+        date.setDate(date.getDate() + days);
+        setDueDate(date.toISOString().slice(0, 10));
+    };
+    const lookup = async (phone) => {
+        setCustomer((current) => ({ ...current, phone }));
+        if (phone.trim().length < 3) return;
+        try {
+            const res = await fetch(`${API_BASE}/customers/lookup?phone=${encodeURIComponent(phone)}`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+            const rows = await res.json();
+            if (rows[0]) setCustomer((current) => ({ ...current, ...rows[0], idNumber: rows[0].id_number || '' }));
+        } catch {
+            // Lookup is optional; the required phone remains available for saving.
+        }
+    };
+    const submit = async () => {
+        setError('');
+        if (!customer.phone.trim()) return setError('Customer phone is required.');
+        if (!dueDate) return setError('Promised pay-by date is required.');
+        if (safeNumber(advance) > total) return setError('Advance cannot exceed the total.');
+        if (!navigator.onLine) return setError('Pay Later requires a connection to sync the credit record safely.');
+        if (!localStorage.getItem('token')) return setError('Your session has expired. Please sign in again.');
+        setBusy(true);
+        try {
+            const res = await fetch(`${API_BASE}/sales/checkout`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
+                body: JSON.stringify({
+                    items: cart.map((item) => ({ inventoryType: item.inventoryType, inventoryId: item.inventoryId, quantity: item.quantity, unitPrice: item.unitPrice, name: item.name })),
+                    paymentMethod: 'CREDIT',
+                    discountAmount: 0,
+                    sessionId: session?.id || null,
+                    customer,
+                    payLater: { advance: safeNumber(advance), advanceMethod: method, dueDate, total, adminPin: pin }
+                })
+            });
+            const responseText = await res.text();
+            let data;
+            try {
+                data = responseText ? JSON.parse(responseText) : {};
+            } catch {
+                data = { error: responseText || `Request failed (${res.status})` };
+            }
+            if (res.status === 401 || (res.status === 403 && data.error === 'Authentication token is invalid or expired')) {
+                window.dispatchEvent(new CustomEvent('pos:auth-expired'));
+                throw new Error('Your session has expired. Please sign in again.');
+            }
+            if (!res.ok) throw new Error(data.error || 'Unable to save Pay Later sale');
+            onCompleted(data.receipt || data.sale);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setBusy(false);
+        }
+    };
+    return (
+        <div className="fixed inset-0 z-50 bg-slate-950/60 flex items-center justify-center p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+            <div
+                className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-6"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="pay-later-title"
+                tabIndex={-1}
+                autoFocus
+                onKeyDown={(event) => {
+                    if (event.key === 'Escape') {
+                        event.preventDefault();
+                        onClose();
+                    } else if (event.key === 'Enter' && !event.repeat && !['BUTTON', 'SELECT'].includes(event.target?.tagName)) {
+                        event.preventDefault();
+                        submit();
+                    }
+                }}
+            >
+                <div className="flex items-center justify-between mb-5"><div><h2 id="pay-later-title" className="text-xl font-bold text-gray-900 dark:text-slate-100">Pay Later</h2><p className="text-sm text-gray-500 dark:text-slate-400">Enter confirms · Esc closes</p></div><button type="button" onClick={onClose} className="text-gray-400 text-2xl" aria-label="Close Pay Later">×</button></div>
+                <div className="grid md:grid-cols-2 gap-3">
+                    <label className="text-sm font-semibold">Phone *<input autoFocus value={customer.phone} onChange={(e) => lookup(e.target.value)} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label>
+                    <label className="text-sm font-semibold">Name<input value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label>
+                    <label className="text-sm font-semibold">ID / NIC<input value={customer.idNumber} onChange={(e) => setCustomer({ ...customer, idNumber: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label>
+                    <label className="text-sm font-semibold">Address<input value={customer.address} onChange={(e) => setCustomer({ ...customer, address: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label>
+                </div>
+                <div className="mt-5 grid md:grid-cols-3 gap-3">
+                    <label className="text-sm font-semibold">Advance now<input type="number" min="0" value={advance} onChange={(e) => setAdvance(e.target.value)} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label>
+                    <label className="text-sm font-semibold">Method<select value={method} onChange={(e) => setMethod(e.target.value)} className="mt-1 w-full rounded-xl border px-3 py-2.5"><option value="CASH">Cash</option><option value="CARD">Card</option><option value="BANK_TRANSFER">Bank Transfer</option></select></label>
+                    <label className="text-sm font-semibold">Promised pay-by *<input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label>
+                </div>
+                <div className="flex gap-2 mt-3 flex-wrap"><button onClick={() => setQuickDate(1)} className="px-3 py-1.5 rounded-lg border text-xs">Tomorrow</button><button onClick={() => setQuickDate(3)} className="px-3 py-1.5 rounded-lg border text-xs">3 days</button><button onClick={() => setQuickDate(7)} className="px-3 py-1.5 rounded-lg border text-xs">1 week</button></div>
+                {config.payLaterLimit > 0 && balance > config.payLaterLimit && !isAdminRole(user?.role) && <label className="block mt-4 text-sm font-semibold">Admin PIN<input type="password" value={pin} onChange={(e) => setPin(e.target.value)} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label>}
+                <div className="mt-5 rounded-2xl bg-gray-50 dark:bg-slate-950 p-4 text-sm"><div className="font-semibold mb-2">Items being given</div>{cart.map((item) => <div key={`${item.inventoryType}-${item.inventoryId}`} className="flex justify-between"><span>{item.quantity} × {item.name}</span><span>{formatMoney(item.unitPrice * item.quantity)}</span></div>)}<div className="border-t mt-3 pt-3 flex justify-between"><strong>Total</strong><strong>{formatMoney(total)}</strong></div><div className="flex justify-between text-amber-700"><span>Balance due</span><strong>{formatMoney(balance)}</strong></div></div>
+                {error && <div className="mt-3 text-sm text-rose-600">{error}</div>}
+                <div className="mt-5 flex justify-end gap-3"><button type="button" onClick={onClose} className="px-4 py-2 rounded-xl border">Back (Esc)</button><button type="button" onClick={submit} disabled={busy} className="px-5 py-2.5 rounded-xl bg-blue-600 text-white font-semibold">{busy ? 'Saving…' : 'Confirm (Enter)'}</button></div>
+            </div>
+        </div>
+    );
+}
+
+const isAdminRole = (role) => role === 'admin' || role === 'shop_owner';
+
+function RequestsPanel({ catalog, user, session, onComplete }) {
+    const [mode, setMode] = useState('list');
+    const [rows, setRows] = useState([]);
+    const [reminders, setReminders] = useState([]);
+    const [search, setSearch] = useState('');
+    const [status, setStatus] = useState('all');
+    const [customer, setCustomer] = useState({ phone: '', name: '', idNumber: '', address: '', note: '' });
+    const [requestLines, setRequestLines] = useState([]);
+    const [lineSearch, setLineSearch] = useState('');
+    const [advance, setAdvance] = useState('0');
+    const [advanceMethod, setAdvanceMethod] = useState('CASH');
+    const [expectedDate, setExpectedDate] = useState('');
+    const [error, setError] = useState('');
+    const [receipt, setReceipt] = useState(null);
+    const [busy, setBusy] = useState(false);
+    const token = () => ({ Authorization: `Bearer ${localStorage.getItem('token')}` });
+    const load = async () => {
+        try {
+            const query = new URLSearchParams({ q: search, status }).toString();
+            const res = await fetch(`${API_BASE}/requests?${query}`, { headers: token() });
+            if (!res.ok) throw new Error('Unable to load requests');
+            setRows(await res.json());
+        } catch (err) { setError(err.message); }
+    };
+    const loadReminders = async () => {
+        try {
+            const res = await fetch(`${API_BASE}/receivables/reminders`, { headers: token() });
+            if (res.ok) setReminders(await res.json());
+        } catch { /* reminders are best-effort while offline */ }
+    };
+    useEffect(() => { load(); loadReminders(); }, [search, status]);
+    const lookupCustomer = async (phone) => {
+        setCustomer((current) => ({ ...current, phone }));
+        if (phone.trim().length < 3) return;
+        try {
+            const res = await fetch(`${API_BASE}/customers/lookup?phone=${encodeURIComponent(phone)}`, { headers: token() });
+            const found = (await res.json())[0];
+            if (found) setCustomer({ phone: found.phone, name: found.name || '', idNumber: found.id_number || '', address: found.address || '', note: found.note || '' });
+        } catch { /* request can still be saved with a new customer */ }
+    };
+    const matchingLines = lineSearch.trim()
+        ? catalog.filter((item) => `${item.displayName} ${item.code} ${item.meta}`.toLowerCase().includes(lineSearch.trim().toLowerCase())).slice(0, 8)
+        : [];
+    const addLine = (item) => {
+        setRequestLines((current) => {
+            const existing = current.find((line) => line.inventoryId === item.inventoryId && line.inventoryType === item.inventoryType);
+            if (existing && item.trackedBy !== 'IMEI') return current.map((line) => line === existing ? { ...line, quantity: line.quantity + 1 } : line);
+            return [...current, { inventoryType: item.inventoryType, inventoryId: item.inventoryId, name: item.displayName, code: item.code, quantity: 1, unit_price: item.price, tracked_by: item.trackedBy }];
+        });
+        setLineSearch('');
+    };
+    const addCustom = () => {
+        const name = lineSearch.trim();
+        if (!name) return;
+        const price = window.prompt(`Price for "${name}"`, '0');
+        if (price === null || Number(price) < 0) return;
+        setRequestLines((current) => [...current, { inventoryType: 'custom', inventoryId: `custom-${Date.now()}`, name, code: '', quantity: 1, unit_price: Number(price), tracked_by: 'NONE' }]);
+        setLineSearch('');
+    };
+    const saveRequest = async () => {
+        setError('');
+        if (!customer.phone.trim()) return setError('Customer phone is required.');
+        if (!requestLines.length) return setError('Add at least one line.');
+        setBusy(true);
+        try {
+            const res = await fetch(`${API_BASE}/requests`, { method: 'POST', headers: { ...token(), 'Content-Type': 'application/json' }, body: JSON.stringify({ ...customer, id_number: customer.idNumber, items: requestLines, advance_amount: Number(advance || 0), advance_method: advanceMethod, expected_ready_date: expectedDate }) });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Unable to save request');
+            setReceipt(data);
+            setMode('receipt');
+            await load();
+        } catch (err) { setError(err.message); } finally { setBusy(false); }
+    };
+    const updateStatus = async (row, next) => {
+        let body = { status: next };
+        if (next === 'Cancelled') {
+            const reason = window.prompt('Cancellation reason');
+            if (!reason) return;
+            const refund = window.confirm('Refund the advance? Cancel to keep it (admin only).');
+            body = { status: next, reason, mode: refund ? 'refund' : 'keep' };
+        }
+        try {
+            const res = await fetch(`${API_BASE}/requests/${row.id}/status`, { method: 'PATCH', headers: { ...token(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Unable to update request');
+            setRows((current) => current.map((item) => item.id === row.id ? data : item));
+        } catch (err) { setError(err.message); }
+    };
+    const recordPayment = async (credit) => {
+        const amount = window.prompt(`Payment for ${credit.note_no}`, String(credit.balance));
+        if (amount === null) return;
+        const res = await fetch(`${API_BASE}/credits/${credit.id}/payments`, { method: 'POST', headers: { ...token(), 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: Number(amount), method: 'CASH', sessionId: session?.id }) });
+        const data = await res.json();
+        if (!res.ok) return setError(data.error || 'Unable to record payment');
+        setReminders((current) => current.filter((item) => item.id !== data.id || data.balance > 0));
+    };
+    const addCreditHistory = async (credit, type) => {
+        const note = window.prompt(type === 'extend' ? 'New due date and note (YYYY-MM-DD | note)' : 'Call note');
+        if (!note) return;
+        const [date, ...parts] = note.split('|');
+        const body = type === 'extend' ? { type, due_date: date.trim(), note: parts.join('|').trim() } : { type, note };
+        const res = await fetch(`${API_BASE}/credits/${credit.id}/history`, { method: 'POST', headers: { ...token(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const data = await res.json();
+        if (!res.ok) setError(data.error || 'Unable to update credit');
+        else loadReminders();
+    };
+    const printRequest = async () => {
+        if (!receipt) return;
+        await printWithHiddenFrame({
+            receipt_no: receipt.request_no,
+            cashier_name: user?.name,
+            customer_name: receipt.customer_name,
+            customer_phone: receipt.customer_phone,
+            items: receipt.items.map((item) => ({ name: item.name, quantity: item.quantity, unit_price: item.unit_price, line_total: item.unit_price * item.quantity })),
+            subtotal: receipt.total,
+            total: receipt.total,
+            payment_method: receipt.advance_method || 'CASH',
+            payment_details: { cash: receipt.advance_amount },
+            amount_paid: receipt.advance_amount,
+            balance_due: receipt.balance
+        });
+        setMode('list');
+        setReceipt(null);
+        setRequestLines([]);
+        setCustomer({ phone: '', name: '', idNumber: '', address: '', note: '' });
+    };
+    if (mode === 'receipt') return <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border p-6"><h2 className="text-2xl font-bold">Request receipt</h2><p className="mt-2">{receipt.request_no} · {receipt.customer_name || 'Customer'} · {receipt.customer_phone}</p><p className="mt-2">Total {formatMoney(receipt.total)} · Advance {formatMoney(receipt.advance_amount)} · Balance {formatMoney(receipt.balance)}</p><p className="text-sm text-gray-500 mt-1">Expected: {receipt.expected_ready_date || 'Not set'}</p><div className="mt-6 flex gap-3"><button onClick={printRequest} className="px-4 py-2 rounded-xl bg-blue-600 text-white">Print receipt</button><button onClick={() => { setMode('list'); setReceipt(null); }} className="px-4 py-2 rounded-xl border">No receipt</button></div></div>;
+    if (mode === 'create') return (
+        <div className="space-y-5">
+            <div className="flex items-center justify-between"><div><h2 className="text-xl font-bold">New request</h2><p className="text-sm text-gray-500">Phone is required. Other customer fields are optional.</p></div><button onClick={() => setMode('list')} className="px-3 py-2 rounded-xl border">Back</button></div>
+            <div className="bg-white dark:bg-slate-800 rounded-3xl border p-5 grid md:grid-cols-2 gap-3">
+                <label className="text-sm font-semibold">Phone *<input autoFocus value={customer.phone} onChange={(e) => lookupCustomer(e.target.value)} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label>
+                <label className="text-sm font-semibold">Name<input value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label>
+                <label className="text-sm font-semibold">ID / NIC<input value={customer.idNumber} onChange={(e) => setCustomer({ ...customer, idNumber: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label>
+                <label className="text-sm font-semibold">Address<input value={customer.address} onChange={(e) => setCustomer({ ...customer, address: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label>
+                <label className="text-sm font-semibold md:col-span-2">Note<textarea value={customer.note} onChange={(e) => setCustomer({ ...customer, note: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2.5" rows="2" /></label>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-3xl border p-5">
+                <div className="relative"><Search className="absolute left-3 top-3 text-gray-400" size={17} /><input value={lineSearch} onChange={(e) => setLineSearch(e.target.value)} onKeyDown={(e) => { if (e.key === 'Escape') setLineSearch(''); if (e.key === 'Enter' && matchingLines[0]) addLine(matchingLines[0]); }} placeholder="Search item, service, or requested item" className="w-full rounded-xl border pl-10 pr-3 py-2.5" />{lineSearch && <div className="absolute z-10 mt-1 w-full bg-white dark:bg-slate-800 rounded-xl border shadow-lg">{matchingLines.map((item) => <button key={`${item.inventoryType}-${item.inventoryId}`} onClick={() => addLine(item)} className="block w-full text-left px-3 py-2 hover:bg-blue-50">{item.displayName} · {formatMoney(item.price)}</button>)}{matchingLines.length === 0 && <button onClick={addCustom} className="block w-full text-left px-3 py-2 text-blue-600">Add as requested item / custom service…</button>}</div>}</div>
+                <div className="mt-4 divide-y">{requestLines.map((line, index) => <div key={line.inventoryId} className="py-2 flex justify-between"><span>{line.quantity} × {line.name}</span><span>{formatMoney(line.unit_price * line.quantity)} <button onClick={() => setRequestLines((current) => current.filter((_, i) => i !== index))} className="ml-2 text-rose-600">×</button></span></div>)}</div>
+                <div className="mt-4 flex justify-between font-bold"><span>Total</span><span>{formatMoney(requestLines.reduce((sum, line) => sum + line.unit_price * line.quantity, 0))}</span></div>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-3xl border p-5 grid md:grid-cols-3 gap-3"><label className="text-sm font-semibold">Advance<input type="number" min="0" value={advance} onChange={(e) => setAdvance(e.target.value)} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label><label className="text-sm font-semibold">Method<select value={advanceMethod} onChange={(e) => setAdvanceMethod(e.target.value)} className="mt-1 w-full rounded-xl border px-3 py-2.5"><option value="CASH">Cash</option><option value="CARD">Card</option><option value="BANK_TRANSFER">Bank Transfer</option></select></label><label className="text-sm font-semibold">Expected ready date<input type="date" value={expectedDate} onChange={(e) => setExpectedDate(e.target.value)} className="mt-1 w-full rounded-xl border px-3 py-2.5" /></label></div>
+            {error && <div className="text-sm text-rose-600">{error}</div>}<button onClick={saveRequest} disabled={busy} className="px-5 py-3 rounded-xl bg-blue-600 text-white font-semibold">{busy ? 'Saving…' : 'Save request (F10)'}</button>
+        </div>
+    );
+    return (
+        <div className="space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-xl font-bold flex items-center gap-2"><ClipboardList size={20} /> Requests</h2><p className="text-sm text-gray-500">Track customer requests and call-ready pickups.</p></div><button onClick={() => setMode('create')} className="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold">New request</button></div>
+            {reminders.length > 0 && <div className="bg-amber-50 dark:bg-amber-500/10 rounded-3xl border border-amber-200 dark:border-amber-500/30 p-4"><h3 className="font-bold flex items-center gap-2"><Bell size={17} /> Due reminders ({reminders.length})</h3><div className="mt-3 space-y-2">{reminders.map((credit) => <div key={credit.id} className="bg-white dark:bg-slate-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2"><div><strong>{credit.customer_name || 'Customer'}</strong> · <a href={`tel:${credit.customer_phone}`} className="text-blue-600">{credit.customer_phone}</a><div className="text-xs text-gray-500">{credit.sale_receipt_no} · {formatMoney(credit.balance)} · due {credit.due_date} · {credit.days_overdue} days overdue</div></div><div className="flex gap-1"><button onClick={() => recordPayment(credit)} className="px-2 py-1 rounded-lg bg-blue-600 text-white text-xs">Record payment</button><button onClick={() => addCreditHistory(credit, 'extend')} className="px-2 py-1 rounded-lg border text-xs">Extend</button><button onClick={() => addCreditHistory(credit, 'call')} className="px-2 py-1 rounded-lg border text-xs">Call note</button></div></div>)}</div></div>}
+            <div className="bg-white dark:bg-slate-800 rounded-3xl border p-4 flex flex-wrap gap-3"><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Phone, name, request number, status" className="flex-1 min-w-[240px] rounded-xl border px-3 py-2.5" /><select value={status} onChange={(e) => setStatus(e.target.value)} className="rounded-xl border px-3 py-2.5"><option value="all">All statuses</option>{['Requested', 'Ordered', 'Ready', 'Completed', 'Cancelled'].map((value) => <option key={value}>{value}</option>)}</select></div>
+            {error && <div className="text-sm text-rose-600">{error}</div>}
+            <div className="bg-white dark:bg-slate-800 rounded-3xl border overflow-x-auto"><table className="w-full text-sm"><thead className="bg-gray-50 dark:bg-slate-950"><tr><th className="px-4 py-3 text-left">Request</th><th className="px-4 py-3 text-left">Customer</th><th className="px-4 py-3 text-left">Lines</th><th className="px-4 py-3 text-right">Balance</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Actions</th></tr></thead><tbody>{rows.map((row) => <tr key={row.id} className="border-t"><td className="px-4 py-3 font-semibold">{row.request_no}<div className="text-xs text-gray-400">{row.expected_ready_date || 'No date'}</div></td><td className="px-4 py-3">{row.customer_name || '—'}<div className="text-xs flex items-center gap-1"><a href={`tel:${row.customer_phone}`} className="text-blue-600"><Phone size={12} />{row.customer_phone}</a></div></td><td className="px-4 py-3">{(row.items || []).map((item) => item.name).join(', ')}</td><td className="px-4 py-3 text-right">{formatMoney(row.balance)}</td><td className="px-4 py-3">{row.status}</td><td className="px-4 py-3"><div className="flex flex-wrap gap-1">{row.status === 'Requested' && <button onClick={() => updateStatus(row, 'Ordered')} className="px-2 py-1 rounded-lg border text-xs">Ordered</button>}{row.status === 'Ordered' && <button onClick={() => updateStatus(row, 'Ready')} className="px-2 py-1 rounded-lg border text-xs">Ready</button>}{row.status === 'Ready' && <button onClick={() => onComplete(row)} className="px-2 py-1 rounded-lg bg-blue-600 text-white text-xs">Complete &amp; pay</button>}{!['Completed', 'Cancelled'].includes(row.status) && <button onClick={() => updateStatus(row, 'Cancelled')} className="px-2 py-1 rounded-lg border text-xs text-rose-600">Cancel</button>}</div></td></tr>)}</tbody></table>{rows.length === 0 && <div className="p-8 text-center text-gray-400">No requests found.</div>}</div>
+        </div>
+    );
+}
+
 export default function SalesPage() {
     const { user } = useAuth();
     const { session } = useSession();
@@ -190,7 +464,7 @@ export default function SalesPage() {
     const [phones, setPhones] = useState([]);
     const [accessories, setAccessories] = useState([]);
     const [sales, setSales] = useState([]);
-    const [config, setConfig] = useState({ discountApprovalLimitPercent: 10 });
+    const [config, setConfig] = useState({ discountApprovalLimitPercent: 10, payLaterLimit: 0 });
     const [inventoryLoading, setInventoryLoading] = useState(true);
     const [salesLoading, setSalesLoading] = useState(true);
     const [salesError, setSalesError] = useState('');
@@ -213,6 +487,8 @@ export default function SalesPage() {
     const [paymentSplit, setPaymentSplit] = useState({ cash: '', card: '', bankTransfer: '' });
     const [receiptOptionIndex, setReceiptOptionIndex] = useState(0);
     const [completedReceipt, setCompletedReceipt] = useState(null);
+    const [payLaterOpen, setPayLaterOpen] = useState(false);
+    const [activeRequest, setActiveRequest] = useState(null);
 
     const [historySearch, setHistorySearch] = useState('');
     const [historyCashierFilter, setHistoryCashierFilter] = useState('all');
@@ -283,8 +559,8 @@ export default function SalesPage() {
                 displayName: accessory.name,
                 price: safeNumber(accessory.sell_price),
                 listPrice: safeNumber(accessory.sell_price),
-                stock: safeNumber(accessory.quantity),
-                trackedBy: 'QTY',
+                stock: accessory.is_service ? Number.MAX_SAFE_INTEGER : safeNumber(accessory.quantity),
+                trackedBy: accessory.is_service ? 'SERVICE' : 'QTY',
                 category: accessory.category || 'Accessories',
                 meta: `${accessory.name} ${accessory.sku} ${accessory.category}`,
                 barcodes: allCodes,
@@ -335,8 +611,8 @@ export default function SalesPage() {
     const effectiveDiscountPercent = listSubtotal > 0 ? (effectiveDiscount / listSubtotal) * 100 : 0;
     const approvalRequired = effectiveDiscountPercent > config.discountApprovalLimitPercent && !isAdmin;
     const splitTotal = safeNumber(paymentSplit.cash) + safeNumber(paymentSplit.card) + safeNumber(paymentSplit.bankTransfer);
-    const cashChange = paymentMethod === 'CASH' ? Math.max(0, safeNumber(cashReceived) - total) : 0;
-    const cashDue = paymentMethod === 'CASH' ? Math.max(0, total - safeNumber(cashReceived)) : 0;
+    const requestBalance = Math.max(0, total - Number(activeRequest?.advance_amount || 0));
+    const cashChange = paymentMethod === 'CASH' ? Math.max(0, safeNumber(cashReceived) - requestBalance) : 0;
 
     const totalCost = useMemo(() => cart.reduce((sum, item) => sum + unitCostOf(item) * item.quantity, 0), [cart]);
     const costKnown = useMemo(
@@ -556,7 +832,8 @@ export default function SalesPage() {
     useEffect(() => {
         if (billingStep !== 'payment') return;
         if (paymentMethod === 'CASH') {
-            setCashReceived(total > 0 ? total.toFixed(2) : '0.00');
+            const due = Math.max(0, total - Number(activeRequest?.advance_amount || 0));
+            setCashReceived(due > 0 ? due.toFixed(2) : '0.00');
             setTimeout(() => {
                 if (cashInputRef.current) {
                     cashInputRef.current.focus();
@@ -564,7 +841,7 @@ export default function SalesPage() {
                 }
             }, 0);
         }
-    }, [billingStep, paymentMethod, total]);
+    }, [billingStep, paymentMethod, total, activeRequest]);
 
     const openItemModal = (baseItem, mode = 'add', focusQuantity = false) => {
         const line = mode === 'edit' ? baseItem : null;
@@ -617,6 +894,29 @@ export default function SalesPage() {
     const handleSelectProduct = (product) => {
         if (!product) return;
         openItemModal(product, 'add');
+    };
+
+    const addCustomService = () => {
+        const name = productSearch.trim();
+        if (!name) return;
+        const price = window.prompt(`Price for "${name}"`, '0');
+        if (price === null || Number(price) < 0) return;
+        setCart((current) => [...current, {
+            inventoryType: 'service',
+            inventoryId: `custom-${Date.now()}`,
+            code: 'CUSTOM',
+            name,
+            unitPrice: Number(price),
+            listPrice: Number(price),
+            quantity: 1,
+            trackedBy: 'SERVICE',
+            stock: Number.MAX_SAFE_INTEGER,
+            category: 'Services',
+            allowPriceOverride: true,
+            source: { is_service: true, cost_price: 0 }
+        }]);
+        setProductSearch('');
+        setSelectedProductIndex(0);
     };
 
     const updateCartQuantity = (line, nextQuantity) => {
@@ -738,6 +1038,7 @@ export default function SalesPage() {
         setBillingStep('cart');
         setPaymentMethod('CASH');
         setCompletedReceipt(null);
+        setActiveRequest(null);
         setSelectedCartIndex(0);
         setFocusArea('search');
         setProductSearch('');
@@ -754,7 +1055,7 @@ export default function SalesPage() {
             setCheckoutError('Add at least one item before checkout.');
             return null;
         }
-        if (paymentMethod === 'CASH' && safeNumber(cashReceived) < total - 0.01) {
+        if (paymentMethod === 'CASH' && safeNumber(cashReceived) < requestBalance - 0.01) {
             setCheckoutError('Cash received must cover the total amount.');
             return null;
         }
@@ -767,8 +1068,8 @@ export default function SalesPage() {
             ? {
                 cash: safeNumber(cashReceived),
                 cashReceived: safeNumber(cashReceived),
-                change: Math.max(0, safeNumber(cashReceived) - total),
-                change_amount: Math.max(0, safeNumber(cashReceived) - total)
+                change: Math.max(0, safeNumber(cashReceived) - requestBalance),
+                change_amount: Math.max(0, safeNumber(cashReceived) - requestBalance)
             }
             : paymentMethod === 'SPLIT'
                 ? {
@@ -793,7 +1094,9 @@ export default function SalesPage() {
             items: cart.map((item) => ({
                 inventoryType: item.inventoryType,
                 inventoryId: item.inventoryId,
-                quantity: item.inventoryType === 'phone' ? 1 : item.quantity
+                quantity: item.inventoryType === 'phone' ? 1 : item.quantity,
+                unitPrice: item.unitPrice,
+                name: item.name
             })),
             paymentMethod,
             cashReceived: paymentMethod === 'CASH' ? safeNumber(cashReceived) : 0,
@@ -801,17 +1104,18 @@ export default function SalesPage() {
             discountAmount: effectiveDiscount,
             approvalNote: approvalNote.trim() || (approvalRequired ? 'Price/discount exceeded approval limit.' : null),
             sessionId: session?.id || null,
-            clientLocalId: localReceipt.clientLocalId
+            clientLocalId: localReceipt.clientLocalId,
+            requestId: activeRequest?.id || ''
         };
 
         setCheckoutLoading(true);
         try {
             const localKey = await addPendingSale(localReceipt);
-            setReceipt({ ...localReceipt, id: localKey });
+            let savedReceipt = { ...localReceipt, id: localKey };
+            setReceipt(savedReceipt);
 
             const token = localStorage.getItem('token');
             if (navigator.onLine && token) {
-                (async () => {
                     try {
                         const res = await fetch(`${API_BASE}/sales/checkout`, {
                             method: 'POST',
@@ -821,32 +1125,31 @@ export default function SalesPage() {
                             },
                             body: JSON.stringify(payloadForServer)
                         });
-                        const data = await res.json();
-                        if (res.ok) {
-                            const { markSaleSynced } = await import('../db/database');
-                            await markSaleSynced(localKey, data?.sale?.id || data?.receipt?.id || null);
-                            setReceipt((current) => current?.id === localKey
-                                ? {
-                                    ...current,
-                                    pending_sync: false,
-                                    receipt_no: data?.receipt?.receipt_no || current.receipt_no,
-                                    id: data?.receipt?.id || current.id
-                                }
-                                : current);
-                            await refreshInventoryCache();
-                            loadSales();
-                            syncNow();
-                        } else {
-                            setReceipt((current) => current?.id === localKey ? { ...current, pending_sync: true } : current);
+                        const responseText = await res.text();
+                        let data = {};
+                        try {
+                            data = responseText ? JSON.parse(responseText) : {};
+                        } catch {
+                            data = { error: responseText };
                         }
+                        if (!res.ok) throw new Error(data.error || 'Unable to save sale');
+                        const { markSaleSynced } = await import('../db/database');
+                        const serverReceipt = data?.receipt || data?.sale;
+                        await markSaleSynced(localKey, serverReceipt?.id || null);
+                        savedReceipt = { ...serverReceipt, id: serverReceipt?.id || localKey, pending_sync: false };
+                        setReceipt(savedReceipt);
+                        await refreshInventoryCache();
+                        loadSales();
+                        syncNow();
                     } catch (err) {
-                        setReceipt((current) => current?.id === localKey ? { ...current, pending_sync: true } : current);
+                        console.warn('Online checkout failed; keeping the sale pending for sync:', err);
+                        savedReceipt = { ...savedReceipt, pending_sync: true };
+                        setReceipt(savedReceipt);
                     }
-                })();
             }
 
             await loadInventory();
-            return { ...localReceipt, id: localKey };
+            return savedReceipt;
         } catch (err) {
             console.error('Checkout failed:', err);
             setCheckoutError(err.message || 'Checkout failed');
@@ -899,6 +1202,55 @@ export default function SalesPage() {
         setCheckoutError('');
         setPaymentMethod('CASH');
         setBillingStep('payment');
+    };
+
+    const openPayLater = () => {
+        if (cart.length === 0) {
+            setCheckoutError('Add at least one item before payment.');
+            return;
+        }
+        setCheckoutError('');
+        setPayLaterOpen(true);
+    };
+
+    const completePayLater = (savedReceipt) => {
+        setPayLaterOpen(false);
+        setReceipt(savedReceipt);
+        setCompletedReceipt(savedReceipt);
+        setReceiptOptionIndex(0);
+        setBillingStep('receipt-options');
+        loadInventory();
+        loadSales();
+    };
+
+    const completeRequest = (request) => {
+        const lines = (request.items || []).map((item) => {
+            const catalogItem = catalog.find((candidate) => String(candidate.inventoryId) === String(item.inventoryId));
+            return catalogItem ? {
+                ...catalogItem,
+                name: item.name || catalogItem.displayName,
+                unitPrice: Number(item.unit_price || catalogItem.price),
+                listPrice: Number(item.unit_price || catalogItem.price),
+                quantity: Number(item.quantity || 1)
+            } : {
+                inventoryType: item.inventoryType || 'service',
+                inventoryId: item.inventoryId || `custom-${Date.now()}`,
+                code: item.code || 'CUSTOM',
+                name: item.name,
+                unitPrice: Number(item.unit_price || 0),
+                listPrice: Number(item.unit_price || 0),
+                quantity: Number(item.quantity || 1),
+                trackedBy: 'SERVICE',
+                stock: Number.MAX_SAFE_INTEGER,
+                allowPriceOverride: true,
+                source: { is_service: true, cost_price: 0 }
+            };
+        });
+        setCart(lines);
+        setActiveRequest(request);
+        setActiveTab('billing');
+        setBillingStep('cart');
+        setCheckoutError(`Completing ${request.request_no}. Advance already paid: ${formatMoney(request.advance_amount)}.`);
     };
 
     const handleSearchKeyDown = (event) => {
@@ -1206,21 +1558,9 @@ export default function SalesPage() {
     const paymentIndex = PAYMENT_METHODS.findIndex((method) => method.value === paymentMethod);
 
     const handlePaymentKeyDown = (event) => {
-        const target = event.target;
-        const typingInInput = target instanceof HTMLInputElement
-            || target instanceof HTMLTextAreaElement
-            || target?.tagName === 'SELECT';
-
-        // FIX: Enter must be handled BEFORE the "typing in an input" early return below.
-        // Previously Enter inside the Cash received / Split inputs hit that return and did nothing.
-        if (event.key === 'Enter') {
-            // Let the Back / Confirm buttons do their own native click on Enter.
-            if (target?.closest?.('[data-enter-native]')) return;
-            event.preventDefault();
-            if (event.repeat) return;
-            handleConfirmPayment();
-            return;
-        }
+        const typingInInput = event.target instanceof HTMLInputElement
+            || event.target instanceof HTMLTextAreaElement
+            || event.target?.tagName === 'SELECT';
 
         // Down/Right = next method, Up/Left = previous method.
         // While typing in an input, Left/Right must keep moving the text cursor, so only Up/Down cycle there.
@@ -1248,9 +1588,19 @@ export default function SalesPage() {
             // While typing in the Cash received input, digits must type normally (no method switch).
             return;
         }
+        if (event.key === '5') {
+            event.preventDefault();
+            openPayLater();
+            return;
+        }
         if (['1', '2', '3', '4'].includes(event.key)) {
             event.preventDefault();
             setPaymentMethod(PAYMENT_METHODS[Number(event.key) - 1].value);
+            return;
+        }
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleConfirmPayment();
         }
     };
 
@@ -1286,6 +1636,10 @@ export default function SalesPage() {
                     <button onClick={() => setActiveTab('history')} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${activeTab === 'history' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-300'}`}>
                         <History size={16} />
                         History
+                    </button>
+                    <button onClick={() => setActiveTab('requests')} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${activeTab === 'requests' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-300'}`}>
+                        <ClipboardList size={16} />
+                        Requests
                     </button>
                 </div>
             </div>
@@ -1359,7 +1713,8 @@ export default function SalesPage() {
                         )}
                         {productSearch.trim() !== '' && visibleProducts.length === 0 && !inventoryLoading && (
                             <div className="mt-3 p-4 rounded-2xl bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20 text-sm text-amber-800 dark:text-amber-200 text-center">
-                                No matching products found.
+                                <div>No matching products found.</div>
+                                <button onClick={addCustomService} className="mt-2 px-3 py-2 rounded-xl bg-blue-600 text-white font-semibold">Add custom service…</button>
                             </div>
                         )}
                     </div>
@@ -1441,16 +1796,34 @@ export default function SalesPage() {
                                             <strong className="text-gray-900 dark:text-slate-100">{formatMoney(subtotal)}</strong>
                                         </div>
                                         <div className="flex items-center justify-between text-sm">
-                                            <span className="text-gray-500 dark:text-slate-400">
-                                                Discount ({effectiveDiscountPercent.toFixed(1)}%)
-                                            </span>
-                                            <strong className="text-rose-600 dark:text-rose-400">-{formatMoney(effectiveDiscount)}</strong>
+                                            <span className="text-gray-500 dark:text-slate-400">Discount</span>
+                                            <strong className="text-gray-500 dark:text-slate-400">-{formatMoney(discountValue)}</strong>
                                         </div>
                                         <div className="flex items-center justify-between text-lg pt-3 border-t border-gray-100 dark:border-slate-800">
                                             <span className="font-semibold text-gray-900 dark:text-slate-100">Total</span>
                                             <strong className="text-blue-600 dark:text-blue-400">{formatMoney(total)}</strong>
                                         </div>
                                     </div>
+
+                                    <div className="space-y-2 mb-6">
+                                        <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Discount amount</label>
+                                        <input
+                                            ref={discountInputRef}
+                                            type="text"
+                                            inputMode="decimal"
+                                            min="0"
+                                            step="0.01"
+                                            value={discountAmount}
+                                            onChange={(e) => setDiscountAmount(e.target.value)}
+                                            className="w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3.5 py-2.5 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                                            placeholder="0.00"
+                                        />
+                                        <div className={`text-xs ${approvalRequired ? 'text-amber-700 dark:text-amber-300' : 'text-gray-500 dark:text-slate-400'}`}>
+                                            Discount approval limit: {config.discountApprovalLimitPercent}%
+                                            {approvalRequired ? ' - admin approval flag will be recorded.' : ''}
+                                        </div>
+                                    </div>
+
                                     {isAdmin && (
                                         <div className={`rounded-xl border px-3.5 py-3 mb-6 ${expectedProfit >= 0 ? 'border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10' : 'border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10'}`}>
                                             <div className="flex items-center justify-between text-xs sm:text-sm">
@@ -1481,6 +1854,14 @@ export default function SalesPage() {
                                         <Printer size={16} />
                                         Proceed to Payment (F10)
                                     </button>
+                                    <button
+                                        onClick={openPayLater}
+                                        disabled={cart.length === 0}
+                                        className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                    >
+                                        <Bell size={16} />
+                                        Pay Later (cashier available)
+                                    </button>
                                     {offlineMode && (
                                         <div className="mt-3 flex items-center gap-2 rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-300">
                                             <CloudUpload size={14} />
@@ -1510,7 +1891,7 @@ export default function SalesPage() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mt-6">
+                            <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mt-6">
                                 {PAYMENT_METHODS.map(({ value, label, icon: Icon }, index) => (
                                     <button
                                         key={value}
@@ -1524,6 +1905,13 @@ export default function SalesPage() {
                                         </div>
                                     </button>
                                 ))}
+                                <button
+                                    onClick={openPayLater}
+                                    className="rounded-2xl border px-4 py-4 text-left transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300"
+                                >
+                                    <div className="text-xs opacity-70 mb-1">5</div>
+                                    <div className="flex items-center gap-2"><Bell size={16} /><span className="font-semibold">Pay Later</span></div>
+                                </button>
                             </div>
 
                             <div className="mt-6">
@@ -1599,11 +1987,10 @@ export default function SalesPage() {
                             )}
 
                             <div className="mt-6 flex justify-end gap-3">
-                                <button data-enter-native onClick={() => setBillingStep('cart')} className="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <button onClick={() => setBillingStep('cart')} className="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     Back (Esc)
                                 </button>
                                 <button
-                                    data-enter-native
                                     onClick={handleConfirmPayment}
                                     disabled={checkoutLoading}
                                     className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -1644,6 +2031,8 @@ export default function SalesPage() {
                         </div>
                     )}
                 </div>
+            ) : activeTab === 'requests' ? (
+                <RequestsPanel catalog={catalog} user={user} session={session} onComplete={completeRequest} />
             ) : (
                 <div className="space-y-6">
                     <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
@@ -1762,6 +2151,18 @@ export default function SalesPage() {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {payLaterOpen && (
+                <PayLaterModal
+                    cart={cart}
+                    total={total}
+                    session={session}
+                    user={user}
+                    config={config}
+                    onClose={() => setPayLaterOpen(false)}
+                    onCompleted={completePayLater}
+                />
             )}
 
             {itemModal.open && (

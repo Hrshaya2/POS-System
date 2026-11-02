@@ -19,7 +19,9 @@ const REPORTS = [
   { id: 'profit', label: 'Profit & Margin', icon: TrendingUp },
   { id: 'payments', label: 'Payment Type', icon: Landmark },
   { id: 'refunds', label: 'Refunds', icon: Receipt },
-  { id: 'credit', label: 'Credit / Unpaid', icon: BadgeDollarSign },
+  { id: 'credit', label: 'Pay Later / Receivables', icon: BadgeDollarSign },
+  { id: 'advances', label: 'Advances', icon: Landmark },
+  { id: 'requests', label: 'Requests', icon: ClipboardList },
   { id: 'purchases', label: 'Purchases', icon: PackageSearch },
   { id: 'performance', label: 'Product Performance', icon: TrendingUp },
   { id: 'activity', label: 'User Activity', icon: History }
@@ -141,6 +143,7 @@ export default function ReportsPage() {
   const [txn, setTxn] = useState({ rows: [], total: 0, page: 1, loading: false });
   const [ref, setRef] = useState({ rows: [], total: 0, page: 1 });
   const [act, setAct] = useState({ rows: [], total: 0, page: 1 });
+  const [connectedReport, setConnectedReport] = useState({ rows: [], total: 0 });
 
   const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const defFrom = useMemo(() => { const d = new Date(); d.setDate(d.getDate() - 30); return d.toISOString().slice(0, 10); }, []);
@@ -168,6 +171,11 @@ export default function ReportsPage() {
     if (active === 'refunds') loadPage('/reports/refunds', setRef, 1);
     if (active === 'activity') loadPage('/reports/user-activity', setAct, 1);
   }, [active, filters]);
+  useEffect(() => {
+    if (!['credit', 'advances', 'requests'].includes(active)) return;
+    const endpoint = active === 'credit' ? 'receivables' : active;
+    fetch(`${API}/reports/${endpoint}`, { headers: H() }).then((res) => res.json()).then((data) => setConnectedReport({ rows: data.receivables || data.advances || data.requests || [], total: data.total || 0 })).catch((e) => setError(e.message));
+  }, [active]);
 
   const stale = !status.isOnline || status.isSyncing || (status.pendingCounts && status.pendingCounts.total > 0) || !status.lastSyncAt;
   const r = report || {};
@@ -236,7 +244,9 @@ export default function ReportsPage() {
           {ref.rows.find((x) => x.approval_status === 'APPROVED' || x.approval_status === 'DIRECT') && (<button onClick={async () => { const rr = ref.rows.find((x) => x.approval_status === 'APPROVED' || x.approval_status === 'DIRECT'); const html = buildRefundReceiptHtml(rr, getReceiptSettings()); const w = window.open(''); w.document.write(html); w.document.close(); setTimeout(() => w.print(), 200); }} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium"><Receipt size={16} />Print refund receipt</button>)}
         </div>)}
 
-        {active === 'credit' && (<Credit credits={r.credit_notes || []} outstanding={r.total_credit_outstanding} />)}
+        {active === 'credit' && (<Credit credits={connectedReport.rows} outstanding={connectedReport.total} />)}
+        {active === 'advances' && (<TableBox cols={[{ key: 'request_no', label: 'Request' }, { key: 'customer_name', label: 'Customer' }, { key: 'customer_phone', label: 'Phone' }, { key: 'advance_amount', label: 'Advance', type: 'money', align: 'right' }, { key: 'status', label: 'Status' }]} rows={connectedReport.rows} total={connectedReport.rows.length} page={1} limit={L} onPage={() => {}} loading={false} noData="No open request advances." name="Advances Report" totals={{ advance_amount: connectedReport.total }} />)}
+        {active === 'requests' && (<TableBox cols={[{ key: 'request_no', label: 'Request' }, { key: 'customer_name', label: 'Customer' }, { key: 'customer_phone', label: 'Phone' }, { key: 'total', label: 'Total', type: 'money', align: 'right' }, { key: 'status', label: 'Status' }]} rows={connectedReport.rows} total={connectedReport.total} page={1} limit={L} onPage={() => {}} loading={false} noData="No requests." name="Requests Report" totals={{ total: connectedReport.rows.reduce((sum, row) => sum + Number(row.total || 0), 0) }} />)}
         {active === 'purchases' && (<Purchases p={r.purchases || []} ss={r.supplier_spend || []} sup={filters.supplier} />)}
         {active === 'performance' && (<Performance best={r.best_selling || []} worst={r.worst_selling || []} dead={r.dead_stock} />)}
 

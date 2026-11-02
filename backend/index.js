@@ -23,6 +23,8 @@ const {
     Refund,
     StoreSetting,
     CreditNote,
+    Customer,
+    Request,
     StorageSnapshot
 } = require('./models');
 
@@ -347,6 +349,17 @@ const normalizeSale = (sale) => {
         approval_status: sale.approval_status,
         approval_note: sale.approval_note,
         session_id: sale.session_id,
+        customer_id: sale.customer_id || '',
+        customer_name: sale.customer_name || '',
+        customer_phone: sale.customer_phone || '',
+        customer_id_number: sale.customer_id_number || '',
+        customer_address: sale.customer_address || '',
+        customer_note: sale.customer_note || '',
+        request_id: sale.request_id || '',
+        credit_note_id: sale.credit_note_id || '',
+        amount_paid: Number(sale.amount_paid ?? sale.total ?? 0),
+        balance_due: Number(sale.balance_due || 0),
+        due_date: sale.due_date || '',
         created_at: sale.created_at || sale.createdAt,
         refunded: !!sale.refunded,
         refunded_at: sale.refunded_at || null,
@@ -374,13 +387,13 @@ const connectDB = async () => {
 const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    if (!token) return res.sendStatus(401);
+    if (!token) return res.status(401).json({ error: 'Authentication required' });
 
     let payload;
     try {
         payload = jwt.verify(token, JWT_SECRET);
     } catch (err) {
-        return res.sendStatus(403);
+        return res.status(403).json({ error: 'Authentication token is invalid or expired' });
     }
 
     // Reject tokens belonging to users that no longer exist (e.g. the account
@@ -1356,8 +1369,336 @@ app.get('/api/stock/alerts', authenticateToken, async (req, res) => {
 // SALES / BILLING
 // =============================================
 
-app.get('/api/sales/config', authenticateToken, (req, res) => {
-    res.json({ discountApprovalLimitPercent: SALE_DISCOUNT_APPROVAL_LIMIT_PERCENT });
+const normalizeCustomer = (customer) => customer ? ({
+    id: customer._id.toString(),
+    phone: customer.phone,
+    name: customer.name || '',
+    id_number: customer.id_number || '',
+    address: customer.address || '',
+    note: customer.note || ''
+}) : null;
+
+const normalizeRequest = (request) => request ? ({
+    id: request._id.toString(),
+    request_no: request.request_no,
+    customer_id: request.customer_id || '',
+    customer_name: request.customer_name || '',
+    customer_phone: request.customer_phone,
+    customer_id_number: request.customer_id_number || '',
+    customer_address: request.customer_address || '',
+    customer_note: request.customer_note || '',
+    items: request.items || [],
+    total: Number(request.total || 0),
+    advance_amount: Number(request.advance_amount || 0),
+    advance_method: request.advance_method || '',
+    balance: Number(request.balance || 0),
+    expected_ready_date: request.expected_ready_date || '',
+    status: request.status,
+    cancellation_reason: request.cancellation_reason || '',
+    cancellation_mode: request.cancellation_mode || '',
+    sale_id: request.sale_id || '',
+    history: request.history || [],
+    created_at: request.created_at || request.createdAt
+}) : null;
+
+const normalizeCreditNote = (credit) => credit ? ({
+    id: credit._id.toString(),
+    note_no: credit.note_no,
+    sale_id: credit.sale_id || '',
+    sale_receipt_no: credit.sale_receipt_no || '',
+    customer_name: credit.customer_name || '',
+    customer_phone: credit.customer_phone || '',
+    customer_id: credit.customer_id || '',
+    amount: Number(credit.amount || 0),
+    amount_paid: Number(credit.amount_paid || 0),
+    balance: Number(credit.balance || 0),
+    due_date: credit.due_date || '',
+    items: credit.items || [],
+    payments: credit.payments || [],
+    history: credit.history || [],
+    status: credit.status,
+    created_at: credit.created_at || credit.createdAt
+}) : null;
+
+const upsertCustomer = async (data) => {
+    const phone = String(data.phone || data.customer_phone || '').trim();
+    if (!phone) throw new Error('Customer phone is required');
+    return Customer.findOneAndUpdate(
+        { phone },
+        {
+            phone,
+            name: String(data.name || data.customer_name || '').trim(),
+            id_number: String(data.id_number || data.customer_id_number || '').trim(),
+            address: String(data.address || '').trim(),
+            note: String(data.note || data.customer_note || '').trim(),
+            updated_at: new Date()
+        },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+};
+
+app.get('/api/customers/lookup', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const phone = String(req.query.phone || '').trim();
+        if (!phone) return res.json([]);
+        const rows = await Customer.find({ phone: { $regex: phone, $options: 'i' } }).sort({ updated_at: -1 }).limit(10);
+        res.json(rows.map(normalizeCustomer));
+    } catch (err) {
+        console.error('[customers lookup]', err);
+        res.status(500).json({ error: 'Unable to lookup customers' });
+    }
+});
+
+app.post('/api/customers', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const customer = await upsertCustomer(req.body || {});
+        res.status(201).json(normalizeCustomer(customer));
+    } catch (err) {
+        res.status(400).json({ error: err.message || 'Unable to save customer' });
+    }
+});
+
+app.get('/api/requests', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const { q = '', status = '' } = req.query;
+        const filter = {};
+        if (status && status !== 'all') filter.status = status;
+        if (q.trim()) {
+            const term = q.trim();
+            filter.$or = [
+                { request_no: { $regex: term, $options: 'i' } },
+                { customer_phone: { $regex: term, $options: 'i' } },
+                { customer_name: { $regex: term, $options: 'i' } },
+                { status: { $regex: term, $options: 'i' } }
+            ];
+        }
+        const rows = await Request.find(filter).sort({ created_at: -1 }).limit(300);
+        res.json(rows.map(normalizeRequest));
+    } catch (err) {
+        console.error('[requests list]', err);
+        res.status(500).json({ error: 'Unable to load requests' });
+    }
+});
+
+app.post('/api/requests', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const body = req.body || {};
+        const customer = await upsertCustomer(body);
+        const items = Array.isArray(body.items) ? body.items : [];
+        if (!items.length) return res.status(400).json({ error: 'At least one request line is required' });
+        const total = items.reduce((sum, item) => sum + Math.max(0, Number(item.unit_price || item.unitPrice || 0)) * Math.max(1, Number(item.quantity || 1)), 0);
+        const advance = Math.min(total, Math.max(0, Number(body.advance_amount || 0)));
+        const request = await Request.create({
+            request_no: `REQ-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`,
+            customer_id: customer._id.toString(),
+            customer_name: customer.name || '',
+            customer_phone: customer.phone,
+            customer_id_number: customer.id_number || '',
+            customer_address: customer.address || '',
+            customer_note: customer.note || '',
+            items,
+            total,
+            advance_amount: advance,
+            advance_method: String(body.advance_method || '').toUpperCase(),
+            balance: Math.max(0, total - advance),
+            expected_ready_date: String(body.expected_ready_date || ''),
+            created_by_id: req.user.id,
+            created_by_name: req.user.name
+        });
+        if (advance > 0 && String(body.advance_method || '').toUpperCase() === 'CASH') {
+            await CashMovement.create({
+                cashier_id: req.user.id,
+                cashier_name: req.user.name,
+                movement_type: 'SALE',
+                amount: advance,
+                note: `Request advance ${request.request_no}`,
+                movement_date: localDateStr(new Date().getTimezoneOffset())
+            });
+        }
+        res.status(201).json(normalizeRequest(request));
+    } catch (err) {
+        console.error('[request create]', err);
+        res.status(400).json({ error: err.message || 'Unable to create request' });
+    }
+});
+
+app.patch('/api/requests/:id/status', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const request = await Request.findById(req.params.id);
+        if (!request) return res.status(404).json({ error: 'Request not found' });
+        const nextStatus = String(req.body.status || '');
+        if (!['Requested', 'Ordered', 'Ready', 'Cancelled'].includes(nextStatus)) return res.status(400).json({ error: 'Invalid request status' });
+        if (nextStatus === 'Cancelled') {
+            const reason = String(req.body.reason || '').trim();
+            if (!reason) return res.status(400).json({ error: 'Cancellation reason is required' });
+            const mode = String(req.body.mode || '').toLowerCase();
+            if (mode === 'keep' && !isAdminOrShopOwner(req.user.role)) return res.status(403).json({ error: 'Only an admin can keep an advance' });
+            if (mode === 'refund' && Number(request.advance_amount || 0) > 0) {
+                await CashMovement.create({
+                    cashier_id: req.user.id,
+                    cashier_name: req.user.name,
+                    movement_type: 'WITHDRAWAL',
+                    amount: -Number(request.advance_amount),
+                    note: `Refund request advance ${request.request_no}: ${reason}`,
+                    movement_date: localDateStr(new Date().getTimezoneOffset())
+                });
+            }
+            request.cancellation_reason = reason;
+            request.cancellation_mode = mode || 'refund';
+        }
+        request.status = nextStatus;
+        request.history.push({ action: 'status', status: nextStatus, note: req.body.reason || '', at: new Date(), by: req.user.name });
+        await request.save();
+        res.json(normalizeRequest(request));
+    } catch (err) {
+        console.error('[request status]', err);
+        res.status(400).json({ error: err.message || 'Unable to update request' });
+    }
+});
+
+app.post('/api/requests/:id/complete', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const request = await Request.findById(req.params.id);
+        if (!request) return res.status(404).json({ error: 'Request not found' });
+        if (request.status === 'Completed' || request.status === 'Cancelled') return res.status(400).json({ error: 'Request is not completable' });
+        request.history.push({ action: 'completion_started', at: new Date(), by: req.user.name });
+        await request.save();
+        res.json({ request: normalizeRequest(request), items: request.items });
+    } catch (err) {
+        console.error('[request complete]', err);
+        res.status(500).json({ error: 'Unable to prepare request completion' });
+    }
+});
+
+app.get('/api/credits', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const filter = req.query.status ? { status: req.query.status } : { status: 'OPEN' };
+        const rows = await CreditNote.find(filter).sort({ due_date: 1, created_at: 1 }).limit(500);
+        res.json(rows.map(normalizeCreditNote));
+    } catch (err) {
+        console.error('[credits list]', err);
+        res.status(500).json({ error: 'Unable to load receivables' });
+    }
+});
+
+app.post('/api/credits/:id/payments', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const credit = await CreditNote.findById(req.params.id);
+        if (!credit || credit.status !== 'OPEN') return res.status(404).json({ error: 'Open credit not found' });
+        const amount = Number(req.body.amount || 0);
+        const method = String(req.body.method || 'CASH').toUpperCase();
+        if (!(amount > 0) || amount > Number(credit.balance) + 0.01) return res.status(400).json({ error: 'Payment amount is invalid' });
+        credit.amount_paid = Number(credit.amount_paid || 0) + amount;
+        credit.balance = Math.max(0, Number(credit.amount) - credit.amount_paid);
+        credit.status = credit.balance <= 0.01 ? 'PAID' : 'OPEN';
+        credit.payments.push({ amount, method, recorded_at: new Date(), session_id: req.body.sessionId || null, by: req.user.name });
+        await credit.save();
+        if (method === 'CASH') {
+            await CashMovement.create({
+                cashier_id: req.user.id,
+                cashier_name: req.user.name,
+                movement_type: 'SALE',
+                amount,
+                note: `Credit payment ${credit.note_no}`,
+                movement_date: localDateStr(new Date().getTimezoneOffset())
+            });
+        }
+        res.json(normalizeCreditNote(credit));
+    } catch (err) {
+        console.error('[credit payment]', err);
+        res.status(400).json({ error: err.message || 'Unable to record payment' });
+    }
+});
+
+app.post('/api/credits/:id/history', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const credit = await CreditNote.findById(req.params.id);
+        if (!credit) return res.status(404).json({ error: 'Credit not found' });
+        const type = String(req.body.type || '');
+        if (!['extend', 'call', 'contacted', 'writeoff'].includes(type)) return res.status(400).json({ error: 'Invalid history action' });
+        if (type === 'writeoff' && !isAdminOrShopOwner(req.user.role)) return res.status(403).json({ error: 'Only an admin can write off credit' });
+        if (type === 'extend' && (!req.body.due_date || !String(req.body.note || '').trim())) return res.status(400).json({ error: 'New date and note are required' });
+        credit.history.push({ type, note: String(req.body.note || ''), due_date: req.body.due_date || '', at: new Date(), by: req.user.name });
+        if (type === 'extend') credit.due_date = String(req.body.due_date);
+        if (type === 'writeoff') credit.status = 'CANCELLED';
+        await credit.save();
+        res.json(normalizeCreditNote(credit));
+    } catch (err) {
+        console.error('[credit history]', err);
+        res.status(400).json({ error: err.message || 'Unable to update credit history' });
+    }
+});
+
+app.get('/api/receivables/reminders', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const today = localDateStr(new Date().getTimezoneOffset());
+        const rows = await CreditNote.find({ status: 'OPEN', balance: { $gt: 0 }, due_date: { $lte: today } }).sort({ due_date: 1 });
+        res.json(rows.map((credit) => ({ ...normalizeCreditNote(credit), days_overdue: diffDays(credit.due_date) })));
+    } catch (err) {
+        console.error('[receivable reminders]', err);
+        res.status(500).json({ error: 'Unable to load due reminders' });
+    }
+});
+
+app.get('/api/reports/receivables', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const rows = await CreditNote.find({ status: 'OPEN' }).sort({ due_date: 1 });
+        res.json({ receivables: rows.map((row) => ({ ...normalizeCreditNote(row), days_overdue: diffDays(row.due_date) })), total: rows.reduce((sum, row) => sum + Number(row.balance || 0), 0) });
+    } catch (err) {
+        console.error('[reports receivables]', err);
+        res.status(500).json({ error: 'Unable to load receivables report' });
+    }
+});
+
+app.get('/api/reports/advances', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const rows = await Request.find({ status: { $in: ['Requested', 'Ordered', 'Ready'] }, advance_amount: { $gt: 0 } }).sort({ created_at: -1 });
+        res.json({ advances: rows.map(normalizeRequest), total: rows.reduce((sum, row) => sum + Number(row.advance_amount || 0), 0) });
+    } catch (err) {
+        console.error('[reports advances]', err);
+        res.status(500).json({ error: 'Unable to load advances report' });
+    }
+});
+
+app.get('/api/reports/requests', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const rows = await Request.find({}).sort({ created_at: -1 });
+        res.json({ requests: rows.map(normalizeRequest), total: rows.length });
+    } catch (err) {
+        console.error('[reports requests]', err);
+        res.status(500).json({ error: 'Unable to load requests report' });
+    }
+});
+
+app.get('/api/sales/config', authenticateToken, async (req, res) => {
+    try {
+        await connectDB();
+        const [limitDoc, pinDoc] = await Promise.all([
+            StoreSetting.findOne({ key: 'pay_later_limit' }),
+            StoreSetting.findOne({ key: 'admin_pay_later_pin' })
+        ]);
+        res.json({
+            discountApprovalLimitPercent: SALE_DISCOUNT_APPROVAL_LIMIT_PERCENT,
+            payLaterLimit: Number(limitDoc?.value?.amount ?? limitDoc?.value ?? 0),
+            payLaterPinConfigured: Boolean(pinDoc?.value?.pin ?? pinDoc?.value)
+        });
+    } catch (err) {
+        console.error('[sales config]', err);
+        res.status(500).json({ error: 'Unable to load sales configuration' });
+    }
 });
 
 app.get('/api/sales', authenticateToken, async (req, res) => {
@@ -1904,16 +2245,27 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
         discountAmount = 0,
         approvalNote = '',
         sessionId,
-        clientLocalId
+        clientLocalId,
+        customer = {},
+        payLater = {},
+        requestId = ''
     } = req.body;
 
     if (!Array.isArray(items) || items.length === 0) {
         return res.status(400).json({ error: 'Cart cannot be empty' });
     }
 
-    const normalizedPaymentMethod = String(paymentMethod || '').trim().toUpperCase();
-    const allowedPaymentMethods = ['CASH', 'CARD', 'BANK_TRANSFER', 'SPLIT'];
-    if (!allowedPaymentMethods.includes(normalizedPaymentMethod)) {
+    const requestedPaymentMethod = paymentMethod || req.body.payment_method
+        || (payLater && Object.keys(payLater).length > 0 ? 'PAY_LATER' : '');
+    const normalizedPaymentMethod = String(requestedPaymentMethod)
+        .trim()
+        .toUpperCase()
+        .replace(/[\s-]+/g, '_');
+    const canonicalPaymentMethod = ['PAY_LATER', 'PAYLATER', 'CREDIT_SALE'].includes(normalizedPaymentMethod)
+        ? 'CREDIT'
+        : normalizedPaymentMethod;
+    const allowedPaymentMethods = ['CASH', 'CARD', 'BANK_TRANSFER', 'SPLIT', 'CREDIT'];
+    if (!allowedPaymentMethods.includes(canonicalPaymentMethod)) {
         return res.status(400).json({ error: 'Invalid payment method' });
     }
 
@@ -1925,6 +2277,20 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
     // Use session for transaction if MongoDB replica set available, otherwise sequential ops
     try {
         await connectDB();
+        if (canonicalPaymentMethod === 'CREDIT') {
+            if (!String(customer.phone || '').trim()) throw new Error('Customer phone is required for Pay Later');
+            if (!String(payLater.dueDate || '').trim()) throw new Error('Promised pay-by date is required');
+            const setting = await StoreSetting.findOne({ key: 'pay_later_limit' });
+            const limit = Number(setting?.value?.amount ?? setting?.value ?? 0);
+            const amount = Number(payLater.advance || 0);
+            const outstanding = Math.max(0, Number(payLater.total || 0) - amount);
+            if (limit > 0 && outstanding > limit && !isAdminOrShopOwner(req.user.role)) {
+                const pinDoc = await StoreSetting.findOne({ key: 'admin_pay_later_pin' });
+                const fallbackPinDoc = pinDoc || await StoreSetting.findOne({ key: 'admin_refund_pin' });
+                const storedPin = String(fallbackPinDoc?.value?.pin ?? fallbackPinDoc?.value?.value ?? fallbackPinDoc?.value ?? '');
+                if (!storedPin || storedPin !== String(payLater.adminPin || '')) throw new Error('Admin PIN required for Pay Later amount above the cashier limit');
+            }
+        }
         // Idempotency: if this same sale (by its device token) was already
         // recorded — e.g. the background sync raced the immediate push, or a
         // network retry re-sent it — return the existing record instead of
@@ -1944,8 +2310,27 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
             const itemType = String(rawItem.inventoryType || '').toLowerCase();
             const inventoryId = String(rawItem.inventoryId || '');
 
-            if (!inventoryId || !['phone', 'accessory'].includes(itemType)) {
+            if (!inventoryId || !['phone', 'accessory', 'service', 'custom'].includes(itemType)) {
                 throw new Error('Invalid cart item');
+            }
+
+            if (itemType === 'service' || itemType === 'custom') {
+                const quantity = Math.max(1, Number(rawItem.quantity || 1));
+                const unitPrice = Math.max(0, Number(rawItem.unitPrice || rawItem.price || 0));
+                const name = String(rawItem.name || 'Custom service').trim();
+                normalizedItems.push({
+                    inventory_type: 'service',
+                    inventory_id: inventoryId,
+                    imei: null,
+                    sku: null,
+                    name,
+                    quantity,
+                    unit_price: unitPrice,
+                    line_total: unitPrice * quantity,
+                    tracked_by: 'NONE'
+                });
+                subtotal += unitPrice * quantity;
+                continue;
             }
 
             if (itemType === 'phone') {
@@ -1953,7 +2338,7 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
                 if (!phone) throw new Error('Phone item not found');
                 if (phone.status === 'Sold') throw new Error(`${phone.brand} ${phone.model} is already sold`);
 
-                const unitPrice = Number(phone.selling_price);
+                const unitPrice = Number(rawItem.unitPrice ?? phone.selling_price);
                 subtotal += unitPrice;
 
                 normalizedItems.push({
@@ -1976,9 +2361,9 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
 
                 const quantity = Math.max(1, Number(rawItem.quantity || 1));
                 if (quantity !== Math.floor(quantity)) throw new Error('Accessory quantity must be a whole number');
-                if (accessory.quantity < quantity) throw new Error(`Not enough stock for ${accessory.name}`);
+                if (!accessory.is_service && accessory.quantity < quantity) throw new Error(`Not enough stock for ${accessory.name}`);
 
-                const unitPrice = Number(accessory.sell_price);
+                const unitPrice = Number(rawItem.unitPrice ?? accessory.sell_price);
                 const lineTotal = unitPrice * quantity;
                 subtotal += lineTotal;
 
@@ -1987,27 +2372,27 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
                     inventory_id: accessory._id.toString(),
                     imei: null,
                     sku: accessory.sku,
-                    name: accessory.name,
+                    name: rawItem.name || accessory.name,
                     quantity,
                     unit_price: unitPrice,
                     line_total: lineTotal,
                     tracked_by: 'QTY'
                 });
 
-                accessory.quantity -= quantity;
-                await accessory.save();
-
-                // Immutable audit trail: every sale decrements via a movement.
-                await logStockMovement({
-                    accessory,
-                    type: 'SALE',
-                    quantityChange: -quantity,
-                    resultingQuantity: Number(accessory.quantity),
-                    reason: 'Sale',
-                    note: `Sold ${quantity} x ${accessory.name}`,
-                    reference: receiptNo,
-                    user: req.user
-                });
+                if (!accessory.is_service) {
+                    accessory.quantity -= quantity;
+                    await accessory.save();
+                    await logStockMovement({
+                        accessory,
+                        type: 'SALE',
+                        quantityChange: -quantity,
+                        resultingQuantity: Number(accessory.quantity),
+                        reason: 'Sale',
+                        note: `Sold ${quantity} x ${accessory.name}`,
+                        reference: receiptNo,
+                        user: req.user
+                    });
+                }
             }
         }
 
@@ -2017,11 +2402,14 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
 
         const total = Math.max(0, subtotal - sanitizedDiscount);
         const discountPercent = subtotal > 0 ? (sanitizedDiscount / subtotal) * 100 : 0;
+        const linkedRequest = requestId ? await Request.findById(requestId) : null;
+        const requestAdvance = linkedRequest ? Math.min(total, Number(linkedRequest.advance_amount || 0)) : 0;
         const approvalRequired = discountPercent > SALE_DISCOUNT_APPROVAL_LIMIT_PERCENT && !isAdminOrShopOwner(req.user.role);
         const approvalStatus = approvalRequired ? 'PENDING_APPROVAL' : (discountPercent > SALE_DISCOUNT_APPROVAL_LIMIT_PERCENT ? 'APPROVED_BY_ADMIN' : 'NOT_REQUIRED');
-        const cashTendered = normalizedPaymentMethod === 'CASH' ? Number(cashReceived || 0) : 0;
-        const changeAmount = normalizedPaymentMethod === 'CASH' ? Math.max(0, cashTendered - total) : 0;
-        if (normalizedPaymentMethod === 'CASH' && cashTendered < total - 0.01) {
+        const creditAdvance = canonicalPaymentMethod === 'CREDIT' ? Math.min(total, Math.max(0, Number(payLater.advance || 0))) : 0;
+        const cashTendered = canonicalPaymentMethod === 'CASH' ? Number(cashReceived || 0) : creditAdvance;
+        const changeAmount = canonicalPaymentMethod === 'CASH' ? Math.max(0, cashTendered - total) : 0;
+        if (canonicalPaymentMethod === 'CASH' && cashTendered < total - requestAdvance - 0.01) {
             throw new Error('Cash received must cover the total amount');
         }
 
@@ -2038,17 +2426,70 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
             discount_amount: sanitizedDiscount,
             discount_percent: discountPercent,
             total,
-            payment_method: normalizedPaymentMethod,
-            payment_details: paymentDetails || (normalizedPaymentMethod === 'CASH' ? { cash: cashTendered, change: changeAmount, cashReceived: cashTendered, change_amount: changeAmount } : null),
+            payment_method: canonicalPaymentMethod,
+            payment_details: paymentDetails || (canonicalPaymentMethod === 'CASH' ? { cash: cashTendered, change: changeAmount, cashReceived: cashTendered, change_amount: changeAmount } : null),
             cash_received: cashTendered,
             change_amount: changeAmount,
             approval_required: approvalRequired,
             approval_status: approvalStatus,
             approval_note: approvalNote || null,
-            session_id: sessionId || null
+            session_id: sessionId || null,
+            customer_id: customer.id || null,
+            customer_name: customer.name || null,
+            customer_phone: customer.phone || null,
+            customer_id_number: customer.idNumber || null,
+            customer_address: customer.address || null,
+            customer_note: customer.note || null,
+            amount_paid: canonicalPaymentMethod === 'CREDIT' ? creditAdvance : requestAdvance + cashTendered,
+            balance_due: canonicalPaymentMethod === 'CREDIT' ? Math.max(0, total - creditAdvance) : Math.max(0, total - requestAdvance - cashTendered),
+            due_date: canonicalPaymentMethod === 'CREDIT' ? String(payLater.dueDate) : ''
         });
 
-        recordLocalOp('sales', 'checkout', receiptNo, { total, paymentMethod: normalizedPaymentMethod, itemCount: normalizedItems.length });
+        if (canonicalPaymentMethod === 'CREDIT') {
+            const credit = await CreditNote.create({
+                note_no: `CR-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`,
+                sale_id: saleDoc._id.toString(),
+                sale_receipt_no: receiptNo,
+                customer_name: customer.name || '',
+                customer_phone: customer.phone,
+                customer_id: customer.id || '',
+                customer_id_number: customer.idNumber || '',
+                customer_address: customer.address || '',
+                customer_note: customer.note || '',
+                amount: total,
+                amount_paid: creditAdvance,
+                balance: Math.max(0, total - creditAdvance),
+                due_date: String(payLater.dueDate),
+                items: normalizedItems,
+                payments: creditAdvance > 0 ? [{ amount: creditAdvance, method: payLater.advanceMethod || 'CASH', recorded_at: new Date(), session_id: sessionId || null, by: req.user.name }] : [],
+                status: total - creditAdvance <= 0.01 ? 'PAID' : 'OPEN'
+            });
+            saleDoc.credit_note_id = credit._id.toString();
+            await saleDoc.save();
+            if (creditAdvance > 0 && String(payLater.advanceMethod || 'CASH').toUpperCase() === 'CASH') {
+                await CashMovement.create({
+                    cashier_id: req.user.id,
+                    cashier_name: req.user.name,
+                    movement_type: 'SALE',
+                    amount: creditAdvance,
+                    note: `Pay Later advance ${credit.note_no}`,
+                    movement_date: localDateStr(new Date().getTimezoneOffset())
+                });
+            }
+        }
+        if (requestId) {
+            const request = await Request.findById(requestId);
+            if (request) {
+                request.status = 'Completed';
+                request.sale_id = saleDoc._id.toString();
+                request.history.push({ action: 'completed', sale_id: saleDoc._id.toString(), at: new Date(), by: req.user.name });
+                await request.save();
+                saleDoc.request_id = requestId;
+                await saleDoc.save();
+            }
+        }
+
+        recordLocalOp('sales', 'checkout', receiptNo, { total, paymentMethod: canonicalPaymentMethod, itemCount: normalizedItems.length });
         return res.status(201).json({
             sale: normalizeSale(saleDoc),
             receipt: normalizeSale(saleDoc),
@@ -3151,8 +3592,14 @@ app.post('/api/sessions/close', authenticateToken, async (req, res) => {
             ...(session.opened_by ? { cashier_id: String(session.opened_by) } : {})
         });
         const totalRefunds = refundMovements.reduce((sum, m) => sum + Number(m.amount || 0), 0);
+        const cashAdvanceMovements = await CashMovement.find({
+            movement_type: 'SALE',
+            movement_date: session.date,
+            note: { $regex: /Request advance|Pay Later advance/i }
+        });
+        const totalCashAdvances = cashAdvanceMovements.reduce((sum, m) => sum + Number(m.amount || 0), 0);
 
-        const expectedCash = (session.opening_cash || 0) + totalCashSales + reloadsSold - totalRefunds;
+        const expectedCash = (session.opening_cash || 0) + totalCashSales + totalCashAdvances + reloadsSold - totalRefunds;
         const actualCashNum = Number(actualCash || 0);
         const variance = actualCashNum - expectedCash;
 
@@ -3333,6 +3780,8 @@ app.get('/api/dashboard', authenticateToken, async (req, res) => {
 
         // 3. Low Stock Alerts
         const lowStockCount = await Accessory.countDocuments({ quantity: { $lt: 5 } });
+        const dueCredits = await CreditNote.find({ status: 'OPEN', balance: { $gt: 0 }, due_date: { $lte: todayStr } }).select('balance').lean();
+        const paymentsDue = dueCredits.reduce((sum, credit) => sum + Number(credit.balance || 0), 0);
 
         // 4. Dead Stock (Phones > 30 days)
         const deadThresholdDate = new Date();
@@ -3397,7 +3846,9 @@ app.get('/api/dashboard', authenticateToken, async (req, res) => {
                 salesGrowth,
                 repairsInProgress,
                 lowStockCount,
-                deadStockCount
+                deadStockCount,
+                paymentsDueCount: dueCredits.length,
+                paymentsDue
             },
             repairStatusCounts,
             recentSales,

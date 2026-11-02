@@ -171,6 +171,7 @@ export const buildReceiptHtml = (receipt, settings) => {
       <div class="muted" style="text-align:center;">${esc(receipt.receipt_no)}</div>
       <div class="muted" style="text-align:center;">Cashier: ${esc(receipt.cashier_name)}</div>
       <div class="muted" style="text-align:center;">${new Date(receipt.created_at).toLocaleString()}</div>
+      ${receipt.customer_phone ? `<div class="muted" style="text-align:center;">Customer: ${esc(receipt.customer_name || '')} ${esc(receipt.customer_phone)}</div>` : ''}
       <span class="badge">${receipt.pending_sync ? 'Pending sync' : 'Synced'}</span>
       ${headerMessage}
       <table>
@@ -190,6 +191,7 @@ export const buildReceiptHtml = (receipt, settings) => {
       <div class="row"><span>Payment</span><strong>${esc(String(receipt.payment_method || '').replace('_', ' '))}</strong></div>
       ${receipt.payment_method === 'CASH' ? `<div class="row"><span>Cash</span><strong>${formatMoney(receipt.cash_received || 0)}</strong></div><div class="row"><span>Change</span><strong>${formatMoney(receipt.change_amount || 0)}</strong></div>` : ''}
       <div class="row" style="font-size:1.5em;"><span>Total</span><strong>${formatMoney(receipt.total)}</strong></div>
+      ${Number(receipt.balance_due || 0) > 0 ? `<div class="row" style="font-size:1.25em;color:#b45309;"><span>BALANCE DUE</span><strong>${formatMoney(receipt.balance_due)}</strong></div>${receipt.due_date ? `<div class="row"><span>Due date</span><strong>${esc(receipt.due_date)}</strong></div>` : ''}` : ''}
       ${contactMarkup ? `${divider}${contactMarkup}` : ''}
       ${footerMarkup}
       ${barcode}

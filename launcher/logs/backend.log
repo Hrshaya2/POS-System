@@ -2926,3 +2926,11 @@ MongoDB connection error: MongooseServerSelectionError: Could not connect to any
     logicalSessionTimeoutMinutes: null
   }
 }
+===== started 01/11/2026 11:16:43.04 =====  
+◇ injected env (4) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (0) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+(node:28888) [MONGOOSE] Warning: `errors` is a reserved schema pathname and may break some functionality. You are allowed to use it, but use at your own risk. To disable this warning pass `suppressReservedKeysWarning` as a schema option.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Connected to MongoDB Atlas
+Local SQLite database ready: D:\Nangi\POS\backend\database.sqlite
+Server is running on port 5000

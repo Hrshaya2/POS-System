@@ -17,6 +17,7 @@ import {
   Trash2,
   Settings,
   Database,
+  Bell,
   Menu,
   X
 } from 'lucide-react';
@@ -118,6 +119,22 @@ const Layout = ({ children }) => {
   // drawer on navigation without threading a callback through SidebarItem.
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [dueReminders, setDueReminders] = React.useState([]);
+
+  React.useEffect(() => {
+    let active = true;
+    const loadDue = async () => {
+      try {
+        const res = await fetch('/api/receivables/reminders', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+        if (res.ok && active) setDueReminders(await res.json());
+      } catch {
+        // The dashboard remains usable offline with the last synced reminder count.
+      }
+    };
+    loadDue();
+    const interval = setInterval(loadDue, 15 * 60 * 1000);
+    return () => { active = false; clearInterval(interval); };
+  }, []);
 
   // Close the drawer whenever the route changes, so tapping a nav item
   // navigates and dismisses the menu in one action.
@@ -255,6 +272,10 @@ const Layout = ({ children }) => {
               <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
             </button>
             <SyncStatusIndicator />
+            <Link to="/sales" title="Payments due" aria-label="Payments due" className="relative shrink-0 p-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300">
+              <Bell size={16} />
+              {dueReminders.length > 0 && <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center">{dueReminders.length}</span>}
+            </Link>
             {isOpen ? (
               <button
                 onClick={() => setShowCloseModal(true)}
@@ -540,6 +561,14 @@ const Dashboard = () => {
           icon={Package}
           colorClass="text-rose-500"
           bgClass="bg-rose-50"
+        />
+        <StatCard
+          title="Payments due"
+          value={stats.paymentsDueCount || 0}
+          subtitle={`Rs. ${Number(stats.paymentsDue || 0).toLocaleString('en-LK')}`}
+          icon={Bell}
+          colorClass="text-amber-600"
+          bgClass="bg-amber-50"
         />
       </div>
 
