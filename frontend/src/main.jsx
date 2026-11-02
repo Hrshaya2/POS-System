@@ -15,15 +15,15 @@ captureInstallPrompt();
 // from the API now dispatches a global event that AuthContext listens to,
 // logging the user out and returning them to the login screen.
 const originalFetch = window.fetch.bind(window);
-window.fetch = async (...args) => {
-  const res = await originalFetch(...args);
-  try {
-    const url = typeof args[0] === 'string' ? args[0] : (args[0]?.url || '');
-    if (res.status === 401 && url.includes('/api/') && !url.includes('/api/auth/')) {
-      window.dispatchEvent(new CustomEvent('pos:auth-expired'));
-    }
-  } catch (err) { /* never break the caller */ }
-  return res;
+window.fetch = (input, init = {}) => {
+  const url = typeof input === 'string' ? input : input?.url || '';
+  if (!url.startsWith('/api/')) return originalFetch(input, init);
+
+  const headers = new Headers(init.headers || (input instanceof Request ? input.headers : undefined));
+  const token = localStorage.getItem('token');
+  if (token) headers.set('Authorization', `Bearer ${token}`);
+
+  return originalFetch(input, { ...init, headers });
 };
 
 createRoot(document.getElementById('root')).render(

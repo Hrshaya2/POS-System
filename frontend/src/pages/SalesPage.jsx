@@ -69,7 +69,7 @@ const getCashSummary = (receipt) => {
     };
 };
 
-const buildLocalReceipt = ({ user, session, cart, paymentMethod, cashReceived, discountValue, paymentDetails }) => {
+const buildLocalReceipt = ({ user, session, cart, paymentMethod, cashReceived, paymentDetails }) => {
     const items = cart.map((item) => ({
         inventory_type: item.inventoryType,
         inventory_id: item.inventoryId,
@@ -84,11 +84,11 @@ const buildLocalReceipt = ({ user, session, cart, paymentMethod, cashReceived, d
         tracked_by: item.trackedBy
     }));
 
-    // What the customer really pays: sold (possibly overridden) prices minus the manual discount box.
+    // The cashier enters the final selling price in the item popup.
     const listSubtotal = items.reduce((sum, item) => sum + item.line_total, 0);
     const soldSubtotal = cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
-    const total = Math.max(0, soldSubtotal - discountValue);
-    // Effective discount = price reductions in the Add item popup + the manual discount box.
+    const total = Math.max(0, soldSubtotal);
+    // The automatic discount is the difference between list and entered prices.
     const totalDiscount = Math.max(0, listSubtotal - total);
     const cashTendered = paymentMethod === 'CASH' ? safeNumber(cashReceived) : 0;
     const changeAmount = paymentMethod === 'CASH' ? Math.max(0, cashTendered - total) : 0;
@@ -210,6 +210,10 @@ function PayLaterModal({ cart, total, session, user, config, onClose, onComplete
         if (!customer.phone.trim()) return setError('Customer phone is required.');
         if (!dueDate) return setError('Promised pay-by date is required.');
         if (safeNumber(advance) > total) return setError('Advance cannot exceed the total.');
+        const normalizedMethod = String(method || 'CASH').trim().toUpperCase().replace(/[\s-]+/g, '_');
+        if (!['CASH', 'CARD', 'BANK_TRANSFER'].includes(normalizedMethod)) {
+            return setError('Choose Cash, Card, or Bank Transfer for the advance.');
+        }
         if (!navigator.onLine) return setError('Pay Later requires a connection to sync the credit record safely.');
         if (!localStorage.getItem('token')) return setError('Your session has expired. Please sign in again.');
         setBusy(true);
@@ -223,7 +227,7 @@ function PayLaterModal({ cart, total, session, user, config, onClose, onComplete
                     discountAmount: 0,
                     sessionId: session?.id || null,
                     customer,
-                    payLater: { advance: safeNumber(advance), advanceMethod: method, dueDate, total, adminPin: pin }
+                    payLater: { advance: safeNumber(advance), advanceMethod: normalizedMethod, dueDate, total, adminPin: pin }
                 })
             });
             const responseText = await res.text();
@@ -232,10 +236,6 @@ function PayLaterModal({ cart, total, session, user, config, onClose, onComplete
                 data = responseText ? JSON.parse(responseText) : {};
             } catch {
                 data = { error: responseText || `Request failed (${res.status})` };
-            }
-            if (res.status === 401 || (res.status === 403 && data.error === 'Authentication token is invalid or expired')) {
-                window.dispatchEvent(new CustomEvent('pos:auth-expired'));
-                throw new Error('Your session has expired. Please sign in again.');
             }
             if (!res.ok) throw new Error(data.error || 'Unable to save Pay Later sale');
             onCompleted(data.receipt || data.sale);
@@ -258,7 +258,7 @@ function PayLaterModal({ cart, total, session, user, config, onClose, onComplete
                     if (event.key === 'Escape') {
                         event.preventDefault();
                         onClose();
-                    } else if (event.key === 'Enter' && !event.repeat && !['BUTTON', 'SELECT'].includes(event.target?.tagName)) {
+                    } else if (event.key === 'Enter' && !event.repeat && event.target?.tagName !== 'BUTTON') {
                         event.preventDefault();
                         submit();
                     }
@@ -292,6 +292,8 @@ function RequestsPanel({ catalog, user, session, onComplete }) {
     const [mode, setMode] = useState('list');
     const [rows, setRows] = useState([]);
     const [reminders, setReminders] = useState([]);
+    const [paybackList, setPaybackList] = useState([]);
+    const [paymentDialog, setPaymentDialog] = useState(null);
     const [search, setSearch] = useState('');
     const [status, setStatus] = useState('all');
     const [customer, setCustomer] = useState({ phone: '', name: '', idNumber: '', address: '', note: '' });
@@ -318,7 +320,16 @@ function RequestsPanel({ catalog, user, session, onComplete }) {
             if (res.ok) setReminders(await res.json());
         } catch { /* reminders are best-effort while offline */ }
     };
-    useEffect(() => { load(); loadReminders(); }, [search, status]);
+    const loadPaybackList = async () => {
+        try {
+            const res = await fetch(`${API_BASE}/credits?status=OPEN`, { headers: token() });
+            if (!res.ok) throw new Error('Unable to load Pay Later balances');
+            setPaybackList(await res.json());
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+    useEffect(() => { load(); loadReminders(); loadPaybackList(); }, [search, status]);
     const lookupCustomer = async (phone) => {
         setCustomer((current) => ({ ...current, phone }));
         if (phone.trim().length < 3) return;
@@ -377,12 +388,26 @@ function RequestsPanel({ catalog, user, session, onComplete }) {
         } catch (err) { setError(err.message); }
     };
     const recordPayment = async (credit) => {
-        const amount = window.prompt(`Payment for ${credit.note_no}`, String(credit.balance));
-        if (amount === null) return;
-        const res = await fetch(`${API_BASE}/credits/${credit.id}/payments`, { method: 'POST', headers: { ...token(), 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: Number(amount), method: 'CASH', sessionId: session?.id }) });
+        setPaymentDialog({ credit, amount: String(credit.balance), method: 'CASH', error: '' });
+    };
+    const submitPayment = async () => {
+        if (!paymentDialog) return;
+        const amount = Number(paymentDialog.amount);
+        if (!(amount > 0) || amount > Number(paymentDialog.credit.balance) + 0.01) {
+            setPaymentDialog((current) => ({ ...current, error: 'Enter an amount greater than zero and no more than the outstanding balance.' }));
+            return;
+        }
+        const res = await fetch(`${API_BASE}/credits/${paymentDialog.credit.id}/payments`, { method: 'POST', headers: { ...token(), 'Content-Type': 'application/json' }, body: JSON.stringify({ amount, method: paymentDialog.method, sessionId: session?.id }) });
         const data = await res.json();
-        if (!res.ok) return setError(data.error || 'Unable to record payment');
+        if (!res.ok) {
+            setPaymentDialog((current) => ({ ...current, error: data.error || 'Unable to record payment' }));
+            return;
+        }
+        setPaymentDialog(null);
         setReminders((current) => current.filter((item) => item.id !== data.id || data.balance > 0));
+        setPaybackList((current) => data.balance > 0
+            ? current.map((item) => item.id === data.id ? data : item)
+            : current.filter((item) => item.id !== data.id));
     };
     const addCreditHistory = async (credit, type) => {
         const note = window.prompt(type === 'extend' ? 'New due date and note (YYYY-MM-DD | note)' : 'Call note');
@@ -436,11 +461,97 @@ function RequestsPanel({ catalog, user, session, onComplete }) {
     );
     return (
         <div className="space-y-5">
-            <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-xl font-bold flex items-center gap-2"><ClipboardList size={20} /> Requests</h2><p className="text-sm text-gray-500">Track customer requests and call-ready pickups.</p></div><button onClick={() => setMode('create')} className="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold">New request</button></div>
+            <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-xl font-bold flex items-center gap-2"><ClipboardList size={20} /> Payback</h2><p className="text-sm text-gray-500">Track all Pay Later balances and collect payments.</p></div></div>
             {reminders.length > 0 && <div className="bg-amber-50 dark:bg-amber-500/10 rounded-3xl border border-amber-200 dark:border-amber-500/30 p-4"><h3 className="font-bold flex items-center gap-2"><Bell size={17} /> Due reminders ({reminders.length})</h3><div className="mt-3 space-y-2">{reminders.map((credit) => <div key={credit.id} className="bg-white dark:bg-slate-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2"><div><strong>{credit.customer_name || 'Customer'}</strong> · <a href={`tel:${credit.customer_phone}`} className="text-blue-600">{credit.customer_phone}</a><div className="text-xs text-gray-500">{credit.sale_receipt_no} · {formatMoney(credit.balance)} · due {credit.due_date} · {credit.days_overdue} days overdue</div></div><div className="flex gap-1"><button onClick={() => recordPayment(credit)} className="px-2 py-1 rounded-lg bg-blue-600 text-white text-xs">Record payment</button><button onClick={() => addCreditHistory(credit, 'extend')} className="px-2 py-1 rounded-lg border text-xs">Extend</button><button onClick={() => addCreditHistory(credit, 'call')} className="px-2 py-1 rounded-lg border text-xs">Call note</button></div></div>)}</div></div>}
-            <div className="bg-white dark:bg-slate-800 rounded-3xl border p-4 flex flex-wrap gap-3"><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Phone, name, request number, status" className="flex-1 min-w-[240px] rounded-xl border px-3 py-2.5" /><select value={status} onChange={(e) => setStatus(e.target.value)} className="rounded-xl border px-3 py-2.5"><option value="all">All statuses</option>{['Requested', 'Ordered', 'Ready', 'Completed', 'Cancelled'].map((value) => <option key={value}>{value}</option>)}</select></div>
+            <div className="bg-white dark:bg-slate-800 rounded-3xl border p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <h3 className="font-bold">Pay Later / Payback list</h3>
+                        <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">All customers with an outstanding balance.</p>
+                    </div>
+                    <strong className="text-amber-700 dark:text-amber-300">
+                        Total due: {formatMoney(paybackList.reduce((sum, credit) => sum + Number(credit.balance || 0), 0))}
+                    </strong>
+                </div>
+                <div className="mt-3 overflow-x-auto">
+                    <table className="w-full text-sm">
+                        <thead className="bg-gray-50 dark:bg-slate-950">
+                            <tr>
+                                <th className="px-3 py-2 text-left">Customer</th>
+                                <th className="px-3 py-2 text-left">Receipt</th>
+                                <th className="px-3 py-2 text-right">Original</th>
+                                <th className="px-3 py-2 text-right">Paid</th>
+                                <th className="px-3 py-2 text-right">Balance</th>
+                                <th className="px-3 py-2 text-left">Due date</th>
+                                <th className="px-3 py-2 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {paybackList.map((credit) => {
+                                const overdue = credit.due_date && new Date(`${credit.due_date}T23:59:59`) < new Date();
+                                return (
+                                    <tr key={credit.id} className="border-t">
+                                        <td className="px-3 py-2">
+                                            <div className="font-semibold">{credit.customer_name || 'Customer'}</div>
+                                            <a href={`tel:${credit.customer_phone}`} className="text-xs text-blue-600">{credit.customer_phone}</a>
+                                        </td>
+                                        <td className="px-3 py-2">{credit.sale_receipt_no || credit.note_no}</td>
+                                        <td className="px-3 py-2 text-right">{formatMoney(credit.amount)}</td>
+                                        <td className="px-3 py-2 text-right">{formatMoney(credit.amount_paid)}</td>
+                                        <td className="px-3 py-2 text-right font-semibold text-amber-700 dark:text-amber-300">{formatMoney(credit.balance)}</td>
+                                        <td className={`px-3 py-2 ${overdue ? 'text-rose-600 font-semibold' : ''}`}>{credit.due_date || '—'}{overdue ? ' · overdue' : ''}</td>
+                                        <td className="px-3 py-2 text-right"><button onClick={() => recordPayment(credit)} className="px-2 py-1 rounded-lg bg-blue-600 text-white text-xs">Record payment</button></td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                    {paybackList.length === 0 && <div className="p-5 text-center text-sm text-gray-400">No outstanding Pay Later balances.</div>}
+                </div>
+            </div>
             {error && <div className="text-sm text-rose-600">{error}</div>}
-            <div className="bg-white dark:bg-slate-800 rounded-3xl border overflow-x-auto"><table className="w-full text-sm"><thead className="bg-gray-50 dark:bg-slate-950"><tr><th className="px-4 py-3 text-left">Request</th><th className="px-4 py-3 text-left">Customer</th><th className="px-4 py-3 text-left">Lines</th><th className="px-4 py-3 text-right">Balance</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Actions</th></tr></thead><tbody>{rows.map((row) => <tr key={row.id} className="border-t"><td className="px-4 py-3 font-semibold">{row.request_no}<div className="text-xs text-gray-400">{row.expected_ready_date || 'No date'}</div></td><td className="px-4 py-3">{row.customer_name || '—'}<div className="text-xs flex items-center gap-1"><a href={`tel:${row.customer_phone}`} className="text-blue-600"><Phone size={12} />{row.customer_phone}</a></div></td><td className="px-4 py-3">{(row.items || []).map((item) => item.name).join(', ')}</td><td className="px-4 py-3 text-right">{formatMoney(row.balance)}</td><td className="px-4 py-3">{row.status}</td><td className="px-4 py-3"><div className="flex flex-wrap gap-1">{row.status === 'Requested' && <button onClick={() => updateStatus(row, 'Ordered')} className="px-2 py-1 rounded-lg border text-xs">Ordered</button>}{row.status === 'Ordered' && <button onClick={() => updateStatus(row, 'Ready')} className="px-2 py-1 rounded-lg border text-xs">Ready</button>}{row.status === 'Ready' && <button onClick={() => onComplete(row)} className="px-2 py-1 rounded-lg bg-blue-600 text-white text-xs">Complete &amp; pay</button>}{!['Completed', 'Cancelled'].includes(row.status) && <button onClick={() => updateStatus(row, 'Cancelled')} className="px-2 py-1 rounded-lg border text-xs text-rose-600">Cancel</button>}</div></td></tr>)}</tbody></table>{rows.length === 0 && <div className="p-8 text-center text-gray-400">No requests found.</div>}</div>
+            {paymentDialog && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4" role="presentation">
+                    <div className="w-full max-w-md rounded-3xl bg-white dark:bg-slate-800 p-6 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="record-payment-title">
+                        <div className="flex items-start justify-between gap-4">
+                            <div>
+                                <h3 id="record-payment-title" className="text-xl font-bold">Record payment</h3>
+                                <p className="mt-1 text-sm text-gray-500">{paymentDialog.credit.customer_name || 'Customer'} · {paymentDialog.credit.customer_phone}</p>
+                            </div>
+                            <button type="button" onClick={() => setPaymentDialog(null)} className="text-2xl text-gray-400" aria-label="Close">×</button>
+                        </div>
+                        <div className="mt-5 rounded-2xl bg-gray-50 dark:bg-slate-950 p-4 text-sm">
+                            <div className="flex justify-between"><span>Receipt</span><strong>{paymentDialog.credit.sale_receipt_no || paymentDialog.credit.note_no}</strong></div>
+                            <div className="mt-2 flex justify-between"><span>Outstanding balance</span><strong className="text-amber-700 dark:text-amber-300">{formatMoney(paymentDialog.credit.balance)}</strong></div>
+                        </div>
+                        <div className="mt-5 grid gap-3">
+                            <label className="text-sm font-semibold">Payment amount
+                                <input
+                                    autoFocus
+                                    type="text"
+                                    inputMode="decimal"
+                                    value={paymentDialog.amount}
+                                    onChange={(event) => setPaymentDialog((current) => ({ ...current, amount: event.target.value, error: '' }))}
+                                    onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); submitPayment(); } }}
+                                    className="mt-1 w-full rounded-xl border px-3 py-2.5 dark:bg-slate-900"
+                                />
+                            </label>
+                            <label className="text-sm font-semibold">Payment method
+                                <select value={paymentDialog.method} onChange={(event) => setPaymentDialog((current) => ({ ...current, method: event.target.value }))} className="mt-1 w-full rounded-xl border px-3 py-2.5 dark:bg-slate-900">
+                                    <option value="CASH">Cash</option>
+                                    <option value="CARD">Card</option>
+                                    <option value="BANK_TRANSFER">Bank Transfer</option>
+                                </select>
+                            </label>
+                        </div>
+                        {paymentDialog.error && <p className="mt-3 text-sm text-rose-600">{paymentDialog.error}</p>}
+                        <div className="mt-6 flex justify-end gap-3">
+                            <button type="button" onClick={() => setPaymentDialog(null)} className="rounded-xl border px-4 py-2 font-semibold">Cancel</button>
+                            <button type="button" onClick={submitPayment} className="rounded-xl bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700">Confirm payment</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
@@ -454,7 +565,6 @@ export default function SalesPage() {
     const hasCustomerAttachFeature = false;
 
     const searchInputRef = useRef(null);
-    const discountInputRef = useRef(null);
     const cashInputRef = useRef(null);
     const splitInputRefs = useRef([]);
     const itemPriceInputRef = useRef(null);
@@ -476,7 +586,6 @@ export default function SalesPage() {
     const [selectedCartIndex, setSelectedCartIndex] = useState(0);
 
     const [cart, setCart] = useState([]);
-    const [discountAmount, setDiscountAmount] = useState('0');
     const [approvalNote, setApprovalNote] = useState('');
     const [checkoutError, setCheckoutError] = useState('');
     const [checkoutLoading, setCheckoutLoading] = useState(false);
@@ -605,8 +714,7 @@ export default function SalesPage() {
         () => cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0),
         [cart]
     );
-    const discountValue = Math.min(Math.max(safeNumber(discountAmount), 0), subtotal);
-    const total = Math.max(0, subtotal - discountValue);
+    const total = subtotal;
     const effectiveDiscount = Math.max(0, listSubtotal - total);
     const effectiveDiscountPercent = listSubtotal > 0 ? (effectiveDiscount / listSubtotal) * 100 : 0;
     const approvalRequired = effectiveDiscountPercent > config.discountApprovalLimitPercent && !isAdmin;
@@ -1030,7 +1138,6 @@ export default function SalesPage() {
 
     const clearSale = () => {
         setCart([]);
-        setDiscountAmount('0');
         setCashReceived('');
         setPaymentSplit({ cash: '', card: '', bankTransfer: '' });
         setApprovalNote('');
@@ -1085,7 +1192,6 @@ export default function SalesPage() {
             cart,
             paymentMethod,
             cashReceived,
-            discountValue,
             paymentDetails
         });
         localReceipt.pending_sync = !navigator.onLine;
@@ -1436,12 +1542,6 @@ export default function SalesPage() {
                 focusSearch();
                 return;
             }
-            if (key === 'F2') {
-                setFocusArea('discount');
-                discountInputRef.current?.focus();
-                discountInputRef.current?.select();
-                return;
-            }
             if (key === 'F4') {
                 if (!selectedCartLine) return;
                 setFocusArea('cart');
@@ -1583,6 +1683,13 @@ export default function SalesPage() {
             setPaymentMethod(method);
             return;
         }
+        // Enter confirms from every payment field, including Cash received
+        // and Split Payment inputs. Do this before the typing guard below.
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            if (!event.repeat) handleConfirmPayment();
+            return;
+        }
         // 1-4 (main row or numpad) select a method directly from the method row (not an input).
         if (typingInInput) {
             // While typing in the Cash received input, digits must type normally (no method switch).
@@ -1597,10 +1704,6 @@ export default function SalesPage() {
             event.preventDefault();
             setPaymentMethod(PAYMENT_METHODS[Number(event.key) - 1].value);
             return;
-        }
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            handleConfirmPayment();
         }
     };
 
@@ -1639,7 +1742,7 @@ export default function SalesPage() {
                     </button>
                     <button onClick={() => setActiveTab('requests')} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${activeTab === 'requests' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-300'}`}>
                         <ClipboardList size={16} />
-                        Requests
+                                Payback
                     </button>
                 </div>
             </div>
@@ -1796,8 +1899,8 @@ export default function SalesPage() {
                                             <strong className="text-gray-900 dark:text-slate-100">{formatMoney(subtotal)}</strong>
                                         </div>
                                         <div className="flex items-center justify-between text-sm">
-                                            <span className="text-gray-500 dark:text-slate-400">Discount</span>
-                                            <strong className="text-gray-500 dark:text-slate-400">-{formatMoney(discountValue)}</strong>
+                                            <span className="text-gray-500 dark:text-slate-400">Automatic discount</span>
+                                            <strong className="text-gray-500 dark:text-slate-400">-{formatMoney(effectiveDiscount)}</strong>
                                         </div>
                                         <div className="flex items-center justify-between text-lg pt-3 border-t border-gray-100 dark:border-slate-800">
                                             <span className="font-semibold text-gray-900 dark:text-slate-100">Total</span>
@@ -1806,20 +1909,8 @@ export default function SalesPage() {
                                     </div>
 
                                     <div className="space-y-2 mb-6">
-                                        <label className="text-sm font-semibold text-gray-700 dark:text-slate-300">Discount amount</label>
-                                        <input
-                                            ref={discountInputRef}
-                                            type="text"
-                                            inputMode="decimal"
-                                            min="0"
-                                            step="0.01"
-                                            value={discountAmount}
-                                            onChange={(e) => setDiscountAmount(e.target.value)}
-                                            className="w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-950 px-3.5 py-2.5 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                                            placeholder="0.00"
-                                        />
                                         <div className={`text-xs ${approvalRequired ? 'text-amber-700 dark:text-amber-300' : 'text-gray-500 dark:text-slate-400'}`}>
-                                            Discount approval limit: {config.discountApprovalLimitPercent}%
+                                            Automatic discount from entered prices. Approval limit: {config.discountApprovalLimitPercent}%
                                             {approvalRequired ? ' - admin approval flag will be recorded.' : ''}
                                         </div>
                                     </div>
@@ -2276,7 +2367,6 @@ export default function SalesPage() {
                 <div className="fixed bottom-0 left-0 right-0 z-20 bg-white/95 dark:bg-slate-900/95 border-t border-gray-200 dark:border-slate-700 px-4 py-2 text-xs text-gray-600 dark:text-slate-300">
                     <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-x-4 gap-y-1">
                         <span><strong>F3</strong> Search</span>
-                        <span><strong>F2</strong> Discount</span>
                         <span><strong>F4</strong> Edit qty</span>
                         {hasCustomerAttachFeature && <span><strong>F7</strong> Attach customer</span>}
                         <span><strong>F8</strong> New sale</span>

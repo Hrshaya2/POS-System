@@ -8,7 +8,7 @@ import {
   Barcode as BarcodeIcon, CheckSquare, Square, Printer,
   History, ClipboardCheck, Upload, TrendingDown, LayoutGrid,
   FileSpreadsheet, FileText, AlertTriangle,
-  ChevronDown, MoreHorizontal, Layers
+  ChevronDown, MoreHorizontal, Layers, X, Save, CreditCard
 } from 'lucide-react';
 import { exportToExcelWithTotals, exportToPdf } from '../utils/reportExport';
 import { useAuth } from '../context/AuthContext';
@@ -41,6 +41,7 @@ const PAGE_TABS = [
   { id: 'take', label: 'Stock Take', icon: ClipboardCheck },
   { id: 'import', label: 'Import', icon: Upload },
   { id: 'alerts', label: 'Alerts', icon: TrendingDown }
+  ,{ id: 'purchases', label: 'Purchases', icon: CreditCard }
 ];
 
 // How many items to show under one category heading in the global search
@@ -160,6 +161,9 @@ export default function StockManagementPage() {
   const [detailItem, setDetailItem] = useState(null);
   const [batchPrintOpen, setBatchPrintOpen] = useState(false);
   const [labelSize, setLabelSize] = useState(loadLabelSize);
+  const [purchases, setPurchases] = useState([]);
+  const [purchaseOpen, setPurchaseOpen] = useState(false);
+  const [purchaseAllowed, setPurchaseAllowed] = useState(isAdmin);
 
   const applyData = useCallback((data) => {
     // Deleted categories are filtered HERE, at the one place all page data
@@ -174,6 +178,45 @@ export default function StockManagementPage() {
   const reload = useCallback(async () => {
     applyData(await refreshStockData());
   }, [applyData]);
+
+  const loadPurchases = useCallback(async () => {
+    if (!purchaseAllowed) return;
+    const res = await fetch('/api/purchases', { headers: { Authorization: `******'token')}` } });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Unable to load purchases');
+    setPurchases(data);
+  }, [purchaseAllowed]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/purchase-permission', { headers: { Authorization: `******'token')}` } })
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Unable to verify Purchase access');
+        if (!cancelled) setPurchaseAllowed(data.allowed === true);
+      })
+      .catch(() => {
+        if (!cancelled) setPurchaseAllowed(isAdmin);
+      });
+    return () => { cancelled = true; };
+  }, [isAdmin]);
+
+  useEffect(() => {
+    if (purchaseAllowed && pageTab === 'purchases') loadPurchases().catch((err) => alert(err.message));
+  }, [purchaseAllowed, pageTab, loadPurchases]);
+
+  const savePurchase = async (payload) => {
+    const res = await fetch('/api/purchases', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `******'token')}` },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Unable to save purchase');
+    setPurchaseOpen(false);
+    setPageTab('purchases');
+    await Promise.all([reload(), loadPurchases()]);
+  };
 
   // Clears this device's stock cache + queued writes, then reloads from the
   // server. Guarded because it discards anything not yet uploaded.
@@ -402,6 +445,12 @@ export default function StockManagementPage() {
       onAddItem={() => setProductFormState({ item: null })}
       onResetLocal={handleResetLocal}
       onDeleteAllStock={handleDeleteAllStock}
+      onNewPurchase={() => setPurchaseOpen(true)}
+      purchaseAllowed={purchaseAllowed}
+      purchases={purchases}
+      purchaseOpen={purchaseOpen && purchaseAllowed}
+      setPurchaseOpen={setPurchaseOpen}
+      onSavePurchase={savePurchase}
       categories={categories} items={items} takes={takes} user={user}
       imports={imports}
       existingSkus={existingSkus} filteredItems={filteredItems}
@@ -494,7 +543,7 @@ function PageShell(props) {
     selectedIds, toggleSelect, setDetailItem,
     setProductFormState, setAdjustItem, setBatchPrintOpen,
     reload, onJumpToItem, onDeleteItem, onPrintLabel, onExportLowStockPdf,
-    onResetLocal, onDeleteAllStock
+    onResetLocal, onDeleteAllStock, onNewPurchase, purchases, purchaseAllowed
   } = props;
 
   return (
@@ -519,6 +568,14 @@ function PageShell(props) {
             an item still happens inside a category ("Add Item here"), and is
             also kept in the More menu for the grid level. */}
         <div className="flex items-center gap-2 shrink-0 flex-wrap">
+          {purchaseAllowed && (
+            <button
+              onClick={onNewPurchase}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-sm transition-colors"
+            >
+              <Plus size={16} /> New Purchase
+            </button>
+          )}
           <button
             onClick={onManageCategories}
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold shadow-sm transition-colors"
@@ -595,7 +652,7 @@ function PageShell(props) {
 
       {/* Internal section tabs */}
       <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-800 p-1.5 inline-flex flex-wrap gap-1 shadow-sm sticky top-0 z-20">
-        {PAGE_TABS.map((tab) => {
+        {PAGE_TABS.filter((tab) => purchaseAllowed || tab.id !== 'purchases').map((tab) => {
           const Icon = tab.icon;
           const isActive = pageTab === tab.id;
           return (
@@ -635,6 +692,8 @@ function PageShell(props) {
         <ImportTab items={items} categories={categories} imports={imports} user={user} onDataChanged={reload} />
       ) : pageTab === 'alerts' ? (
         <AlertsPanel onJumpToItem={onJumpToItem} onExportLowStockPdf={onExportLowStockPdf} />
+      ) : pageTab === 'purchases' ? (
+        <PurchasesTab purchases={purchases} />
       ) : (
         <ItemsSection
           activeCategory={activeCategory} setActiveCategory={setActiveCategory}
@@ -731,7 +790,169 @@ function PageModals(props) {
           onClose={() => setBatchPrintOpen(false)}
         />
       )}
+      {props.purchaseOpen && (
+        <PurchaseModal
+          items={items}
+          categories={categories}
+          onClose={() => props.setPurchaseOpen(false)}
+          onSave={props.onSavePurchase}
+        />
+      )}
     </>
+  );
+}
+
+function PurchasesTab({ purchases = [] }) {
+  const [query, setQuery] = useState('');
+  const filtered = purchases.filter((purchase) => [purchase.document_no, purchase.external_document, purchase.vendor]
+    .some((value) => String(value || '').toLowerCase().includes(query.toLowerCase())));
+  return (
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden">
+      <div className="p-4 border-b border-gray-100 dark:border-slate-700 flex items-center justify-between gap-3">
+        <div><h2 className="font-bold text-gray-900 dark:text-slate-100">Purchase documents</h2><p className="text-xs text-gray-500">Direct purchases and supplier balances</p></div>
+        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search document or vendor" className="rounded-xl border px-3 py-2 text-sm dark:bg-slate-900 dark:border-slate-600" />
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm"><thead className="bg-gray-50 dark:bg-slate-950 text-xs uppercase text-gray-500"><tr>
+          <th className="px-4 py-3 text-left">Number</th><th className="px-4 py-3 text-left">Vendor</th><th className="px-4 py-3 text-left">Date</th><th className="px-4 py-3 text-left">Due</th><th className="px-4 py-3 text-left">Status</th><th className="px-4 py-3 text-right">Total</th>
+        </tr></thead><tbody>
+          {filtered.map((purchase) => <tr key={purchase.id} className="border-t dark:border-slate-700">
+            <td className="px-4 py-3 font-semibold">{purchase.document_no}<div className="text-xs text-gray-400">{purchase.external_document}</div></td>
+            <td className="px-4 py-3">{purchase.vendor}</td><td className="px-4 py-3">{purchase.date}</td><td className="px-4 py-3">{purchase.due_date}</td>
+            <td className="px-4 py-3">{purchase.status}</td><td className="px-4 py-3 text-right">Rs. {Number(purchase.total || 0).toLocaleString('en-LK', { minimumFractionDigits: 2 })}</td>
+          </tr>)}
+          {!filtered.length && <tr><td colSpan="6" className="p-8 text-center text-gray-400">No purchases found.</td></tr>}
+        </tbody></table>
+      </div>
+    </div>
+  );
+}
+
+function PurchaseModal({ items = [], categories = [], onClose, onSave }) {
+  const today = new Date().toISOString().slice(0, 10);
+  const searchRef = useRef(null);
+  const [documentNo] = useState(() => {
+    const key = 'pos_purchase_sequence';
+    const next = Number(localStorage.getItem(key) || 0) + 1;
+    localStorage.setItem(key, String(next));
+    return `PUR-${String(next).padStart(6, '0')}`;
+  });
+  const [search, setSearch] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [lines, setLines] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [quantity, setQuantity] = useState('1');
+  const [cost, setCost] = useState('0');
+  const [selling, setSelling] = useState('');
+  const [vendor, setVendor] = useState('Unknown');
+  const [externalDocument, setExternalDocument] = useState('');
+  const [date, setDate] = useState(today);
+  const [dueDate, setDueDate] = useState(today);
+  const [stockDate, setStockDate] = useState(today);
+  const [internalNote, setInternalNote] = useState('');
+  const [note, setNote] = useState('');
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('CASH');
+  const [fromCashDrawer, setFromCashDrawer] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const matches = useMemo(() => items.filter((item) => {
+    const q = search.trim().toLowerCase();
+    return !q || [item.name, item.sku, item.barcode, ...(item.barcodes || [])].some((v) => String(v || '').toLowerCase().includes(q));
+  }).slice(0, 12), [items, search]);
+  const subtotal = lines.reduce((sum, line) => sum + Number(line.unitCost || 0) * Number(line.quantity || 0), 0);
+
+  useEffect(() => { searchRef.current?.focus(); }, []);
+  useEffect(() => { setSelectedIndex(0); }, [search]);
+  const selectItem = (item) => {
+    setSelected(item); setQuantity('1'); setCost(String(item.cost_price || 0)); setSelling(String(item.sell_price || '')); setSearch('');
+  };
+  const addLine = () => {
+    if (!selected) return;
+    const qty = Math.max(1, Number(quantity) || 0);
+    const unitCost = Math.max(0, Number(cost) || 0);
+    setLines((current) => {
+      const found = current.findIndex((line) => line.inventoryId === selected.id);
+      if (found < 0) return [...current, { inventoryType: 'accessory', inventoryId: selected.id, sku: selected.sku, name: selected.name, quantity: qty, unitCost, sellingPrice: Number(selling) || 0, lineTotal: qty * unitCost }];
+      return current.map((line, index) => index === found ? { ...line, quantity: line.quantity + qty, unitCost, lineTotal: (line.quantity + qty) * unitCost } : line);
+    });
+    setSelected(null); setQuantity('1'); setCost('0'); setSelling(''); setTimeout(() => searchRef.current?.focus(), 0);
+  };
+  const save = async () => {
+    if (!lines.length) return setError('Add at least one item.');
+    setBusy(true); setError('');
+    try {
+      await onSave({
+        documentNo, externalDocument, vendor, date, dueDate, stockDate, lines,
+        payments: Number(paymentAmount) > 0 ? [{ amount: Number(paymentAmount), method: paymentMethod, date, from_cash_drawer: fromCashDrawer }] : [],
+        internalNote, note
+      });
+    }
+    catch (err) { setError(err.message); } finally { setBusy(false); }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') { event.preventDefault(); onClose(); return; }
+    if (event.key === 'F10') { event.preventDefault(); save(); return; }
+    if (!selected && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+      event.preventDefault(); setSelectedIndex((index) => Math.max(0, Math.min(matches.length - 1, index + (event.key === 'ArrowDown' ? 1 : -1))));
+    }
+    if (!selected && event.key === 'Enter' && matches[selectedIndex]) { event.preventDefault(); selectItem(matches[selectedIndex]); }
+    else if (selected && event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') { event.preventDefault(); addLine(); }
+  };
+  return (
+    <div className="fixed inset-0 z-50 bg-slate-950/60 p-4 md:p-8" onKeyDown={handleKeyDown}>
+      <div className="mx-auto max-w-6xl h-full max-h-[92vh] overflow-y-auto rounded-3xl bg-white dark:bg-slate-800 shadow-2xl p-6">
+        <div className="flex items-center justify-between mb-5"><div><h2 className="text-2xl font-bold">New Purchase</h2><p className="text-sm text-gray-500">{documentNo} · Enter selects items · F10 saves · Esc closes</p></div><button onClick={onClose} aria-label="Close"><X /></button></div>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-5">
+          <label className="text-xs font-semibold text-gray-500">External invoice
+            <input value={externalDocument} onChange={(e) => setExternalDocument(e.target.value)} placeholder="Optional invoice number" className="mt-1 w-full rounded-xl border px-3 py-2 text-sm dark:bg-slate-900" />
+          </label>
+          <label className="text-xs font-semibold text-gray-500">Supplier
+            <input value={vendor} onChange={(e) => setVendor(e.target.value)} placeholder="Unknown" className="mt-1 w-full rounded-xl border px-3 py-2 text-sm dark:bg-slate-900" />
+          </label>
+          <label className="text-xs font-semibold text-gray-500">Purchase date
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="mt-1 block w-full rounded-xl border px-3 py-2 text-sm dark:bg-slate-900" />
+          </label>
+          <label className="text-xs font-semibold text-gray-500">Stock received
+            <input type="date" value={stockDate} onChange={(e) => setStockDate(e.target.value)} className="mt-1 block w-full rounded-xl border px-3 py-2 text-sm dark:bg-slate-900" />
+          </label>
+          <label className="text-xs font-semibold text-gray-500">Due date
+            <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} className="mt-1 block w-full rounded-xl border px-3 py-2 text-sm dark:bg-slate-900" />
+          </label>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <div className="lg:col-span-1">
+            <input ref={searchRef} value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Scan barcode or search item…" className="w-full rounded-xl border px-3 py-3 dark:bg-slate-900" />
+            <div className="mt-2 rounded-xl border dark:border-slate-700 overflow-hidden">{(search ? matches : categories).map((entry, index) => search ? (
+              <button key={entry.id} onClick={() => selectItem(entry)} className={`w-full text-left px-3 py-2 border-b dark:border-slate-700 ${index === selectedIndex ? 'bg-blue-50 dark:bg-blue-500/20' : ''}`}><b>{entry.name}</b><span className="block text-xs text-gray-500">{entry.sku} · Stock {entry.quantity || 0}</span></button>
+            ) : <div key={entry.id || entry.name} className="px-3 py-2 text-sm text-gray-600 dark:text-slate-300">{entry.name}</div>)}</div>
+            {selected && <div className="mt-3 rounded-2xl border border-blue-200 bg-blue-50 dark:bg-blue-500/10 p-4 space-y-3"><b>{selected.name}</b><div className="text-xs text-gray-500">Current stock: {selected.quantity || 0} · Last cost: Rs. {selected.cost_price || 0}</div>
+              <input autoFocus value={quantity} onChange={(e) => setQuantity(e.target.value)} onWheel={(e) => e.currentTarget.blur()} inputMode="decimal" placeholder="Quantity" className="w-full rounded-xl border px-3 py-2 dark:bg-slate-900" />
+              <input value={cost} onChange={(e) => setCost(e.target.value)} onWheel={(e) => e.currentTarget.blur()} inputMode="decimal" placeholder="Cost price" className="w-full rounded-xl border px-3 py-2 dark:bg-slate-900" />
+              <input value={selling} onChange={(e) => setSelling(e.target.value)} onWheel={(e) => e.currentTarget.blur()} inputMode="decimal" placeholder="Selling price (optional)" className="w-full rounded-xl border px-3 py-2 dark:bg-slate-900" />
+              <button onClick={addLine} className="w-full rounded-xl bg-blue-600 text-white py-2 font-semibold">Add line (Enter)</button>
+            </div>}
+          </div>
+          <div className="lg:col-span-2"><table className="w-full text-sm"><thead><tr className="text-left border-b dark:border-slate-700"><th className="py-2">Item</th><th>Qty</th><th>Cost</th><th className="text-right">Total</th><th /></tr></thead><tbody>{lines.map((line, index) => <tr key={`${line.inventoryId}-${index}`} className="border-b dark:border-slate-700"><td className="py-3">{line.name}<div className="text-xs text-gray-500">{line.sku}</div></td><td>{line.quantity}</td><td>Rs. {line.unitCost.toFixed(2)}</td><td className="text-right">Rs. {(line.quantity * line.unitCost).toFixed(2)}</td><td><button onClick={() => setLines((current) => current.filter((_, i) => i !== index))}><Trash2 size={15} /></button></td></tr>)}</tbody></table>
+            <div className="mt-5 flex justify-end text-lg font-bold">Total: Rs. {subtotal.toFixed(2)}</div>
+            <div className="mt-4 rounded-2xl border p-4 dark:border-slate-700">
+              <div className="font-semibold mb-2">Payments</div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <input value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} onWheel={(e) => e.currentTarget.blur()} inputMode="decimal" placeholder="Paid amount" className="rounded-xl border px-3 py-2 dark:bg-slate-900" />
+                <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="rounded-xl border px-3 py-2 dark:bg-slate-900"><option value="CASH">Cash</option><option value="CARD">Card</option><option value="BANK_TRANSFER">Bank Transfer</option></select>
+                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={fromCashDrawer} onChange={(e) => setFromCashDrawer(e.target.checked)} disabled={paymentMethod !== 'CASH'} /> Paid from cash drawer</label>
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-3 mt-4">
+              <textarea value={internalNote} onChange={(e) => setInternalNote(e.target.value)} placeholder="Internal note (staff only)" className="w-full rounded-xl border px-3 py-2 dark:bg-slate-900" />
+              <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Supplier note" className="w-full rounded-xl border px-3 py-2 dark:bg-slate-900" />
+            </div>
+          </div>
+        </div>
+        {error && <div className="mt-4 text-sm text-rose-600">{error}</div>}
+        <div className="mt-6 flex justify-end gap-3"><button onClick={onClose} className="rounded-xl border px-4 py-2">Cancel</button><button onClick={save} disabled={busy} className="rounded-xl bg-emerald-600 px-5 py-2 text-white font-semibold"><Save size={16} className="inline mr-2" />{busy ? 'Saving…' : 'Save purchase (F10)'}</button></div>
+      </div>
+    </div>
   );
 }
 

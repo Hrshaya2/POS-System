@@ -83,7 +83,7 @@ const stockMovementSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true,
-        enum: ['STOCK_IN', 'SALE', 'REFUND', 'ADJUSTMENT', 'STOCK_TAKE', 'IMPORT']
+        enum: ['STOCK_IN', 'PURCHASE', 'SALE', 'REFUND', 'ADJUSTMENT', 'STOCK_TAKE', 'IMPORT']
     },
     quantity_change: { type: Number, required: true },
     resulting_quantity: { type: Number, required: true },
@@ -253,6 +253,61 @@ const stockImportSchema = new mongoose.Schema({
     created_at: { type: Date, default: Date.now }
 }, { timestamps: true });
 
+// --- PURCHASES / SUPPLIER PAYABLES ---
+const purchaseLineSchema = new mongoose.Schema({
+    inventory_type: { type: String, required: true },
+    inventory_id: { type: String, required: true },
+    sku: String,
+    name: { type: String, required: true },
+    quantity: { type: Number, required: true },
+    unit_cost: { type: Number, required: true },
+    selling_price: Number,
+    tax_rate: { type: Number, default: 0 },
+    discount: { type: Number, default: 0 },
+    line_total: { type: Number, required: true },
+    imeis: { type: [String], default: [] },
+    brand: String,
+    model: String,
+    category: String,
+    condition: String,
+    warranty: String
+}, { _id: false });
+
+const purchasePaymentSchema = new mongoose.Schema({
+    amount: { type: Number, required: true },
+    method: { type: String, required: true },
+    date: { type: String, required: true },
+    note: String,
+    from_cash_drawer: { type: Boolean, default: false }
+}, { _id: false });
+
+const purchaseSchema = new mongoose.Schema({
+    document_no: { type: String, required: true, unique: true },
+    external_document: { type: String, default: '' },
+    vendor: { type: String, default: 'Unknown' },
+    document_type: { type: String, default: 'Purchase' },
+    date: { type: String, required: true },
+    due_date: { type: String, required: true },
+    stock_date: { type: String, required: true },
+    lines: { type: [purchaseLineSchema], default: [] },
+    discount: { type: Number, default: 0 },
+    subtotal: { type: Number, default: 0 },
+    tax_total: { type: Number, default: 0 },
+    total: { type: Number, default: 0 },
+    payments: { type: [purchasePaymentSchema], default: [] },
+    amount_paid: { type: Number, default: 0 },
+    balance: { type: Number, default: 0 },
+    status: { type: String, enum: ['UNPAID', 'PARTIAL', 'PAID', 'VOID'], default: 'UNPAID' },
+    internal_note: { type: String, default: '' },
+    note: { type: String, default: '' },
+    created_by_id: String,
+    created_by_name: String,
+    void_reason: String,
+    voided_by_id: String,
+    voided_at: Date,
+    created_at: { type: Date, default: Date.now }
+}, { timestamps: true });
+
 // --- REFUNDS (immutable audit trail of every sale reversal) ---
 const refundItemSchema = new mongoose.Schema({
     inventory_type: { type: String, required: true },   // 'phone' | 'accessory' | 'service'
@@ -409,6 +464,7 @@ module.exports = {
     StockMovement: mongoose.model('StockMovement', stockMovementSchema),
     StockTake: mongoose.model('StockTake', stockTakeSchema),
     StockImport: mongoose.model('StockImport', stockImportSchema),
+    Purchase: mongoose.model('Purchase', purchaseSchema),
     Refund: mongoose.model('Refund', refundSchema),
     StoreSetting: mongoose.model('StoreSetting', storeSettingSchema),
     CreditNote: mongoose.model('CreditNote', creditNoteSchema),

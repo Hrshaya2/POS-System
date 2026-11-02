@@ -20,6 +20,7 @@ const {
     StockMovement,
     StockTake,
     StockImport,
+    Purchase,
     Refund,
     StoreSetting,
     CreditNote,
@@ -85,6 +86,7 @@ const formatLocalTime = (date, tzOffsetMinutes) =>
     new Date(date.getTime() - tzOffsetMinutes * 60 * 1000).toISOString().slice(11, 16);
 
 const formatReceiptNo = () => `RCPT-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+const formatPurchaseNo = () => `PUR-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
 const formatRefundRef = () => `RFS-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
 const formatRepairJobNo = () => `REP-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
 
@@ -147,7 +149,7 @@ const getRefundPolicy = async () => {
 // Stock Management helpers
 // =============================================
 
-const MOVEMENT_TYPES = ['STOCK_IN', 'SALE', 'REFUND', 'ADJUSTMENT', 'STOCK_TAKE', 'IMPORT'];
+const MOVEMENT_TYPES = ['STOCK_IN', 'PURCHASE', 'SALE', 'REFUND', 'ADJUSTMENT', 'STOCK_TAKE', 'IMPORT'];
 const ADJUSTMENT_REASONS = ['Damaged', 'Lost/Theft', 'Miscount', 'Returned to Supplier', 'Other'];
 
 // Write an immutable audit-trail row for every accessory quantity change.
@@ -166,6 +168,7 @@ const logStockMovement = async ({ accessory, type, quantityChange, resultingQuan
         user_id: user.id ? String(user.id) : '',
         user_name: user.name || ''
     });
+
     return doc;
 };
 
@@ -403,7 +406,7 @@ const authenticateToken = async (req, res, next) => {
     try {
         await connectDB();
         const userExists = await User.exists({ _id: payload.id });
-        if (!userExists) return res.sendStatus(401);
+        if (!userExists) return res.status(401).json({ error: 'User account no longer exists' });
     } catch (dbErr) {
         console.error('Auth DB check failed:', dbErr);
         return res.status(500).json({ error: 'Authentication check failed' });
@@ -420,6 +423,20 @@ const requireAdmin = (req, res, next) => {
         next();
     } else {
         res.status(403).json({ error: 'Admin or Shop Owner access required' });
+    }
+};
+
+const requirePurchaseAccess = async (req, res, next) => {
+    if (req.user && isAdminOrShopOwner(req.user.role)) return next();
+    if (req.user?.role !== 'cashier') return res.status(403).json({ error: 'Purchase access is restricted to authorized staff.' });
+    try {
+        const setting = await StoreSetting.findOne({ key: 'cashier_purchase_enabled' });
+        const enabled = setting?.value?.enabled === true || setting?.value === true;
+        if (!enabled) return res.status(403).json({ error: 'Purchase access is not enabled for this cashier. Ask an admin to enable it in Settings.' });
+        next();
+    } catch (err) {
+        console.error('Purchase permission check failed:', err);
+        res.status(500).json({ error: 'Unable to verify purchase permission' });
     }
 };
 
@@ -940,6 +957,179 @@ app.post('/api/stock/adjust', authenticateToken, async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message || 'Database error adjusting stock' });
+    }
+});
+
+// --- Direct purchases / supplier payables ---
+const normalizePurchase = (purchase) => ({
+    id: purchase._id.toString(),
+    document_no: purchase.document_no,
+    external_document: purchase.external_document || '',
+    vendor: purchase.vendor || 'Unknown',
+    document_type: purchase.document_type || 'Purchase',
+    date: purchase.date,
+    due_date: purchase.due_date,
+    stock_date: purchase.stock_date,
+    lines: purchase.lines || [],
+    discount: Number(purchase.discount || 0),
+    subtotal: Number(purchase.subtotal || 0),
+    tax_total: Number(purchase.tax_total || 0),
+    total: Number(purchase.total || 0),
+    payments: purchase.payments || [],
+    amount_paid: Number(purchase.amount_paid || 0),
+    balance: Number(purchase.balance || 0),
+    status: purchase.status,
+    internal_note: purchase.internal_note || '',
+    note: purchase.note || '',
+    created_by_name: purchase.created_by_name || '',
+    created_at: purchase.created_at
+});
+
+app.get('/api/purchases', authenticateToken, requirePurchaseAccess, async (req, res) => {
+    try {
+        await connectDB();
+        const { from = '', to = '', vendor = '', status = '', q = '' } = req.query;
+        const filter = { };
+        if (from || to) {
+            filter.date = {};
+            if (from) filter.date.$gte = String(from);
+            if (to) filter.date.$lte = String(to);
+        }
+        if (vendor) filter.vendor = { $regex: String(vendor), $options: 'i' };
+        if (status) filter.status = String(status).toUpperCase();
+        if (q) filter.$or = [
+            { document_no: { $regex: String(q), $options: 'i' } },
+            { external_document: { $regex: String(q), $options: 'i' } },
+            { vendor: { $regex: String(q), $options: 'i' } },
+            { 'lines.name': { $regex: String(q), $options: 'i' } },
+            { 'lines.sku': { $regex: String(q), $options: 'i' } }
+        ];
+        const rows = await Purchase.find(filter).sort({ date: -1, created_at: -1 }).limit(1000);
+        res.json(rows.map(normalizePurchase));
+    } catch (err) {
+        res.status(500).json({ error: 'Unable to load purchases' });
+    }
+});
+
+app.post('/api/purchases', authenticateToken, requirePurchaseAccess, async (req, res) => {
+    try {
+        await connectDB();
+        const body = req.body || {};
+        if (!Array.isArray(body.lines) || body.lines.length === 0) return res.status(400).json({ error: 'Add at least one purchase item' });
+        const lines = body.lines.map((line) => ({
+            inventory_type: String(line.inventoryType || line.inventory_type || 'accessory'),
+            inventory_id: String(line.inventoryId || line.inventory_id || ''),
+            sku: String(line.sku || ''),
+            name: String(line.name || 'Item'),
+            quantity: Math.max(1, Number(line.quantity || 0)),
+            unit_cost: Math.max(0, Number(line.unitCost ?? line.unit_cost ?? 0)),
+            selling_price: Number(line.sellingPrice ?? line.selling_price ?? 0),
+            tax_rate: Math.max(0, Number(line.taxRate ?? line.tax_rate ?? 0)),
+            discount: Math.max(0, Number(line.discount || 0)),
+            line_total: Math.max(0, Number(line.lineTotal ?? line.line_total ?? 0)),
+            imeis: Array.isArray(line.imeis) ? line.imeis.map((imei) => String(imei).trim()).filter(Boolean) : [],
+            brand: String(line.brand || ''),
+            model: String(line.model || ''),
+            category: String(line.category || ''),
+            condition: String(line.condition || ''),
+            warranty: String(line.warranty || '')
+        }));
+        const seenImeis = new Set();
+        for (const line of lines) {
+            if (line.inventory_type === 'phone') {
+                if (line.imeis.length !== line.quantity) return res.status(400).json({ error: `${line.name}: enter one IMEI per unit` });
+                for (const imei of line.imeis) {
+                    if (seenImeis.has(imei) || await Phone.exists({ imei })) return res.status(400).json({ error: `Duplicate IMEI: ${imei}` });
+                    seenImeis.add(imei);
+                }
+            }
+        }
+        const subtotal = lines.reduce((sum, line) => sum + line.unit_cost * line.quantity, 0);
+        const discount = Math.max(0, Number(body.discount || 0));
+        const taxTotal = lines.reduce((sum, line) => sum + Math.max(0, line.unit_cost * line.quantity - line.discount) * line.tax_rate / 100, 0);
+        const total = Math.max(0, subtotal - discount + taxTotal);
+        const payments = (Array.isArray(body.payments) ? body.payments : []).map((p) => ({
+            amount: Math.max(0, Number(p.amount || 0)),
+            method: String(p.method || 'CASH').toUpperCase(),
+            date: String(p.date || body.date || localDateStr(new Date().getTimezoneOffset())),
+            note: String(p.note || ''),
+            from_cash_drawer: !!p.from_cash_drawer
+        })).filter((p) => p.amount > 0);
+        const amountPaid = Math.min(total, payments.reduce((sum, p) => sum + p.amount, 0));
+        const purchase = await Purchase.create({
+            document_no: String(body.documentNo || formatPurchaseNo()),
+            external_document: String(body.externalDocument || ''),
+            vendor: String(body.vendor || 'Unknown'),
+            date: String(body.date || localDateStr(new Date().getTimezoneOffset())),
+            due_date: String(body.dueDate || body.date || localDateStr(new Date().getTimezoneOffset())),
+            stock_date: String(body.stockDate || new Date().toISOString()),
+            lines, discount, subtotal, tax_total: taxTotal, total, payments,
+            amount_paid: amountPaid, balance: Math.max(0, total - amountPaid),
+            status: amountPaid >= total - 0.01 ? 'PAID' : amountPaid > 0 ? 'PARTIAL' : 'UNPAID',
+            internal_note: String(body.internalNote || ''), note: String(body.note || ''),
+            created_by_id: req.user.id, created_by_name: req.user.name
+        });
+        for (const line of lines) {
+            if (line.inventory_type === 'phone') {
+                for (const imei of line.imeis) {
+                    await Phone.create({
+                        imei, brand: line.brand || line.name, model: line.model || line.name,
+                        condition: line.condition || 'New', purchase_price: line.unit_cost,
+                        selling_price: line.selling_price || line.unit_cost, warranty: line.warranty || '',
+                        status: 'In Stock', category: line.category || 'Uncategorised'
+                    });
+                }
+                continue;
+            }
+            const accessory = await Accessory.findById(line.inventory_id) || await Accessory.findOne({ sku: line.sku });
+            if (!accessory) throw new Error(`Item not found: ${line.name}`);
+            if (!accessory.is_service) accessory.quantity = Number(accessory.quantity || 0) + line.quantity;
+            accessory.cost_price = line.unit_cost;
+            if (line.selling_price > 0) accessory.sell_price = line.selling_price;
+            await accessory.save();
+            await logStockMovement({ accessory, type: 'PURCHASE', quantityChange: accessory.is_service ? 0 : line.quantity,
+                resultingQuantity: Number(accessory.quantity || 0), reason: 'Purchase', note: `Vendor: ${purchase.vendor}`,
+                reference: purchase.document_no, user: req.user });
+        }
+        for (const payment of payments.filter((p) => p.from_cash_drawer && p.method === 'CASH')) {
+            await CashMovement.create({ cashier_id: req.user.id, cashier_name: req.user.name, movement_type: 'CASH_OUT',
+                amount: payment.amount, note: `Purchase ${purchase.document_no}`, movement_date: payment.date });
+        }
+        res.status(201).json(normalizePurchase(purchase));
+    } catch (err) {
+        res.status(400).json({ error: err.message || 'Unable to save purchase' });
+    }
+});
+
+app.post('/api/purchases/:id/void', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await connectDB();
+        const purchase = await Purchase.findById(req.params.id);
+        if (!purchase) return res.status(404).json({ error: 'Purchase not found' });
+        if (purchase.status === 'VOID') return res.status(400).json({ error: 'Purchase is already void' });
+        for (const line of purchase.lines) {
+            if (line.inventory_type === 'phone') {
+                const phones = await Phone.find({ imei: { $in: line.imeis } });
+                if (phones.some((phone) => phone.status !== 'In Stock')) return res.status(400).json({ error: `Cannot void ${purchase.document_no}: a purchased phone has already been sold` });
+                await Phone.deleteMany({ imei: { $in: line.imeis } });
+                continue;
+            }
+            const accessory = await Accessory.findById(line.inventory_id);
+            if (!accessory || Number(accessory.quantity || 0) < line.quantity) return res.status(400).json({ error: `Cannot void ${purchase.document_no}: stock for ${line.name} has already been sold or consumed` });
+            accessory.quantity -= line.quantity;
+            await accessory.save();
+            await logStockMovement({ accessory, type: 'ADJUSTMENT', quantityChange: -line.quantity,
+                resultingQuantity: accessory.quantity, reason: 'Purchase void', note: String(req.body.reason || ''),
+                reference: purchase.document_no, user: req.user });
+        }
+        purchase.status = 'VOID';
+        purchase.void_reason = String(req.body.reason || '');
+        purchase.voided_by_id = req.user.id;
+        purchase.voided_at = new Date();
+        await purchase.save();
+        res.json(normalizePurchase(purchase));
+    } catch (err) {
+        res.status(400).json({ error: err.message || 'Unable to void purchase' });
     }
 });
 
@@ -2235,6 +2425,16 @@ app.put('/api/store-settings/:key', authenticateToken, requireAdmin, async (req,
     } catch (err) { res.status(500).json({ error: 'Failed to save store setting' }); }
 });
 
+app.get('/api/purchase-permission', authenticateToken, async (req, res) => {
+    try {
+        if (isAdminOrShopOwner(req.user.role)) return res.json({ allowed: true, isAdmin: true });
+        const setting = await StoreSetting.findOne({ key: 'cashier_purchase_enabled' });
+        res.json({ allowed: setting?.value?.enabled === true || setting?.value === true, isAdmin: false });
+    } catch (err) {
+        res.status(500).json({ error: 'Unable to load purchase permission' });
+    }
+});
+
 
 app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
     const {
@@ -2280,6 +2480,13 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
         if (canonicalPaymentMethod === 'CREDIT') {
             if (!String(customer.phone || '').trim()) throw new Error('Customer phone is required for Pay Later');
             if (!String(payLater.dueDate || '').trim()) throw new Error('Promised pay-by date is required');
+            const advanceMethod = String(payLater.advanceMethod || 'CASH')
+                .trim()
+                .toUpperCase()
+                .replace(/[\s-]+/g, '_');
+            if (!['CASH', 'CARD', 'BANK_TRANSFER'].includes(advanceMethod)) {
+                throw new Error('Invalid Pay Later advance method');
+            }
             const setting = await StoreSetting.findOne({ key: 'pay_later_limit' });
             const limit = Number(setting?.value?.amount ?? setting?.value ?? 0);
             const amount = Number(payLater.advance || 0);
@@ -2461,12 +2668,18 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
                 balance: Math.max(0, total - creditAdvance),
                 due_date: String(payLater.dueDate),
                 items: normalizedItems,
-                payments: creditAdvance > 0 ? [{ amount: creditAdvance, method: payLater.advanceMethod || 'CASH', recorded_at: new Date(), session_id: sessionId || null, by: req.user.name }] : [],
+                payments: creditAdvance > 0 ? [{
+                    amount: creditAdvance,
+                    method: String(payLater.advanceMethod || 'CASH').trim().toUpperCase().replace(/[\s-]+/g, '_'),
+                    recorded_at: new Date(),
+                    session_id: sessionId || null,
+                    by: req.user.name
+                }] : [],
                 status: total - creditAdvance <= 0.01 ? 'PAID' : 'OPEN'
             });
             saleDoc.credit_note_id = credit._id.toString();
             await saleDoc.save();
-            if (creditAdvance > 0 && String(payLater.advanceMethod || 'CASH').toUpperCase() === 'CASH') {
+            if (creditAdvance > 0 && String(payLater.advanceMethod || 'CASH').trim().toUpperCase().replace(/[\s-]+/g, '_') === 'CASH') {
                 await CashMovement.create({
                     cashier_id: req.user.id,
                     cashier_name: req.user.name,
@@ -3007,7 +3220,7 @@ app.get('/api/reports', authenticateToken, requireAdmin, async (req, res) => {
             RepairJob.find({ repair_status: 'Delivered', updated_at: { $gte: rangeStart, $lte: rangeEnd } }),
             CashMovement.find({ movement_date: { $gte: from, $lte: to } }),
             Refund.find({ movement_date: { $gte: from, $lte: to } }),
-            StockMovement.find({ type: 'STOCK_IN', created_at: { $gte: rangeStart, $lte: rangeEnd } }),
+            StockMovement.find({ type: { $in: ['STOCK_IN', 'PURCHASE'] }, created_at: { $gte: rangeStart, $lte: rangeEnd } }),
             User.find({}),
             DailySession.find({ date: { $gte: from, $lte: to } }).sort({ date: -1 })
         ]);

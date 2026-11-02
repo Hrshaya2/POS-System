@@ -3,9 +3,9 @@
 // API requests are NEVER cached - only data/API calls should fail offline, never the app itself.
 
 const CACHE_PREFIX = 'loyal-mobile-pos';
-// v2: busts any pre-Stock-Management app shell cached by v1 clients.
-const APP_SHELL_CACHE = `${CACHE_PREFIX}-app-shell-v2`;
-const RUNTIME_CACHE = `${CACHE_PREFIX}-runtime-v2`;
+// v3: refreshes clients after the session/logout handling fix.
+const APP_SHELL_CACHE = `${CACHE_PREFIX}-app-shell-v4`;
+const RUNTIME_CACHE = `${CACHE_PREFIX}-runtime-v4`;
 
 // Static bundle files (JS/CSS/images/fonts) - these are hashed by Vite on build, so cache-first is safe
 const STATIC_ASSET_PATTERN = /\.(js|css|png|jpe?g|gif|webp|svg|ico|woff2?|ttf|otf|eot|map)(\?.*)?$/i;

@@ -72,6 +72,7 @@ export default function SettingsPage() {
   const [rpBusy, setRpBusy] = useState(false);
   const [policyStatus, setPolicyStatus] = useState({ kind: '', msg: '' });
   const [payLaterLimit, setPayLaterLimit] = useState(0);
+  const [cashierPurchaseEnabled, setCashierPurchaseEnabled] = useState(false);
 
   React.useEffect(() => {
     if (!isAdmin) return undefined;
@@ -94,6 +95,13 @@ export default function SettingsPage() {
         if (res3.ok) {
           const value = await res3.json();
           setPayLaterLimit(Number(value?.amount ?? value?.value ?? value ?? 0));
+        }
+      } catch (err) { /* ignore */ }
+      try {
+        const res4 = await fetch(`${SETTINGS_API}/store-settings/cashier_purchase_enabled`, { headers: authHeaders() });
+        if (res4.ok) {
+          const value = await res4.json();
+          setCashierPurchaseEnabled(value?.enabled === true || value === true);
         }
       } catch (err) { /* ignore */ }
     })();
@@ -121,6 +129,12 @@ export default function SettingsPage() {
       }
       const limitRes = await fetch(`${SETTINGS_API}/store-settings/pay_later_limit`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ amount: Math.max(0, Number(payLaterLimit) || 0) }) });
       if (!limitRes.ok) throw new Error('Refund policy saved but Pay Later limit could not be saved.');
+      const purchaseRes = await fetch(`${SETTINGS_API}/store-settings/cashier_purchase_enabled`, {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify({ enabled: cashierPurchaseEnabled })
+      });
+      if (!purchaseRes.ok) throw new Error('Other settings saved but cashier Purchase access could not be saved.');
       setPolicyStatus({ kind: 'ok', msg: 'Refund policy saved. New refunds follow these limits immediately.' });
     } catch (e) {
       setPolicyStatus({ kind: 'err', msg: e.message || 'Save failed' });
@@ -382,6 +396,17 @@ export default function SettingsPage() {
             an admin / shop owner completes it with the approval PIN.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <label className="block md:col-span-3 rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 p-4">
+              <span className="text-sm font-bold text-amber-800 dark:text-amber-200">Allow cashiers to create Purchases</span>
+              <button
+                type="button"
+                onClick={() => setCashierPurchaseEnabled((enabled) => !enabled)}
+                className={`mt-2 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold ${cashierPurchaseEnabled ? 'border-emerald-300 bg-emerald-100 text-emerald-800' : 'border-gray-200 bg-white text-gray-500 dark:bg-slate-900 dark:border-slate-700'}`}
+              >
+                {cashierPurchaseEnabled ? 'Enabled — cashiers can purchase stock' : 'Disabled — admin/owner only'}
+              </button>
+              <span className="mt-1 block text-xs text-amber-700 dark:text-amber-300">Admins and shop owners can always create Purchases.</span>
+            </label>
             <Field label="Cashier Pay Later limit without admin PIN (Rs.)">
               <input type="number" min="0" step="100" className={inputClass} value={payLaterLimit} onChange={(e) => setPayLaterLimit(e.target.value)} />
             </Field>
