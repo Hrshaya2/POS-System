@@ -17,6 +17,7 @@ import {
     Phone,
     Bell,
     ClipboardList
+    , Plus, X
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSession } from '../context/SessionContext';
@@ -179,6 +180,138 @@ const printRefundWithHiddenFrame = async (refund) => {
     const html = buildRefundReceiptHtml(refund, getReceiptSettings());
     await printHtmlInHiddenFrame(html);
 };
+
+function ServicesModal({ services, isAdmin, standalone = false, onClose, onAdd }) {
+    const searchRef = useRef(null);
+    const [search, setSearch] = useState('');
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [selected, setSelected] = useState(null);
+    const [quantity, setQuantity] = useState('1');
+    const [price, setPrice] = useState('');
+    const [cost, setCost] = useState('0');
+    const [note, setNote] = useState('');
+    const [lines, setLines] = useState([]);
+    const [error, setError] = useState('');
+    const matches = useMemo(() => {
+        const q = search.trim().toLowerCase();
+        return services.filter((service) => !q || `${service.displayName} ${service.code} ${service.meta}`.toLowerCase().includes(q)).slice(0, 12);
+    }, [services, search]);
+
+    useEffect(() => { searchRef.current?.focus(); }, []);
+    useEffect(() => { setSelectedIndex(0); }, [search]);
+
+    const selectService = (service) => {
+        setSelected(service);
+        setQuantity('1');
+        setPrice(String(service.price || 0));
+        setCost(String(service.source?.cost_price || 0));
+        setNote('');
+        setError('');
+    };
+    const addLine = () => {
+        if (!selected) return;
+        if (!String(selected.displayName || '').trim()) return setError('Enter a service name.');
+        const qty = Math.max(1, Math.floor(Number(quantity) || 0));
+        const value = Number(price);
+        if (!Number.isFinite(value) || value < 0) return setError('Enter a valid service price.');
+        if (selected.allowPriceOverride === false && Math.abs(value - selected.price) > 0.001) return setError('Price changes are disabled for this service.');
+        const line = {
+            ...selected,
+            inventoryType: 'service',
+            inventoryId: selected.inventoryId,
+            name: selected.displayName,
+            unitPrice: value,
+            listPrice: selected.price,
+            quantity: qty,
+            trackedBy: 'SERVICE',
+            note,
+            source: { ...selected.source, cost_price: isAdmin ? Number(cost) || 0 : 0 }
+        };
+        setLines((current) => [...current, line]);
+        setSelected(null);
+        setSearch('');
+        setTimeout(() => searchRef.current?.focus(), 0);
+    };
+    const addCustom = () => selectService({
+        inventoryType: 'service',
+        inventoryId: `custom-${Date.now()}`,
+        code: 'CUSTOM',
+        displayName: '',
+        price: 0,
+        category: 'Services',
+        meta: '',
+        allowPriceOverride: true,
+        source: { is_service: true, cost_price: 0 },
+        custom: true
+    });
+    const removeLine = (index) => setLines((current) => current.filter((_, i) => i !== index));
+    const handleKeyDown = (event) => {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            if (selected) setSelected(null);
+            else onClose();
+            return;
+        }
+        if (!selected && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+            event.preventDefault();
+            setSelectedIndex((index) => Math.max(0, Math.min(matches.length - 1, index + (event.key === 'ArrowDown' ? 1 : -1))));
+            return;
+        }
+        if (event.key === 'Enter' && !event.repeat) {
+            event.preventDefault();
+            if (selected) addLine();
+            else if (matches[selectedIndex]) selectService(matches[selectedIndex]);
+        }
+        if (event.key === 'F10') {
+            event.preventDefault();
+            if (lines.length) onAdd(lines);
+            else setError('Add at least one service.');
+        }
+    };
+    return (
+        <div className="fixed inset-0 z-50 bg-slate-950/60 p-4 md:p-8" onKeyDown={handleKeyDown}>
+            <div className="mx-auto max-w-5xl max-h-[92vh] overflow-y-auto rounded-3xl bg-white dark:bg-slate-800 shadow-2xl p-6">
+                <div className="flex items-center justify-between mb-5">
+                    <div><h2 className="text-2xl font-bold">Services</h2><p className="text-sm text-gray-500">Enter selects/adds · F10 {standalone ? 'saves & pays' : 'adds to cart'} · Esc closes</p></div>
+                    <button type="button" onClick={onClose} aria-label="Close services"><X /></button>
+                </div>
+                <div className="grid lg:grid-cols-2 gap-5">
+                    <div>
+                        <input ref={searchRef} value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search service..." className="w-full rounded-xl border px-3 py-3 dark:bg-slate-900" />
+                        <div className="mt-2 rounded-xl border overflow-hidden">
+                            {matches.map((service, index) => (
+                                <button key={service.inventoryId} type="button" onClick={() => selectService(service)} className={`w-full px-3 py-3 text-left border-b last:border-b-0 ${index === selectedIndex ? 'bg-blue-50 dark:bg-blue-500/20' : ''}`}>
+                                    <b>{service.displayName}</b><span className="block text-xs text-gray-500">{formatMoney(service.price)} · {service.code || 'Service'}</span>
+                                </button>
+                            ))}
+                            <button type="button" onClick={addCustom} className="w-full px-3 py-3 text-left text-blue-600 hover:bg-blue-50">+ Custom service...</button>
+                        </div>
+                        {selected && (
+                            <div className="mt-3 rounded-2xl border border-blue-200 bg-blue-50 dark:bg-blue-500/10 p-4 space-y-3">
+                                <input autoFocus={!selected.custom} value={selected.displayName} onChange={(event) => setSelected((current) => ({ ...current, displayName: event.target.value }))} placeholder="Service name" className="w-full rounded-xl border px-3 py-2 dark:bg-slate-900" />
+                                <input value={quantity} onChange={(event) => setQuantity(event.target.value)} inputMode="decimal" placeholder="Quantity" className="w-full rounded-xl border px-3 py-2 dark:bg-slate-900" />
+                                <input value={price} onChange={(event) => setPrice(event.target.value)} readOnly={!selected.custom && selected.allowPriceOverride === false} inputMode="decimal" placeholder="Price" className="w-full rounded-xl border px-3 py-2 dark:bg-slate-900" />
+                                {isAdmin && <input value={cost} onChange={(event) => setCost(event.target.value)} inputMode="decimal" placeholder="Cost (admin only)" className="w-full rounded-xl border px-3 py-2 dark:bg-slate-900" />}
+                                <input value={note} onChange={(event) => setNote(event.target.value)} placeholder="Note (never enter customer passwords)" className="w-full rounded-xl border px-3 py-2 dark:bg-slate-900" />
+                                <button type="button" onClick={addLine} className="w-full rounded-xl bg-blue-600 text-white py-2 font-semibold">Add service (Enter)</button>
+                            </div>
+                        )}
+                    </div>
+                    <div>
+                        <h3 className="font-bold mb-2">Service lines</h3>
+                        <div className="rounded-xl border divide-y">
+                            {lines.map((line, index) => <div key={`${line.inventoryId}-${index}`} className="p-3 flex items-center justify-between gap-3"><span>{line.quantity} × {line.name}</span><span>{formatMoney(line.unitPrice * line.quantity)} <button type="button" onClick={() => removeLine(index)} className="ml-2 text-rose-600">×</button></span></div>)}
+                            {!lines.length && <div className="p-6 text-center text-sm text-gray-400">No services added.</div>}
+                        </div>
+                        <div className="mt-4 flex justify-between font-bold"><span>Total</span><span>{formatMoney(lines.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0))}</span></div>
+                    </div>
+                </div>
+                {error && <div className="mt-4 text-sm text-rose-600">{error}</div>}
+                <div className="mt-6 flex justify-end gap-3"><button type="button" onClick={onClose} className="rounded-xl border px-4 py-2">Cancel</button><button type="button" onClick={() => lines.length ? onAdd(lines) : setError('Add at least one service.')} className="rounded-xl bg-blue-600 px-5 py-2 text-white font-semibold">{standalone ? 'Save & pay' : 'Add to cart'}</button></div>
+            </div>
+        </div>
+    );
+}
 
 function PayLaterModal({ cart, total, session, user, config, onClose, onCompleted }) {
     const [customer, setCustomer] = useState({ phone: '', name: '', idNumber: '', address: '', note: '' });
@@ -598,6 +731,8 @@ export default function SalesPage() {
     const [completedReceipt, setCompletedReceipt] = useState(null);
     const [payLaterOpen, setPayLaterOpen] = useState(false);
     const [activeRequest, setActiveRequest] = useState(null);
+    const [servicesModalOpen, setServicesModalOpen] = useState(false);
+    const [standaloneServices, setStandaloneServices] = useState(false);
 
     const [historySearch, setHistorySearch] = useState('');
     const [historyCashierFilter, setHistoryCashierFilter] = useState('all');
@@ -701,6 +836,11 @@ export default function SalesPage() {
             .map((entry) => entry.item)
             .slice(0, 12);
     }, [catalog, productSearch]);
+    const serviceCatalog = useMemo(() => catalog.filter((item) => item.source?.is_service), [catalog]);
+    const serviceSales = useMemo(
+        () => sales.filter((sale) => (sale.items || []).some((item) => item.inventory_type === 'service' || item.tracked_by === 'SERVICE')),
+        [sales]
+    );
 
     useEffect(() => {
         if (selectedProductIndex >= visibleProducts.length) setSelectedProductIndex(0);
@@ -1202,6 +1342,7 @@ export default function SalesPage() {
                 inventoryId: item.inventoryId,
                 quantity: item.inventoryType === 'phone' ? 1 : item.quantity,
                 unitPrice: item.unitPrice,
+                costPrice: isAdmin ? safeNumber(item.source?.cost_price) : 0,
                 name: item.name
             })),
             paymentMethod,
@@ -1317,6 +1458,24 @@ export default function SalesPage() {
         }
         setCheckoutError('');
         setPayLaterOpen(true);
+    };
+
+    const openServices = (standalone = false) => {
+        setStandaloneServices(standalone);
+        setServicesModalOpen(true);
+    };
+
+    const acceptServiceLines = (lines) => {
+        setServicesModalOpen(false);
+        if (standaloneServices) {
+            setCart(lines);
+            setActiveTab('billing');
+            setBillingStep('payment');
+            setPaymentMethod('CASH');
+            setCashReceived('');
+        } else {
+            setCart((current) => [...current, ...lines]);
+        }
     };
 
     const completePayLater = (savedReceipt) => {
@@ -1460,7 +1619,7 @@ export default function SalesPage() {
         const tag = target?.tagName;
         const typing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target?.isContentEditable;
         const focusIsOnPage = target === document.body || target === document.documentElement;
-        const isFKey = ['F2', 'F3', 'F4', 'F7', 'F8', 'F10'].includes(key);
+        const isFKey = ['F2', 'F3', 'F4', 'F7', 'F8', 'F9', 'F10'].includes(key);
 
         // 1) "Start a new sale?" dialog: Enter clears, Esc cancels
         if (newSaleConfirmOpen) {
@@ -1535,6 +1694,10 @@ export default function SalesPage() {
 
             if (key === 'F10') {
                 openPaymentStep();
+                return;
+            }
+            if (key === 'F9') {
+                openServices(false);
                 return;
             }
             if (key === 'F3') {
@@ -1744,6 +1907,10 @@ export default function SalesPage() {
                         <ClipboardList size={16} />
                                 Payback
                     </button>
+                    <button onClick={() => setActiveTab('services')} className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${activeTab === 'services' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-300'}`}>
+                        <Plus size={16} />
+                        Services
+                    </button>
                 </div>
             </div>
 
@@ -1938,6 +2105,13 @@ export default function SalesPage() {
                                     )}
 
                                     <button
+                                        onClick={() => openServices(false)}
+                                        className="mb-3 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:border-blue-500/40 dark:bg-blue-500/10 dark:text-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    >
+                                        <Plus size={16} />
+                                        Add service (F9)
+                                    </button>
+                                    <button
                                         onClick={openPaymentStep}
                                         disabled={cart.length === 0}
                                         className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-blue-600 text-white hover:bg-blue-700 dark:hover:bg-blue-600 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -2124,6 +2298,29 @@ export default function SalesPage() {
                 </div>
             ) : activeTab === 'requests' ? (
                 <RequestsPanel catalog={catalog} user={user} session={session} onComplete={completeRequest} />
+            ) : activeTab === 'services' ? (
+                <div className="space-y-5">
+                    <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h2 className="text-xl font-bold">Services</h2>
+                                <p className="text-sm text-gray-500">Bill non-stock services using the normal payment, receipt, cash-session, and refund flow.</p>
+                            </div>
+                            <button onClick={() => openServices(true)} className="rounded-xl bg-blue-600 px-4 py-3 text-white font-semibold">New service sale</button>
+                        </div>
+                        <div className="mt-5 grid md:grid-cols-2 gap-3">
+                            <div className="rounded-2xl border p-4">
+                                <h3 className="font-bold">Service catalog</h3>
+                                <p className="text-xs text-gray-500 mt-1">Add or edit service items from Stock Management using the Service toggle.</p>
+                                <div className="mt-3 space-y-2">{serviceCatalog.slice(0, 8).map((service) => <div key={service.inventoryId} className="flex justify-between text-sm"><span>{service.displayName}</span><span>{formatMoney(service.price)}</span></div>)}</div>
+                            </div>
+                            <div className="rounded-2xl border p-4">
+                                <h3 className="font-bold">Recent service sales</h3>
+                                <div className="mt-3 space-y-2">{serviceSales.slice(0, 8).map((sale) => <div key={sale.id || sale.receipt_no} className="flex justify-between text-sm"><span>{sale.receipt_no}</span><span>{formatMoney(sale.total)}</span></div>)}{serviceSales.length === 0 && <p className="text-sm text-gray-500">No service sales yet.</p>}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             ) : (
                 <div className="space-y-6">
                     <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
@@ -2394,6 +2591,15 @@ export default function SalesPage() {
                     sale={refundSale}
                     onClose={() => setRefundSale(null)}
                     onApplied={() => loadSales()}
+                />
+            )}
+            {servicesModalOpen && (
+                <ServicesModal
+                    services={serviceCatalog}
+                    isAdmin={isAdmin}
+                    standalone={standaloneServices}
+                    onClose={() => setServicesModalOpen(false)}
+                    onAdd={acceptServiceLines}
                 />
             )}
         </div>

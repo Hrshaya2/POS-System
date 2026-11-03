@@ -2533,6 +2533,7 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
                     name,
                     quantity,
                     unit_price: unitPrice,
+                    cost_price: Math.max(0, Number(rawItem.costPrice || 0)),
                     line_total: unitPrice * quantity,
                     tracked_by: 'NONE'
                 });
@@ -2575,15 +2576,16 @@ app.post('/api/sales/checkout', authenticateToken, async (req, res) => {
                 subtotal += lineTotal;
 
                 normalizedItems.push({
-                    inventory_type: 'accessory',
+                    inventory_type: accessory.is_service ? 'service' : 'accessory',
                     inventory_id: accessory._id.toString(),
                     imei: null,
                     sku: accessory.sku,
                     name: rawItem.name || accessory.name,
                     quantity,
                     unit_price: unitPrice,
+                    cost_price: accessory.is_service ? Math.max(0, Number(rawItem.costPrice ?? accessory.cost_price ?? 0)) : undefined,
                     line_total: lineTotal,
-                    tracked_by: 'QTY'
+                    tracked_by: accessory.is_service ? 'SERVICE' : 'QTY'
                 });
 
                 if (!accessory.is_service) {
