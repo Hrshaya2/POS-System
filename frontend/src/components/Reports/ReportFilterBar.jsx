@@ -55,11 +55,11 @@ export default function ReportFilterBar({ filters, setFilters, extras = [] }) {
                     <>
                         <div className="flex flex-col">
                             <label className="text-xs text-gray-500 dark:text-slate-400 mb-1">From</label>
-                            <input type="date" value={filters.from || ''} onChange={(e) => apply({ from: e.target.value })} className="px-3 py-2 border rounded-lg text-sm" />
+                            <input type="date" value={filters.from || ''} onChange={(e) => apply({ from: e.target.value })} className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100" />
                         </div>
                         <div className="flex flex-col">
                             <label className="text-xs text-gray-500 dark:text-slate-400 mb-1">To</label>
-                            <input type="date" value={filters.to || ''} onChange={(e) => apply({ to: e.target.value })} className="px-3 py-2 border rounded-lg text-sm" />
+                            <input type="date" value={filters.to || ''} onChange={(e) => apply({ to: e.target.value })} className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100" />
                         </div>
                     </>
                 )}
@@ -67,14 +67,14 @@ export default function ReportFilterBar({ filters, setFilters, extras = [] }) {
                 {filters.showCashier && (
                     <div className="flex flex-col">
                         <label className="text-xs text-gray-500 dark:text-slate-400 mb-1">Cashier</label>
-                        <input type="text" placeholder="All cashiers" value={filters.cashierId || ''} onChange={(e) => apply({ cashierId: e.target.value })} className="px-3 py-2 border rounded-lg text-sm w-44" />
+                        <input type="text" placeholder="All cashiers" value={filters.cashierId || ''} onChange={(e) => apply({ cashierId: e.target.value })} className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm w-44 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500" />
                     </div>
                 )}
 
                 {filters.showCategory && (
                     <div className="flex flex-col">
                         <label className="text-xs text-gray-500 dark:text-slate-400 mb-1">Category / Group</label>
-                        <input type="text" placeholder="All categories" value={filters.category || ''} onChange={(e) => apply({ category: e.target.value })} className="px-3 py-2 border rounded-lg text-sm w-44" />
+                        <input type="text" placeholder="All categories" value={filters.category || ''} onChange={(e) => apply({ category: e.target.value })} className="px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm w-44 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500" />
                     </div>
                 )}
 
@@ -94,7 +94,7 @@ export default function ReportFilterBar({ filters, setFilters, extras = [] }) {
 }
 
 export const SummaryTile = ({ label, value, valueType = 'money', icon: Icon, muted = false }) => (
-    <div className={`bg-white rounded-2xl border border-gray-100 p-4 shadow-sm ${muted ? 'opacity-75' : ''}`}>
+    <div className={`bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 p-4 shadow-sm ${muted ? 'opacity-75' : ''}`}>
         <div className="flex items-center gap-2 text-gray-500 dark:text-slate-400 text-xs font-semibold mb-1">
             {Icon ? <Icon size={14} /> : null}{label}
         </div>

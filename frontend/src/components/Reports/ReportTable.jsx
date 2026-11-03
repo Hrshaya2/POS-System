@@ -12,7 +12,7 @@ export default function ReportTable({ columns, rows, total, page, limit, onPage,
     const Cell = ({ row, col }) => {
         if (col.render) return col.render(row);
         const v = row[col.key];
-        if (v == null || v === '') return <span className="text-gray-400">—</span>;
+        if (v == null || v === '') return         <span className="text-gray-400 dark:text-slate-500">—</span>;
         if (col.type === 'money') return <span className="tabular-nums">{formatMoney(v)}</span>;
         if (col.type === 'number') return <span className="tabular-nums">{formatNumber(v)}</span>;
         return <span>{v}</span>;
@@ -26,7 +26,7 @@ export default function ReportTable({ columns, rows, total, page, limit, onPage,
             <tr>
                 <td colSpan={columns.length} className="px-4 py-12 text-center text-gray-400 dark:text-slate-500">
                     <div className="flex flex-col items-center gap-2">
-                        <AlertCircle size={28} className="text-gray-300" />
+                        <AlertCircle size={28} className="text-gray-300 dark:text-slate-600" />
                         <span>{noDataText || 'No data for the selected filters.'}</span>
                     </div>
                 </td>
@@ -38,7 +38,7 @@ export default function ReportTable({ columns, rows, total, page, limit, onPage,
         <>
             <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-100 dark:divide-slate-800">
                 {rows.map((row, i) => (
-                    <tr key={row.id || row._id || i} className={i % 2 ? 'bg-gray-50/40' : ''}>
+                    <tr key={row.id || row._id || i} className={i % 2 ? 'bg-gray-50/40 dark:bg-slate-900/40' : ''}>
                         {columns.map((col) => (
                             <td key={col.key} className={`px-4 py-2.5 text-sm ${col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'}`}>
                                 <Cell row={row} col={col} />
@@ -48,7 +48,7 @@ export default function ReportTable({ columns, rows, total, page, limit, onPage,
                 ))}
             </tbody>
             {total !== undefined && (
-                <tfoot className="bg-gray-50">
+                <tfoot className="bg-gray-50 dark:bg-slate-950">
                     <tr>
                         <td colSpan={columns.length} className="px-4 py-3 text-xs text-gray-500 dark:text-slate-400">
                             Showing {start}–{end} of {formatNumber(total)}
