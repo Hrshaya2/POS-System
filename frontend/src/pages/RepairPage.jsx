@@ -32,18 +32,6 @@ export default function RepairPage() {
   const completionDateRef = useRef(null);
   const [jobs, setJobs] = useState([]);
   const [spareParts, setSpareParts] = useState([]);
-  const [offlineMode, setOfflineMode] = useState(!navigator.onLine);
-
-  useEffect(() => {
-    const handleOnline = () => setOfflineMode(false);
-    const handleOffline = () => setOfflineMode(true);
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -54,6 +42,24 @@ export default function RepairPage() {
   const [error, setError] = useState('');
   const [selectedPartId, setSelectedPartId] = useState('');
   const [selectedPartQty, setSelectedPartQty] = useState('1');
+  const [sparePartSearch, setSparePartSearch] = useState('');
+  const [collectionDialog, setCollectionDialog] = useState(null);
+  const [finalBillDialog, setFinalBillDialog] = useState(null);
+  const openFinalBillCustomizer = (job) => {
+    setFinalBillDialog({
+      job,
+      charges: [{ id: `${Date.now()}`, name: '', amount: '' }]
+    });
+  };
+
+  const printCustomizedFinalBill = () => {
+    if (!finalBillDialog) return;
+    const charges = finalBillDialog.charges
+      .map((charge) => ({ name: charge.name.trim(), amount: Number(charge.amount) }))
+      .filter((charge) => charge.name && Number.isFinite(charge.amount) && charge.amount > 0);
+    openRepairBillPrint({ ...finalBillDialog.job, additional_charges: charges }, 'FINAL');
+    setFinalBillDialog(null);
+  };
   const todayDate = useMemo(() => toDateInputValue(new Date()), []);
   const defaultDueDate = useMemo(() => {
     const nextDate = new Date();
@@ -97,7 +103,8 @@ export default function RepairPage() {
       throw new Error('Unable to load repair jobs');
     }
 
-    const data = await res.json();
+    const data = await parseApiResponse(res);
+    if (!res.ok) throw new Error(data.error || 'Unable to load repair jobs');
     setJobs(data);
     if (data.length && !selectedJobId) setSelectedJobId(data[0].id);
     if (data.length && selectedJobId && !data.some((job) => job.id === selectedJobId)) {
@@ -146,6 +153,17 @@ export default function RepairPage() {
   }, [jobs, searchTerm]);
 
   const selectedJob = filteredJobs.find((job) => job.id === selectedJobId) || filteredJobs[0] || null;
+  const filteredSpareParts = useMemo(() => {
+    const term = sparePartSearch.trim().toLowerCase();
+    if (!term) return spareParts;
+    return spareParts.filter((part) => [
+      part.name,
+      part.sku,
+      part.barcode,
+      ...(Array.isArray(part.barcodes) ? part.barcodes : []),
+      part.category
+    ].some((value) => String(value || '').toLowerCase().includes(term)));
+  }, [spareParts, sparePartSearch]);
 
   useEffect(() => {
     if (selectedJob && !filteredJobs.some((job) => job.id === selectedJobId)) {
@@ -280,7 +298,7 @@ export default function RepairPage() {
 
             const data = await parseApiResponse(res);
             if (res.ok) {
-              const { markRepairJobSynced, removeRepairJob } = await import('../db/database');
+              const { markRepairJobSynced } = await import('../db/database');
               await markRepairJobSynced(localKey, data.id);
               setJobs((current) => current.map((job) =>
                 job.id === displayJob.id ? { ...job, id: data.id } : job
@@ -342,6 +360,15 @@ export default function RepairPage() {
   };
 
   const addPartToRepair = async (jobId) => {
+    if (String(jobId).startsWith('local-')) {
+      setError('This job is still syncing. Please wait for it to sync before adding spare parts.');
+      return;
+    }
+    const quantity = Number(selectedPartQty);
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      setError('Spare part quantity must be a whole number greater than zero.');
+      return;
+    }
     const token = localStorage.getItem('token');
     const res = await fetch(`${API_BASE}/repair-jobs/${jobId}/parts`, {
       method: 'POST',
@@ -349,7 +376,7 @@ export default function RepairPage() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ inventoryId: Number(selectedPartId), quantity: Number(selectedPartQty || 1) })
+      body: JSON.stringify({ inventoryId: selectedPartId, quantity })
     });
 
     const data = await parseApiResponse(res);
@@ -371,19 +398,23 @@ export default function RepairPage() {
     }
     const job = jobs.find((j) => String(j.id) === String(jobId));
     const balance = Number(job?.invoice?.balance_due ?? 0);
-    const method = window.prompt(
-      `Collect balance ${formatMoney(balance)}.\nEnter payment method: CASH, CARD, or BANK_TRANSFER`,
-      job?.payment_method || 'CASH'
-    );
-    if (method === null) return;
-    const normalized = String(method).trim().toUpperCase();
+    if (!(balance > 0)) {
+      setError('There is no balance to collect.');
+      return;
+    }
+    setCollectionDialog({ job, balance, method: job?.payment_method || 'CASH', error: '' });
+  };
+
+  const submitCollection = async () => {
+    if (!collectionDialog) return;
+    const normalized = String(collectionDialog.method || '').trim().toUpperCase().replace(/[\s-]+/g, '_');
     if (!['CASH', 'CARD', 'BANK_TRANSFER'].includes(normalized)) {
-      setError('Payment method must be CASH, CARD, or BANK_TRANSFER.');
+      setCollectionDialog((current) => ({ ...current, error: 'Choose Cash, Card, or Bank Transfer.' }));
       return;
     }
     setError('');
     const token = localStorage.getItem('token');
-    const res = await fetch(`${API_BASE}/repair-jobs/${jobId}/collect`, {
+    const res = await fetch(`${API_BASE}/repair-jobs/${collectionDialog.job.id}/collect`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -393,12 +424,13 @@ export default function RepairPage() {
     });
     const data = await parseApiResponse(res);
     if (!res.ok) {
-      setError(data.error || 'Unable to collect balance');
+      setCollectionDialog((current) => ({ ...current, error: data.error || 'Unable to collect balance' }));
       return;
     }
+    setCollectionDialog(null);
     await loadData();
-    setSelectedJobId(jobId);
-    openRepairBillPrint({ ...job, payment_method: normalized, payment_status: 'PAID', invoice: data }, 'FINAL');
+    setSelectedJobId(collectionDialog.job.id);
+    openRepairBillPrint({ ...collectionDialog.job, payment_method: normalized, payment_status: 'PAID', invoice: data }, 'FINAL');
   };
 
   const checkWarranty = async () => {
@@ -529,6 +561,49 @@ export default function RepairPage() {
           {error && (
             <div className="mt-4 rounded-2xl border border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">{error}</div>
           )}
+
+          {finalBillDialog && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4" role="presentation">
+              <div className="w-full max-w-lg rounded-3xl bg-white dark:bg-slate-800 p-6 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="custom-final-bill-title">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h2 id="custom-final-bill-title" className="text-xl font-bold">Customize final bill</h2>
+                    <p className="mt-1 text-sm text-gray-500">Add optional services or charges before printing.</p>
+                  </div>
+                  <button type="button" onClick={() => setFinalBillDialog(null)} className="text-2xl text-gray-400" aria-label="Close">×</button>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {['Charger', 'Additional service'].map((name) => (
+                    <button
+                      key={name}
+                      type="button"
+                      onClick={() => setFinalBillDialog((current) => ({ ...current, charges: [...current.charges, { id: `${Date.now()}-${name}`, name, amount: '' }] }))}
+                      className="rounded-xl border px-3 py-2 text-sm font-semibold hover:bg-gray-50 dark:hover:bg-slate-700"
+                    >
+                      + {name}
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-4 space-y-3">
+                  {finalBillDialog.charges.map((charge, index) => (
+                    <div key={charge.id} className="grid grid-cols-[1fr_130px_auto] gap-2">
+                      <input value={charge.name} onChange={(event) => setFinalBillDialog((current) => ({ ...current, charges: current.charges.map((item, i) => i === index ? { ...item, name: event.target.value } : item) }))} placeholder="Service or charge name" className="rounded-xl border px-3 py-2.5 dark:bg-slate-900" />
+                      <input value={charge.amount} onChange={(event) => setFinalBillDialog((current) => ({ ...current, charges: current.charges.map((item, i) => i === index ? { ...item, amount: event.target.value } : item) }))} type="text" inputMode="decimal" placeholder="Amount" className="rounded-xl border px-3 py-2.5 dark:bg-slate-900" />
+                      <button type="button" onClick={() => setFinalBillDialog((current) => ({ ...current, charges: current.charges.filter((_, i) => i !== index) }))} className="rounded-xl px-2 text-rose-600" aria-label="Remove charge">×</button>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-5 rounded-2xl bg-gray-50 dark:bg-slate-950 p-4 text-sm">
+                  <div className="flex justify-between"><span>Repair total</span><strong>{formatMoney(finalBillDialog.job.invoice?.total_cost || finalBillDialog.job.estimated_cost)}</strong></div>
+                  <div className="mt-2 flex justify-between font-bold"><span>Extra charges</span><strong>{formatMoney(finalBillDialog.charges.reduce((sum, charge) => sum + (Number(charge.amount) || 0), 0))}</strong></div>
+                </div>
+                <div className="mt-6 flex justify-end gap-3">
+                  <button type="button" onClick={() => setFinalBillDialog(null)} className="rounded-xl border px-4 py-2 font-semibold">Cancel</button>
+                  <button type="button" onClick={printCustomizedFinalBill} className="rounded-xl bg-slate-900 px-4 py-2 font-semibold text-white">Print final bill</button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm p-6">
@@ -619,7 +694,34 @@ export default function RepairPage() {
                   <Printer size={15} /> Advance Receipt
                 </button>
               )}
-              <button onClick={() => openRepairBillPrint(selectedJob, 'FINAL')} className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 dark:bg-slate-100 px-4 py-2.5 text-sm font-semibold text-white dark:text-slate-900 hover:opacity-90">
+
+              {collectionDialog && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4" role="presentation">
+                  <div className="w-full max-w-md rounded-3xl bg-white dark:bg-slate-800 p-6 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="repair-collection-title">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <h2 id="repair-collection-title" className="text-xl font-bold">Collect repair balance</h2>
+                        <p className="mt-1 text-sm text-gray-500">{collectionDialog.job.customer_name} · {collectionDialog.job.device_model}</p>
+                      </div>
+                      <button type="button" onClick={() => setCollectionDialog(null)} className="text-2xl text-gray-400" aria-label="Close">×</button>
+                    </div>
+                    <div className="mt-5 rounded-2xl bg-gray-50 dark:bg-slate-950 p-4 flex justify-between text-sm">
+                      <span>Balance due</span><strong className="text-emerald-700 dark:text-emerald-300">{formatMoney(collectionDialog.balance)}</strong>
+                    </div>
+                    <label className="block mt-5 text-sm font-semibold">Payment method
+                      <select value={collectionDialog.method} onChange={(event) => setCollectionDialog((current) => ({ ...current, method: event.target.value, error: '' }))} className="mt-1 w-full rounded-xl border px-3 py-2.5 dark:bg-slate-900">
+                        <option value="CASH">Cash</option><option value="CARD">Card</option><option value="BANK_TRANSFER">Bank Transfer</option>
+                      </select>
+                    </label>
+                    {collectionDialog.error && <p className="mt-3 text-sm text-rose-600">{collectionDialog.error}</p>}
+                    <div className="mt-6 flex justify-end gap-3">
+                      <button type="button" onClick={() => setCollectionDialog(null)} className="rounded-xl border px-4 py-2 font-semibold">Cancel</button>
+                      <button type="button" onClick={submitCollection} className="rounded-xl bg-emerald-600 px-4 py-2 font-semibold text-white hover:bg-emerald-700">Confirm payment</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <button onClick={() => openFinalBillCustomizer(selectedJob)} className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 dark:bg-slate-100 px-4 py-2.5 text-sm font-semibold text-white dark:text-slate-900 hover:opacity-90">
                 <Printer size={15} /> Final Bill
               </button>
               {selectedJob.payment_status !== 'PAID' && (
@@ -658,12 +760,35 @@ export default function RepairPage() {
             <div>
               <h3 className="font-bold text-gray-900 dark:text-slate-100 mb-3 flex items-center gap-2"><Package size={18} className="text-amber-600" /> Spare Parts Used</h3>
               <div className="flex flex-col gap-3">
-                <select value={selectedPartId} onChange={(e) => setSelectedPartId(e.target.value)} className="rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3 bg-white dark:bg-slate-800">
-                  <option value="">Select spare part</option>
-                  {spareParts.map((part) => (
-                    <option key={part.id} value={part.id}>{part.name} ({part.quantity} in stock)</option>
-                  ))}
-                </select>
+                <input
+                  value={sparePartSearch}
+                  onChange={(e) => setSparePartSearch(e.target.value)}
+                  placeholder="Search spare part by name, SKU, barcode..."
+                  className="rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3 bg-white dark:bg-slate-800"
+                />
+                {sparePartSearch && (
+                  <div className="max-h-52 overflow-y-auto rounded-2xl border border-gray-200 dark:border-slate-700">
+                    {filteredSpareParts.map((part) => (
+                      <button
+                        key={part.id}
+                        type="button"
+                        onClick={() => { setSelectedPartId(part.id); setSparePartSearch(part.name); }}
+                        className={`w-full px-4 py-3 text-left text-sm border-b last:border-b-0 border-gray-100 dark:border-slate-700 hover:bg-amber-50 dark:hover:bg-amber-500/10 ${selectedPartId === part.id ? 'bg-amber-50 dark:bg-amber-500/10' : ''}`}
+                      >
+                        <span className="font-semibold">{part.name}</span>
+                        <span className="block text-xs text-gray-500 dark:text-slate-400">{part.sku || 'No SKU'} · {part.quantity} in stock</span>
+                      </button>
+                    ))}
+                    {filteredSpareParts.length === 0 && (
+                      <p className="px-4 py-3 text-sm text-gray-500 dark:text-slate-400">No spare parts found.</p>
+                    )}
+                  </div>
+                )}
+                {selectedPartId && (
+                  <p className="text-sm text-emerald-700 dark:text-emerald-300">
+                    Selected: {spareParts.find((part) => part.id === selectedPartId)?.name || 'Spare part'}
+                  </p>
+                )}
                 <input value={selectedPartQty} onChange={(e) => setSelectedPartQty(e.target.value)} type="number" min="1" className="rounded-2xl border border-gray-200 dark:border-slate-700 px-4 py-3" placeholder="Quantity" />
                 <button onClick={() => addPartToRepair(selectedJob.id)} disabled={!selectedPartId} className="rounded-2xl bg-amber-600 px-4 py-3 font-semibold text-white disabled:opacity-50">
                   Add Spare Part

@@ -26,7 +26,9 @@ export const buildRepairBillHtml = (job, kind = 'FINAL', settings) => {
   const parts = Array.isArray(job?.parts) ? job.parts : [];
   const labor = Number(job?.invoice?.labor_cost ?? job?.estimated_cost ?? 0);
   const partsTotal = Number(job?.invoice?.parts_cost ?? parts.reduce((sum, p) => sum + Number(p.total_cost || 0), 0));
-  const total = Number(job?.invoice?.total_cost ?? (labor + partsTotal));
+  const additionalCharges = Array.isArray(job?.additional_charges) ? job.additional_charges : [];
+  const additionalTotal = additionalCharges.reduce((sum, charge) => sum + Number(charge.amount || 0), 0);
+  const total = Number(job?.invoice?.total_cost ?? (labor + partsTotal + additionalTotal));
   const advance = Number(job?.invoice?.advance_amount ?? job?.advance_amount ?? 0);
   const balance = Number(job?.invoice?.balance_due ?? Math.max(0, total - advance));
   const jobNo = job?.job_no || job?.invoice?.invoice_no || job?.id || '';
@@ -61,9 +63,10 @@ export const buildRepairBillHtml = (job, kind = 'FINAL', settings) => {
     `<table style="width:100%;border-collapse:collapse;margin-top:1em;"><tbody>` +
     `<tr><td style="padding:0.7em 0;border-bottom:1px solid #eee;"><div style="font-weight:700;">Labor / Service</div></td>` +
     `<td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(labor)}</td></tr>` +
-    `${partsRows}</tbody></table>` +
+    `${partsRows}${additionalCharges.map((charge) => `<tr><td style="padding:0.7em 0;border-bottom:1px solid #eee;"><div style="font-weight:700;">${esc(charge.name)}</div><div style="font-size:0.9em;color:#666;">Additional charge</div></td><td style="padding:0.7em 0;border-bottom:1px solid #eee;text-align:right;">${formatMoney(charge.amount)}</td></tr>`).join('')}</tbody></table>` +
     `<div class="row"><span>Labor</span><strong>${formatMoney(labor)}</strong></div>` +
     `<div class="row"><span>Parts</span><strong>${formatMoney(partsTotal)}</strong></div>` +
+    (additionalTotal > 0 ? `<div class="row"><span>Additional charges</span><strong>${formatMoney(additionalTotal)}</strong></div>` : '') +
     `<div class="row"><span>Total</span><strong>${formatMoney(total)}</strong></div>`;
   const totalsBlock = isAdvance
     ? `<div class="row" style="font-size:1.5em;"><span>Received</span><strong>${formatMoney(advance)}</strong></div>`
@@ -135,4 +138,3 @@ export const openRepairBillPrint = (job, kind = 'FINAL') => {
   }
   return true;
 };
-

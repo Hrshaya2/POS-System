@@ -2898,6 +2898,16 @@ app.post('/api/repair-jobs', authenticateToken, async (req, res) => {
             advance_received_by: advance > 0 ? (req.user.name || '') : ''
         });
 
+        if (advance > 0 && method === 'CASH') {
+            await CashMovement.create({
+                cashier_id: req.user.id,
+                cashier_name: req.user.name,
+                movement_type: 'SALE',
+                amount: advance,
+                note: `Repair advance ${job.job_no}`,
+                movement_date: localDateStr(new Date().getTimezoneOffset())
+            });
+        }
         recordLocalOp('repair_jobs', 'create', job._id.toString(), { imei: job.imei, device_model: job.device_model, status: 'Received', advance });
         res.status(201).json({
             id: job._id.toString(),
@@ -2945,15 +2955,7 @@ app.put('/api/repair-jobs/:id/status', authenticateToken, async (req, res) => {
         res.json({
             id: job._id.toString(),
             ...job.toObject(),
-            invoice: {
-                job_id: job._id.toString(),
-                invoice_no: `REPAIR-${job._id.toString().slice(-4).toUpperCase()}`,
-                labor_cost: laborCost,
-                parts_cost: partsTotal,
-                total_cost: total,
-                status: job.repair_status,
-                created_at: job.created_at
-            }
+            invoice: buildRepairInvoice(job, jobParts)
         });
     } catch (err) {
         console.error(err);
@@ -3070,7 +3072,7 @@ app.post('/api/repair-jobs/:id/collect', authenticateToken, async (req, res) => 
 
         const jobParts = await RepairJobPart.find({ repair_job_id: job.id });
         const invoice = buildRepairInvoice(job, jobParts);
-        const method = String(req.body.payment_method || job.payment_method || '').trim().toUpperCase();
+        const method = String(req.body.payment_method || job.payment_method || '').trim().toUpperCase().replace(/[\s-]+/g, '_');
         if (!['CASH', 'CARD', 'BANK_TRANSFER'].includes(method)) {
             return res.status(400).json({ error: 'Payment method (Cash / Card / Bank Transfer) is required to collect the balance.' });
         }
@@ -3078,6 +3080,16 @@ app.post('/api/repair-jobs/:id/collect', authenticateToken, async (req, res) => 
         job.payment_status = 'PAID';
         job.updated_at = new Date();
         await job.save();
+        if (invoice.balance_due > 0 && method === 'CASH') {
+            await CashMovement.create({
+                cashier_id: req.user.id,
+                cashier_name: req.user.name,
+                movement_type: 'SALE',
+                amount: invoice.balance_due,
+                note: `Repair balance ${job.job_no || job._id.toString()}`,
+                movement_date: localDateStr(new Date().getTimezoneOffset())
+            });
+        }
         recordLocalOp('repair_jobs', 'collect', job._id.toString(), { balance: invoice.balance_due, method });
         res.json({ ...buildRepairInvoice(job, jobParts), collected: invoice.balance_due });
     } catch (err) {
