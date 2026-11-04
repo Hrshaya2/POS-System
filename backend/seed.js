@@ -5,7 +5,7 @@
 // =============================================
 
 require('dotenv').config();
-const mongoose = require('mongoose');
+const { mongoose, connectDB } = require('./mongo');
 const bcrypt = require('bcryptjs');
 
 const { User, Phone, Accessory, Sale, RepairJob, RepairJobPart, CashMovement, DailySession } = require('./models');
@@ -19,7 +19,7 @@ if (!MONGO_URI) {
 
 async function main() {
     console.log('Connecting to MongoDB Atlas...');
-    await mongoose.connect(MONGO_URI);
+    await connectDB();
     console.log('✅ Connected to', mongoose.connection.name);
 
     // --- 1. Seed Default Users ---

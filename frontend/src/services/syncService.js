@@ -30,7 +30,7 @@ import {
 } from '../db/database';
 import { applyServerInventorySnapshot } from './stockService';
 
-const SYNC_INTERVAL_MS = 30000; // 30 seconds
+const SYNC_INTERVAL_MS = 60 * 1000;
 
 // Throttles stranded-op revival so "Retry" clicks re-arm attempts without
 // letting genuinely bad ops spin on every 30s cycle forever.

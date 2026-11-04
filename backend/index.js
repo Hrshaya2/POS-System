@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
+const { mongoose, connectDB } = require('./mongo');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
@@ -330,7 +330,7 @@ const normalizeRefund = (refund, opts = {}) => ({
     created_at: refund.created_at || refund.initiated_at
 });
 
-const normalizeSale = (sale) => {
+const normalizeSale = (sale, refundSummary = null) => {
     if (!sale) return null;
     return {
         id: sale._id.toString(),
@@ -369,18 +369,36 @@ const normalizeSale = (sale) => {
         refund_reason: sale.refund_reason || '',
         refunded_by_id: sale.refunded_by_id || '',
         refunded_by_name: sale.refunded_by_name || '',
+        refund_summary: refundSummary || {
+            count: 0,
+            totalQty: 0,
+            latest: null
+        },
         pending_sync: false
     };
 };
 
-// MongoDB connection (cached for serverless)
-let cachedDb = null;
-const connectDB = async () => {
-    if (cachedDb) return cachedDb;
-    if (!MONGO_URI) throw new Error('MONGO_URI is not configured');
-    const conn = await mongoose.connect(MONGO_URI);
-    cachedDb = conn;
-    return conn;
+const getRefundSummaries = async (sales) => {
+    const saleIds = sales
+        .map((sale) => String(sale._id))
+        .filter((id) => mongoose.Types.ObjectId.isValid(id));
+    const summaries = new Map();
+    if (!saleIds.length) return summaries;
+
+    const refunds = await Refund.find({
+        sale_id: { $in: saleIds },
+        approval_status: { $in: ['APPROVED', 'DIRECT'] }
+    }).sort({ movement_date: -1, createdAt: -1 }).lean();
+
+    for (const refund of refunds) {
+        const saleId = String(refund.sale_id);
+        const summary = summaries.get(saleId) || { count: 0, totalQty: 0, latest: null };
+        summary.count += 1;
+        summary.totalQty += (refund.items || []).reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+        if (!summary.latest) summary.latest = normalizeRefund(refund);
+        summaries.set(saleId, summary);
+    }
+    return summaries;
 };
 
 // =============================================
@@ -1914,7 +1932,8 @@ app.get('/api/sales', authenticateToken, async (req, res) => {
         }
 
         const sales = await Sale.find(filter).sort({ createdAt: -1 }).limit(200);
-        res.json(sales.map(normalizeSale));
+        const refundSummaries = await getRefundSummaries(sales);
+        res.json(sales.map((sale) => normalizeSale(sale, refundSummaries.get(String(sale._id)))));
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Database error fetching sales' });
@@ -1929,7 +1948,8 @@ app.get('/api/sales/:id', authenticateToken, async (req, res) => {
         if (!isAdminOrShopOwner(req.user.role) && sale.cashier_id !== req.user.id) {
             return res.status(403).json({ error: 'Access denied' });
         }
-        res.json(normalizeSale(sale));
+        const refundSummaries = await getRefundSummaries([sale]);
+        res.json(normalizeSale(sale, refundSummaries.get(String(sale._id))));
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Database error fetching sale' });
@@ -4368,7 +4388,7 @@ app.storage = { getStorageUsage, getStorageBreakdown, clearStorageCollection };
 if (require.main === module) {
     // Local development: start server
     const PORT = process.env.PORT || 5000;
-    if (!MONGO_URI) {
+    if (!process.env.MONGO_URI) {
         console.error('MONGO_URI is not set. Please set it in .env');
         process.exit(1);
     }

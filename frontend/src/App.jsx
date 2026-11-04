@@ -374,7 +374,7 @@ const SyncStatusBadge = () => {
   React.useEffect(() => {
     fetchSyncStatus();
     // Poll every 15 seconds to keep status fresh
-    const interval = setInterval(fetchSyncStatus, 15000);
+    const interval = setInterval(fetchSyncStatus, 60 * 1000);
     return () => clearInterval(interval);
   }, [fetchSyncStatus]);
 
@@ -452,8 +452,8 @@ const Dashboard = () => {
   React.useEffect(() => {
     fetchDashboard();
 
-    // Poll every 15 seconds so Today's Sales and the chart stay fresh
-    const interval = setInterval(fetchDashboard, 15000);
+    // Poll once a minute; writes and sync completion trigger immediate refreshes.
+    const interval = setInterval(fetchDashboard, 60 * 1000);
     return () => clearInterval(interval);
   }, [fetchDashboard]);
 

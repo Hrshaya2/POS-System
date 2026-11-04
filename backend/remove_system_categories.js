@@ -5,7 +5,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-const mongoose = require('mongoose');
+const { mongoose, connectDB } = require('./mongo');
 const { StockCategory } = require('./models');
 
 (async () => {
@@ -14,7 +14,7 @@ const { StockCategory } = require('./models');
       console.log('MONGO_URI missing in backend/.env');
       process.exit(1);
     }
-    await mongoose.connect(process.env.MONGO_URI);
+    await connectDB();
     console.log('Connected.\n');
 
     const seeded = await StockCategory.find({ created_by: 'system' }).lean();

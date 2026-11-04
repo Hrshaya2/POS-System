@@ -1,7 +1,7 @@
 // READ-ONLY diagnostic: lists current stock categories + newest items.
 // Prints nothing destructive; safe to run anytime. Usage: node diagnose_stock_categories.js
 require('dotenv').config();
-const mongoose = require('mongoose');
+const { mongoose, connectDB } = require('./mongo');
 const { StockCategory, Accessory } = require('./models');
 
 (async () => {
@@ -10,7 +10,7 @@ const { StockCategory, Accessory } = require('./models');
       console.log('MONGO_URI missing in backend/.env');
       process.exit(1);
     }
-    await mongoose.connect(process.env.MONGO_URI);
+    await connectDB();
     console.log('Connected.\n');
 
     const cats = await StockCategory.find().sort({ createdAt: -1 }).lean();

@@ -692,7 +692,7 @@ function RequestsPanel({ catalog, user, session, onComplete }) {
 export default function SalesPage() {
     const { user } = useAuth();
     const { session } = useSession();
-    const { syncNow } = useSync();
+    const { syncNow, status: syncStatus } = useSync();
 
     const isAdmin = user?.role === 'admin' || user?.role === 'shop_owner';
     const hasCustomerAttachFeature = false;
@@ -972,12 +972,16 @@ export default function SalesPage() {
                     return true;
                 });
                 setSales(deduped);
+                setRefundMetaBySale(Object.fromEntries(
+                    deduped
+                        .filter((sale) => sale.refund_summary)
+                        .map((sale) => [sale.id, sale.refund_summary])
+                ));
                 setSalesError('');
             } else if (res.status === 401) {
                 setSalesError('Your session has expired. Please sign in again to load sales history.');
             } else {
-                const errData = await res.json().catch(() => ({}));
-                setSalesError(errData.error || 'Unable to load sales history from the server.');
+                throw new Error('Sales history unavailable');
             }
         } catch (err) {
             setSalesError('You appear to be offline - showing locally saved sales only.');
@@ -1012,10 +1016,29 @@ export default function SalesPage() {
     }, []);
 
     useEffect(() => {
-        loadSales();
-        const timer = setInterval(loadSales, 15000);
-        return () => clearInterval(timer);
-    }, [historySearch, historyCashierFilter, isAdmin]);
+        if (activeTab !== 'history') return undefined;
+        const debounceTimer = setTimeout(() => {
+            if (document.visibilityState === 'visible') loadSales();
+        }, 300);
+        const onVisibilityChange = () => {
+            if (document.visibilityState === 'visible') loadSales();
+        };
+        document.addEventListener('visibilitychange', onVisibilityChange);
+        const timer = setInterval(() => {
+            if (document.visibilityState === 'visible') loadSales();
+        }, 60 * 1000);
+        return () => {
+            clearTimeout(debounceTimer);
+            clearInterval(timer);
+            document.removeEventListener('visibilitychange', onVisibilityChange);
+        };
+    }, [activeTab, historySearch, historyCashierFilter, isAdmin]);
+
+    useEffect(() => {
+        if (activeTab === 'history' && syncStatus?.lastSyncAt && document.visibilityState === 'visible') {
+            loadSales();
+        }
+    }, [activeTab, syncStatus?.lastSyncAt]);
 
     useEffect(() => {
         if (!receipt) return;
@@ -1023,12 +1046,12 @@ export default function SalesPage() {
     }, [receipt]);
 
     useEffect(() => {
-        if (activeTab !== 'history' || sales.length === 0) return;
+        if (activeTab !== 'history' || sales.length === 0 || sales.every((sale) => sale.refund_summary || sale.pending_sync || sale.syncStatus === 'pending')) return;
         let cancelled = false;
         (async () => {
             try {
                 const token = localStorage.getItem('token');
-                const targets = sales.slice(0, 60);
+                const targets = sales.filter((sale) => !sale.refund_summary && !sale.pending_sync && sale.syncStatus !== 'pending').slice(0, 60);
                 const requests = targets.map((sale) =>
                     fetch(`${API_BASE}/refunds?saleId=${encodeURIComponent(sale.id)}&limit=100`, {
                         headers: { Authorization: `Bearer ${token}` }
