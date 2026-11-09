@@ -1364,7 +1364,9 @@ export default function SalesPage() {
                 inventoryType: item.inventoryType,
                 inventoryId: item.inventoryId,
                 quantity: item.inventoryType === 'phone' ? 1 : item.quantity,
-                unitPrice: item.unitPrice,
+                // The server applies discountAmount to the submitted subtotal.
+                // Send list prices here so the discount is applied exactly once.
+                unitPrice: item.listPrice ?? item.unitPrice,
                 costPrice: isAdmin ? safeNumber(item.source?.cost_price) : 0,
                 name: item.name
             })),
@@ -2086,7 +2088,7 @@ export default function SalesPage() {
                                     <div className="space-y-3 mb-6">
                                         <div className="flex items-center justify-between text-sm">
                                             <span className="text-gray-500 dark:text-slate-400">Subtotal</span>
-                                            <strong className="text-gray-900 dark:text-slate-100">{formatMoney(subtotal)}</strong>
+                                            <strong className="text-gray-900 dark:text-slate-100">{formatMoney(listSubtotal)}</strong>
                                         </div>
                                         <div className="flex items-center justify-between text-sm">
                                             <span className="text-gray-500 dark:text-slate-400">Automatic discount</span>

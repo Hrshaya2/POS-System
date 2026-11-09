@@ -89,7 +89,8 @@ const checkoutSale = async (sale, token) => {
     items: (sale.items || []).map((item) => ({
       inventoryType: item.inventory_type,
       inventoryId: item.inventory_id,
-      quantity: item.quantity
+      quantity: item.quantity,
+      unitPrice: item.unit_price
     })),
     paymentMethod: sale.payment_method,
     cashReceived: sale.cash_received || 0,
