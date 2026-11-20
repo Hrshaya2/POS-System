@@ -49,6 +49,7 @@ const safeNumber = (value) => {
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : 0;
 };
+const roundMoney = (value) => Math.round((safeNumber(value) + Number.EPSILON) * 100) / 100;
 
 const unitCostOf = (item) => (
     item?.inventoryType === 'phone'
@@ -70,6 +71,25 @@ const getCashSummary = (receipt) => {
     };
 };
 
+const calculateSaleTotals = (cart) => {
+    const listSubtotal = roundMoney(cart.reduce(
+        (sum, item) => sum + safeNumber(item.listPrice ?? item.unitPrice) * safeNumber(item.quantity),
+        0
+    ));
+    const total = roundMoney(cart.reduce(
+        (sum, item) => sum + safeNumber(item.unitPrice) * safeNumber(item.quantity),
+        0
+    ));
+    const discount = roundMoney(Math.max(0, listSubtotal - total));
+
+    return {
+        subtotal: listSubtotal,
+        discount,
+        total: roundMoney(Math.max(0, listSubtotal - discount)),
+        discountPercent: listSubtotal > 0 ? (discount / listSubtotal) * 100 : 0
+    };
+};
+
 const buildLocalReceipt = ({ user, session, cart, paymentMethod, cashReceived, paymentDetails }) => {
     const items = cart.map((item) => ({
         inventory_type: item.inventoryType,
@@ -86,13 +106,10 @@ const buildLocalReceipt = ({ user, session, cart, paymentMethod, cashReceived, p
     }));
 
     // The cashier enters the final selling price in the item popup.
-    const listSubtotal = items.reduce((sum, item) => sum + item.line_total, 0);
-    const soldSubtotal = cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
-    const total = Math.max(0, soldSubtotal);
-    // The automatic discount is the difference between list and entered prices.
-    const totalDiscount = Math.max(0, listSubtotal - total);
+    // Keep the local/offline receipt identical to the totals sent to the server.
+    const saleTotals = calculateSaleTotals(cart);
     const cashTendered = paymentMethod === 'CASH' ? safeNumber(cashReceived) : 0;
-    const changeAmount = paymentMethod === 'CASH' ? Math.max(0, cashTendered - total) : 0;
+    const changeAmount = paymentMethod === 'CASH' ? Math.max(0, cashTendered - saleTotals.total) : 0;
     const now = new Date().toISOString();
 
     return {
@@ -101,10 +118,10 @@ const buildLocalReceipt = ({ user, session, cart, paymentMethod, cashReceived, p
         cashier_name: user?.name,
         cashier_role: user?.role,
         items,
-        subtotal: listSubtotal,
-        discount_amount: totalDiscount,
-        discount_percent: listSubtotal > 0 ? (totalDiscount / listSubtotal) * 100 : 0,
-        total,
+        subtotal: saleTotals.subtotal,
+        discount_amount: saleTotals.discount,
+        discount_percent: saleTotals.discountPercent,
+        total: saleTotals.total,
         payment_method: paymentMethod,
         payment_details: paymentDetails,
         cash_received: cashTendered,
@@ -846,17 +863,11 @@ export default function SalesPage() {
         if (selectedProductIndex >= visibleProducts.length) setSelectedProductIndex(0);
     }, [visibleProducts, selectedProductIndex]);
 
-    const listSubtotal = useMemo(
-        () => cart.reduce((sum, item) => sum + (item.listPrice * item.quantity), 0),
-        [cart]
-    );
-    const subtotal = useMemo(
-        () => cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0),
-        [cart]
-    );
-    const total = subtotal;
-    const effectiveDiscount = Math.max(0, listSubtotal - total);
-    const effectiveDiscountPercent = listSubtotal > 0 ? (effectiveDiscount / listSubtotal) * 100 : 0;
+    const saleTotals = useMemo(() => calculateSaleTotals(cart), [cart]);
+    const listSubtotal = saleTotals.subtotal;
+    const total = saleTotals.total;
+    const effectiveDiscount = saleTotals.discount;
+    const effectiveDiscountPercent = saleTotals.discountPercent;
     const approvalRequired = effectiveDiscountPercent > config.discountApprovalLimitPercent && !isAdmin;
     const splitTotal = safeNumber(paymentSplit.cash) + safeNumber(paymentSplit.card) + safeNumber(paymentSplit.bankTransfer);
     const requestBalance = Math.max(0, total - Number(activeRequest?.advance_amount || 0));
